@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\images\favicon\grey\**" />
+    <Content Remove="wwwroot\images\favicon\grey\**" />
+    <EmbeddedResource Remove="wwwroot\images\favicon\grey\**" />
+    <None Remove="wwwroot\images\favicon\grey\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\favicon\grey\" />
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 

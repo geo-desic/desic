@@ -1,0 +1,6 @@
+Android Chrome
+	App name: Desic
+	Theme color: 424242
+Windows Metro Color: 424242
+Safari Theme Color: 424242
+/images/favicon/{xxx}
