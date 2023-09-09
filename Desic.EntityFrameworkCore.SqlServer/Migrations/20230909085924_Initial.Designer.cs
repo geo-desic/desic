@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Desic.EntityFrameworkCore.SqlServer.Migrations
 {
     [DbContext(typeof(DesicContext))]
-    [Migration("20230909033134_Initial")]
+    [Migration("20230909085924_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,12 +20,13 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("app")
                 .HasAnnotation("ProductVersion", "7.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Desic.EntityFrameworkCore.Models.User", b =>
+            modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.User", b =>
                 {
                     b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,10 +39,14 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<bool?>("Hidden")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
@@ -50,17 +55,27 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<long?>("SequentialId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex(new[] { "SequentialId" }, "UX_Users_SequentialId")
+                        .IsUnique()
+                        .HasFilter("[SequentialId] IS NOT NULL");
+
+                    b.HasIndex(new[] { "Username" }, "UX_Users_Username")
+                        .IsUnique()
+                        .HasFilter("[Username] IS NOT NULL");
+
+                    b.ToTable("Users", "app");
                 });
 #pragma warning restore 612, 618
         }

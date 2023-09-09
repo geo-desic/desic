@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Desic.EntityFrameworkCore.Entities;
+using Desic.EntityFrameworkCore.Entities.Configurations;
+using Microsoft.EntityFrameworkCore;
 
 namespace Desic.EntityFrameworkCore.Models
 {
@@ -7,6 +9,12 @@ namespace Desic.EntityFrameworkCore.Models
         public DesicContext(DbContextOptions<DesicContext> options) : base(options) { }
 
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("app");
+            modelBuilder.ApplyConfiguration(new UserConfiguration(Database));
+        }
 
         public static async Task InitializeAsync(DesicContext db)
         {

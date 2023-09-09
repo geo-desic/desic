@@ -1,4 +1,4 @@
-﻿namespace Desic.EntityFrameworkCore.Models
+﻿namespace Desic.EntityFrameworkCore.Entities
 {
     public class User
     {

@@ -11,16 +11,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Desic.EntityFrameworkCore.Sqlite.Migrations
 {
     [DbContext(typeof(DesicContext))]
-    [Migration("20230905024319_Initial")]
+    [Migration("20230909085913_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
+            modelBuilder
+                .HasDefaultSchema("app")
+                .HasAnnotation("ProductVersion", "7.0.10");
 
-            modelBuilder.Entity("Desic.EntityFrameworkCore.Models.User", b =>
+            modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.User", b =>
                 {
                     b.Property<Guid?>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,10 +35,14 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("CreatedOn")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("DATETIME('now)");
 
                     b.Property<bool?>("Hidden")
-                        .HasColumnType("INTEGER");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("TEXT");
@@ -45,7 +51,9 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("TEXT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("DATETIME('now)");
 
                     b.Property<long?>("SequentialId")
                         .HasColumnType("INTEGER");
@@ -55,7 +63,13 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex(new[] { "SequentialId" }, "UX_Users_SequentialId")
+                        .IsUnique();
+
+                    b.HasIndex(new[] { "Username" }, "UX_Users_Username")
+                        .IsUnique();
+
+                    b.ToTable("Users", "app");
                 });
 #pragma warning restore 612, 618
         }
