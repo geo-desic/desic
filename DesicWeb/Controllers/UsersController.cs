@@ -1,9 +1,9 @@
-﻿using System.Threading.Tasks;
-using Desic.Entities;
+﻿using Desic.Entities;
 using Desic.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace DesicWeb.Controllers
 {
@@ -24,7 +24,7 @@ namespace DesicWeb.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IUser>> Get(long id)
         {
-            _logger.LogInformation($"UsersController.Get({id})");
+            _logger.LogInformation("UsersController.Get({id})", id);
             var result = await _repository.Get(id);
             if (result == null) return NotFound();
             return Ok(result);

@@ -1,13 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30503.244
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desic", "Desic\Desic.csproj", "{5D7681F4-BA9E-4F85-8BE7-1B9CEFBE63C2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesicTests", "DesicTests\DesicTests.csproj", "{7608792A-EA90-4F5F-8C49-73C0F4430C4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesicWeb", "DesicWeb\DesicWeb.csproj", "{2552DE60-277C-4857-9231-8E3DD16B8033}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesicWeb", "DesicWeb\DesicWeb.csproj", "{2552DE60-277C-4857-9231-8E3DD16B8033}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desic.Api", "Desic.Api\Desic.Api.csproj", "{0D656664-1931-47AD-81D1-5167BAAF6FCC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desic.EntityFrameworkCore", "Desic.EntityFrameworkCore\Desic.EntityFrameworkCore.csproj", "{38B94AD7-36E8-4928-B4B0-66AF0B04FF4A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Migrations", "Migrations", "{2FD739C8-A3C6-4D14-9AA6-E4619EC00A3C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desic.EntityFrameworkCore.SqlServer", "Desic.EntityFrameworkCore.SqlServer\Desic.EntityFrameworkCore.SqlServer.csproj", "{23B60187-9FF1-435F-9901-3084DDD41358}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desic.EntityFrameworkCore.Sqlite", "Desic.EntityFrameworkCore.Sqlite\Desic.EntityFrameworkCore.Sqlite.csproj", "{30F0D933-F4E4-4D34-B228-35A9F1B24860}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +37,29 @@ Global
 		{2552DE60-277C-4857-9231-8E3DD16B8033}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2552DE60-277C-4857-9231-8E3DD16B8033}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2552DE60-277C-4857-9231-8E3DD16B8033}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D656664-1931-47AD-81D1-5167BAAF6FCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D656664-1931-47AD-81D1-5167BAAF6FCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D656664-1931-47AD-81D1-5167BAAF6FCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D656664-1931-47AD-81D1-5167BAAF6FCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38B94AD7-36E8-4928-B4B0-66AF0B04FF4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38B94AD7-36E8-4928-B4B0-66AF0B04FF4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38B94AD7-36E8-4928-B4B0-66AF0B04FF4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38B94AD7-36E8-4928-B4B0-66AF0B04FF4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23B60187-9FF1-435F-9901-3084DDD41358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23B60187-9FF1-435F-9901-3084DDD41358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23B60187-9FF1-435F-9901-3084DDD41358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23B60187-9FF1-435F-9901-3084DDD41358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30F0D933-F4E4-4D34-B228-35A9F1B24860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30F0D933-F4E4-4D34-B228-35A9F1B24860}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30F0D933-F4E4-4D34-B228-35A9F1B24860}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30F0D933-F4E4-4D34-B228-35A9F1B24860}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{23B60187-9FF1-435F-9901-3084DDD41358} = {2FD739C8-A3C6-4D14-9AA6-E4619EC00A3C}
+		{30F0D933-F4E4-4D34-B228-35A9F1B24860} = {2FD739C8-A3C6-4D14-9AA6-E4619EC00A3C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5794C7B4-61C9-4C2E-A0BD-08C2BC358877}
