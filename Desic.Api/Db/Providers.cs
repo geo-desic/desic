@@ -12,7 +12,6 @@ namespace Desic.Api.Db
             var provider = config.GetValue("provider", Sqlite.Name)!;
             if (provider == Sqlite.Name)
             {
-                //options.UseSqlite(config.GetConnectionString(Sqlite.Name), x => x.MigrationsAssembly("Desic.EntityFrameworkCore"));
                 options.UseSqlite(config.GetConnectionString(Sqlite.Name), x => x.MigrationsAssembly(Sqlite.Assembly));
             }
             else if (provider == SqlServer.Name)

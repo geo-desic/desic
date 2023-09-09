@@ -30,6 +30,7 @@
     },
     "Docker": {
       "commandName": "Docker",
+      "commandLineArgs": "provider=Sqlite",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "environmentVariables": {
