@@ -23,7 +23,7 @@ namespace Desic.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IUser>> Get(long id)
         {
-            using var loggerScope = _logger.BeginScope(new List<KeyValuePair<string, object>> { new KeyValuePair<string, object>("UserId", id) });
+            using var loggerScope = _logger.BeginScope(new List<KeyValuePair<string, object>> { new("UserId", id) });
             _logger.LogInformation("UsersController.Get({id})", id);
             var result = await _context.Users.FirstOrDefaultAsync(x => x.SequentialId == id);
             if (result == null) return NotFound();
