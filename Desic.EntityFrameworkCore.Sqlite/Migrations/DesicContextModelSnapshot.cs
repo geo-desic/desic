@@ -17,7 +17,7 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("app")
-                .HasAnnotation("ProductVersion", "7.0.10");
+                .HasAnnotation("ProductVersion", "8.0.2");
 
             modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.User", b =>
                 {
@@ -34,7 +34,7 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     b.Property<DateTime?>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("DATETIME('now)");
+                        .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<bool?>("Hidden")
                         .ValueGeneratedOnAdd()
@@ -50,7 +50,7 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("DATETIME('now)");
+                        .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<long?>("SequentialId")
                         .HasColumnType("INTEGER");

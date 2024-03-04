@@ -21,10 +21,10 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     SequentialId = table.Column<long>(type: "INTEGER", nullable: true),
-                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true, defaultValueSql: "DATETIME('now)"),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true, defaultValueSql: "DATETIME('now')"),
                     CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedByType = table.Column<string>(type: "TEXT", nullable: true),
-                    ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: true, defaultValueSql: "DATETIME('now)"),
+                    ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: true, defaultValueSql: "DATETIME('now')"),
                     ModifiedBy = table.Column<string>(type: "TEXT", nullable: true),
                     ModifiedByType = table.Column<string>(type: "TEXT", nullable: true),
                     Hidden = table.Column<bool>(type: "INTEGER", nullable: true, defaultValue: false),
