@@ -13,7 +13,7 @@ namespace Desic.EntityFrameworkCore.Extensions
                 ProviderNames.MySqlPomelo => "UTC_TIMESTAMP()",
                 ProviderNames.Oracle => "CAST(SYS_EXTRACT_UTC(SYSTIMESTAMP) AS DATE)",
                 ProviderNames.PostgreSQL => "now() at time zone 'utc'",
-                ProviderNames.Sqlite => "DATETIME('now)",
+                ProviderNames.Sqlite => "DATETIME('now')",
                 ProviderNames.SqlServer => "GETUTCDATE()",
                 _ => "GETUTCDATE()",
             };
