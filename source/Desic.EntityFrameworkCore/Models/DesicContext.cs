@@ -36,15 +36,18 @@ namespace Desic.EntityFrameworkCore.Models
                 const int maxSeconds = 725328000;
                 var randomSeconds = random.Next(maxSeconds);
                 var createdOn = new DateTime(2000, 1, 1).AddSeconds(randomSeconds);
+                var sequentialId = i + 1;
+                var sequentialIdString = $"{sequentialId}";
+                var guidString = "00000000-0000-0000-0000-000000000000"[..^sequentialIdString.Length] + sequentialIdString;
                 result.Add(new User
                 {
-                    Id = Guid.NewGuid(),
-                    SequentialId = i + 1,
+                    Id = new Guid(guidString),
+                    SequentialId = sequentialId,
                     CreatedOn = createdOn,
                     CreatedBy = "system",
                     ModifiedOn = random.Next(2) == 0 ? createdOn : createdOn.AddSeconds(random.Next(maxSeconds - randomSeconds)),
                     ModifiedBy = "system",
-                    Username = $"user{i + 1}",
+                    Username = $"user{sequentialId}",
                 });
             }
             return result;
