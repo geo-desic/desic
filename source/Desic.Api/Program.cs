@@ -1,5 +1,8 @@
 using Desic.Api.Db;
+using Desic.Api.HealthChecks;
 using Desic.EntityFrameworkCore.Models;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -11,6 +14,10 @@ builder.Services.AddDbContext<DesicContext>(options =>
 });
 
 builder.Services.AddControllers();
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<DesicContext>(tags: ["ready"])
+    .AddCheck("Alive", x => HealthCheckResult.Healthy());
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -33,6 +40,21 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapHealthChecks("v1/healthz/live", new HealthCheckOptions
+{
+    Predicate = _ => false
+});
+
+app.MapHealthChecks("v1/healthz/ready", new HealthCheckOptions
+{
+    Predicate = healthCheck => healthCheck.Tags.Contains("ready")
+});
+
+app.MapHealthChecks("v1/healthz/report", new HealthCheckOptions
+{
+    ResponseWriter = ResponseWriter.Write
+});
 
 app.MapControllers();
 
