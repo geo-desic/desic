@@ -9,7 +9,7 @@ namespace Desic.Api.Db
 
         public static void Configure(IConfiguration config, DbContextOptionsBuilder options)
         {
-            var provider = config.GetValue("provider", Sqlite.Name)!;
+            var provider = config.GetValue("DbProvider", Sqlite.Name)!;
             if (provider == Sqlite.Name)
             {
                 options.UseSqlite(config.GetConnectionString(Sqlite.Name), x => x.MigrationsAssembly(Sqlite.Assembly));

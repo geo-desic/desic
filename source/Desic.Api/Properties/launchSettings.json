@@ -22,7 +22,7 @@
     },
     "IIS Express": {
       "commandName": "IISExpress",
-      "commandLineArgs": "provider=SqlServer",
+      "commandLineArgs": "DbProvider=SqlServer",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
@@ -31,7 +31,7 @@
     },
     "Docker": {
       "commandName": "Docker",
-      "commandLineArgs": "provider=Sqlite",
+      "commandLineArgs": "DbProvider=Sqlite",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "environmentVariables": {
