@@ -10,7 +10,7 @@ namespace DesicTests
     public class UsersControllerTests
     {
         [Fact]
-        public async void Get_ReturnsHttpNotFound_ForInvalidId()
+        public async void Get_WithInvalidId_ReturnsHttpNotFound()
         {
             var controller = new UsersController(new FakeUsersRepository(), new NullLogger<UsersController>());
             var result = (await controller.Get(0)).Result;
@@ -18,7 +18,7 @@ namespace DesicTests
         }
 
         [Fact]
-        public async void Get_ReturnsNotNullUser_ForValidId()
+        public async void Get_WithValidId_ReturnsNotNullUser()
         {
             var controller = new UsersController(new FakeUsersRepository(), new NullLogger<UsersController>());
             var result = (await controller.Get(1)).Result;
