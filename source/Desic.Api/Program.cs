@@ -1,3 +1,4 @@
+using Desic.Api.BackgroundServices;
 using Desic.Api.Db;
 using Desic.Api.HealthChecks;
 using Desic.EntityFrameworkCore.Models;
@@ -13,22 +14,20 @@ builder.Services.AddDbContext<DesicContext>(options =>
     Providers.Configure(config, options);
 });
 
+builder.Services.AddHostedService<StartupBackgroundService>();
+builder.Services.AddSingleton<StartupHealthCheck>();
+
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks()
+    .AddCheck("Alive", x => HealthCheckResult.Healthy())
     .AddDbContextCheck<DesicContext>(tags: ["ready"])
-    .AddCheck("Alive", x => HealthCheckResult.Healthy());
+    .AddCheck<StartupHealthCheck>("Startup", tags: ["ready"]);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<DesicContext>();
-    await DesicContext.InitializeAsync(db);
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

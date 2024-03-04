@@ -16,13 +16,13 @@ namespace Desic.EntityFrameworkCore.Models
             modelBuilder.ApplyConfiguration(new UserConfiguration(Database));
         }
 
-        public static async Task InitializeAsync(DesicContext db)
+        public static async Task InitializeAsync(DesicContext db, CancellationToken cancellationToken)
         {
-            await db.Database.MigrateAsync();
+            await db.Database.MigrateAsync(cancellationToken);
             if (db.Users.Any()) return;
 
             db.Users.AddRange(GenerateSeedDataUsers());
-            await db.SaveChangesAsync();
+            await db.SaveChangesAsync(cancellationToken);
         }
 
         private const int SeedDataCount = 10;
