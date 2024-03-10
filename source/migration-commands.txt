@@ -1,0 +1,3 @@
+dotnet ef migrations add Initial --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite --startup-project ./Desic.Api -- --DbProvider Sqlite
+
+dotnet ef migrations add Initial --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer --startup-project ./Desic.Api -- --DbProvider SqlServer
