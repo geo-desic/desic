@@ -19,49 +19,105 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                 .HasDefaultSchema("app")
                 .HasAnnotation("ProductVersion", "8.0.2");
 
-            modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.User", b =>
+            modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.EntityType", b =>
                 {
-                    b.Property<Guid?>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CreatedBy")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CreatedByType")
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Name" }, "UX_EntityTypes_Username")
+                        .IsUnique();
+
+                    b.ToTable("EntityTypes", "app");
+                });
+
+            modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("CreatedOn")
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CreatedByTypeId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("DATETIME('now')");
 
-                    b.Property<bool?>("Hidden")
+                    b.Property<Guid>("ModifiedById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ModifiedByTypeId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("DATETIME('now')");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Name" }, "UX_Tags_Name");
+
+                    b.ToTable("Tags", "app");
+                });
+
+            modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("CreatedByTypeId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasDefaultValueSql("DATETIME('now')");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsHidden")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(false);
 
-                    b.Property<string>("ModifiedBy")
+                    b.Property<Guid>("ModifiedById")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ModifiedByType")
+                    b.Property<Guid>("ModifiedByTypeId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("ModifiedOn")
+                    b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("DATETIME('now')");
-
-                    b.Property<long?>("SequentialId")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Username")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex(new[] { "SequentialId" }, "UX_Users_SequentialId")
-                        .IsUnique();
 
                     b.HasIndex(new[] { "Username" }, "UX_Users_Username")
                         .IsUnique();

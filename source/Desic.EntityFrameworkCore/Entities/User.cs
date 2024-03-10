@@ -1,16 +1,19 @@
 ﻿namespace Desic.EntityFrameworkCore.Entities
 {
-    public class User
+    public class User : ModifiableEntity
     {
-        public Guid? Id { get; set; }
-        public long? SequentialId { get; set; }
-        public DateTime? CreatedOn { get; set; }
-        public string? CreatedBy { get; set; }
-        public string? CreatedByType { get; set; }
-        public DateTime? ModifiedOn { get; set; }
-        public string? ModifiedBy { get; set; }
-        public string? ModifiedByType { get; set; }
-        public bool? Hidden { get; set; }
         public string? Username { get; set; }
+        public bool IsActive
+        {
+            get => _iaActive ?? true;
+            set => _iaActive = value;
+        }
+        public bool IsHidden
+        {
+            get => _isHidden ?? false;
+            set => _isHidden = value;
+        }
+        private bool? _iaActive;
+        private bool? _isHidden;
     }
 }
