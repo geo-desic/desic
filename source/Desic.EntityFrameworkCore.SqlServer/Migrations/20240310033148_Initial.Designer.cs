@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Desic.EntityFrameworkCore.SqlServer.Migrations
 {
     [DbContext(typeof(DesicContext))]
-    [Migration("20240310023239_Initial")]
+    [Migration("20240310033148_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -30,15 +30,17 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnOrder(1);
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Name" }, "UX_EntityTypes_Username")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("EntityTypes", "app");
@@ -48,37 +50,53 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0);
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(1);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
+                        .HasColumnOrder(3)
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(4);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(5);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
+                        .HasColumnOrder(6)
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnOrder(7);
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Name" }, "UX_Tags_Name");
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("Name");
 
                     b.ToTable("Tags", "app");
                 });
@@ -87,48 +105,66 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0);
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(1);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
+                        .HasColumnOrder(3)
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(true)
+                        .HasColumnOrder(8);
 
                     b.Property<bool>("IsHidden")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasDefaultValue(false)
+                        .HasColumnOrder(9);
 
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(4);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(5);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
+                        .HasColumnOrder(6)
                         .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Username")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnOrder(7);
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Username" }, "UX_Users_Username")
-                        .IsUnique()
-                        .HasFilter("[Username] IS NOT NULL");
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Users", "app");
                 });

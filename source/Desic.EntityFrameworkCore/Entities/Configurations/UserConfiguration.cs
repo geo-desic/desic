@@ -1,32 +1,21 @@
-﻿using Desic.EntityFrameworkCore.Extensions;
+﻿using Desic.EntityFrameworkCore.Entities.Configurations.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Desic.EntityFrameworkCore.Entities.Configurations
 {
-    internal class UserConfiguration : IEntityTypeConfiguration<User>
+    internal class UserConfiguration(DatabaseFacade db) : IEntityTypeConfiguration<User>
     {
-        private readonly DatabaseFacade _db;
-
-        public UserConfiguration(DatabaseFacade db)
-        {
-            _db = db;
-        }
+        private readonly DatabaseFacade _db = db;
 
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(x => x.Id);
-            //builder.HasIndex(x => x.SequentialId, "UX_Users_SequentialId").IsUnique();
-            builder.HasIndex(x => x.Username, "UX_Users_Username").IsUnique();
-            builder.Property(x => x.CreatedById).IsRequired();
-            builder.Property(x => x.CreatedByTypeId).IsRequired();
-            builder.Property(x => x.CreatedOn).HasDefaultValueSql(_db.DateTimeUtc()).IsRequired();
-            builder.Property(x => x.ModifiedById).IsRequired();
-            builder.Property(x => x.ModifiedByTypeId).IsRequired();
-            builder.Property(x => x.ModifiedOn).HasDefaultValueSql(_db.DateTimeUtc()).IsRequired();
-            builder.Property(x => x.IsActive).HasDefaultValue(true).IsRequired();
-            builder.Property(x => x.IsHidden).HasDefaultValue(false).IsRequired();
+            var columnOrder = builder.ConfigureModifiableEntity(_db);
+            builder.Property(x => x.Username).IsRequired().HasColumnOrder(columnOrder++);
+            builder.Property(x => x.IsActive).HasDefaultValue(true).IsRequired().HasColumnOrder(columnOrder++);
+            builder.Property(x => x.IsHidden).HasDefaultValue(false).IsRequired().HasColumnOrder(columnOrder++);
+            builder.HasIndex(x => x.Username).IsUnique();
         }
     }
 }

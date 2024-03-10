@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Desic.EntityFrameworkCore.Sqlite.Migrations
 {
     [DbContext(typeof(DesicContext))]
-    [Migration("20240310023232_Initial")]
+    [Migration("20240310033141_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -26,15 +26,17 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(0);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(1);
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Name" }, "UX_EntityTypes_Username")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.ToTable("EntityTypes", "app");
@@ -44,37 +46,53 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(0);
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(1);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(2);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
+                        .HasColumnOrder(3)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(4);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(5);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
+                        .HasColumnOrder(6)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(7);
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Name" }, "UX_Tags_Name");
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("Name");
 
                     b.ToTable("Tags", "app");
                 });
@@ -83,46 +101,65 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(0);
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(1);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(2);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
+                        .HasColumnOrder(3)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
-                        .HasDefaultValue(true);
+                        .HasDefaultValue(true)
+                        .HasColumnOrder(8);
 
                     b.Property<bool>("IsHidden")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
-                        .HasDefaultValue(false);
+                        .HasDefaultValue(false)
+                        .HasColumnOrder(9);
 
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(4);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(5);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
+                        .HasColumnOrder(6)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<string>("Username")
-                        .HasColumnType("TEXT");
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(7);
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Username" }, "UX_Users_Username")
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("Username")
                         .IsUnique();
 
                     b.ToTable("Users", "app");

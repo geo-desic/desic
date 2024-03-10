@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Desic.EntityFrameworkCore.Entities.Configurations.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Desic.EntityFrameworkCore.Entities.Configurations
@@ -7,9 +8,9 @@ namespace Desic.EntityFrameworkCore.Entities.Configurations
     {
         public void Configure(EntityTypeBuilder<EntityType> builder)
         {
-            builder.HasKey(x => x.Id);
-            //builder.HasIndex(x => x.SequentialId, "UX_EntityTypes_SequentialId").IsUnique();
-            builder.HasIndex(x => x.Name, "UX_EntityTypes_Username").IsUnique();
+            var columnOrder = builder.ConfigureMinimalEntity();
+            builder.Property(x => x.Name).IsRequired().HasColumnOrder(columnOrder++);
+            builder.HasIndex(x => x.Name).IsUnique();
         }
     }
 }

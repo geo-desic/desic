@@ -33,13 +33,13 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     ModifiedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ModifiedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -52,15 +52,15 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    IsHidden = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     ModifiedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ModifiedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    IsHidden = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -68,25 +68,72 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "UX_EntityTypes_Username",
+                name: "IX_EntityTypes_Name",
                 schema: "app",
                 table: "EntityTypes",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "UX_Tags_Name",
+                name: "IX_Tags_CreatedById",
+                schema: "app",
+                table: "Tags",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_CreatedByTypeId",
+                schema: "app",
+                table: "Tags",
+                column: "CreatedByTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_ModifiedById",
+                schema: "app",
+                table: "Tags",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_ModifiedByTypeId",
+                schema: "app",
+                table: "Tags",
+                column: "ModifiedByTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_Name",
                 schema: "app",
                 table: "Tags",
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "UX_Users_Username",
+                name: "IX_Users_CreatedById",
+                schema: "app",
+                table: "Users",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_CreatedByTypeId",
+                schema: "app",
+                table: "Users",
+                column: "CreatedByTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ModifiedById",
+                schema: "app",
+                table: "Users",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ModifiedByTypeId",
+                schema: "app",
+                table: "Users",
+                column: "ModifiedByTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Username",
                 schema: "app",
                 table: "Users",
                 column: "Username",
-                unique: true,
-                filter: "[Username] IS NOT NULL");
+                unique: true);
         }
 
         /// <inheritdoc />
