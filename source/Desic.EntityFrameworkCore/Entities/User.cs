@@ -2,7 +2,7 @@
 {
     public class User : ModifiableEntity
     {
-        public string? Username { get; set; }
+        public required string Username { get; set; }
         public bool IsActive
         {
             get => _iaActive ?? true;

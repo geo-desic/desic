@@ -44,6 +44,20 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tags_EntityTypes_CreatedByTypeId",
+                        column: x => x.CreatedByTypeId,
+                        principalSchema: "app",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tags_EntityTypes_ModifiedByTypeId",
+                        column: x => x.ModifiedByTypeId,
+                        principalSchema: "app",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,13 +72,27 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                     ModifiedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ModifiedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
-                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     IsHidden = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_EntityTypes_CreatedByTypeId",
+                        column: x => x.CreatedByTypeId,
+                        principalSchema: "app",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Users_EntityTypes_ModifiedByTypeId",
+                        column: x => x.ModifiedByTypeId,
+                        principalSchema: "app",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -140,15 +168,15 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "EntityTypes",
-                schema: "app");
-
-            migrationBuilder.DropTable(
                 name: "Tags",
                 schema: "app");
 
             migrationBuilder.DropTable(
                 name: "Users",
+                schema: "app");
+
+            migrationBuilder.DropTable(
+                name: "EntityTypes",
                 schema: "app");
         }
     }

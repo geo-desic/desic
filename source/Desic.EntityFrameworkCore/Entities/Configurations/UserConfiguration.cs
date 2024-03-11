@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Desic.EntityFrameworkCore.Entities.Configurations
 {
-    internal class UserConfiguration(DatabaseFacade db) : IEntityTypeConfiguration<User>
+    internal class UserConfiguration(DatabaseFacade databaseFacade) : IEntityTypeConfiguration<User>
     {
-        private readonly DatabaseFacade _db = db;
+        private readonly DatabaseFacade _databaseFacade = databaseFacade ?? throw new ArgumentNullException(nameof(databaseFacade));
 
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            var columnOrder = builder.ConfigureModifiableEntity(_db);
-            builder.Property(x => x.Username).IsRequired().HasColumnOrder(columnOrder++);
+            var columnOrder = builder.ConfigureModifiableEntity(_databaseFacade);
+            builder.Property(x => x.Username).IsRequired().HasMaxLength(100).HasColumnOrder(columnOrder++);
             builder.Property(x => x.IsActive).HasDefaultValue(true).IsRequired().HasColumnOrder(columnOrder++);
             builder.Property(x => x.IsHidden).HasDefaultValue(false).IsRequired().HasColumnOrder(columnOrder++);
             builder.HasIndex(x => x.Username).IsUnique();

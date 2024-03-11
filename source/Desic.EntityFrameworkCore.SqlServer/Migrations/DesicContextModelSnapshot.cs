@@ -147,7 +147,8 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(7);
 
                     b.HasKey("Id");
@@ -164,6 +165,36 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", "app");
+                });
+
+            modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.Tag", b =>
+                {
+                    b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
+                        .WithOne()
+                        .HasForeignKey("Desic.EntityFrameworkCore.Entities.Tag", "CreatedByTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
+                        .WithOne()
+                        .HasForeignKey("Desic.EntityFrameworkCore.Entities.Tag", "ModifiedByTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.User", b =>
+                {
+                    b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
+                        .WithOne()
+                        .HasForeignKey("Desic.EntityFrameworkCore.Entities.User", "CreatedByTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
+                        .WithOne()
+                        .HasForeignKey("Desic.EntityFrameworkCore.Entities.User", "ModifiedByTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

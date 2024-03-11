@@ -7,25 +7,27 @@ namespace Desic.EntityFrameworkCore.Entities.Configurations.Extensions
 {
     internal static class ConfigurationExtensions
     {
-        internal static int ConfigureModifiableEntity<T>(this EntityTypeBuilder<T> builder, DatabaseFacade db) where T : ModifiableEntity
+        internal static int ConfigureModifiableEntity<T>(this EntityTypeBuilder<T> builder, DatabaseFacade databaseFacade) where T : ModifiableEntity
         {
-            var columnOrder = builder.ConfigureCreatableEntity(db);
+            var columnOrder = builder.ConfigureCreatableEntity(databaseFacade);
             builder.Property(x => x.ModifiedById).IsRequired().HasColumnOrder(columnOrder++);
             builder.Property(x => x.ModifiedByTypeId).IsRequired().HasColumnOrder(columnOrder++);
-            builder.Property(x => x.ModifiedOn).HasDefaultValueSql(db.DateTimeUtc()).IsRequired().HasColumnOrder(columnOrder++);
-            builder.HasIndex(x => x.ModifiedById);
-            builder.HasIndex(x => x.ModifiedByTypeId);
+            builder.Property(x => x.ModifiedOn).IsRequired().HasDefaultValueSql(databaseFacade.DateTimeUtc()).HasColumnOrder(columnOrder++);
+            builder.HasIndex(x => x.ModifiedById).IsUnique(false);
+            builder.HasIndex(x => x.ModifiedByTypeId).IsUnique(false);
+            builder.HasOne<EntityType>().WithOne().HasForeignKey<T>(x => x.ModifiedByTypeId).OnDelete(DeleteBehavior.Restrict).IsRequired();
             return columnOrder;
         }
 
-        internal static int ConfigureCreatableEntity<T>(this EntityTypeBuilder<T> builder, DatabaseFacade db) where T : CreatableEntity
+        internal static int ConfigureCreatableEntity<T>(this EntityTypeBuilder<T> builder, DatabaseFacade databaseFacade) where T : CreatableEntity
         {
             var columnOrder = builder.ConfigureMinimalEntity();
             builder.Property(x => x.CreatedById).IsRequired().HasColumnOrder(columnOrder++);
             builder.Property(x => x.CreatedByTypeId).IsRequired().HasColumnOrder(columnOrder++);
-            builder.Property(x => x.CreatedOn).HasDefaultValueSql(db.DateTimeUtc()).IsRequired().HasColumnOrder(columnOrder++);
-            builder.HasIndex(x => x.CreatedById);
-            builder.HasIndex(x => x.CreatedByTypeId);
+            builder.Property(x => x.CreatedOn).IsRequired().HasDefaultValueSql(databaseFacade.DateTimeUtc()).HasColumnOrder(columnOrder++);
+            builder.HasIndex(x => x.CreatedById).IsUnique(false);
+            builder.HasIndex(x => x.CreatedByTypeId).IsUnique(false);
+            builder.HasOne<EntityType>().WithOne().HasForeignKey<T>(x => x.CreatedByTypeId).OnDelete(DeleteBehavior.Restrict).IsRequired();
             return columnOrder;
         }
 

@@ -10,9 +10,9 @@ namespace Desic.EntityFrameworkCore.Data.Test
             var result = new List<User>();
             var random = new Random();
             var isActive = true;
-            var entityTypeTag = EntityTypes.Get(Enums.EntityType.Tag)!;
-            var entityTypeUserIdString = EntityTypes.Get(Enums.EntityType.User)!.Id.ToString();
-            var tagSystem = Tags.Get(Enums.SystemTag.System)!;
+            var entityTypeTag = EntityTypes.Get(Enums.EntityType.Tag);
+            var entityTypeUserIdString = EntityTypes.Get(Enums.EntityType.User).Id.ToString();
+            var tagSystem = Tags.Get(Enums.SystemTag.System);
             for (var i = 0; i < count; ++i)
             {
                 const int maxSeconds = 725328000;

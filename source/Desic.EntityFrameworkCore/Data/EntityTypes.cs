@@ -14,9 +14,9 @@ namespace Desic.EntityFrameworkCore.Data
             return _entityTypes.Select(x => new EntityType { Id = x.Value.Id, Name = x.Value.Name }).ToList();
         }
 
-        internal static ReadOnlyEntityType? Get(Enums.EntityType entityType)
+        internal static ReadOnlyEntityType Get(Enums.EntityType entityType)
         {
-            return _entityTypes.TryGetValue(entityType, out var result) ? result : null;
+            return _entityTypes[entityType];
         }
 
         private static SortedList<Enums.EntityType, ReadOnlyEntityType> GenerateEntityTypesFromEnum()

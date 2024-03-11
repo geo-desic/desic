@@ -6,27 +6,28 @@ namespace Desic.EntityFrameworkCore.Data
     {
         public static async Task ApplyAsync(DesicContext db, CancellationToken cancellationToken)
         {
-            var hasDml = false;
-
             if (!db.EntityTypes.Any())
             {
-                hasDml = true;
-                db.EntityTypes.AddRange(Data.EntityTypes.Generate());
+                db.EntityTypes.AddRange(EntityTypes.Generate());
+                await db.SaveChangesAsync(cancellationToken);
+                db.ChangeTracker.Clear(); // EF foreign key issues occur if this is not done after adding the entity types to the db
             }
+
+            var saveChanges = false;
 
             if (!db.Tags.Any())
             {
-                hasDml = true;
-                db.Tags.AddRange(Data.Tags.Generate());
+                saveChanges = true;
+                db.Tags.AddRange(Tags.Generate());
             }
 
             if (!db.Users.Any())
             {
-                hasDml = true;
-                db.Users.AddRange(Data.Test.Users.Generate());
+                saveChanges = true;
+                db.Users.AddRange(Test.Users.Generate());
             }
 
-            if (hasDml)
+            if (saveChanges)
             {
                 await db.SaveChangesAsync(cancellationToken);
             }

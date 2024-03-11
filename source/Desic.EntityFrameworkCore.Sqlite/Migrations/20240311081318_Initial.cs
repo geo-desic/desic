@@ -44,6 +44,20 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tags_EntityTypes_CreatedByTypeId",
+                        column: x => x.CreatedByTypeId,
+                        principalSchema: "app",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Tags_EntityTypes_ModifiedByTypeId",
+                        column: x => x.ModifiedByTypeId,
+                        principalSchema: "app",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,13 +72,27 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     ModifiedById = table.Column<Guid>(type: "TEXT", nullable: false),
                     ModifiedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    Username = table.Column<string>(type: "TEXT", nullable: false),
+                    Username = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true),
                     IsHidden = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_EntityTypes_CreatedByTypeId",
+                        column: x => x.CreatedByTypeId,
+                        principalSchema: "app",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Users_EntityTypes_ModifiedByTypeId",
+                        column: x => x.ModifiedByTypeId,
+                        principalSchema: "app",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -140,15 +168,15 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "EntityTypes",
-                schema: "app");
-
-            migrationBuilder.DropTable(
                 name: "Tags",
                 schema: "app");
 
             migrationBuilder.DropTable(
                 name: "Users",
+                schema: "app");
+
+            migrationBuilder.DropTable(
+                name: "EntityTypes",
                 schema: "app");
         }
     }

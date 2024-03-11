@@ -7,13 +7,13 @@ namespace Desic.EntityFrameworkCore.Data
     {
         static Tags()
         {
-            _entityTypeTag = EntityTypes.Get(Enums.EntityType.Tag)!;
+            _entityTypeTag = EntityTypes.Get(Enums.EntityType.Tag);
             _systemTags = GenerateSystemTagsFromEnum();
         }
 
         internal static IList<Tag> Generate()
         {
-            var tagSystem = Get(SystemTag.System)!;
+            var tagSystem = Get(SystemTag.System);
             return _systemTags.Select(x => new Tag
             {
                 Id = x.Value.Id,
@@ -25,9 +25,9 @@ namespace Desic.EntityFrameworkCore.Data
             }).ToList();
         }
 
-        internal static ReadOnlyTag? Get(SystemTag systemTag)
+        internal static ReadOnlyTag Get(SystemTag systemTag)
         {
-            return _systemTags.TryGetValue(systemTag, out var result) ? result : null;
+            return _systemTags[systemTag];
         }
 
         private static readonly EntityTypes.ReadOnlyEntityType _entityTypeTag;
