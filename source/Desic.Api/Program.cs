@@ -12,6 +12,10 @@ var config = builder.Configuration;
 builder.Services.AddDbContext<DesicContext>(options =>
 {
     Providers.Configure(config, options);
+    if (config.GetValue("DesicContext:EnableSensitiveDataLogging", false))
+    {
+        options.EnableSensitiveDataLogging();
+    }
 });
 
 builder.Services.AddHostedService<StartupBackgroundService>();
