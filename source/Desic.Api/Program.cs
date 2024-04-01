@@ -31,6 +31,8 @@ builder.Services.AddHealthChecks()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies([typeof(Desic.Business.Marker).Assembly, typeof(Desic.EntityFrameworkCore.Marker).Assembly]));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
