@@ -24,7 +24,7 @@ namespace Desic.Api.Controllers.V1
 
             var request = new GetUserByIdRequest { UserId = id };
             _logger.LogTrace("Invoking {requestType}: {@request}", nameof(GetUserByIdRequest), request);
-            _logger.LogTrace("Invoking {requestType} with UserId {requestUserId}", nameof(GetUserByIdRequest), request.UserId);
+            _logger.LogDebug("Invoking {requestType} with UserId {requestUserId}", nameof(GetUserByIdRequest), request.UserId);
             var result = await _mediator.Send(request);
 
             if (result == null)
