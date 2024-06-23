@@ -25,7 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{08836AD0-2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desic.Api.Tests", "test\Desic.Api.Tests\Desic.Api.Tests.csproj", "{041A5007-EC2D-48F0-BD05-CB7B6AE8FF79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desic.Business", "source\Desic.Business\Desic.Business.csproj", "{E5D95281-C3C7-4701-98BD-D6A02DC5CEEF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Desic.Business", "source\Desic.Business\Desic.Business.csproj", "{E5D95281-C3C7-4701-98BD-D6A02DC5CEEF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExportExcel", "source\ExportExcel\ExportExcel.csproj", "{77D14304-8876-4769-83F0-6B7C50AFCE95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{E5D95281-C3C7-4701-98BD-D6A02DC5CEEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5D95281-C3C7-4701-98BD-D6A02DC5CEEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5D95281-C3C7-4701-98BD-D6A02DC5CEEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{77D14304-8876-4769-83F0-6B7C50AFCE95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77D14304-8876-4769-83F0-6B7C50AFCE95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77D14304-8876-4769-83F0-6B7C50AFCE95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77D14304-8876-4769-83F0-6B7C50AFCE95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{30F0D933-F4E4-4D34-B228-35A9F1B24860} = {2FD739C8-A3C6-4D14-9AA6-E4619EC00A3C}
 		{041A5007-EC2D-48F0-BD05-CB7B6AE8FF79} = {08836AD0-2EB2-4332-8915-92BEC19F63E7}
 		{E5D95281-C3C7-4701-98BD-D6A02DC5CEEF} = {6B51A4A2-F505-4342-8A18-9F38BE78C360}
+		{77D14304-8876-4769-83F0-6B7C50AFCE95} = {6B51A4A2-F505-4342-8A18-9F38BE78C360}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5794C7B4-61C9-4C2E-A0BD-08C2BC358877}
