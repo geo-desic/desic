@@ -8,27 +8,21 @@ namespace ExportExcel
 {
     internal class ExcelFile(string filePath)
     {
-        private string _filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
+        private const uint DateNumberFormatId = 22; // m/d/yyyy H:mm => https://github.com/ClosedXML/ClosedXML/wiki/NumberFormatId-Lookup-Table
+        private const uint DateStyleIndex = 1;
+        private readonly string _filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
+        private const long MaxIntegralValuePreservingPrecision = 999999999999999L;
+        private long _sharedStringCount = 0;
+        private readonly Dictionary<string, long> _sharedStringIndices = [];
         private SharedStringTablePart? _sharedStringTablePart;
 
-        public async Task Create(DbDataReader reader, string?[]? worksheetNames = null)
+        internal async Task Create(DbDataReader reader, string?[]? worksheetNames = null)
         {
             // https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/working-with-sheets?tabs=cs
             using var document = SpreadsheetDocument.Create(_filePath, SpreadsheetDocumentType.Workbook);
-            var workbookPart = document.AddWorkbookPart();
-            workbookPart.Workbook = new Workbook();
+            var workbookPart = InitializeWorkbook(document);
 
             var sheets = workbookPart.Workbook.AppendChild(new Sheets());
-
-            _sharedStringTablePart = null;
-            if (workbookPart.GetPartsOfType<SharedStringTablePart>().Any())
-            {
-                _sharedStringTablePart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
-            }
-            else
-            {
-                _sharedStringTablePart = workbookPart.AddNewPart<SharedStringTablePart>();
-            }
 
             var nextResult = true;
             var resultSetIndex = 0u;
@@ -78,9 +72,7 @@ namespace ExportExcel
                 ++columnIndex;
                 var cell = new Cell { CellReference = ColumnIndexToColumnName(columnIndex) + rowIndex };
                 result.InsertAt(cell, columnIndex - 1);
-                var sharedStringIndex = InsertSharedStringItem(row["ColumnName"].ToString() ?? string.Empty);
-                cell.CellValue = new CellValue(sharedStringIndex.ToString());
-                cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
+                ConfigureCellValue(cell, typeof(string), row["ColumnName"]);
             }
             return result;
         }
@@ -92,40 +84,29 @@ namespace ExportExcel
             {
                 var cell = new Cell { CellReference = ColumnIndexToColumnName(columnIndex) + rowIndex };
                 result.InsertAt(cell, columnIndex - 1);
-                if (IsNumeric(schemaTable.Rows[columnIndex - 1]["DataType"].ToString()))
-                {
-                    cell.CellValue = new CellValue(reader[columnIndex - 1].ToString()!);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
-                }
-                else
-                {
-                    var sharedStringIndex = InsertSharedStringItem(reader[columnIndex - 1].ToString() ?? string.Empty);
-                    cell.CellValue = new CellValue(sharedStringIndex.ToString());
-                    cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
-                }
+                ConfigureCellValue(cell, schemaTable.Rows[columnIndex - 1]["DataType"] as Type, reader[columnIndex - 1]);
             }
             return result;
         }
 
         // https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/how-to-insert-text-into-a-cell-in-a-spreadsheet
-        private int InsertSharedStringItem(string text)
+        // altered to utilize a dictionary of indices for incrased performance
+        private long InsertSharedStringItem(string text)
         {
             _sharedStringTablePart!.SharedStringTable ??= new SharedStringTable();
 
-            var i = 0;
-            foreach (SharedStringItem item in _sharedStringTablePart.SharedStringTable.Elements<SharedStringItem>())
+            if (_sharedStringIndices.TryGetValue(text, out var index))
             {
-                if (item.InnerText == text)
-                {
-                    return i;
-                }
-                ++i;
+                return index;
             }
 
+            index = _sharedStringCount;
+            _sharedStringIndices[text] = index;
             _sharedStringTablePart.SharedStringTable.AppendChild(new SharedStringItem(new Text(text)));
             _sharedStringTablePart.SharedStringTable.Save();
+            ++_sharedStringCount;
 
-            return i;
+            return index;
         }
 
         // https://learn.microsoft.com/en-us/office/troubleshoot/excel/convert-excel-column-numbers
@@ -144,17 +125,228 @@ namespace ExportExcel
             return result;
         }
 
-        private static bool IsNumeric(string? dataTypeString)
+        private WorkbookPart InitializeWorkbook(SpreadsheetDocument document)
         {
-            return dataTypeString == "System.Byte"
-                || dataTypeString == "System.Int16"
-                || dataTypeString == "System.Int32"
-                || dataTypeString == "System.Int64"
-                || dataTypeString == "System.Int128"
-                || dataTypeString == "System.UInt16"
-                || dataTypeString == "System.UInt32"
-                || dataTypeString == "System.UInt64"
-                || dataTypeString == "System.UInt128";
+            // https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/working-with-sheets?tabs=cs
+            var workbookPart = document.AddWorkbookPart();
+            workbookPart.Workbook = new Workbook();
+
+            _sharedStringTablePart = null;
+            if (workbookPart.GetPartsOfType<SharedStringTablePart>().Any())
+            {
+                _sharedStringTablePart = workbookPart.GetPartsOfType<SharedStringTablePart>().First();
+            }
+            else
+            {
+                _sharedStringTablePart = workbookPart.AddNewPart<SharedStringTablePart>();
+            }
+
+            // for formatting dates => https://stackoverflow.com/a/31874753
+            var workbookStylesPart = workbookPart.AddNewPart<WorkbookStylesPart>();
+            workbookStylesPart.Stylesheet = new Stylesheet
+            {
+                CellStyleFormats = new CellStyleFormats(new CellFormat()),
+                Borders = new Borders(new Border()),
+                Fills = new Fills(new Fill()),
+                Fonts = new Fonts(new Font()),
+                CellFormats = new CellFormats
+                (
+                    new CellFormat(), // default: index 0
+                    new CellFormat    // dates: index 1 (DateStyleIndex)
+                    {
+                        NumberFormatId = DateNumberFormatId,
+                        ApplyNumberFormat = true
+                    }
+                )
+            };
+
+            return workbookPart;
+        }
+
+        private void ConfigureCellValue(Cell cell, Type? type, object? value)
+        {
+            type ??= typeof(string);
+            if (value == null || DBNull.Value.Equals(value))
+            {
+                ConfigureCellValue(cell, null);
+                return;
+            }
+            if (typeof(bool).Equals(type))
+            {
+                ConfigureCellValue(cell, (bool)value);
+                return;
+            }
+            if (typeof(DateTime).Equals(type))
+            {
+                ConfigureCellValue(cell, (DateTime)value);
+                return;
+            }
+            if (typeof(DateTimeOffset).Equals(type))
+            {
+                ConfigureCellValue(cell, (DateTimeOffset)value);
+                return;
+            }
+            if (typeof(byte).Equals(type))
+            {
+                ConfigureCellValue(cell, (byte)value);
+                return;
+            }
+            if (typeof(short).Equals(type))
+            {
+                ConfigureCellValue(cell, (short)value);
+                return;
+            }
+            if (typeof(ushort).Equals(type))
+            {
+                ConfigureCellValue(cell, (ushort)value);
+                return;
+            }
+            if (typeof(int).Equals(type))
+            {
+                ConfigureCellValue(cell, (int)value);
+                return;
+            }
+            if (typeof(uint).Equals(type))
+            {
+                ConfigureCellValue(cell, (uint)value);
+                return;
+            }
+            if (typeof(long).Equals(type))
+            {
+                ConfigureCellValue(cell, (long)value);
+                return;
+            }
+            if (typeof(ulong).Equals(type))
+            {
+                ConfigureCellValue(cell, (ulong)value);
+                return;
+            }
+            if (typeof(Int128).Equals(type))
+            {
+                ConfigureCellValue(cell, (Int128)value);
+                return;
+            }
+            if (typeof(UInt128).Equals(type))
+            {
+                ConfigureCellValue(cell, (UInt128)value);
+                return;
+            }
+            if (typeof(decimal).Equals(type))
+            {
+                ConfigureCellValue(cell, (decimal)value);
+                return;
+            }
+            if (typeof(double).Equals(type))
+            {
+                ConfigureCellValue(cell, (double)value);
+                return;
+            }
+            if (typeof(float).Equals(type))
+            {
+                ConfigureCellValue(cell, (float)value);
+                return;
+            }
+            // handle everything else as string
+            ConfigureCellValue(cell, value?.ToString());
+        }
+
+        private void ConfigureCellValue(Cell cell, string? value)
+        {
+            var sharedStringIndex = InsertSharedStringItem(value?.ToString() ?? string.Empty);
+            cell.CellValue = new CellValue(sharedStringIndex.ToString());
+            cell.DataType = new EnumValue<CellValues>(CellValues.SharedString);
+        }
+
+        private static void ConfigureCellValue(Cell cell, bool value)
+        {
+            cell.CellValue = new CellValue(value);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Boolean);
+        }
+
+        private static void ConfigureCellValue(Cell cell, DateTime value)
+        {
+            cell.CellValue = new CellValue(value);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Date);
+            cell.StyleIndex = DateStyleIndex;
+        }
+
+        private static void ConfigureCellValue(Cell cell, DateTimeOffset value)
+        {
+            cell.CellValue = new CellValue(value);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Date);
+            cell.StyleIndex = DateStyleIndex;
+        }
+
+        private static void ConfigureCellValue(Cell cell, byte value)
+        {
+            cell.CellValue = new CellValue(value);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, short value)
+        {
+            cell.CellValue = new CellValue(value);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, ushort value)
+        {
+            cell.CellValue = new CellValue(value);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, int value)
+        {
+            cell.CellValue = new CellValue(value);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, uint value)
+        {
+            cell.CellValue = new CellValue(value.ToString());
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, long value)
+        {
+            cell.CellValue = new CellValue(value.ToString());
+            cell.DataType = new EnumValue<CellValues>(value > MaxIntegralValuePreservingPrecision || value < -MaxIntegralValuePreservingPrecision ? CellValues.String : CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, ulong value)
+        {
+            cell.CellValue = new CellValue(value.ToString());
+            cell.DataType = new EnumValue<CellValues>(value > MaxIntegralValuePreservingPrecision ? CellValues.String : CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, Int128 value)
+        {
+            cell.CellValue = new CellValue(value.ToString());
+            cell.DataType = new EnumValue<CellValues>(value > MaxIntegralValuePreservingPrecision || value < -MaxIntegralValuePreservingPrecision ? CellValues.String : CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, UInt128 value)
+        {
+            cell.CellValue = new CellValue(value.ToString());
+            cell.DataType = new EnumValue<CellValues>(value > MaxIntegralValuePreservingPrecision ? CellValues.String : CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, decimal value)
+        {
+            cell.CellValue = new CellValue(value);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, double value)
+        {
+            cell.CellValue = new CellValue(value);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+        }
+
+        private static void ConfigureCellValue(Cell cell, float value)
+        {
+            cell.CellValue = new CellValue(value);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using ExportExcel;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 using System.Text;
 
 var builder = new ConfigurationBuilder();
@@ -12,8 +13,7 @@ var configQueries = config.GetSection("Queries").GetChildren().ToArray().Select(
 var commandTextBuilder = new StringBuilder();
 foreach (var configQuery in configQueries)
 {
-    commandTextBuilder.Append(configQuery.Value);
-    commandTextBuilder.AppendLine(";");
+    commandTextBuilder.Append(configQuery.Value).AppendLine(";");
 }
 
 var worksheetNames = configQueries.Select(x => x.Name).ToArray();
@@ -32,6 +32,25 @@ foreach (var configParameter in configParameters)
 }
 using var reader = await command.ExecuteReaderAsync();
 
-var filename = $"{config["ExportFileNamePrefix"]}-{DateTime.UtcNow:yyyyMMdd-HHmmss}.xlsx";
-var excelFile = new ExcelFile(filename);
+var directory = config["Export:Directory"];
+var prefix = config["Export:FileNamePrefix"];
+var filename = $"{DateTime.UtcNow:yyyyMMdd-HHmmss}.xlsx";
+if (!string.IsNullOrEmpty(prefix))
+{
+    filename = $"{prefix}-{filename}";
+}
+var path = filename;
+if (!string.IsNullOrEmpty(directory))
+{
+    path = Path.Combine(directory, filename);
+    if (!Directory.Exists(directory))
+    {
+        Directory.CreateDirectory(directory);
+    }
+}
+var excelFile = new ExcelFile(path);
+var stopwatch = new Stopwatch();
+stopwatch.Start();
 await excelFile.Create(reader, worksheetNames);
+stopwatch.Stop();
+Console.WriteLine($"Excel file generated in {stopwatch.Elapsed.TotalMilliseconds}ms");
