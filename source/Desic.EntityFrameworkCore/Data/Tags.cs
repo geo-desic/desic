@@ -14,7 +14,7 @@ namespace Desic.EntityFrameworkCore.Data
         internal static IList<Tag> Generate()
         {
             var tagSystem = Get(SystemTag.System);
-            return _systemTags.Select(x => new Tag
+            return [.. _systemTags.Select(x => new Tag
             {
                 Id = x.Value.Id,
                 CreatedByTypeId = _entityTypeTag.Id,
@@ -22,7 +22,7 @@ namespace Desic.EntityFrameworkCore.Data
                 ModifiedByTypeId = _entityTypeTag.Id,
                 ModifiedById = tagSystem.Id,
                 Name = x.Value.Name,
-            }).ToList();
+            })];
         }
 
         internal static ReadOnlyTag Get(SystemTag systemTag)
@@ -37,7 +37,7 @@ namespace Desic.EntityFrameworkCore.Data
         {
             var result = new SortedList<SystemTag, ReadOnlyTag>();
             var entityTypeTagIdString = _entityTypeTag.Id.ToString();
-            foreach (var value in (SystemTag[])Enum.GetValues(typeof(SystemTag)))
+            foreach (var value in Enum.GetValues<SystemTag>())
             {
                 var integerIdString = $"{(int)value}";
                 var guidString = entityTypeTagIdString[..^integerIdString.Length] + integerIdString;

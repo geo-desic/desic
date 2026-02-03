@@ -22,7 +22,7 @@ namespace ExportExcel
             using var document = SpreadsheetDocument.Create(_filePath, SpreadsheetDocumentType.Workbook);
             var workbookPart = InitializeWorkbook(document);
 
-            var sheets = workbookPart.Workbook.AppendChild(new Sheets());
+            var sheets = workbookPart.Workbook!.AppendChild(new Sheets());
 
             var nextResult = true;
             var resultSetIndex = 0u;

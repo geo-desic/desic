@@ -29,14 +29,14 @@ namespace Desic.Api.HealthChecks
             {
                 OverallStatus = healthReport.Status,
                 TotalDurationMilliseconds = (long)healthReport.TotalDuration.TotalMilliseconds,
-                Entries = healthReport.Entries.Select(e => new Dtos.HealthChecks.HealthReportEntry
+                Entries = [.. healthReport.Entries.Select(e => new Dtos.HealthChecks.HealthReportEntry
                 {
                     Data = e.Value.Data,
                     DurationMilliseconds = (long)e.Value.Duration.TotalMilliseconds,
                     Name = e.Key,
                     Status = e.Value.Status,
                     Tags = e.Value.Tags,
-                }).ToList(),
+                })],
             };
 
             return context.Response.WriteAsync(JsonSerializer.Serialize(result, options: _jsonSerializerOptions));
