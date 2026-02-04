@@ -34,6 +34,7 @@ namespace Desic.EntityFrameworkCore.Users.Commands
             user.IsHidden = false;
 
             await _desicContext.Users.AddAsync(user, cancellationToken);
+            await _desicContext.SaveChangesAsync(cancellationToken);
             _desicContext.Entry(user).State = EntityState.Detached;
 
             return user.Id;
