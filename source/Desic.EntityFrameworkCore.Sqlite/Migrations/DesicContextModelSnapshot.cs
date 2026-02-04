@@ -17,7 +17,7 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("app")
-                .HasAnnotation("ProductVersion", "8.0.2");
+                .HasAnnotation("ProductVersion", "10.0.2");
 
             modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.EntityType", b =>
                 {
