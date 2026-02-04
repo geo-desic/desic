@@ -4,11 +4,12 @@ namespace Desic.EntityFrameworkCore.Data.Test
 {
     internal static class Users
     {
-        private const int SeedDataCount = 10;
-        internal static IList<User> Generate(int count = SeedDataCount)
+        private const int DefaultDataCount = 10;
+        private const int RandomSeed = 1;
+        internal static IList<User> Generate(int count = DefaultDataCount)
         {
             var result = new List<User>();
-            var random = new Random();
+            var random = new Random(RandomSeed);
             var isActive = true;
             var entityTypeTag = EntityTypes.Get(Enums.EntityType.Tag);
             var entityTypeUserIdString = EntityTypes.Get(Enums.EntityType.User).Id.ToString();
@@ -21,12 +22,10 @@ namespace Desic.EntityFrameworkCore.Data.Test
                 var sequentialId = i + 1;
                 var sequentialIdString = $"{sequentialId}";
                 var guidString = entityTypeUserIdString[..^sequentialIdString.Length] + sequentialIdString;
-                isActive = !isActive;
                 var isHidden = !isActive && i % 3 == 0;
                 result.Add(new User
                 {
                     Id = new Guid(guidString),
-                    //SequentialId = sequentialId,
                     CreatedOn = createdOn,
                     CreatedById = tagSystem.Id,
                     CreatedByTypeId = entityTypeTag.Id,
@@ -37,6 +36,7 @@ namespace Desic.EntityFrameworkCore.Data.Test
                     IsActive = isActive,
                     IsHidden = isHidden,
                 });
+                isActive = !isActive;
             }
             return result;
         }

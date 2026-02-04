@@ -1,7 +1,9 @@
 using Desic.Api.BackgroundServices;
+using Desic.Business.Users.Validators;
 using Desic.Api.Db;
 using Desic.Api.HealthChecks;
 using Desic.EntityFrameworkCore.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
@@ -32,6 +34,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies([typeof(Desic.Business.Marker).Assembly, typeof(Desic.EntityFrameworkCore.Marker).Assembly]));
+builder.Services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
 
 var app = builder.Build();
 
