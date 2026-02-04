@@ -31,7 +31,7 @@
     },
     "Docker": {
       "commandName": "Docker",
-      "commandLineArgs": "DbProvider=Sqlite",
+      "commandLineArgs": "DbProvider=SqlServer",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "environmentVariables": {

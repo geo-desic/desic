@@ -1,0 +1,30 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    container_name: sqlserver_container
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "4be55771-1b77-41ef-9a98-6c5d1774fbf9"
+      MSSQL_PID: "Developer"
+    volumes:
+      # Persist data outside the container
+      - sqlserver_data:/var/opt/mssql
+
+  desic.api:
+    image: ${DOCKER_REGISTRY-}desicapi
+    build:
+      context: .
+      dockerfile: source/Desic.Api/Dockerfile
+    depends_on:
+      - sqlserver
+    environment:
+      ConnectionString:Sqlite: "Data Source=/app/data/desic.db;"
+      ConnectionStrings:SqlServer: "Server=sqlserver;Database=Desic;User Id=sa;Password=4be55771-1b77-41ef-9a98-6c5d1774fbf9;TrustServerCertificate=True"
+    volumes:
+      - sqlite_data:/app/data
+
+volumes:
+  sqlite_data:
+  sqlserver_data:
