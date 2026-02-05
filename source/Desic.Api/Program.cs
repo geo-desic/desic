@@ -14,20 +14,21 @@ using var loggerFactory = LoggerFactory.Create(loggingBuilder =>
     loggingBuilder.AddDebug();
 });
 
-ILogger logger = loggerFactory.CreateLogger("BeforeAppBuild");
+ILogger logger = loggerFactory.CreateLogger("BeforeAppBuilt");
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
-logger.LogDebug("Starting configuration of web application builder services");
+var dbProvider = config.GetValue("DbProvider", Providers.SqlServer.Name)!;
+logger.LogInformation("Database provider determined from configuration: {dbProvider}", dbProvider);
 
-// Add services to the container.
+logger.LogInformation("Starting configuration of the web application builder");
+
 builder.Services.AddDbContext<DesicContext>(options =>
 {
-    Providers.Configure(config, options, logger);
+    Providers.Configure(config, options, dbProvider);
     if (config.GetValue("DesicContext:EnableSensitiveDataLogging", false))
     {
-        logger.LogWarning("Enabling sensitive data logging");
         options.EnableSensitiveDataLogging();
     }
 });
@@ -48,40 +49,51 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies([typeof(Desic.Business.Marker).Assembly, typeof(Desic.EntityFrameworkCore.Marker).Assembly]));
 builder.Services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
 
+logger.LogInformation("Completed configuration of the web application builder");
+
 var app = builder.Build();
 
-logger.LogDebug("Completed configuration of web application builder services");
+app.Logger.LogInformation("Built the web application");
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+var isDevelopment = app.Environment.IsDevelopment();
+app.Logger.LogInformation("Application environment: {appEnvironment}", app.Environment);
+app.Logger.LogInformation("Application is development: {appIsDevelopment}", isDevelopment);
+
+if (isDevelopment)
 {
-    logger.LogWarning("Configuring the app for swagger support");
+    app.Logger.LogInformation("Configuring the app for swagger support");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.Logger.LogInformation("Configuring the app to use https redirection");
 app.UseHttpsRedirection();
 
+app.Logger.LogInformation("Configuring the app to use authorization");
 app.UseAuthorization();
 
-logger.LogDebug("Adding v1/healthz/ endpoints");
-
-app.MapHealthChecks("v1/healthz/live", new HealthCheckOptions
+var endpoint = "v1/healthz/live";
+app.Logger.LogInformation($"Configuring the endpoint: {endpoint}");
+app.MapHealthChecks(endpoint, new HealthCheckOptions
 {
     Predicate = _ => false
 });
 
-app.MapHealthChecks("v1/healthz/ready", new HealthCheckOptions
+endpoint = "v1/healthz/ready";
+app.Logger.LogInformation($"Configuring the endpoint: {endpoint}");
+app.MapHealthChecks(endpoint, new HealthCheckOptions
 {
     Predicate = healthCheck => healthCheck.Tags.Contains("ready")
 });
 
-app.MapHealthChecks("v1/healthz/report", new HealthCheckOptions
+endpoint = "v1/healthz/report";
+app.Logger.LogInformation($"Configuring the endpoint: {endpoint}");
+app.MapHealthChecks(endpoint, new HealthCheckOptions
 {
     ResponseWriter = ResponseWriter.Write
 });
 
-logger.LogDebug("Mapping app controllers");
+app.Logger.LogInformation("Configuring the app to use controllers");
 app.MapControllers();
 
 app.Run();

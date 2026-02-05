@@ -31,7 +31,7 @@ namespace Desic.Api.Controllers.V1
 
             if (result == null)
             {
-                _logger.LogWarning(LogEvents.UsersGetNotFound, "User with id {id} not found", id);
+                _logger.LogInformation(LogEvents.UsersGetNotFound, "User with id {id} not found", id);
                 return NotFound();
             }
             return Ok(result);
