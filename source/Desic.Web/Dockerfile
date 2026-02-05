@@ -1,23 +1,19 @@
-FROM node:25-slim AS development
+FROM node:25-slim
 
 WORKDIR /app
 
-# Set non-root user for security (included in node image)
-#RUN chown -R node:node /app
-
 COPY package*.json ./
-#COPY --chown=node:node package*.json ./
 
-RUN ls -F ./
-
-RUN npm install
+RUN npm ci
 
 # Copy source files (excluding those in .dockerignore)
-#COPY --chown=node:node . .
+COPY . .
 
 EXPOSE 56054
 
+# Set non-root user for security (included in node image)
+RUN chown -R node:node /app
 # Use non-root user
-#USER node
+USER node
 
 CMD ["npm", "run", "dev"]
