@@ -22,8 +22,22 @@ services:
     environment:
       ConnectionString:Sqlite: "Data Source=/app/data/desic.db;"
       ConnectionStrings:SqlServer: "Server=sqlserver;Database=Desic;User Id=sa;Password=4be55771-1b77-41ef-9a98-6c5d1774fbf9;TrustServerCertificate=True"
+      DbProvider: "SqlServer"
     volumes:
       - sqlite_data:/app/data
+
+  desic.web:
+    image: ${DOCKER_REGISTRY-}desicweb
+    build:
+      context: source/Desic.Web
+      dockerfile: Dockerfile
+    depends_on:
+      - desic.api
+    ports:
+      - "56054:56054"
+    volumes:
+      - ./source/Desic.Web:/app # mounts local project directory to the container's working directory
+      - /app/node_modules # creates an anonymous volume to prevent host's node_modules from overwriting container's
 
 volumes:
   sqlite_data:
