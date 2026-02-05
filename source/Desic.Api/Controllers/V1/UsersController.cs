@@ -22,20 +22,21 @@ namespace Desic.Api.Controllers.V1
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<User>> Get([FromRoute] Guid id)
         {
-            using var loggerScope = _logger.BeginScope(new List<KeyValuePair<string, object?>> { { new("activityId", System.Diagnostics.Activity.Current?.Id) }, { new("endpointType", "UserGet") }, { new("userId", id) } });
-            _logger.LogInformation(LogEvents.UsersGet, "Get({id})", id);
+            //using var loggerScope = _logger.BeginScope(new Dictionary<string, object?> { ["activityId"] = System.Diagnostics.Activity.Current?.Id, ["userId"] = id, });
+            using var loggerScope1 = _logger.BeginScope("ActivityId:{activityId}", System.Diagnostics.Activity.Current?.Id);
+            using var loggerScope2 = _logger.BeginScope("UserId:{userId}", id);
+
+            _logger.LogInformation(LogEvents.UserGet, "Get({id})", id);
 
             var request = new GetUserByIdRequest { UserId = id };
-            _logger.LogTrace("Invoking {requestType}: {@request}", nameof(GetUserByIdRequest), request);
-            _logger.LogDebug("Invoking {requestType}", nameof(GetUserByIdRequest));
             var result = await _mediator.Send(request);
 
-            if (result == null)
+            if (result.IsFailed)
             {
-                _logger.LogInformation(LogEvents.UsersGetNotFound, "User with id {id} not found", id);
+                _logger.LogInformation(LogEvents.UserGet, "User with id {id} not found", id);
                 return NotFound();
             }
-            return Ok(result.ToDto());
+            return Ok(result.Value.ToDto());
         }
 
         [HttpPost]
@@ -46,24 +47,28 @@ namespace Desic.Api.Controllers.V1
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<User>> Create([FromBody] UserCreate user, [FromHeader(Name = "Prefer")] string? preferHeaderValue)
         {
-            using var loggerScope = _logger.BeginScope(new List<KeyValuePair<string, object?>> { { new("activityId", System.Diagnostics.Activity.Current?.Id) }, { new("endpointType", "UserCreate") }, { new("username", user.Username) } });
-            _logger.LogInformation(LogEvents.UsersCreate, "Create(user, {preferHeaderValue})", preferHeaderValue);
-            _logger.LogTrace(LogEvents.UsersCreate, "{@user}", user);
+            //using var loggerScope = _logger.BeginScope(new Dictionary<string, object?> { ["activityId"] = System.Diagnostics.Activity.Current?.Id, ["username"] = user.Username, });
+            using var loggerScope1 = _logger.BeginScope("ActivityId:{activityId}", System.Diagnostics.Activity.Current?.Id);
+            using var loggerScope2 = _logger.BeginScope("Username:{username}", user.Username);
+
+            _logger.LogInformation(LogEvents.UserCreate, "Create(user, {preferHeaderValue})", preferHeaderValue);
 
             var request = new CreateUserRequest { User = user.ToBusinessModel(), ReturnResult = "return=representation".Equals(preferHeaderValue, StringComparison.OrdinalIgnoreCase) };
-            _logger.LogTrace("Invoking {requestType}: {@request}", nameof(CreateUserRequest), request);
-            _logger.LogDebug("Invoking {requestType}", nameof(CreateUserRequest));
             var resultCreate = await _mediator.Send(request);
             if (resultCreate.IsFailed)
             {
                 return BadRequest(resultCreate.ToProblemDetails());
             }
+            var userBusiness = resultCreate.Value;
+            _logger.LogDebug(LogEvents.UserCreate, "Adding 'Entity-Id' response header with value {entityId}", userBusiness.Id);
+            HttpContext.Response.Headers.Append("Entity-Id", userBusiness.Id.ToString()); // always attach this header on success regardless of prefer header value
             if (request.ReturnResult)
             {
-                _logger.LogInformation(LogEvents.UsersCreate, "Returning status code {statusCode} and created user in response", StatusCodes.Status201Created);
-                var userResult = resultCreate.Value.ToDto();
+                _logger.LogDebug(LogEvents.UserCreate, "Returning status code {statusCode} and created user", StatusCodes.Status201Created);
+                var userResult = userBusiness.ToDto();
                 return CreatedAtAction(nameof(Get), new { id = userResult.Id }, userResult);
             }
+            _logger.LogDebug(LogEvents.UserCreate, "Returning status code {statusCode}", StatusCodes.Status204NoContent);
             return NoContent();
         }
     }

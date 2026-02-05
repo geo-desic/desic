@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Desic.Business\Desic.Business.csproj" />
+    <ProjectReference Include="..\Desic.Core\Desic.Core.csproj" />
     <ProjectReference Include="..\Desic.EntityFrameworkCore.Sqlite\Desic.EntityFrameworkCore.Sqlite.csproj" />
     <ProjectReference Include="..\Desic.EntityFrameworkCore.SqlServer\Desic.EntityFrameworkCore.SqlServer.csproj" />
     <ProjectReference Include="..\Desic.EntityFrameworkCore\Desic.EntityFrameworkCore.csproj" />

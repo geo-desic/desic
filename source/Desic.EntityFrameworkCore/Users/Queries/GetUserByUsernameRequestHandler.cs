@@ -13,10 +13,6 @@ namespace Desic.EntityFrameworkCore.Users.Queries
 
         public async Task<User?> Handle(GetUserByUsernameRequest request, CancellationToken cancellationToken)
         {
-            using var loggerScope = _logger.BeginScope(new List<KeyValuePair<string, object?>> { { new("handlerType", nameof(GetUserByUsernameRequestHandler)) }, { new("requestUsername", request.Username) } });
-            _logger.LogTrace("Handling {requestType}: {@request}", nameof(GetUserByUsernameRequest), request);
-            _logger.LogDebug("Handling {requestType}", nameof(GetUserByUsernameRequest));
-
             return await _desicContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Username == request.Username, cancellationToken);
         }
 

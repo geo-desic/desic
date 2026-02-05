@@ -13,10 +13,6 @@ namespace Desic.EntityFrameworkCore.Users.Commands
 
         public async Task<Guid> Handle(CreateUserRequest request, CancellationToken cancellationToken)
         {
-            using var loggerScope = _logger.BeginScope(new List<KeyValuePair<string, object>> { { new("handlerType", nameof(CreateUserRequestHandler)) }, { new("requestUsername", request.User.Username) } });
-            _logger.LogTrace("Handling {requestType}: {@request}", nameof(CreateUserRequest), request);
-            _logger.LogDebug("Handling {requestType}", nameof(CreateUserRequest));
-
             // change later to user who created this user
             var entityTypeTag = EntityTypes.Get(Enums.EntityType.Tag);
             var tagSystem = Tags.Get(Enums.SystemTag.System);

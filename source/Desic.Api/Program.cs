@@ -2,6 +2,7 @@ using Desic.Api.BackgroundServices;
 using Desic.Api.Db;
 using Desic.Api.HealthChecks;
 using Desic.Business.Users.Validators;
+using Desic.Core.Mediator;
 using Desic.EntityFrameworkCore.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -46,7 +47,11 @@ builder.Services.AddHealthChecks()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies([typeof(Desic.Business.Marker).Assembly, typeof(Desic.EntityFrameworkCore.Marker).Assembly]));
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblies([typeof(Desic.Business.Marker).Assembly, typeof(Desic.EntityFrameworkCore.Marker).Assembly]);
+    cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
+});
 builder.Services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
 
 logger.LogInformation("Completed configuration of the web application builder");
@@ -56,7 +61,7 @@ var app = builder.Build();
 app.Logger.LogInformation("Built the web application");
 
 var isDevelopment = app.Environment.IsDevelopment();
-app.Logger.LogInformation("Application environment: {appEnvironment}", app.Environment);
+app.Logger.LogInformation("Application environment: {appEnvironmentName}", app.Environment.EnvironmentName);
 app.Logger.LogInformation("Application is development: {appIsDevelopment}", isDevelopment);
 
 if (isDevelopment)

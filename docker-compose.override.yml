@@ -22,8 +22,8 @@ services:
       - ConnectionStrings:SqlServer=Server=sqlserver;Database=Desic;User Id=sa;Password=4be55771-1b77-41ef-9a98-6c5d1774fbf9;TrustServerCertificate=True
       - DbProvider=SqlServer
     ports:
-      - "8080"
-      - "8081"
+      - "8080:8080"
+      - "8081:8081"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

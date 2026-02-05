@@ -15,6 +15,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["source/Desic.Api/Desic.Api.csproj", "source/Desic.Api/"]
 COPY ["source/Desic.Business/Desic.Business.csproj", "source/Desic.Business/"]
+COPY ["source/Desic.Core/Desic.Core.csproj", "source/Desic.Core/"]
 COPY ["source/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "source/Desic.EntityFrameworkCore/"]
 COPY ["source/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj", "source/Desic.EntityFrameworkCore.Sqlite/"]
 COPY ["source/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj", "source/Desic.EntityFrameworkCore.SqlServer/"]
