@@ -36,7 +36,7 @@ namespace Desic.Business.Users
             if (user != null)
             {
                 _logger.LogInformation("A user with username {username} already exists: id = {id}", user.Username, user.Id);
-                return Result.Fail($"A user with username '{user.Username}' alrady exists");
+                return Result.Fail($"A user with username '{user.Username}' already exists");
             }
 
             user = new EntityFrameworkCore.Entities.User { Username = request.User.Username! };
