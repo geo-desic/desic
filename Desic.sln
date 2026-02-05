@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExportExcel", "source\Expor
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "desic.web", "source\Desic.Web\desic.web.esproj", "{34F70EF6-3E41-018E-F908-2FC1D0AEC9BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,12 @@ Global
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34F70EF6-3E41-018E-F908-2FC1D0AEC9BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34F70EF6-3E41-018E-F908-2FC1D0AEC9BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34F70EF6-3E41-018E-F908-2FC1D0AEC9BB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{34F70EF6-3E41-018E-F908-2FC1D0AEC9BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34F70EF6-3E41-018E-F908-2FC1D0AEC9BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34F70EF6-3E41-018E-F908-2FC1D0AEC9BB}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +84,7 @@ Global
 		{041A5007-EC2D-48F0-BD05-CB7B6AE8FF79} = {08836AD0-2EB2-4332-8915-92BEC19F63E7}
 		{E5D95281-C3C7-4701-98BD-D6A02DC5CEEF} = {6B51A4A2-F505-4342-8A18-9F38BE78C360}
 		{77D14304-8876-4769-83F0-6B7C50AFCE95} = {6B51A4A2-F505-4342-8A18-9F38BE78C360}
+		{34F70EF6-3E41-018E-F908-2FC1D0AEC9BB} = {6B51A4A2-F505-4342-8A18-9F38BE78C360}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5794C7B4-61C9-4C2E-A0BD-08C2BC358877}
