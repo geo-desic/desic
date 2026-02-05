@@ -1,7 +1,8 @@
 ﻿using Desic.Api.Controllers.V1;
+using Desic.Api.Dtos.Users;
 using Desic.Business.Users;
-using Desic.Business.Users.Models;
 using FluentAssertions;
+using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ namespace Desic.Api.Tests.Controllers
         public async Task Get_UserDoesNotExist_Status404NotFound()
         {
             // arrange
-            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync((User?)null);
+            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(Result.Fail($"User with id {_id} not found"));
             var controller = NewUsersController();
 
             // act
@@ -40,9 +41,10 @@ namespace Desic.Api.Tests.Controllers
         public async Task Get_UserExistsAndAuthorizedToAccess_Status200OK()
         {
             // arrange
-            var expectedUser = NewUser();
-            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(expectedUser);
+            var userBusiness = NewUserBusiness();
+            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(Result.Ok(userBusiness));
             var controller = NewUsersController();
+            var userExpected = ExpectedUserDto(userBusiness);
 
             // act
             var result = (await controller.Get(_id))?.Result as OkObjectResult;
@@ -50,7 +52,7 @@ namespace Desic.Api.Tests.Controllers
             // assert
             result.Should().NotBeNull();
             result?.StatusCode.Should().Be(200);
-            result?.Value.Should().BeSameAs(expectedUser);
+            result?.Value.Should().BeEquivalentTo(userExpected);
         }
 
         private UsersController NewUsersController(ILogger<UsersController>? logger = null, Mock<IMediator>? mediator = null)
@@ -60,9 +62,18 @@ namespace Desic.Api.Tests.Controllers
             return new UsersController(logger: logger, mediator: mediator.Object);
         }
 
-        private static User NewUser(Guid id = new())
+        private static User ExpectedUserDto(Business.Users.Models.User user)
         {
             return new User
+            {
+                Id = user.Id,
+                Username = user.Username,
+            };
+        }
+
+        private static Business.Users.Models.User NewUserBusiness(Guid id = new())
+        {
+            return new Business.Users.Models.User
             {
                 Id = id,
                 Username = "username",
