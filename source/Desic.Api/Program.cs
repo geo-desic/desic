@@ -5,8 +5,10 @@ using Desic.Business.Users.Validators;
 using Desic.Core.Mediator;
 using Desic.EntityFrameworkCore.Models;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Identity.Web;
 
 using var loggerFactory = LoggerFactory.Create(loggingBuilder =>
 {
@@ -24,6 +26,9 @@ var dbProvider = config.GetValue("DbProvider", Providers.SqlServer.Name)!;
 logger.LogInformation("Database provider determined from configuration: {dbProvider}", dbProvider);
 
 logger.LogInformation("Starting configuration of the web application builder");
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 builder.Services.AddDbContext<DesicContext>(options =>
 {
@@ -73,6 +78,9 @@ if (isDevelopment)
 
 app.Logger.LogInformation("Configuring the app to use https redirection");
 app.UseHttpsRedirection();
+
+app.Logger.LogInformation("Configuring the app to use authentication");
+app.UseAuthentication();
 
 app.Logger.LogInformation("Configuring the app to use authorization");
 app.UseAuthorization();
