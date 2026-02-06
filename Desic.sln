@@ -29,6 +29,11 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "desic.web", "source\Desic.W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desic.Core", "source\Desic.Core\Desic.Core.csproj", "{299C0F05-A09C-499C-8C0F-86DAAF2F5E0F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{FE18FCC0-69DF-4EEA-8BF1-7B9CC107621C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
