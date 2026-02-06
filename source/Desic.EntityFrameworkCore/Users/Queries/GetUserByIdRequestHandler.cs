@@ -1,6 +1,6 @@
-﻿using Desic.EntityFrameworkCore.Entities;
+﻿using Desic.Core.Mediator;
+using Desic.EntityFrameworkCore.Entities;
 using Desic.EntityFrameworkCore.Models;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

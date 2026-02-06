@@ -3,7 +3,7 @@ using Desic.Api.Logging;
 using Desic.Api.Mappings;
 using Desic.Api.Results;
 using Desic.Business.Users;
-using MediatR;
+using Desic.Core.Mediator;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Desic.Api.Controllers.V1
