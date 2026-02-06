@@ -2,7 +2,7 @@ using Desic.Api.BackgroundServices;
 using Desic.Api.Db;
 using Desic.Api.HealthChecks;
 using Desic.Business.Users.Validators;
-using Desic.Core.Mediator.Entities;
+using Desic.Core.Mediator;
 using Desic.EntityFrameworkCore.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;

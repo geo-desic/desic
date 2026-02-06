@@ -29,6 +29,7 @@
     <ProjectReference Include="..\Desic.EntityFrameworkCore.Sqlite\Desic.EntityFrameworkCore.Sqlite.csproj" />
     <ProjectReference Include="..\Desic.EntityFrameworkCore.SqlServer\Desic.EntityFrameworkCore.SqlServer.csproj" />
     <ProjectReference Include="..\Desic.EntityFrameworkCore\Desic.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\MediatR\MediatR.csproj" />
   </ItemGroup>
 
 </Project>

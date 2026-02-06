@@ -1,0 +1,1 @@
+Copied from nuget MediatR package [v12.5.0](https://github.com/LuckyPennySoftware/MediatR/blob/v12.5.0) preserving its [license](https://github.com/LuckyPennySoftware/MediatR/blob/v12.5.0/LICENSE)

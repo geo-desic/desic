@@ -1,6 +1,6 @@
 ﻿using Desic.Business.Users.Models;
-using Desic.Core.Mediator;
 using FluentResults;
+using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Business.Users

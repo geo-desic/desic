@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -27,7 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\source\Desic.Api\Desic.Api.csproj" />
     <ProjectReference Include="..\..\source\Desic.Business\Desic.Business.csproj" />
-    <ProjectReference Include="..\..\source\Desic.Core\Desic.Core.csproj" />
+    <ProjectReference Include="..\..\source\MediatR\MediatR.csproj" />
   </ItemGroup>
 
   <ItemGroup>

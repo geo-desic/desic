@@ -1,9 +1,9 @@
 ﻿using Desic.Api.Controllers.V1;
 using Desic.Api.Dtos.Users;
 using Desic.Business.Users;
-using Desic.Core.Mediator;
 using FluentAssertions;
 using FluentResults;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;

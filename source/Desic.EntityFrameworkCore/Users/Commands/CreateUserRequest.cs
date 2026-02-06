@@ -1,5 +1,5 @@
-﻿using Desic.Core.Mediator;
-using Desic.EntityFrameworkCore.Entities;
+﻿using Desic.EntityFrameworkCore.Entities;
+using MediatR;
 
 namespace Desic.EntityFrameworkCore.Users.Commands
 {

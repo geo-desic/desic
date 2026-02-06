@@ -1,6 +1,6 @@
 ﻿using Desic.Business.Users.Models;
-using Desic.Core.Mediator;
 using FluentResults;
+using MediatR;
 
 namespace Desic.Business.Users
 {

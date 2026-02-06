@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Desic.Core\Desic.Core.csproj" />
     <ProjectReference Include="..\Desic.EntityFrameworkCore\Desic.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\MediatR\MediatR.csproj" />
   </ItemGroup>
 
 </Project>
