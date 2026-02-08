@@ -29,7 +29,7 @@ namespace Desic.Api.BackgroundServices
                 logger.LogWarning("DesicContext initialization is not allowed in non development web application environments");
             }
 
-                _startupHealthCheck.StartupCompleted = true;
+            _startupHealthCheck.StartupCompleted = true;
         }
     }
 }

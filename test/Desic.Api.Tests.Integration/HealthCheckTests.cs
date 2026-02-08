@@ -1,73 +1,73 @@
 ﻿using AwesomeAssertions;
 using Desic.Api.Dtos.HealthChecks;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Desic.Api.Tests.Integration.WebApplication;
+using Desic.Testing.Integration.Core.Db;
+using Desic.Testing.Integration.Core.Http;
+using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Desic.Api.Tests.Integration
+namespace Desic.Api.Tests.Integration;
+
+public class HealthCheckTests : IClassFixture<DesicContextMsSqlContainer>
 {
-    public class HealthCheckTests(CustomWebApplicationFactory<Program> factory) : IntegrationTestClassFixture(factory)
+    private readonly TestWebApplicationFactory<Program> _factory;
+    private readonly HttpClient _httpClient;
+
+    public HealthCheckTests(DesicContextMsSqlContainer container)
     {
-        [Fact]
-        public async Task Live_ValidRequest_Status200OkAndHealthy()
+        _factory = new TestWebApplicationFactory<Program>(container.ConnectionString);
+        _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
+    }
+
+    [Fact]
+    public async Task Live_ValidRequest_Status200OkAndHealthy()
+    {
+        // arrange
+        var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/live");
+
+        // act
+        var response = await _httpClient.SendAsyncAndReadResponseAsString(request);
+
+        // assert
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.Content.Should().Be("Healthy");
+    }
+
+    [Fact]
+    public async Task Ready_ValidRequest_Status200OkAndHealthy()
+    {
+        // arrange
+        var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/ready");
+
+        // act
+        var response = await _httpClient.SendAsyncAndReadResponseAsString(request);
+
+        // assert
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.Content.Should().Be("Healthy");
+    }
+
+    [Fact]
+    public async Task Report_ValidRequest_Status200OkAndHealthy()
+    {
+        // arrange
+        var healthy = Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Healthy;
+        var expected = new HealthReport
         {
-            // act
-            var response = await _client.GetAsync("/v1/healthz/live", TestContext.Current.CancellationToken);
-            var contentString = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-
-            // assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            contentString.Should().Be("Healthy");
-        }
-
-        [Fact]
-        public async Task Ready_ValidRequest_Status200OkAndHealthy()
-        {
-            // act
-            var response = await _client.GetAsync("/v1/healthz/ready", TestContext.Current.CancellationToken);
-            var contentString = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-
-            // assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            contentString.Should().Be("Healthy");
-        }
-
-        [Fact]
-        public async Task Report_ValidRequest_Status200OkAndHealthy()
-        {
-            // arrange
-            var healthy = Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Healthy;
-            var expectedEntries = new HealthReportEntry[]
-            {
+            OverallStatus = healthy,
+            Entries =
+            [
                 new() { Name = "Alive", Status = healthy, Tags = [], Data = new Dictionary<string, object>() },
                 new() { Name = "DesicContext", Status = healthy, Tags = ["ready"], Data = new Dictionary<string, object>() },
                 new() { Name = "Startup", Status = healthy, Tags = ["ready"], Data = new Dictionary<string, object>() },
-            };
+            ]
+        };
+        var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/report");
 
-            // act
-            var response = await _client.GetAsync("/v1/healthz/report", TestContext.Current.CancellationToken);
-            var contentString = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-            var result = JsonDeserialize<HealthReport>(contentString);
+        // act
+        var response = await _httpClient.SendAsyncAndReadResponseAsJson<HealthReport>(request);
 
-            // assert
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-            result.Should().NotBeNull();
-            result.OverallStatus.Should().Be(healthy);
-            result.Entries.Should().BeEquivalentTo(expectedEntries, opt => opt.Excluding(x => x.DurationMilliseconds));
-        }
-
-        private static T? JsonDeserialize<T>(string value)
-        {
-            try
-            {
-                var options = new JsonSerializerOptions
-                {
-                    Converters = { new JsonStringEnumConverter() },
-                    PropertyNameCaseInsensitive = true,
-                };
-                return JsonSerializer.Deserialize<T>(value, options);
-            }
-            catch { }
-            return default;
-        }
+        // assert
+        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.Content.Should().BeEquivalentTo(expected, opt => opt.Excluding(x => x.TotalDurationMilliseconds).For(x => x.Entries).Exclude(x => x.DurationMilliseconds));
     }
 }

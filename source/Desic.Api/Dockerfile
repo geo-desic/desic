@@ -19,6 +19,8 @@ COPY ["source/Desic.Core/Desic.Core.csproj", "source/Desic.Core/"]
 COPY ["source/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "source/Desic.EntityFrameworkCore/"]
 COPY ["source/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj", "source/Desic.EntityFrameworkCore.Sqlite/"]
 COPY ["source/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj", "source/Desic.EntityFrameworkCore.SqlServer/"]
+COPY ["source/MediatR/MediatR.csproj", "source/MediatR/"]
+COPY ["source/MediatR.Contracts/MediatR.Contracts.csproj", "source/MediatR.Contracts/"]
 RUN dotnet restore "./source/Desic.Api/Desic.Api.csproj"
 COPY . .
 WORKDIR "/src/source/Desic.Api"

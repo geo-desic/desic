@@ -5,10 +5,9 @@ using Desic.Business.Users.Validators;
 using Desic.Core.Mediator;
 using Desic.EntityFrameworkCore.Models;
 using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Identity.Web;
 
 using var loggerFactory = LoggerFactory.Create(loggingBuilder =>
 {
@@ -27,8 +26,8 @@ logger.LogInformation("Database provider determined from configuration: {dbProvi
 
 logger.LogInformation("Starting configuration of the web application builder");
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
 builder.Services.AddDbContext<DesicContext>(options =>
 {
@@ -58,6 +57,11 @@ builder.Services.AddMediatR(cfg =>
     cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 builder.Services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
+builder.Services.AddHttpLogging(logging =>
+{
+    logging.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders | HttpLoggingFields.ResponsePropertiesAndHeaders | HttpLoggingFields.Duration;
+    logging.CombineLogs = true;
+});
 
 logger.LogInformation("Completed configuration of the web application builder");
 
@@ -69,6 +73,9 @@ var isDevelopment = app.Environment.IsDevelopment();
 app.Logger.LogInformation("Application environment: {appEnvironmentName}", app.Environment.EnvironmentName);
 app.Logger.LogInformation("Application is development: {appIsDevelopment}", isDevelopment);
 
+app.Logger.LogInformation("Configuring the app to use http logging");
+app.UseHttpLogging();
+
 if (isDevelopment)
 {
     app.Logger.LogInformation("Configuring the app for swagger support");
@@ -79,8 +86,8 @@ if (isDevelopment)
 app.Logger.LogInformation("Configuring the app to use https redirection");
 app.UseHttpsRedirection();
 
-app.Logger.LogInformation("Configuring the app to use authentication");
-app.UseAuthentication();
+//app.Logger.LogInformation("Configuring the app to use authentication");
+//app.UseAuthentication();
 
 app.Logger.LogInformation("Configuring the app to use authorization");
 app.UseAuthorization();

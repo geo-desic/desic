@@ -18,7 +18,7 @@ namespace Desic.Business.Users
             if (request.User == null)
             {
                 _logger.LogDebug("User was not supplied");
-                return Result.Fail("User was not supplied");
+                return Result.Fail<User>("User was not supplied");
             }
             var validationResult = _validator.Validate(request.User);
             if (!validationResult.IsValid)
@@ -32,7 +32,7 @@ namespace Desic.Business.Users
             if (user != null)
             {
                 _logger.LogDebug("A user with username {username} already exists: id = {userId}", user.Username, user.Id);
-                return Result.Fail($"A user with username '{user.Username}' already exists");
+                return Result.Fail<User>($"A user with username '{user.Username}' already exists");
             }
 
             user = new EntityFrameworkCore.Entities.User { Username = request.User.Username! };

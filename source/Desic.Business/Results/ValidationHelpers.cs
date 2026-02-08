@@ -7,7 +7,7 @@ namespace Desic.Business.Results
     {
         internal static Result<T> ToFailResult<T>(this ValidationResult result)
         {
-            return Result.Fail(result.Errors.Select(e => new ValidationResultError(e.ErrorMessage, e.PropertyName, e.Severity.ToString())));
+            return Result.Fail<T>(result.Errors.Select(e => new ValidationResultError(e.ErrorMessage, e.PropertyName, e.Severity.ToString())));
         }
     }
 }

@@ -1,8 +1,8 @@
 using Desic.Api.Dtos.Users;
 using Desic.Api.Logging;
 using Desic.Api.Mappings;
-using Desic.Api.Results;
 using Desic.Business.Users;
+using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,8 +22,6 @@ namespace Desic.Api.Controllers.V1
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<User>> Get([FromRoute] Guid id)
         {
-            //using var loggerScope = _logger.BeginScope(new Dictionary<string, object?> { ["activityId"] = System.Diagnostics.Activity.Current?.Id, ["userId"] = id, });
-            using var loggerScope1 = _logger.BeginScope("ActivityId:{activityId}", System.Diagnostics.Activity.Current?.Id);
             using var loggerScope2 = _logger.BeginScope("UserId:{userId}", id);
 
             _logger.LogInformation(LogEvents.UserGet, "Get({id})", id);
@@ -47,8 +45,6 @@ namespace Desic.Api.Controllers.V1
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<ActionResult<User>> Create([FromBody] UserCreate user, [FromHeader(Name = "Prefer")] string? preferHeaderValue)
         {
-            //using var loggerScope = _logger.BeginScope(new Dictionary<string, object?> { ["activityId"] = System.Diagnostics.Activity.Current?.Id, ["username"] = user.Username, });
-            using var loggerScope1 = _logger.BeginScope("ActivityId:{activityId}", System.Diagnostics.Activity.Current?.Id);
             using var loggerScope2 = _logger.BeginScope("Username:{username}", user.Username);
 
             _logger.LogInformation(LogEvents.UserCreate, "Create(user, {preferHeaderValue})", preferHeaderValue);
@@ -57,7 +53,7 @@ namespace Desic.Api.Controllers.V1
             var resultCreate = await _mediator.Send(request);
             if (resultCreate.IsFailed)
             {
-                return BadRequest(resultCreate.ToProblemDetails());
+                return Problem(resultCreate);
             }
             var userBusiness = resultCreate.Value;
             _logger.LogDebug(LogEvents.UserCreate, "Adding 'Entity-Id' response header with value {entityId}", userBusiness.Id);
@@ -70,6 +66,11 @@ namespace Desic.Api.Controllers.V1
             }
             _logger.LogDebug(LogEvents.UserCreate, "Returning status code {statusCode}", StatusCodes.Status204NoContent);
             return NoContent();
+        }
+
+        protected ObjectResult Problem<T>(Result<T> result)
+        {
+            return Problem(statusCode: 400, detail: "One or more error occurred", extensions: new Dictionary<string, object?> { ["errors"] = result.Errors.Select(e => e.Message) });
         }
     }
 }

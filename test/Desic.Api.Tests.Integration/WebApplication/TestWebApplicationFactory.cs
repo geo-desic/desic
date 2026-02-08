@@ -8,10 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 
-namespace Desic.Api.Tests.Integration;
+namespace Desic.Api.Tests.Integration.WebApplication;
 
-public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
+public class TestWebApplicationFactory<TProgram>(string connectionString) : WebApplicationFactory<TProgram> where TProgram : class
 {
+    private readonly string _connectionString = connectionString;
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>
@@ -26,19 +28,9 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
                 services.Remove(dbConnectionDescriptor);
             }
 
-            // create open SqliteConnection so EF won't automatically close it
-            services.AddSingleton<DbConnection>(container =>
+            services.AddDbContext<DesicContext>(options =>
             {
-                var connection = new SqliteConnection("DataSource=:memory:");
-                connection.Open();
-
-                return connection;
-            });
-
-            services.AddDbContext<DesicContext>((container, options) =>
-            {
-                var connection = container.GetRequiredService<DbConnection>();
-                options.UseSqlite(connection);
+                options.UseSqlServer(_connectionString);
             });
         });
 
@@ -52,5 +44,23 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
         });
 
         builder.UseEnvironment("Development");
+    }
+
+    private static void ConfigureForSqlite(IServiceCollection services)
+    {
+        // create open SqliteConnection so EF won't automatically close it
+        services.AddSingleton<DbConnection>(container =>
+        {
+            var connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
+
+            return connection;
+        });
+
+        services.AddDbContext<DesicContext>((container, options) =>
+        {
+            var connection = container.GetRequiredService<DbConnection>();
+            options.UseSqlite(connection);
+        });
     }
 }
