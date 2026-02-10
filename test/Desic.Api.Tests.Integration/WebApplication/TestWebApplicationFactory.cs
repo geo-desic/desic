@@ -39,6 +39,7 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
             var inMemoryConfig = new Dictionary<string, string?>
             {
                 ["DesicContext:AllowInitialization"] = "false",
+                ["HttpLogging:Enabled"] = "false",
             };
             config.AddInMemoryCollection(inMemoryConfig);
         });

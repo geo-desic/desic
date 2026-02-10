@@ -24,6 +24,9 @@ var config = builder.Configuration;
 var dbProvider = config.GetValue("DbProvider", Providers.SqlServer.Name)!;
 logger.LogInformation("Database provider determined from configuration: {dbProvider}", dbProvider);
 
+var httpLoggingEnabled = config.GetValue("HttpLogging:Enabled", false);
+logger.LogInformation("Http logging enabled value determined from configuration: {httpLoggingEnabled}", httpLoggingEnabled);
+
 logger.LogInformation("Starting configuration of the web application builder");
 
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -57,11 +60,14 @@ builder.Services.AddMediatR(cfg =>
     cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 builder.Services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
-builder.Services.AddHttpLogging(logging =>
+if (httpLoggingEnabled)
 {
-    logging.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders | HttpLoggingFields.ResponsePropertiesAndHeaders | HttpLoggingFields.Duration;
-    logging.CombineLogs = true;
-});
+    builder.Services.AddHttpLogging(logging =>
+    {
+        logging.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders | HttpLoggingFields.ResponsePropertiesAndHeaders | HttpLoggingFields.Duration;
+        logging.CombineLogs = true;
+    });
+}
 
 logger.LogInformation("Completed configuration of the web application builder");
 
@@ -73,8 +79,11 @@ var isDevelopment = app.Environment.IsDevelopment();
 app.Logger.LogInformation("Application environment: {appEnvironmentName}", app.Environment.EnvironmentName);
 app.Logger.LogInformation("Application is development: {appIsDevelopment}", isDevelopment);
 
-app.Logger.LogInformation("Configuring the app to use http logging");
-app.UseHttpLogging();
+if (httpLoggingEnabled)
+{
+    app.Logger.LogInformation("Configuring the app to use http logging");
+    app.UseHttpLogging();
+}
 
 if (isDevelopment)
 {
