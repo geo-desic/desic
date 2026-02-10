@@ -39,6 +39,1783 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     b.ToTable("EntityTypes", "app");
                 });
 
+            modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.Iso3166Country", b =>
+                {
+                    b.Property<int>("IsoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnOrder(0);
+
+                    b.Property<string>("Alpha2")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(1);
+
+                    b.Property<string>("Alpha3")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(2);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("IsoId");
+
+                    b.HasIndex("Alpha2")
+                        .IsUnique();
+
+                    b.HasIndex("Alpha3")
+                        .IsUnique();
+
+                    b.ToTable("Iso3166Countries", "app");
+
+                    b.HasData(
+                        new
+                        {
+                            IsoId = 4,
+                            Alpha2 = "af",
+                            Alpha3 = "afg",
+                            Name = "Afghanistan"
+                        },
+                        new
+                        {
+                            IsoId = 248,
+                            Alpha2 = "ax",
+                            Alpha3 = "ala",
+                            Name = "Åland Islands"
+                        },
+                        new
+                        {
+                            IsoId = 8,
+                            Alpha2 = "al",
+                            Alpha3 = "alb",
+                            Name = "Albania"
+                        },
+                        new
+                        {
+                            IsoId = 12,
+                            Alpha2 = "dz",
+                            Alpha3 = "dza",
+                            Name = "Algeria"
+                        },
+                        new
+                        {
+                            IsoId = 16,
+                            Alpha2 = "as",
+                            Alpha3 = "asm",
+                            Name = "American Samoa"
+                        },
+                        new
+                        {
+                            IsoId = 20,
+                            Alpha2 = "ad",
+                            Alpha3 = "and",
+                            Name = "Andorra"
+                        },
+                        new
+                        {
+                            IsoId = 24,
+                            Alpha2 = "ao",
+                            Alpha3 = "ago",
+                            Name = "Angola"
+                        },
+                        new
+                        {
+                            IsoId = 660,
+                            Alpha2 = "ai",
+                            Alpha3 = "aia",
+                            Name = "Anguilla"
+                        },
+                        new
+                        {
+                            IsoId = 10,
+                            Alpha2 = "aq",
+                            Alpha3 = "ata",
+                            Name = "Antarctica"
+                        },
+                        new
+                        {
+                            IsoId = 28,
+                            Alpha2 = "ag",
+                            Alpha3 = "atg",
+                            Name = "Antigua and Barbuda"
+                        },
+                        new
+                        {
+                            IsoId = 32,
+                            Alpha2 = "ar",
+                            Alpha3 = "arg",
+                            Name = "Argentina"
+                        },
+                        new
+                        {
+                            IsoId = 51,
+                            Alpha2 = "am",
+                            Alpha3 = "arm",
+                            Name = "Armenia"
+                        },
+                        new
+                        {
+                            IsoId = 533,
+                            Alpha2 = "aw",
+                            Alpha3 = "abw",
+                            Name = "Aruba"
+                        },
+                        new
+                        {
+                            IsoId = 36,
+                            Alpha2 = "au",
+                            Alpha3 = "aus",
+                            Name = "Australia"
+                        },
+                        new
+                        {
+                            IsoId = 40,
+                            Alpha2 = "at",
+                            Alpha3 = "aut",
+                            Name = "Austria"
+                        },
+                        new
+                        {
+                            IsoId = 31,
+                            Alpha2 = "az",
+                            Alpha3 = "aze",
+                            Name = "Azerbaijan"
+                        },
+                        new
+                        {
+                            IsoId = 44,
+                            Alpha2 = "bs",
+                            Alpha3 = "bhs",
+                            Name = "Bahamas"
+                        },
+                        new
+                        {
+                            IsoId = 48,
+                            Alpha2 = "bh",
+                            Alpha3 = "bhr",
+                            Name = "Bahrain"
+                        },
+                        new
+                        {
+                            IsoId = 50,
+                            Alpha2 = "bd",
+                            Alpha3 = "bgd",
+                            Name = "Bangladesh"
+                        },
+                        new
+                        {
+                            IsoId = 52,
+                            Alpha2 = "bb",
+                            Alpha3 = "brb",
+                            Name = "Barbados"
+                        },
+                        new
+                        {
+                            IsoId = 112,
+                            Alpha2 = "by",
+                            Alpha3 = "blr",
+                            Name = "Belarus"
+                        },
+                        new
+                        {
+                            IsoId = 56,
+                            Alpha2 = "be",
+                            Alpha3 = "bel",
+                            Name = "Belgium"
+                        },
+                        new
+                        {
+                            IsoId = 84,
+                            Alpha2 = "bz",
+                            Alpha3 = "blz",
+                            Name = "Belize"
+                        },
+                        new
+                        {
+                            IsoId = 204,
+                            Alpha2 = "bj",
+                            Alpha3 = "ben",
+                            Name = "Benin"
+                        },
+                        new
+                        {
+                            IsoId = 60,
+                            Alpha2 = "bm",
+                            Alpha3 = "bmu",
+                            Name = "Bermuda"
+                        },
+                        new
+                        {
+                            IsoId = 64,
+                            Alpha2 = "bt",
+                            Alpha3 = "btn",
+                            Name = "Bhutan"
+                        },
+                        new
+                        {
+                            IsoId = 68,
+                            Alpha2 = "bo",
+                            Alpha3 = "bol",
+                            Name = "Bolivia, Plurinational State of"
+                        },
+                        new
+                        {
+                            IsoId = 535,
+                            Alpha2 = "bq",
+                            Alpha3 = "bes",
+                            Name = "Bonaire, Sint Eustatius and Saba"
+                        },
+                        new
+                        {
+                            IsoId = 70,
+                            Alpha2 = "ba",
+                            Alpha3 = "bih",
+                            Name = "Bosnia and Herzegovina"
+                        },
+                        new
+                        {
+                            IsoId = 72,
+                            Alpha2 = "bw",
+                            Alpha3 = "bwa",
+                            Name = "Botswana"
+                        },
+                        new
+                        {
+                            IsoId = 74,
+                            Alpha2 = "bv",
+                            Alpha3 = "bvt",
+                            Name = "Bouvet Island"
+                        },
+                        new
+                        {
+                            IsoId = 76,
+                            Alpha2 = "br",
+                            Alpha3 = "bra",
+                            Name = "Brazil"
+                        },
+                        new
+                        {
+                            IsoId = 86,
+                            Alpha2 = "io",
+                            Alpha3 = "iot",
+                            Name = "British Indian Ocean Territory"
+                        },
+                        new
+                        {
+                            IsoId = 96,
+                            Alpha2 = "bn",
+                            Alpha3 = "brn",
+                            Name = "Brunei Darussalam"
+                        },
+                        new
+                        {
+                            IsoId = 100,
+                            Alpha2 = "bg",
+                            Alpha3 = "bgr",
+                            Name = "Bulgaria"
+                        },
+                        new
+                        {
+                            IsoId = 854,
+                            Alpha2 = "bf",
+                            Alpha3 = "bfa",
+                            Name = "Burkina Faso"
+                        },
+                        new
+                        {
+                            IsoId = 108,
+                            Alpha2 = "bi",
+                            Alpha3 = "bdi",
+                            Name = "Burundi"
+                        },
+                        new
+                        {
+                            IsoId = 132,
+                            Alpha2 = "cv",
+                            Alpha3 = "cpv",
+                            Name = "Cabo Verde"
+                        },
+                        new
+                        {
+                            IsoId = 116,
+                            Alpha2 = "kh",
+                            Alpha3 = "khm",
+                            Name = "Cambodia"
+                        },
+                        new
+                        {
+                            IsoId = 120,
+                            Alpha2 = "cm",
+                            Alpha3 = "cmr",
+                            Name = "Cameroon"
+                        },
+                        new
+                        {
+                            IsoId = 124,
+                            Alpha2 = "ca",
+                            Alpha3 = "can",
+                            Name = "Canada"
+                        },
+                        new
+                        {
+                            IsoId = 136,
+                            Alpha2 = "ky",
+                            Alpha3 = "cym",
+                            Name = "Cayman Islands"
+                        },
+                        new
+                        {
+                            IsoId = 140,
+                            Alpha2 = "cf",
+                            Alpha3 = "caf",
+                            Name = "Central African Republic"
+                        },
+                        new
+                        {
+                            IsoId = 148,
+                            Alpha2 = "td",
+                            Alpha3 = "tcd",
+                            Name = "Chad"
+                        },
+                        new
+                        {
+                            IsoId = 152,
+                            Alpha2 = "cl",
+                            Alpha3 = "chl",
+                            Name = "Chile"
+                        },
+                        new
+                        {
+                            IsoId = 156,
+                            Alpha2 = "cn",
+                            Alpha3 = "chn",
+                            Name = "China"
+                        },
+                        new
+                        {
+                            IsoId = 162,
+                            Alpha2 = "cx",
+                            Alpha3 = "cxr",
+                            Name = "Christmas Island"
+                        },
+                        new
+                        {
+                            IsoId = 166,
+                            Alpha2 = "cc",
+                            Alpha3 = "cck",
+                            Name = "Cocos (Keeling) Islands"
+                        },
+                        new
+                        {
+                            IsoId = 170,
+                            Alpha2 = "co",
+                            Alpha3 = "col",
+                            Name = "Colombia"
+                        },
+                        new
+                        {
+                            IsoId = 174,
+                            Alpha2 = "km",
+                            Alpha3 = "com",
+                            Name = "Comoros"
+                        },
+                        new
+                        {
+                            IsoId = 178,
+                            Alpha2 = "cg",
+                            Alpha3 = "cog",
+                            Name = "Congo"
+                        },
+                        new
+                        {
+                            IsoId = 180,
+                            Alpha2 = "cd",
+                            Alpha3 = "cod",
+                            Name = "Congo, Democratic Republic of the"
+                        },
+                        new
+                        {
+                            IsoId = 184,
+                            Alpha2 = "ck",
+                            Alpha3 = "cok",
+                            Name = "Cook Islands"
+                        },
+                        new
+                        {
+                            IsoId = 188,
+                            Alpha2 = "cr",
+                            Alpha3 = "cri",
+                            Name = "Costa Rica"
+                        },
+                        new
+                        {
+                            IsoId = 384,
+                            Alpha2 = "ci",
+                            Alpha3 = "civ",
+                            Name = "Côte d'Ivoire"
+                        },
+                        new
+                        {
+                            IsoId = 191,
+                            Alpha2 = "hr",
+                            Alpha3 = "hrv",
+                            Name = "Croatia"
+                        },
+                        new
+                        {
+                            IsoId = 192,
+                            Alpha2 = "cu",
+                            Alpha3 = "cub",
+                            Name = "Cuba"
+                        },
+                        new
+                        {
+                            IsoId = 531,
+                            Alpha2 = "cw",
+                            Alpha3 = "cuw",
+                            Name = "Curaçao"
+                        },
+                        new
+                        {
+                            IsoId = 196,
+                            Alpha2 = "cy",
+                            Alpha3 = "cyp",
+                            Name = "Cyprus"
+                        },
+                        new
+                        {
+                            IsoId = 203,
+                            Alpha2 = "cz",
+                            Alpha3 = "cze",
+                            Name = "Czechia"
+                        },
+                        new
+                        {
+                            IsoId = 208,
+                            Alpha2 = "dk",
+                            Alpha3 = "dnk",
+                            Name = "Denmark"
+                        },
+                        new
+                        {
+                            IsoId = 262,
+                            Alpha2 = "dj",
+                            Alpha3 = "dji",
+                            Name = "Djibouti"
+                        },
+                        new
+                        {
+                            IsoId = 212,
+                            Alpha2 = "dm",
+                            Alpha3 = "dma",
+                            Name = "Dominica"
+                        },
+                        new
+                        {
+                            IsoId = 214,
+                            Alpha2 = "do",
+                            Alpha3 = "dom",
+                            Name = "Dominican Republic"
+                        },
+                        new
+                        {
+                            IsoId = 218,
+                            Alpha2 = "ec",
+                            Alpha3 = "ecu",
+                            Name = "Ecuador"
+                        },
+                        new
+                        {
+                            IsoId = 818,
+                            Alpha2 = "eg",
+                            Alpha3 = "egy",
+                            Name = "Egypt"
+                        },
+                        new
+                        {
+                            IsoId = 222,
+                            Alpha2 = "sv",
+                            Alpha3 = "slv",
+                            Name = "El Salvador"
+                        },
+                        new
+                        {
+                            IsoId = 226,
+                            Alpha2 = "gq",
+                            Alpha3 = "gnq",
+                            Name = "Equatorial Guinea"
+                        },
+                        new
+                        {
+                            IsoId = 232,
+                            Alpha2 = "er",
+                            Alpha3 = "eri",
+                            Name = "Eritrea"
+                        },
+                        new
+                        {
+                            IsoId = 233,
+                            Alpha2 = "ee",
+                            Alpha3 = "est",
+                            Name = "Estonia"
+                        },
+                        new
+                        {
+                            IsoId = 748,
+                            Alpha2 = "sz",
+                            Alpha3 = "swz",
+                            Name = "Eswatini"
+                        },
+                        new
+                        {
+                            IsoId = 231,
+                            Alpha2 = "et",
+                            Alpha3 = "eth",
+                            Name = "Ethiopia"
+                        },
+                        new
+                        {
+                            IsoId = 238,
+                            Alpha2 = "fk",
+                            Alpha3 = "flk",
+                            Name = "Falkland Islands (Malvinas)"
+                        },
+                        new
+                        {
+                            IsoId = 234,
+                            Alpha2 = "fo",
+                            Alpha3 = "fro",
+                            Name = "Faroe Islands"
+                        },
+                        new
+                        {
+                            IsoId = 242,
+                            Alpha2 = "fj",
+                            Alpha3 = "fji",
+                            Name = "Fiji"
+                        },
+                        new
+                        {
+                            IsoId = 246,
+                            Alpha2 = "fi",
+                            Alpha3 = "fin",
+                            Name = "Finland"
+                        },
+                        new
+                        {
+                            IsoId = 250,
+                            Alpha2 = "fr",
+                            Alpha3 = "fra",
+                            Name = "France"
+                        },
+                        new
+                        {
+                            IsoId = 254,
+                            Alpha2 = "gf",
+                            Alpha3 = "guf",
+                            Name = "French Guiana"
+                        },
+                        new
+                        {
+                            IsoId = 258,
+                            Alpha2 = "pf",
+                            Alpha3 = "pyf",
+                            Name = "French Polynesia"
+                        },
+                        new
+                        {
+                            IsoId = 260,
+                            Alpha2 = "tf",
+                            Alpha3 = "atf",
+                            Name = "French Southern Territories"
+                        },
+                        new
+                        {
+                            IsoId = 266,
+                            Alpha2 = "ga",
+                            Alpha3 = "gab",
+                            Name = "Gabon"
+                        },
+                        new
+                        {
+                            IsoId = 270,
+                            Alpha2 = "gm",
+                            Alpha3 = "gmb",
+                            Name = "Gambia"
+                        },
+                        new
+                        {
+                            IsoId = 268,
+                            Alpha2 = "ge",
+                            Alpha3 = "geo",
+                            Name = "Georgia"
+                        },
+                        new
+                        {
+                            IsoId = 276,
+                            Alpha2 = "de",
+                            Alpha3 = "deu",
+                            Name = "Germany"
+                        },
+                        new
+                        {
+                            IsoId = 288,
+                            Alpha2 = "gh",
+                            Alpha3 = "gha",
+                            Name = "Ghana"
+                        },
+                        new
+                        {
+                            IsoId = 292,
+                            Alpha2 = "gi",
+                            Alpha3 = "gib",
+                            Name = "Gibraltar"
+                        },
+                        new
+                        {
+                            IsoId = 300,
+                            Alpha2 = "gr",
+                            Alpha3 = "grc",
+                            Name = "Greece"
+                        },
+                        new
+                        {
+                            IsoId = 304,
+                            Alpha2 = "gl",
+                            Alpha3 = "grl",
+                            Name = "Greenland"
+                        },
+                        new
+                        {
+                            IsoId = 308,
+                            Alpha2 = "gd",
+                            Alpha3 = "grd",
+                            Name = "Grenada"
+                        },
+                        new
+                        {
+                            IsoId = 312,
+                            Alpha2 = "gp",
+                            Alpha3 = "glp",
+                            Name = "Guadeloupe"
+                        },
+                        new
+                        {
+                            IsoId = 316,
+                            Alpha2 = "gu",
+                            Alpha3 = "gum",
+                            Name = "Guam"
+                        },
+                        new
+                        {
+                            IsoId = 320,
+                            Alpha2 = "gt",
+                            Alpha3 = "gtm",
+                            Name = "Guatemala"
+                        },
+                        new
+                        {
+                            IsoId = 831,
+                            Alpha2 = "gg",
+                            Alpha3 = "ggy",
+                            Name = "Guernsey"
+                        },
+                        new
+                        {
+                            IsoId = 324,
+                            Alpha2 = "gn",
+                            Alpha3 = "gin",
+                            Name = "Guinea"
+                        },
+                        new
+                        {
+                            IsoId = 624,
+                            Alpha2 = "gw",
+                            Alpha3 = "gnb",
+                            Name = "Guinea-Bissau"
+                        },
+                        new
+                        {
+                            IsoId = 328,
+                            Alpha2 = "gy",
+                            Alpha3 = "guy",
+                            Name = "Guyana"
+                        },
+                        new
+                        {
+                            IsoId = 332,
+                            Alpha2 = "ht",
+                            Alpha3 = "hti",
+                            Name = "Haiti"
+                        },
+                        new
+                        {
+                            IsoId = 334,
+                            Alpha2 = "hm",
+                            Alpha3 = "hmd",
+                            Name = "Heard Island and McDonald Islands"
+                        },
+                        new
+                        {
+                            IsoId = 336,
+                            Alpha2 = "va",
+                            Alpha3 = "vat",
+                            Name = "Holy See"
+                        },
+                        new
+                        {
+                            IsoId = 340,
+                            Alpha2 = "hn",
+                            Alpha3 = "hnd",
+                            Name = "Honduras"
+                        },
+                        new
+                        {
+                            IsoId = 344,
+                            Alpha2 = "hk",
+                            Alpha3 = "hkg",
+                            Name = "Hong Kong"
+                        },
+                        new
+                        {
+                            IsoId = 348,
+                            Alpha2 = "hu",
+                            Alpha3 = "hun",
+                            Name = "Hungary"
+                        },
+                        new
+                        {
+                            IsoId = 352,
+                            Alpha2 = "is",
+                            Alpha3 = "isl",
+                            Name = "Iceland"
+                        },
+                        new
+                        {
+                            IsoId = 356,
+                            Alpha2 = "in",
+                            Alpha3 = "ind",
+                            Name = "India"
+                        },
+                        new
+                        {
+                            IsoId = 360,
+                            Alpha2 = "id",
+                            Alpha3 = "idn",
+                            Name = "Indonesia"
+                        },
+                        new
+                        {
+                            IsoId = 364,
+                            Alpha2 = "ir",
+                            Alpha3 = "irn",
+                            Name = "Iran, Islamic Republic of"
+                        },
+                        new
+                        {
+                            IsoId = 368,
+                            Alpha2 = "iq",
+                            Alpha3 = "irq",
+                            Name = "Iraq"
+                        },
+                        new
+                        {
+                            IsoId = 372,
+                            Alpha2 = "ie",
+                            Alpha3 = "irl",
+                            Name = "Ireland"
+                        },
+                        new
+                        {
+                            IsoId = 833,
+                            Alpha2 = "im",
+                            Alpha3 = "imn",
+                            Name = "Isle of Man"
+                        },
+                        new
+                        {
+                            IsoId = 376,
+                            Alpha2 = "il",
+                            Alpha3 = "isr",
+                            Name = "Israel"
+                        },
+                        new
+                        {
+                            IsoId = 380,
+                            Alpha2 = "it",
+                            Alpha3 = "ita",
+                            Name = "Italy"
+                        },
+                        new
+                        {
+                            IsoId = 388,
+                            Alpha2 = "jm",
+                            Alpha3 = "jam",
+                            Name = "Jamaica"
+                        },
+                        new
+                        {
+                            IsoId = 392,
+                            Alpha2 = "jp",
+                            Alpha3 = "jpn",
+                            Name = "Japan"
+                        },
+                        new
+                        {
+                            IsoId = 832,
+                            Alpha2 = "je",
+                            Alpha3 = "jey",
+                            Name = "Jersey"
+                        },
+                        new
+                        {
+                            IsoId = 400,
+                            Alpha2 = "jo",
+                            Alpha3 = "jor",
+                            Name = "Jordan"
+                        },
+                        new
+                        {
+                            IsoId = 398,
+                            Alpha2 = "kz",
+                            Alpha3 = "kaz",
+                            Name = "Kazakhstan"
+                        },
+                        new
+                        {
+                            IsoId = 404,
+                            Alpha2 = "ke",
+                            Alpha3 = "ken",
+                            Name = "Kenya"
+                        },
+                        new
+                        {
+                            IsoId = 296,
+                            Alpha2 = "ki",
+                            Alpha3 = "kir",
+                            Name = "Kiribati"
+                        },
+                        new
+                        {
+                            IsoId = 408,
+                            Alpha2 = "kp",
+                            Alpha3 = "prk",
+                            Name = "Korea, Democratic People's Republic of"
+                        },
+                        new
+                        {
+                            IsoId = 410,
+                            Alpha2 = "kr",
+                            Alpha3 = "kor",
+                            Name = "Korea, Republic of"
+                        },
+                        new
+                        {
+                            IsoId = 414,
+                            Alpha2 = "kw",
+                            Alpha3 = "kwt",
+                            Name = "Kuwait"
+                        },
+                        new
+                        {
+                            IsoId = 417,
+                            Alpha2 = "kg",
+                            Alpha3 = "kgz",
+                            Name = "Kyrgyzstan"
+                        },
+                        new
+                        {
+                            IsoId = 418,
+                            Alpha2 = "la",
+                            Alpha3 = "lao",
+                            Name = "Lao People's Democratic Republic"
+                        },
+                        new
+                        {
+                            IsoId = 428,
+                            Alpha2 = "lv",
+                            Alpha3 = "lva",
+                            Name = "Latvia"
+                        },
+                        new
+                        {
+                            IsoId = 422,
+                            Alpha2 = "lb",
+                            Alpha3 = "lbn",
+                            Name = "Lebanon"
+                        },
+                        new
+                        {
+                            IsoId = 426,
+                            Alpha2 = "ls",
+                            Alpha3 = "lso",
+                            Name = "Lesotho"
+                        },
+                        new
+                        {
+                            IsoId = 430,
+                            Alpha2 = "lr",
+                            Alpha3 = "lbr",
+                            Name = "Liberia"
+                        },
+                        new
+                        {
+                            IsoId = 434,
+                            Alpha2 = "ly",
+                            Alpha3 = "lby",
+                            Name = "Libya"
+                        },
+                        new
+                        {
+                            IsoId = 438,
+                            Alpha2 = "li",
+                            Alpha3 = "lie",
+                            Name = "Liechtenstein"
+                        },
+                        new
+                        {
+                            IsoId = 440,
+                            Alpha2 = "lt",
+                            Alpha3 = "ltu",
+                            Name = "Lithuania"
+                        },
+                        new
+                        {
+                            IsoId = 442,
+                            Alpha2 = "lu",
+                            Alpha3 = "lux",
+                            Name = "Luxembourg"
+                        },
+                        new
+                        {
+                            IsoId = 446,
+                            Alpha2 = "mo",
+                            Alpha3 = "mac",
+                            Name = "Macao"
+                        },
+                        new
+                        {
+                            IsoId = 450,
+                            Alpha2 = "mg",
+                            Alpha3 = "mdg",
+                            Name = "Madagascar"
+                        },
+                        new
+                        {
+                            IsoId = 454,
+                            Alpha2 = "mw",
+                            Alpha3 = "mwi",
+                            Name = "Malawi"
+                        },
+                        new
+                        {
+                            IsoId = 458,
+                            Alpha2 = "my",
+                            Alpha3 = "mys",
+                            Name = "Malaysia"
+                        },
+                        new
+                        {
+                            IsoId = 462,
+                            Alpha2 = "mv",
+                            Alpha3 = "mdv",
+                            Name = "Maldives"
+                        },
+                        new
+                        {
+                            IsoId = 466,
+                            Alpha2 = "ml",
+                            Alpha3 = "mli",
+                            Name = "Mali"
+                        },
+                        new
+                        {
+                            IsoId = 470,
+                            Alpha2 = "mt",
+                            Alpha3 = "mlt",
+                            Name = "Malta"
+                        },
+                        new
+                        {
+                            IsoId = 584,
+                            Alpha2 = "mh",
+                            Alpha3 = "mhl",
+                            Name = "Marshall Islands"
+                        },
+                        new
+                        {
+                            IsoId = 474,
+                            Alpha2 = "mq",
+                            Alpha3 = "mtq",
+                            Name = "Martinique"
+                        },
+                        new
+                        {
+                            IsoId = 478,
+                            Alpha2 = "mr",
+                            Alpha3 = "mrt",
+                            Name = "Mauritania"
+                        },
+                        new
+                        {
+                            IsoId = 480,
+                            Alpha2 = "mu",
+                            Alpha3 = "mus",
+                            Name = "Mauritius"
+                        },
+                        new
+                        {
+                            IsoId = 175,
+                            Alpha2 = "yt",
+                            Alpha3 = "myt",
+                            Name = "Mayotte"
+                        },
+                        new
+                        {
+                            IsoId = 484,
+                            Alpha2 = "mx",
+                            Alpha3 = "mex",
+                            Name = "Mexico"
+                        },
+                        new
+                        {
+                            IsoId = 583,
+                            Alpha2 = "fm",
+                            Alpha3 = "fsm",
+                            Name = "Micronesia, Federated States of"
+                        },
+                        new
+                        {
+                            IsoId = 498,
+                            Alpha2 = "md",
+                            Alpha3 = "mda",
+                            Name = "Moldova, Republic of"
+                        },
+                        new
+                        {
+                            IsoId = 492,
+                            Alpha2 = "mc",
+                            Alpha3 = "mco",
+                            Name = "Monaco"
+                        },
+                        new
+                        {
+                            IsoId = 496,
+                            Alpha2 = "mn",
+                            Alpha3 = "mng",
+                            Name = "Mongolia"
+                        },
+                        new
+                        {
+                            IsoId = 499,
+                            Alpha2 = "me",
+                            Alpha3 = "mne",
+                            Name = "Montenegro"
+                        },
+                        new
+                        {
+                            IsoId = 500,
+                            Alpha2 = "ms",
+                            Alpha3 = "msr",
+                            Name = "Montserrat"
+                        },
+                        new
+                        {
+                            IsoId = 504,
+                            Alpha2 = "ma",
+                            Alpha3 = "mar",
+                            Name = "Morocco"
+                        },
+                        new
+                        {
+                            IsoId = 508,
+                            Alpha2 = "mz",
+                            Alpha3 = "moz",
+                            Name = "Mozambique"
+                        },
+                        new
+                        {
+                            IsoId = 104,
+                            Alpha2 = "mm",
+                            Alpha3 = "mmr",
+                            Name = "Myanmar"
+                        },
+                        new
+                        {
+                            IsoId = 516,
+                            Alpha2 = "na",
+                            Alpha3 = "nam",
+                            Name = "Namibia"
+                        },
+                        new
+                        {
+                            IsoId = 520,
+                            Alpha2 = "nr",
+                            Alpha3 = "nru",
+                            Name = "Nauru"
+                        },
+                        new
+                        {
+                            IsoId = 524,
+                            Alpha2 = "np",
+                            Alpha3 = "npl",
+                            Name = "Nepal"
+                        },
+                        new
+                        {
+                            IsoId = 528,
+                            Alpha2 = "nl",
+                            Alpha3 = "nld",
+                            Name = "Netherlands"
+                        },
+                        new
+                        {
+                            IsoId = 540,
+                            Alpha2 = "nc",
+                            Alpha3 = "ncl",
+                            Name = "New Caledonia"
+                        },
+                        new
+                        {
+                            IsoId = 554,
+                            Alpha2 = "nz",
+                            Alpha3 = "nzl",
+                            Name = "New Zealand"
+                        },
+                        new
+                        {
+                            IsoId = 558,
+                            Alpha2 = "ni",
+                            Alpha3 = "nic",
+                            Name = "Nicaragua"
+                        },
+                        new
+                        {
+                            IsoId = 562,
+                            Alpha2 = "ne",
+                            Alpha3 = "ner",
+                            Name = "Niger"
+                        },
+                        new
+                        {
+                            IsoId = 566,
+                            Alpha2 = "ng",
+                            Alpha3 = "nga",
+                            Name = "Nigeria"
+                        },
+                        new
+                        {
+                            IsoId = 570,
+                            Alpha2 = "nu",
+                            Alpha3 = "niu",
+                            Name = "Niue"
+                        },
+                        new
+                        {
+                            IsoId = 574,
+                            Alpha2 = "nf",
+                            Alpha3 = "nfk",
+                            Name = "Norfolk Island"
+                        },
+                        new
+                        {
+                            IsoId = 807,
+                            Alpha2 = "mk",
+                            Alpha3 = "mkd",
+                            Name = "North Macedonia"
+                        },
+                        new
+                        {
+                            IsoId = 580,
+                            Alpha2 = "mp",
+                            Alpha3 = "mnp",
+                            Name = "Northern Mariana Islands"
+                        },
+                        new
+                        {
+                            IsoId = 578,
+                            Alpha2 = "no",
+                            Alpha3 = "nor",
+                            Name = "Norway"
+                        },
+                        new
+                        {
+                            IsoId = 512,
+                            Alpha2 = "om",
+                            Alpha3 = "omn",
+                            Name = "Oman"
+                        },
+                        new
+                        {
+                            IsoId = 586,
+                            Alpha2 = "pk",
+                            Alpha3 = "pak",
+                            Name = "Pakistan"
+                        },
+                        new
+                        {
+                            IsoId = 585,
+                            Alpha2 = "pw",
+                            Alpha3 = "plw",
+                            Name = "Palau"
+                        },
+                        new
+                        {
+                            IsoId = 275,
+                            Alpha2 = "ps",
+                            Alpha3 = "pse",
+                            Name = "Palestine, State of"
+                        },
+                        new
+                        {
+                            IsoId = 591,
+                            Alpha2 = "pa",
+                            Alpha3 = "pan",
+                            Name = "Panama"
+                        },
+                        new
+                        {
+                            IsoId = 598,
+                            Alpha2 = "pg",
+                            Alpha3 = "png",
+                            Name = "Papua New Guinea"
+                        },
+                        new
+                        {
+                            IsoId = 600,
+                            Alpha2 = "py",
+                            Alpha3 = "pry",
+                            Name = "Paraguay"
+                        },
+                        new
+                        {
+                            IsoId = 604,
+                            Alpha2 = "pe",
+                            Alpha3 = "per",
+                            Name = "Peru"
+                        },
+                        new
+                        {
+                            IsoId = 608,
+                            Alpha2 = "ph",
+                            Alpha3 = "phl",
+                            Name = "Philippines"
+                        },
+                        new
+                        {
+                            IsoId = 612,
+                            Alpha2 = "pn",
+                            Alpha3 = "pcn",
+                            Name = "Pitcairn"
+                        },
+                        new
+                        {
+                            IsoId = 616,
+                            Alpha2 = "pl",
+                            Alpha3 = "pol",
+                            Name = "Poland"
+                        },
+                        new
+                        {
+                            IsoId = 620,
+                            Alpha2 = "pt",
+                            Alpha3 = "prt",
+                            Name = "Portugal"
+                        },
+                        new
+                        {
+                            IsoId = 630,
+                            Alpha2 = "pr",
+                            Alpha3 = "pri",
+                            Name = "Puerto Rico"
+                        },
+                        new
+                        {
+                            IsoId = 634,
+                            Alpha2 = "qa",
+                            Alpha3 = "qat",
+                            Name = "Qatar"
+                        },
+                        new
+                        {
+                            IsoId = 638,
+                            Alpha2 = "re",
+                            Alpha3 = "reu",
+                            Name = "Réunion"
+                        },
+                        new
+                        {
+                            IsoId = 642,
+                            Alpha2 = "ro",
+                            Alpha3 = "rou",
+                            Name = "Romania"
+                        },
+                        new
+                        {
+                            IsoId = 643,
+                            Alpha2 = "ru",
+                            Alpha3 = "rus",
+                            Name = "Russian Federation"
+                        },
+                        new
+                        {
+                            IsoId = 646,
+                            Alpha2 = "rw",
+                            Alpha3 = "rwa",
+                            Name = "Rwanda"
+                        },
+                        new
+                        {
+                            IsoId = 652,
+                            Alpha2 = "bl",
+                            Alpha3 = "blm",
+                            Name = "Saint Barthélemy"
+                        },
+                        new
+                        {
+                            IsoId = 654,
+                            Alpha2 = "sh",
+                            Alpha3 = "shn",
+                            Name = "Saint Helena, Ascension and Tristan da Cunha"
+                        },
+                        new
+                        {
+                            IsoId = 659,
+                            Alpha2 = "kn",
+                            Alpha3 = "kna",
+                            Name = "Saint Kitts and Nevis"
+                        },
+                        new
+                        {
+                            IsoId = 662,
+                            Alpha2 = "lc",
+                            Alpha3 = "lca",
+                            Name = "Saint Lucia"
+                        },
+                        new
+                        {
+                            IsoId = 663,
+                            Alpha2 = "mf",
+                            Alpha3 = "maf",
+                            Name = "Saint Martin (French part)"
+                        },
+                        new
+                        {
+                            IsoId = 666,
+                            Alpha2 = "pm",
+                            Alpha3 = "spm",
+                            Name = "Saint Pierre and Miquelon"
+                        },
+                        new
+                        {
+                            IsoId = 670,
+                            Alpha2 = "vc",
+                            Alpha3 = "vct",
+                            Name = "Saint Vincent and the Grenadines"
+                        },
+                        new
+                        {
+                            IsoId = 882,
+                            Alpha2 = "ws",
+                            Alpha3 = "wsm",
+                            Name = "Samoa"
+                        },
+                        new
+                        {
+                            IsoId = 674,
+                            Alpha2 = "sm",
+                            Alpha3 = "smr",
+                            Name = "San Marino"
+                        },
+                        new
+                        {
+                            IsoId = 678,
+                            Alpha2 = "st",
+                            Alpha3 = "stp",
+                            Name = "Sao Tome and Principe"
+                        },
+                        new
+                        {
+                            IsoId = 682,
+                            Alpha2 = "sa",
+                            Alpha3 = "sau",
+                            Name = "Saudi Arabia"
+                        },
+                        new
+                        {
+                            IsoId = 686,
+                            Alpha2 = "sn",
+                            Alpha3 = "sen",
+                            Name = "Senegal"
+                        },
+                        new
+                        {
+                            IsoId = 688,
+                            Alpha2 = "rs",
+                            Alpha3 = "srb",
+                            Name = "Serbia"
+                        },
+                        new
+                        {
+                            IsoId = 690,
+                            Alpha2 = "sc",
+                            Alpha3 = "syc",
+                            Name = "Seychelles"
+                        },
+                        new
+                        {
+                            IsoId = 694,
+                            Alpha2 = "sl",
+                            Alpha3 = "sle",
+                            Name = "Sierra Leone"
+                        },
+                        new
+                        {
+                            IsoId = 702,
+                            Alpha2 = "sg",
+                            Alpha3 = "sgp",
+                            Name = "Singapore"
+                        },
+                        new
+                        {
+                            IsoId = 534,
+                            Alpha2 = "sx",
+                            Alpha3 = "sxm",
+                            Name = "Sint Maarten (Dutch part)"
+                        },
+                        new
+                        {
+                            IsoId = 703,
+                            Alpha2 = "sk",
+                            Alpha3 = "svk",
+                            Name = "Slovakia"
+                        },
+                        new
+                        {
+                            IsoId = 705,
+                            Alpha2 = "si",
+                            Alpha3 = "svn",
+                            Name = "Slovenia"
+                        },
+                        new
+                        {
+                            IsoId = 90,
+                            Alpha2 = "sb",
+                            Alpha3 = "slb",
+                            Name = "Solomon Islands"
+                        },
+                        new
+                        {
+                            IsoId = 706,
+                            Alpha2 = "so",
+                            Alpha3 = "som",
+                            Name = "Somalia"
+                        },
+                        new
+                        {
+                            IsoId = 710,
+                            Alpha2 = "za",
+                            Alpha3 = "zaf",
+                            Name = "South Africa"
+                        },
+                        new
+                        {
+                            IsoId = 239,
+                            Alpha2 = "gs",
+                            Alpha3 = "sgs",
+                            Name = "South Georgia and the South Sandwich Islands"
+                        },
+                        new
+                        {
+                            IsoId = 728,
+                            Alpha2 = "ss",
+                            Alpha3 = "ssd",
+                            Name = "South Sudan"
+                        },
+                        new
+                        {
+                            IsoId = 724,
+                            Alpha2 = "es",
+                            Alpha3 = "esp",
+                            Name = "Spain"
+                        },
+                        new
+                        {
+                            IsoId = 144,
+                            Alpha2 = "lk",
+                            Alpha3 = "lka",
+                            Name = "Sri Lanka"
+                        },
+                        new
+                        {
+                            IsoId = 729,
+                            Alpha2 = "sd",
+                            Alpha3 = "sdn",
+                            Name = "Sudan"
+                        },
+                        new
+                        {
+                            IsoId = 740,
+                            Alpha2 = "sr",
+                            Alpha3 = "sur",
+                            Name = "Suriname"
+                        },
+                        new
+                        {
+                            IsoId = 744,
+                            Alpha2 = "sj",
+                            Alpha3 = "sjm",
+                            Name = "Svalbard and Jan Mayen"
+                        },
+                        new
+                        {
+                            IsoId = 752,
+                            Alpha2 = "se",
+                            Alpha3 = "swe",
+                            Name = "Sweden"
+                        },
+                        new
+                        {
+                            IsoId = 756,
+                            Alpha2 = "ch",
+                            Alpha3 = "che",
+                            Name = "Switzerland"
+                        },
+                        new
+                        {
+                            IsoId = 760,
+                            Alpha2 = "sy",
+                            Alpha3 = "syr",
+                            Name = "Syrian Arab Republic"
+                        },
+                        new
+                        {
+                            IsoId = 158,
+                            Alpha2 = "tw",
+                            Alpha3 = "twn",
+                            Name = "Taiwan, Province of China"
+                        },
+                        new
+                        {
+                            IsoId = 762,
+                            Alpha2 = "tj",
+                            Alpha3 = "tjk",
+                            Name = "Tajikistan"
+                        },
+                        new
+                        {
+                            IsoId = 834,
+                            Alpha2 = "tz",
+                            Alpha3 = "tza",
+                            Name = "Tanzania, United Republic of"
+                        },
+                        new
+                        {
+                            IsoId = 764,
+                            Alpha2 = "th",
+                            Alpha3 = "tha",
+                            Name = "Thailand"
+                        },
+                        new
+                        {
+                            IsoId = 626,
+                            Alpha2 = "tl",
+                            Alpha3 = "tls",
+                            Name = "Timor-Leste"
+                        },
+                        new
+                        {
+                            IsoId = 768,
+                            Alpha2 = "tg",
+                            Alpha3 = "tgo",
+                            Name = "Togo"
+                        },
+                        new
+                        {
+                            IsoId = 772,
+                            Alpha2 = "tk",
+                            Alpha3 = "tkl",
+                            Name = "Tokelau"
+                        },
+                        new
+                        {
+                            IsoId = 776,
+                            Alpha2 = "to",
+                            Alpha3 = "ton",
+                            Name = "Tonga"
+                        },
+                        new
+                        {
+                            IsoId = 780,
+                            Alpha2 = "tt",
+                            Alpha3 = "tto",
+                            Name = "Trinidad and Tobago"
+                        },
+                        new
+                        {
+                            IsoId = 788,
+                            Alpha2 = "tn",
+                            Alpha3 = "tun",
+                            Name = "Tunisia"
+                        },
+                        new
+                        {
+                            IsoId = 792,
+                            Alpha2 = "tr",
+                            Alpha3 = "tur",
+                            Name = "Türkiye"
+                        },
+                        new
+                        {
+                            IsoId = 795,
+                            Alpha2 = "tm",
+                            Alpha3 = "tkm",
+                            Name = "Turkmenistan"
+                        },
+                        new
+                        {
+                            IsoId = 796,
+                            Alpha2 = "tc",
+                            Alpha3 = "tca",
+                            Name = "Turks and Caicos Islands"
+                        },
+                        new
+                        {
+                            IsoId = 798,
+                            Alpha2 = "tv",
+                            Alpha3 = "tuv",
+                            Name = "Tuvalu"
+                        },
+                        new
+                        {
+                            IsoId = 800,
+                            Alpha2 = "ug",
+                            Alpha3 = "uga",
+                            Name = "Uganda"
+                        },
+                        new
+                        {
+                            IsoId = 804,
+                            Alpha2 = "ua",
+                            Alpha3 = "ukr",
+                            Name = "Ukraine"
+                        },
+                        new
+                        {
+                            IsoId = 784,
+                            Alpha2 = "ae",
+                            Alpha3 = "are",
+                            Name = "United Arab Emirates"
+                        },
+                        new
+                        {
+                            IsoId = 826,
+                            Alpha2 = "gb",
+                            Alpha3 = "gbr",
+                            Name = "United Kingdom of Great Britain and Northern Ireland"
+                        },
+                        new
+                        {
+                            IsoId = 840,
+                            Alpha2 = "us",
+                            Alpha3 = "usa",
+                            Name = "United States of America"
+                        },
+                        new
+                        {
+                            IsoId = 581,
+                            Alpha2 = "um",
+                            Alpha3 = "umi",
+                            Name = "United States Minor Outlying Islands"
+                        },
+                        new
+                        {
+                            IsoId = 858,
+                            Alpha2 = "uy",
+                            Alpha3 = "ury",
+                            Name = "Uruguay"
+                        },
+                        new
+                        {
+                            IsoId = 860,
+                            Alpha2 = "uz",
+                            Alpha3 = "uzb",
+                            Name = "Uzbekistan"
+                        },
+                        new
+                        {
+                            IsoId = 548,
+                            Alpha2 = "vu",
+                            Alpha3 = "vut",
+                            Name = "Vanuatu"
+                        },
+                        new
+                        {
+                            IsoId = 862,
+                            Alpha2 = "ve",
+                            Alpha3 = "ven",
+                            Name = "Venezuela, Bolivarian Republic of"
+                        },
+                        new
+                        {
+                            IsoId = 704,
+                            Alpha2 = "vn",
+                            Alpha3 = "vnm",
+                            Name = "Viet Nam"
+                        },
+                        new
+                        {
+                            IsoId = 92,
+                            Alpha2 = "vg",
+                            Alpha3 = "vgb",
+                            Name = "Virgin Islands (British)"
+                        },
+                        new
+                        {
+                            IsoId = 850,
+                            Alpha2 = "vi",
+                            Alpha3 = "vir",
+                            Name = "Virgin Islands (U.S.)"
+                        },
+                        new
+                        {
+                            IsoId = 876,
+                            Alpha2 = "wf",
+                            Alpha3 = "wlf",
+                            Name = "Wallis and Futuna"
+                        },
+                        new
+                        {
+                            IsoId = 732,
+                            Alpha2 = "eh",
+                            Alpha3 = "esh",
+                            Name = "Western Sahara"
+                        },
+                        new
+                        {
+                            IsoId = 887,
+                            Alpha2 = "ye",
+                            Alpha3 = "yem",
+                            Name = "Yemen"
+                        },
+                        new
+                        {
+                            IsoId = 894,
+                            Alpha2 = "zm",
+                            Alpha3 = "zmb",
+                            Name = "Zambia"
+                        },
+                        new
+                        {
+                            IsoId = 716,
+                            Alpha2 = "zw",
+                            Alpha3 = "zwe",
+                            Name = "Zimbabwe"
+                        });
+                });
+
             modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.Tag", b =>
                 {
                     b.Property<Guid>("Id")
