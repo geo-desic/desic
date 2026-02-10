@@ -2,7 +2,7 @@
 using FluentResults;
 using MediatR;
 
-namespace Desic.Business.Users
+namespace Desic.Business.Users.Queries
 {
     public class GetUserByIdRequest : IRequest<Result<User>>
     {

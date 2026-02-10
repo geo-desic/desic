@@ -7,7 +7,10 @@ namespace Desic.Business.Users.Validators
     {
         public UserCreateValidator()
         {
-            RuleFor(u => u.Username).NotEmpty().Length(5, 50).Matches("^[a-zA-Z0-9_]+$");
+            RuleFor(u => u.Username)
+                .NotEmpty()
+                .Length(5, 50)
+                .Matches("^[a-zA-Z0-9]+([._-]?[a-zA-Z0-9]+)*$"); // alphanumeric characters, hyphens '-', and periods '.'; no consecutive special characters, nor at start/end
         }
     }
 }

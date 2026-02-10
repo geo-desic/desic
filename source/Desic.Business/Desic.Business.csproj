@@ -16,4 +16,8 @@
     <ProjectReference Include="..\MediatR\MediatR.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Desic.Business.Tests.Unit" />
+  </ItemGroup>
+
 </Project>

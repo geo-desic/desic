@@ -1,7 +1,8 @@
 using Desic.Api.Dtos.Users;
 using Desic.Api.Logging;
 using Desic.Api.Mappings;
-using Desic.Business.Users;
+using Desic.Business.Users.Commands;
+using Desic.Business.Users.Queries;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

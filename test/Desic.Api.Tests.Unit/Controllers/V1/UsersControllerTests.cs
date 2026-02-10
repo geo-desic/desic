@@ -1,6 +1,6 @@
 ﻿using Desic.Api.Controllers.V1;
 using Desic.Api.Dtos.Users;
-using Desic.Business.Users;
+using Desic.Business.Users.Queries;
 using FluentAssertions;
 using FluentResults;
 using MediatR;
