@@ -1,0 +1,22 @@
+﻿namespace Desic.Core.Helpers;
+
+public static class GuidHelpers
+{
+    public static Guid ToGuid(this int value)
+    {
+        return default(Guid).ToIntBasedGuid(value);
+    }
+
+    public static Guid ToIntBasedGuid(this Guid guid, int value)
+    {
+        return guid.ToString().ToIntBasedGuid(value);
+    }
+
+    public static Guid ToIntBasedGuid(this string guid, int value)
+    {
+        if (value < 0) value = -value;
+        var valueString = value.ToString();
+        var resultString = guid.Substring(0, guid.Length - valueString.Length) + valueString;
+        return new Guid(resultString);
+    }
+}

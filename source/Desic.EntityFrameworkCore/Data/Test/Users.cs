@@ -1,4 +1,5 @@
-﻿using Desic.EntityFrameworkCore.Entities;
+﻿using Desic.Core.Helpers;
+using Desic.EntityFrameworkCore.Entities;
 
 namespace Desic.EntityFrameworkCore.Data.Test
 {
@@ -12,7 +13,7 @@ namespace Desic.EntityFrameworkCore.Data.Test
             var random = new Random(RandomSeed);
             var isActive = true;
             var entityTypeTag = EntityTypes.Get(Enums.EntityType.Tag);
-            var entityTypeUserIdString = EntityTypes.Get(Enums.EntityType.User).Id.ToString();
+            var entityTypeUserId = EntityTypes.Get(Enums.EntityType.User).Id;
             var tagSystem = Tags.Get(Enums.SystemTag.System);
             for (var i = 0; i < count; ++i)
             {
@@ -20,12 +21,10 @@ namespace Desic.EntityFrameworkCore.Data.Test
                 var randomSeconds = random.Next(maxSeconds);
                 var createdOn = new DateTime(2000, 1, 1).AddSeconds(randomSeconds);
                 var sequentialId = i + 1;
-                var sequentialIdString = $"{sequentialId}";
-                var guidString = entityTypeUserIdString[..^sequentialIdString.Length] + sequentialIdString;
                 var isHidden = !isActive && i % 3 == 0;
                 result.Add(new User
                 {
-                    Id = new Guid(guidString),
+                    Id = entityTypeUserId.ToIntBasedGuid(sequentialId),
                     CreatedOn = createdOn,
                     CreatedById = tagSystem.Id,
                     CreatedByTypeId = entityTypeTag.Id,

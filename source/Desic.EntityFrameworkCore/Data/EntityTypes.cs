@@ -11,7 +11,7 @@ namespace Desic.EntityFrameworkCore.Data
 
         internal static IList<EntityType> Generate()
         {
-            return _entityTypes.Select(x => new EntityType { Id = x.Value.Id, Name = x.Value.Name }).ToList();
+            return [.. _entityTypes.Select(x => new EntityType { Id = x.Value.Id, Name = x.Value.Name })];
         }
 
         internal static ReadOnlyEntityType Get(Enums.EntityType entityType)
@@ -22,7 +22,7 @@ namespace Desic.EntityFrameworkCore.Data
         private static SortedList<Enums.EntityType, ReadOnlyEntityType> GenerateEntityTypesFromEnum()
         {
             var result = new SortedList<Enums.EntityType, ReadOnlyEntityType>();
-            foreach (var value in (Enums.EntityType[])Enum.GetValues(typeof(Enums.EntityType)))
+            foreach (var value in Enum.GetValues<Enums.EntityType>())
             {
                 var integerIdString = $"{(int)value}";
                 var guidString = "00000000"[..^integerIdString.Length] + integerIdString + "-0000-0000-0000-000000000000";

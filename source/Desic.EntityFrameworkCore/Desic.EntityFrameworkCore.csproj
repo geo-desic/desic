@@ -16,7 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Desic.Core\Desic.Core.csproj" />
     <ProjectReference Include="..\MediatR\MediatR.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Desic.EntityFrameworkCore.Tests.Unit"/>
   </ItemGroup>
 
 </Project>
