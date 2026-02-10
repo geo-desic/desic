@@ -1,7 +1,7 @@
 ﻿using Desic.Business.Users.Models;
 using FluentValidation;
 
-namespace Desic.Business.Users.Validators
+namespace Desic.Business.Users.Models.Validators
 {
     public class UserCreateValidator : AbstractValidator<UserCreate>
     {

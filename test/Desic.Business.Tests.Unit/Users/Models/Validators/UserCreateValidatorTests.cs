@@ -1,9 +1,9 @@
 ﻿using Desic.Business.Users.Models;
-using Desic.Business.Users.Validators;
+using Desic.Business.Users.Models.Validators;
 using FluentValidation.TestHelper;
 using System.Text;
 
-namespace Desic.Business.Tests.Unit.Users.Validators;
+namespace Desic.Business.Tests.Unit.Users.Models.Validators;
 
 public class UserCreateValidatorTests
 {
