@@ -1,7 +1,6 @@
-﻿namespace Desic.Business.Users.Models
+﻿namespace Desic.Business.Users.Models;
+
+public class UserCreate
 {
-    public class UserCreate
-    {
-        public string? Username { get; set; }
-    }
+    public string? Username { get; set; }
 }

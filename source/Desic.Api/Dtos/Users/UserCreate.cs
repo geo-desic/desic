@@ -1,7 +1,6 @@
-﻿namespace Desic.Api.Dtos.Users
+﻿namespace Desic.Api.Dtos.Users;
+
+public class UserCreate
 {
-    public class UserCreate
-    {
-        public string? Username { get; set; }
-    }
+    public string? Username { get; set; }
 }

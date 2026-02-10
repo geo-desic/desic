@@ -1,7 +1,6 @@
-﻿namespace Desic.EntityFrameworkCore.Entities
+﻿namespace Desic.EntityFrameworkCore.Entities;
+
+public class Tag : ModifiableEntity
 {
-    public class Tag : ModifiableEntity
-    {
-        public required string Name { get; set; }
-    }
+    public required string Name { get; set; }
 }

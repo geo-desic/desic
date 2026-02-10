@@ -3,28 +3,27 @@ using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.Business.Users.Queries
+namespace Desic.Business.Users.Queries;
+
+public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger, IMediator mediator) : IRequestHandler<GetUserByIdRequest, Result<User>>
 {
-    public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger, IMediator mediator) : IRequestHandler<GetUserByIdRequest, Result<User>>
+    private readonly ILogger<GetUserByIdRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException();
+
+    public async Task<Result<User>> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
     {
-        private readonly ILogger<GetUserByIdRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException();
+        var query = new EntityFrameworkCore.Users.Queries.GetUserByIdRequest { UserId = request.UserId };
+        var user = await _mediator.Send(query, cancellationToken);
 
-        public async Task<Result<User>> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
+        if (user == null)
         {
-            var query = new EntityFrameworkCore.Users.Queries.GetUserByIdRequest { UserId = request.UserId };
-            var user = await _mediator.Send(query, cancellationToken);
-
-            if (user == null)
-            {
-                _logger.LogDebug("User with id {id} not found", request.UserId);
-                return Result.Fail($"User with id {request.UserId} not found");
-            }
-            return new User
-            {
-                Id = user.Id,
-                Username = user.Username,
-            };
+            _logger.LogDebug("User with id {id} not found", request.UserId);
+            return Result.Fail($"User with id {request.UserId} not found");
         }
+        return new User
+        {
+            Id = user.Id,
+            Username = user.Username,
+        };
     }
 }

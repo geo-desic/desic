@@ -1,7 +1,6 @@
-﻿namespace Desic.EntityFrameworkCore.Entities
+﻿namespace Desic.EntityFrameworkCore.Entities;
+
+public class MinimalEntity
 {
-    public class MinimalEntity
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

@@ -1,7 +1,6 @@
-﻿namespace Desic.EntityFrameworkCore.Entities
+﻿namespace Desic.EntityFrameworkCore.Entities;
+
+public class EntityType : MinimalEntity
 {
-    public class EntityType : MinimalEntity
-    {
-        public required string Name { get; set; }
-    }
+    public required string Name { get; set; }
 }

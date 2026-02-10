@@ -2,10 +2,9 @@
 using FluentResults;
 using MediatR;
 
-namespace Desic.Business.Users.Queries
+namespace Desic.Business.Users.Queries;
+
+public class GetUserByIdRequest : IRequest<Result<User>>
 {
-    public class GetUserByIdRequest : IRequest<Result<User>>
-    {
-        public Guid UserId { get; set; }
-    }
+    public Guid UserId { get; set; }
 }

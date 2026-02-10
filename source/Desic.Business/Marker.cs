@@ -1,6 +1,5 @@
-﻿namespace Desic.Business
+﻿namespace Desic.Business;
+
+public class Marker
 {
-    public class Marker
-    {
-    }
 }

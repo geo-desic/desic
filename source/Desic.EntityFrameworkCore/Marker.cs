@@ -1,6 +1,5 @@
-﻿namespace Desic.EntityFrameworkCore
+﻿namespace Desic.EntityFrameworkCore;
+
+public class Marker
 {
-    public class Marker
-    {
-    }
 }

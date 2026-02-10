@@ -1,16 +1,14 @@
-﻿using Desic.Business.Users.Models;
-using FluentValidation;
+﻿using FluentValidation;
 
-namespace Desic.Business.Users.Models.Validators
+namespace Desic.Business.Users.Models.Validators;
+
+public class UserCreateValidator : AbstractValidator<UserCreate>
 {
-    public class UserCreateValidator : AbstractValidator<UserCreate>
+    public UserCreateValidator()
     {
-        public UserCreateValidator()
-        {
-            RuleFor(u => u.Username)
-                .NotEmpty()
-                .Length(5, 50)
-                .Matches("^[a-zA-Z0-9]+([._-]?[a-zA-Z0-9]+)*$"); // alphanumeric characters, hyphens '-', and periods '.'; no consecutive special characters, nor at start/end
-        }
+        RuleFor(u => u.Username)
+            .NotEmpty()
+            .Length(5, 50)
+            .Matches("^[a-zA-Z0-9]+([._-]?[a-zA-Z0-9]+)*$"); // alphanumeric characters, hyphens '-', and periods '.'; no consecutive special characters, nor at start/end
     }
 }

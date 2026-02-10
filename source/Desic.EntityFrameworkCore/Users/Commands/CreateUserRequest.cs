@@ -1,10 +1,9 @@
 ﻿using Desic.EntityFrameworkCore.Entities;
 using MediatR;
 
-namespace Desic.EntityFrameworkCore.Users.Commands
+namespace Desic.EntityFrameworkCore.Users.Commands;
+
+public class CreateUserRequest : IRequest<Guid>
 {
-    public class CreateUserRequest : IRequest<Guid>
-    {
-        public required User User { get; set; }
-    }
+    public required User User { get; set; }
 }

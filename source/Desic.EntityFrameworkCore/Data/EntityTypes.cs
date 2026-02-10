@@ -1,42 +1,41 @@
 ﻿using Desic.EntityFrameworkCore.Entities;
 
-namespace Desic.EntityFrameworkCore.Data
+namespace Desic.EntityFrameworkCore.Data;
+
+internal static class EntityTypes
 {
-    internal static class EntityTypes
+    static EntityTypes()
     {
-        static EntityTypes()
-        {
-            _entityTypes = GenerateEntityTypesFromEnum();
-        }
+        _entityTypes = GenerateEntityTypesFromEnum();
+    }
 
-        internal static IList<EntityType> Generate()
-        {
-            return [.. _entityTypes.Select(x => new EntityType { Id = x.Value.Id, Name = x.Value.Name })];
-        }
+    internal static IList<EntityType> Generate()
+    {
+        return [.. _entityTypes.Select(x => new EntityType { Id = x.Value.Id, Name = x.Value.Name })];
+    }
 
-        internal static ReadOnlyEntityType Get(Enums.EntityType entityType)
-        {
-            return _entityTypes[entityType];
-        }
+    internal static ReadOnlyEntityType Get(Enums.EntityType entityType)
+    {
+        return _entityTypes[entityType];
+    }
 
-        private static SortedList<Enums.EntityType, ReadOnlyEntityType> GenerateEntityTypesFromEnum()
+    private static SortedList<Enums.EntityType, ReadOnlyEntityType> GenerateEntityTypesFromEnum()
+    {
+        var result = new SortedList<Enums.EntityType, ReadOnlyEntityType>();
+        foreach (var value in Enum.GetValues<Enums.EntityType>())
         {
-            var result = new SortedList<Enums.EntityType, ReadOnlyEntityType>();
-            foreach (var value in Enum.GetValues<Enums.EntityType>())
-            {
-                var integerIdString = $"{(int)value}";
-                var guidString = "00000000"[..^integerIdString.Length] + integerIdString + "-0000-0000-0000-000000000000";
-                result.Add(value, new ReadOnlyEntityType { Id = new(guidString), Name = Enum.GetName(value)! });
-            }
-            return result;
+            var integerIdString = $"{(int)value}";
+            var guidString = "00000000"[..^integerIdString.Length] + integerIdString + "-0000-0000-0000-000000000000";
+            result.Add(value, new ReadOnlyEntityType { Id = new(guidString), Name = Enum.GetName(value)! });
         }
+        return result;
+    }
 
-        private static readonly SortedList<Enums.EntityType, ReadOnlyEntityType> _entityTypes;
+    private static readonly SortedList<Enums.EntityType, ReadOnlyEntityType> _entityTypes;
 
-        internal class ReadOnlyEntityType
-        {
-            public Guid Id { get; init; }
-            public required string Name { get; init; }
-        }
+    internal class ReadOnlyEntityType
+    {
+        public Guid Id { get; init; }
+        public required string Name { get; init; }
     }
 }

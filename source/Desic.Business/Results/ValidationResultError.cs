@@ -1,10 +1,9 @@
 ﻿using FluentResults;
 
-namespace Desic.Business.Results
+namespace Desic.Business.Results;
+
+internal class ValidationResultError(string message, string? propertyName, string? severity) : Error(message)
 {
-    internal class ValidationResultError(string message, string? propertyName, string? severity) : Error(message)
-    {
-        public string? PropertyName { get; set; } = propertyName;
-        public string? Severity { get; set; } = severity;
-    }
+    public string? PropertyName { get; set; } = propertyName;
+    public string? Severity { get; set; } = severity;
 }

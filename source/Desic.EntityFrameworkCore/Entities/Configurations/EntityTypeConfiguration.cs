@@ -2,15 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Desic.EntityFrameworkCore.Entities.Configurations
+namespace Desic.EntityFrameworkCore.Entities.Configurations;
+
+internal class EntityTypeConfiguration : IEntityTypeConfiguration<EntityType>
 {
-    internal class EntityTypeConfiguration : IEntityTypeConfiguration<EntityType>
+    public void Configure(EntityTypeBuilder<EntityType> builder)
     {
-        public void Configure(EntityTypeBuilder<EntityType> builder)
-        {
-            var columnOrder = builder.ConfigureMinimalEntity();
-            builder.Property(x => x.Name).IsRequired().HasColumnOrder(columnOrder++);
-            builder.HasIndex(x => x.Name).IsUnique();
-        }
+        var columnOrder = builder.ConfigureMinimalEntity();
+        builder.Property(x => x.Name).IsRequired().HasColumnOrder(columnOrder++);
+        builder.HasIndex(x => x.Name).IsUnique();
     }
 }

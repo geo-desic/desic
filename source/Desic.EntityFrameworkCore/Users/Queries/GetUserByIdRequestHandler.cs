@@ -4,16 +4,15 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.EntityFrameworkCore.Users.Queries
-{
-    public class GetUserByIdRequestHandler(DesicContext desicContext, ILogger<GetUserByIdRequestHandler> logger) : IRequestHandler<GetUserByIdRequest, User?>
-    {
-        private readonly DesicContext _desicContext = desicContext ?? throw new ArgumentNullException(nameof(desicContext));
-        private readonly ILogger<GetUserByIdRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+namespace Desic.EntityFrameworkCore.Users.Queries;
 
-        public async Task<User?> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
-        {
-            return await _desicContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
-        }
+public class GetUserByIdRequestHandler(DesicContext desicContext, ILogger<GetUserByIdRequestHandler> logger) : IRequestHandler<GetUserByIdRequest, User?>
+{
+    private readonly DesicContext _desicContext = desicContext ?? throw new ArgumentNullException(nameof(desicContext));
+    private readonly ILogger<GetUserByIdRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+
+    public async Task<User?> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
+    {
+        return await _desicContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken);
     }
 }

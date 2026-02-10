@@ -1,55 +1,54 @@
 ﻿using Desic.EntityFrameworkCore.Entities;
 using Desic.EntityFrameworkCore.Enums;
 
-namespace Desic.EntityFrameworkCore.Data
+namespace Desic.EntityFrameworkCore.Data;
+
+internal static class Tags
 {
-    internal static class Tags
+    static Tags()
     {
-        static Tags()
-        {
-            _entityTypeTag = EntityTypes.Get(Enums.EntityType.Tag);
-            _systemTags = GenerateSystemTagsFromEnum();
-        }
+        _entityTypeTag = EntityTypes.Get(Enums.EntityType.Tag);
+        _systemTags = GenerateSystemTagsFromEnum();
+    }
 
-        internal static IList<Tag> Generate()
+    internal static IList<Tag> Generate()
+    {
+        var tagSystem = Get(SystemTag.System);
+        return [.. _systemTags.Select(x => new Tag
         {
-            var tagSystem = Get(SystemTag.System);
-            return [.. _systemTags.Select(x => new Tag
-            {
-                Id = x.Value.Id,
-                CreatedByTypeId = _entityTypeTag.Id,
-                CreatedById = tagSystem.Id,
-                ModifiedByTypeId = _entityTypeTag.Id,
-                ModifiedById = tagSystem.Id,
-                Name = x.Value.Name,
-            })];
-        }
+            Id = x.Value.Id,
+            CreatedByTypeId = _entityTypeTag.Id,
+            CreatedById = tagSystem.Id,
+            ModifiedByTypeId = _entityTypeTag.Id,
+            ModifiedById = tagSystem.Id,
+            Name = x.Value.Name,
+        })];
+    }
 
-        internal static ReadOnlyTag Get(SystemTag systemTag)
+    internal static ReadOnlyTag Get(SystemTag systemTag)
+    {
+        return _systemTags[systemTag];
+    }
+
+    private static readonly EntityTypes.ReadOnlyEntityType _entityTypeTag;
+    private static readonly SortedList<SystemTag, ReadOnlyTag> _systemTags;
+
+    private static SortedList<SystemTag, ReadOnlyTag> GenerateSystemTagsFromEnum()
+    {
+        var result = new SortedList<SystemTag, ReadOnlyTag>();
+        var entityTypeTagIdString = _entityTypeTag.Id.ToString();
+        foreach (var value in Enum.GetValues<SystemTag>())
         {
-            return _systemTags[systemTag];
+            var integerIdString = $"{(int)value}";
+            var guidString = entityTypeTagIdString[..^integerIdString.Length] + integerIdString;
+            result.Add(value, new ReadOnlyTag { Id = new(guidString), Name = Enum.GetName(value)! });
         }
+        return result;
+    }
 
-        private static readonly EntityTypes.ReadOnlyEntityType _entityTypeTag;
-        private static readonly SortedList<SystemTag, ReadOnlyTag> _systemTags;
-
-        private static SortedList<SystemTag, ReadOnlyTag> GenerateSystemTagsFromEnum()
-        {
-            var result = new SortedList<SystemTag, ReadOnlyTag>();
-            var entityTypeTagIdString = _entityTypeTag.Id.ToString();
-            foreach (var value in Enum.GetValues<SystemTag>())
-            {
-                var integerIdString = $"{(int)value}";
-                var guidString = entityTypeTagIdString[..^integerIdString.Length] + integerIdString;
-                result.Add(value, new ReadOnlyTag { Id = new(guidString), Name = Enum.GetName(value)! });
-            }
-            return result;
-        }
-
-        internal class ReadOnlyTag
-        {
-            public Guid Id { get; init; }
-            public required string Name { get; init; }
-        }
+    internal class ReadOnlyTag
+    {
+        public Guid Id { get; init; }
+        public required string Name { get; init; }
     }
 }
