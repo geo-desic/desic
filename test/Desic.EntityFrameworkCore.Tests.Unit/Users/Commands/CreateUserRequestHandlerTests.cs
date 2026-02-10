@@ -13,7 +13,7 @@ public class CreateUserRequestHandlerTests : AddUsersDependencyTests
     public class CreateUserRequestHandlerTests001 : CreateUserRequestHandlerTests
     {
         [Fact]
-        public async Task Handle_NewUser_ExpectedResult()
+        public async Task Handle_ValidNewUser_ExpectedResult()
         {
             // arrange
             var countBefore = 3;

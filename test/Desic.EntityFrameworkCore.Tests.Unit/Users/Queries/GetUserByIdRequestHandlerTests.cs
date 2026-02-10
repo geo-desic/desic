@@ -13,7 +13,7 @@ public class GetUserByIdRequestHandlerTests : AddUsersDependencyTests
     public class GetUserByIdRequestHandlerTests001 : GetUserByIdRequestHandlerTests
     {
         [Fact]
-        public async Task Handle_UserDoesNotExist_ReturnsNullUser()
+        public async Task Handle_UserDoesNotExist_ReturnsNull()
         {
             // arrange
             AddUsers(1); // add a user to ensure sut doesn't just return null regardless of input
