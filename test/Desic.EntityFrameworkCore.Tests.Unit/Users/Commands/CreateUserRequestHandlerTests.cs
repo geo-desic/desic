@@ -1,5 +1,5 @@
-﻿using Desic.EntityFrameworkCore.Users.Commands;
-using FluentAssertions;
+﻿using AwesomeAssertions;
+using Desic.EntityFrameworkCore.Users.Commands;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
