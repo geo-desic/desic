@@ -2,6 +2,7 @@
 
 namespace Desic.EntityFrameworkCore.Data;
 
+[Obsolete]
 internal static class Iso3166Countries
 {
     /* data in Generate() is accurate to: 2026-02-10
@@ -20,8 +21,8 @@ internal static class Iso3166Countries
     */
     internal static Iso3166Country[] Generate()
     {
-        return new[]
-        {
+        return
+        [
             new Iso3166Country { IsoId = 4, Alpha2 = "af", Alpha3 = "afg", Name = "Afghanistan" },
             new Iso3166Country { IsoId = 248, Alpha2 = "ax", Alpha3 = "ala", Name = "Åland Islands" },
             new Iso3166Country { IsoId = 8, Alpha2 = "al", Alpha3 = "alb", Name = "Albania" },
@@ -271,6 +272,6 @@ internal static class Iso3166Countries
             new Iso3166Country { IsoId = 887, Alpha2 = "ye", Alpha3 = "yem", Name = "Yemen" },
             new Iso3166Country { IsoId = 894, Alpha2 = "zm", Alpha3 = "zmb", Name = "Zambia" },
             new Iso3166Country { IsoId = 716, Alpha2 = "zw", Alpha3 = "zwe", Name = "Zimbabwe" },
-        };
+        ];
     }
 }

@@ -7,7 +7,7 @@ public static class Providers
     public static readonly Provider Sqlite = new(nameof(Sqlite), typeof(EntityFrameworkCore.Sqlite.Marker).Assembly.GetName().Name!);
     public static readonly Provider SqlServer = new(nameof(SqlServer), typeof(EntityFrameworkCore.SqlServer.Marker).Assembly.GetName().Name!);
 
-    public static void Configure(IConfiguration config, DbContextOptionsBuilder options, string dbProvider)
+    public static void Configure(DbContextOptionsBuilder options, string dbProvider, IConfiguration config)
     {
         if (dbProvider == Sqlite.Name)
         {
@@ -16,6 +16,10 @@ public static class Providers
         else if (dbProvider == SqlServer.Name)
         {
             options.UseSqlServer(config.GetConnectionString(SqlServer.Name), x => x.MigrationsAssembly(SqlServer.Assembly));
+        }
+        else
+        {
+            throw new Exception($"Unsupported db provider: {dbProvider}");
         }
     }
 }

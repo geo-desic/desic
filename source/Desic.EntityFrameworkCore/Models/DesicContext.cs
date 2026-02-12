@@ -1,5 +1,4 @@
-﻿using Desic.EntityFrameworkCore.Data;
-using Desic.EntityFrameworkCore.Entities;
+﻿using Desic.EntityFrameworkCore.Entities;
 using Desic.EntityFrameworkCore.Entities.Configurations;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +10,12 @@ public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(op
     public DbSet<Iso3166Country> Iso3166Countries { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<User> Users { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking); // queries should use AsTracking() when necessary
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,6 +29,5 @@ public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(op
     public static async Task InitializeAsync(DesicContext db, CancellationToken cancellationToken)
     {
         await db.Database.MigrateAsync(cancellationToken);
-        await Seed.ApplyAsync(db, cancellationToken);
     }
 }

@@ -1,14 +1,14 @@
 ﻿using Desic.EntityFrameworkCore.Models;
+using Desic.EntityFrameworkCore.Models.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 
-namespace Desic.Api.Tests.Integration.WebApplication;
+namespace Desic.Testing.Integration.Core.WebApplication;
 
 public class TestWebApplicationFactory<TProgram>(string connectionString) : WebApplicationFactory<TProgram> where TProgram : class
 {
@@ -28,9 +28,10 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
                 services.Remove(dbConnectionDescriptor);
             }
 
-            services.AddDbContext<DesicContext>(options =>
+            services.AddDbContext<DesicContext>((serviceProvider, options) =>
             {
-                options.UseSqlServer(_connectionString);
+                options.UseSqlServer(_connectionString, x => x.MigrationsAssembly(typeof(EntityFrameworkCore.SqlServer.Marker).Assembly.GetName().Name));
+                options.UseDesicContextSeeding(serviceProvider);
             });
         });
 
@@ -38,7 +39,13 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
         {
             var inMemoryConfig = new Dictionary<string, string?>
             {
+                ["DbProvider"] = "SqlServer",
                 ["DesicContext:AllowInitialization"] = "false",
+                ["DesicContext:Seeding:Enabled"] = "true",
+                ["DesicContext:Seeding:Users:Enabled"] = "true",
+                ["DesicContext:Seeding:Users:Test:Enabled"] = "true",
+                ["DesicContext:Seeding:Users:Test:Count"] = "5",
+                ["DesicContext:Seeding:Iso3166Countries:Enabled"] = "false",
                 ["HttpLogging:Enabled"] = "false",
             };
             config.AddInMemoryCollection(inMemoryConfig);
@@ -47,6 +54,7 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
         builder.UseEnvironment("Development");
     }
 
+    /*
     private static void ConfigureForSqlite(IServiceCollection services)
     {
         // create open SqliteConnection so EF won't automatically close it
@@ -64,4 +72,5 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
             options.UseSqlite(connection);
         });
     }
+    */
 }

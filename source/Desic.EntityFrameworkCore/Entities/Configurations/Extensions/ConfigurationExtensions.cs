@@ -38,4 +38,17 @@ internal static class ConfigurationExtensions
         builder.HasKey(x => x.Id);
         return columnOrder;
     }
+
+    internal static int ConfigureSoftDeletableEntity<T>(this EntityTypeBuilder<T> builder, DatabaseFacade databaseFacade) where T : SoftDeletableEntity
+    {
+        var columnOrder = builder.ConfigureModifiableEntity(databaseFacade);
+        builder.Property(x => x.IsDeleted).HasColumnOrder(columnOrder++);
+        builder.Property(x => x.DeletedById).HasColumnOrder(columnOrder++);
+        builder.Property(x => x.DeletedByTypeId).HasColumnOrder(columnOrder++);
+        builder.Property(x => x.DeletedOn).HasColumnOrder(columnOrder++);
+        builder.HasIndex(x => x.IsDeleted).IsUnique(false);
+        builder.HasIndex(x => x.DeletedById).IsUnique(false);
+        builder.HasIndex(x => x.DeletedByTypeId).IsUnique(false);
+        return columnOrder;
+    }
 }

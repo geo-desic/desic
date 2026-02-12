@@ -2,6 +2,7 @@
 
 namespace Desic.EntityFrameworkCore.Data;
 
+[Obsolete]
 internal static class Seed
 {
     public static async Task ApplyAsync(DesicContext db, CancellationToken cancellationToken)

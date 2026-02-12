@@ -1,6 +1,6 @@
 ﻿namespace Desic.EntityFrameworkCore.Entities;
 
-public class ModifiableEntity : CreatableEntity
+public abstract class ModifiableEntity : CreatableEntity
 {
     public Guid ModifiedById { get; set; }
     public Guid ModifiedByTypeId { get; set; }

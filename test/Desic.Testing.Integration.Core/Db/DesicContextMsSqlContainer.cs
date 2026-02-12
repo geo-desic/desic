@@ -1,6 +1,8 @@
 ﻿using Desic.EntityFrameworkCore.Models;
+using Desic.Testing.Integration.Core.WebApplication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
 using Xunit;
 
@@ -20,13 +22,16 @@ public sealed class DesicContextMsSqlContainer : IAsyncLifetime
         await _container.StartAsync();
         Console.WriteLine($"Started mssql container with name = {_container.Name} and id = {_container.Id} and image = {_container.Image.FullName}");
 
-        var optionsBuilder = new DbContextOptionsBuilder<DesicContext>();
-        optionsBuilder.UseSqlServer(ConnectionString, x => x.MigrationsAssembly(typeof(EntityFrameworkCore.SqlServer.Marker).Assembly.GetName().Name));
-        using var context = new DesicContext(optionsBuilder.Options);
+        Console.WriteLine($"Attempting to instantiate a DesicContext");
+        using var factory = new TestWebApplicationFactory<Program>(ConnectionString);
+        var serviceProvider = factory.Services;
+        using var scope = serviceProvider.CreateScope();
+        using var context = scope.ServiceProvider.GetRequiredService<DesicContext>();
+        Console.WriteLine($"Successfully instantiated a DesicContext");
 
         Console.WriteLine($"Attempting to initialize the database");
         using var cts = new CancellationTokenSource();
-        await DesicContext.InitializeAsync(context, cts.Token);
+        await context.Database.MigrateAsync(cts.Token);
         Console.WriteLine($"Successfully initialized the database");
     }
 

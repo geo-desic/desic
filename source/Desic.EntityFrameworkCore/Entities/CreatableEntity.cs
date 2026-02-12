@@ -1,6 +1,6 @@
 ﻿namespace Desic.EntityFrameworkCore.Entities;
 
-public class CreatableEntity : MinimalEntity
+public abstract class CreatableEntity : MinimalEntity
 {
     public Guid CreatedById { get; set; }
     public Guid CreatedByTypeId { get; set; }

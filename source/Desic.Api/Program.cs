@@ -4,6 +4,7 @@ using Desic.Api.HealthChecks;
 using Desic.Business.Users.Models.Validators;
 using Desic.Core.Mediator;
 using Desic.EntityFrameworkCore.Models;
+using Desic.EntityFrameworkCore.Models.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpLogging;
@@ -32,12 +33,23 @@ logger.LogInformation("Starting configuration of the web application builder");
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-builder.Services.AddDbContext<DesicContext>(options =>
+// DesicContext seeding uses MediatR so make sure this is before builder.Services.AddDbContext<DesicContext>
+builder.Services.AddMediatR(cfg =>
 {
-    Providers.Configure(config, options, dbProvider);
+    cfg.RegisterServicesFromAssemblies([typeof(Desic.Business.Marker).Assembly, typeof(Desic.EntityFrameworkCore.Marker).Assembly]);
+    cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
+});
+
+builder.Services.AddDbContext<DesicContext>((serviceProvider, options) =>
+{
+    Providers.Configure(options, dbProvider, config);
     if (config.GetValue("DesicContext:EnableSensitiveDataLogging", false))
     {
         options.EnableSensitiveDataLogging();
+    }
+    if (config.GetValue("DesicContext:Seeding:Enabled", false))
+    {
+        options.UseDesicContextSeeding(serviceProvider);
     }
 });
 
@@ -54,11 +66,6 @@ builder.Services.AddHealthChecks()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssemblies([typeof(Desic.Business.Marker).Assembly, typeof(Desic.EntityFrameworkCore.Marker).Assembly]);
-    cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
-});
 builder.Services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
 if (httpLoggingEnabled)
 {
