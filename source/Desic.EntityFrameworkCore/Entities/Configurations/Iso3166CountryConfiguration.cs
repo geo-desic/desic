@@ -1,4 +1,5 @@
 ﻿using Desic.EntityFrameworkCore.Entities.Configurations.Extensions;
+using Desic.EntityFrameworkCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,7 +13,7 @@ internal class Iso3166CountryConfiguration(DatabaseFacade databaseFacade) : IEnt
     public void Configure(EntityTypeBuilder<Iso3166Country> builder)
     {
         var columnOrder = builder.ConfigureSoftDeletableEntity(_databaseFacade);
-        builder.ToTable("Iso3166Countries", "ref");
+        builder.ToTable("Iso3166Countries", DesicContext.RefSchema);
         builder.Property(x => x.IsoId).IsRequired().HasColumnOrder(columnOrder++);
         builder.Property(x => x.Alpha2).IsRequired().HasColumnOrder(columnOrder++);
         builder.Property(x => x.Alpha3).IsRequired().HasColumnOrder(columnOrder++);

@@ -1,5 +1,6 @@
-﻿using System;
+﻿using Desic.EntityFrameworkCore.CustomMigrations;
 using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 #nullable disable
 
@@ -274,11 +275,15 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 table: "Users",
                 column: "Username",
                 unique: true);
+
+            migrationBuilder.CreateAppUserAndPermissions(password: "2d4ba4c0-6cd1-4c7c-b08c-0db156c44116");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.UndoCreateAppUserAndPermissions();
+
             migrationBuilder.DropTable(
                 name: "Iso3166Countries",
                 schema: "ref");

@@ -3,16 +3,15 @@ using System;
 using Desic.EntityFrameworkCore.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Desic.EntityFrameworkCore.SqlServer.Migrations
+namespace Desic.EntityFrameworkCore.Sqlite.Migrations
 {
     [DbContext(typeof(DesicContext))]
-    [Migration("20260212065822_Initial")]
+    [Migration("20260213015959_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -21,21 +20,18 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("app")
-                .HasAnnotation("ProductVersion", "10.0.2")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+                .HasAnnotation("ProductVersion", "10.0.3");
 
             modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.EntityType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(0);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
                     b.HasKey("Id");
@@ -50,71 +46,71 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(0);
 
                     b.Property<string>("Alpha2")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(12);
 
                     b.Property<string>("Alpha3")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(13);
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(2);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(3)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<Guid>("DeletedById")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(8);
 
                     b.Property<Guid>("DeletedByTypeId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(9);
 
                     b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(10);
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit")
+                        .HasColumnType("INTEGER")
                         .HasColumnOrder(7);
 
                     b.Property<int>("IsoId")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnOrder(11);
 
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(4);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(5);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(6)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(14);
 
                     b.HasKey("Id");
@@ -151,40 +147,40 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(0);
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(2);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(3)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(4);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(5);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(6)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(7);
 
                     b.HasKey("Id");
@@ -206,53 +202,53 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(0);
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(2);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(3)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(true)
                         .HasColumnOrder(8);
 
                     b.Property<bool>("IsHidden")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("INTEGER")
                         .HasDefaultValue(false)
                         .HasColumnOrder(9);
 
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(4);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(5);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(6)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(7);
 
                     b.HasKey("Id");

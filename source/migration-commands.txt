@@ -1,3 +1,14 @@
-dotnet ef migrations add Initial --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite --startup-project ./Desic.Api -- --DbProvider Sqlite
+creating migration code:
 
+dotnet ef migrations add Initial --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite --startup-project ./Desic.Api -- --DbProvider Sqlite
 dotnet ef migrations add Initial --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer --startup-project ./Desic.Api -- --DbProvider SqlServer
+
+
+applying migrations to a database:
+
+dotnet ef database update --connection "Data Source=./desic.db;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite --startup-project ./Desic.Api -- --DbProvider Sqlite
+dotnet ef database update --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer --startup-project ./Desic.Api -- --DbProvider SqlServer
+
+reverting database to <prior-migration-name> (use 0 for beginning)
+dotnet ef database update <prior-migration-name> --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer --startup-project ./Desic.Api -- --DbProvider SqlServer
+dotnet ef database update 0 --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer --startup-project ./Desic.Api -- --DbProvider SqlServer

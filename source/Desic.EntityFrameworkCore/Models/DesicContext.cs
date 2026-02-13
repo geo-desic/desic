@@ -11,6 +11,10 @@ public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(op
     public DbSet<Tag> Tags { get; set; }
     public DbSet<User> Users { get; set; }
 
+    public const string AppUser = "AppUser";
+    public const string AppSchema = "app"; // application can perform all dml operations (select, insert, update, delete) in this schema
+    public const string RefSchema = "ref"; // application can perform only read operations (select) in this schema
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
@@ -19,7 +23,7 @@ public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(op
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("app");
+        modelBuilder.HasDefaultSchema(AppSchema);
         modelBuilder.ApplyConfiguration(new EntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new Iso3166CountryConfiguration(Database));
         modelBuilder.ApplyConfiguration(new TagConfiguration(Database));
