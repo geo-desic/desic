@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Desic.EntityFrameworkCore.SqlServer;
 
@@ -48,11 +47,6 @@ public class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<Desi
         result.ConfigureServices((hostContext, services) =>
         {
             var config = hostContext.Configuration;
-            services.AddLogging(b =>
-            {
-                b.SetMinimumLevel(LogLevel.Debug);
-                b.AddConsole();
-            });
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssembly(typeof(EntityFrameworkCore.Marker).Assembly);
