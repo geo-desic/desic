@@ -1,4 +1,6 @@
-﻿namespace Desic.EntityFrameworkCore.Entities;
+﻿using Desic.EntityFrameworkCore.Entities.Infrastructure;
+
+namespace Desic.EntityFrameworkCore.Entities;
 
 public class User : ModifiableEntity
 {
@@ -15,4 +17,6 @@ public class User : ModifiableEntity
     }
     private bool? _iaActive;
     private bool? _isHidden;
+
+    protected override Enums.EntityType EnumEntityType => Enums.EntityType.User;
 }

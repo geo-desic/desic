@@ -2,6 +2,7 @@
 using Desic.EntityFrameworkCore.Data.Resources.ClassMaps;
 using Desic.EntityFrameworkCore.Data.Resources.Queries;
 using Desic.EntityFrameworkCore.Entities;
+using Desic.EntityFrameworkCore.Entities.Infrastructure;
 using Desic.EntityFrameworkCore.Enums;
 using Desic.EntityFrameworkCore.Iso3166Countries.Models;
 using Desic.EntityFrameworkCore.Models;
@@ -15,7 +16,7 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
 {
     private int _batchNumber = 0;
     private readonly DesicContext _context = context ?? throw new ArgumentNullException(nameof(context));
-    private const int _defaultBatchSize = 100;
+    private const int _defaultBatchSize = 50;
     private readonly ILogger<SeedIso3166CountriesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
@@ -31,19 +32,17 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
         var tag = new Tag
         {
             Id = Guid.NewGuid(),
-            CreatedOn = nowTagOn,
-            CreatedByTypeId = entityTypeTag.Id,
-            CreatedById = tagSystem.Id,
-            ModifiedOn = nowTagOn,
-            ModifiedByTypeId = entityTypeTag.Id,
-            ModifiedById = tagSystem.Id,
             Name = $"Process-SeedIso3166Countries-{nowTagOn:yyyyMMddHHmmss}",
         };
+        tag.SetCreatedAndModifiedBy(tagSystem, on: nowTagOn);
 
         _logger.LogDebug("Creating tag {tagName}", tag.Name);
         await _context.AddAsync(tag, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         _context.Entry(tag).State = EntityState.Detached;
+
+        _logger.LogDebug("Updating all records with IsBeingSeeded = true");
+        await _context.Iso3166Countries.ExecuteUpdateAsync(c => c.SetProperty(p => p.IsBeingSeeded, p => true), cancellationToken);
 
         var requestStream = new Iso3166CountriesResourceStreamRequest
         {
@@ -51,7 +50,8 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
             ResourceName = "Desic.EntityFrameworkCore.Data.Resources.iso-3166-countries.csv",
         };
 
-        var items = new List<Iso3166Country>();
+        var batchInserts = new List<Iso3166Country>();
+        _logger.LogDebug("Starting comparison of data to determine if any records need to be inserted or udpated");
         _logger.LogDebug("Creating stream for csv resource = {resourceName} using class map type = {classMapType}", requestStream.ResourceName, requestStream.ClassMapType);
         await foreach (var item in _mediator.CreateStream(requestStream, cancellationToken))
         {
@@ -59,74 +59,63 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
             var countryExisting = await _context.Iso3166Countries.AsTracking().FirstOrDefaultAsync(x => x.IsoId == item.IsoId, cancellationToken);
             if (countryExisting == null)
             {
-                var now = DateTime.UtcNow;
                 item.Id = Guid.NewGuid();
-                item.CreatedOn = now;
-                item.CreatedByTypeId = entityTypeTag.Id;
-                item.CreatedById = tag.Id;
-                item.ModifiedOn = now;
-                item.ModifiedByTypeId = entityTypeTag.Id;
-                item.ModifiedById = tag.Id;
-                items.Add(item);
+                item.IsBeingSeeded = false;
+                item.SetCreatedAndModifiedBy(tag);
+                batchInserts.Add(item);
                 ++result.Inserts;
+                // will be persisted on next PerformBatchChanges
             }
             else
             {
-                // always update these so soft deletes (performed later) will work properly
-                countryExisting.ModifiedOn = DateTime.UtcNow;
-                countryExisting.ModifiedByTypeId = entityTypeTag.Id;
-                countryExisting.ModifiedById = tag.Id;
-                if (countryExisting.Alpha2 != item.Alpha2 || countryExisting.Alpha2 != item.Alpha3 || countryExisting.Name != item.Name)
+                countryExisting.IsBeingSeeded = false;
+                if (!countryExisting.IsEquivalentTo(item))
                 {
-                    countryExisting.Alpha2 = item.Alpha2;
-                    countryExisting.Alpha3 = item.Alpha3;
-                    countryExisting.Name = item.Name;
+                    countryExisting.UpdateFrom(item);
+                    countryExisting.SetNotDeletedAndModifiedBy(tag);
                     ++result.Updates;
-                    // will be updated in the context on next PerformAdditionsAndUpdates
+                    // will be persisted on next PerformBatchChanges
                 }
             }
             if (result.Processed % request.BatchSize == 0)
             {
-                // no reason to track any added/updated items once they are saved to the context
-                await PerformBatchChanges(cancellationToken: cancellationToken, itemsToAdd: items, clearChangeTracker: true);
+                // no reason to track any inserted/updated items once they are saved to the context
+                await PerformBatchChanges(cancellationToken: cancellationToken, batchInserts: batchInserts, clearChangeTracker: true);
             }
         }
         if (result.Processed % request.BatchSize != 0) // for potential partial batch at end
         {
-            await PerformBatchChanges(cancellationToken: cancellationToken, itemsToAdd: items, clearChangeTracker: true);
+            await PerformBatchChanges(cancellationToken: cancellationToken, batchInserts: batchInserts, clearChangeTracker: true);
         }
 
-        // soft deletes
-        foreach (var countryToDelete in _context.Iso3166Countries.AsTracking().Where(x => x.ModifiedById != tag.Id))
-        {
-            countryToDelete.IsDeleted = true;
-            countryToDelete.DeletedOn = DateTime.UtcNow;
-            countryToDelete.DeletedByTypeId = entityTypeTag.Id;
-            countryToDelete.DeletedById = tag.Id;
-            ++result.Deletes;
-            if (result.Processed % request.BatchSize == 0)
-            {
-                await PerformBatchChanges(cancellationToken: cancellationToken, clearChangeTracker: false);
-            }
-        }
-        if (result.Processed % request.BatchSize != 0)
-        {
-            await PerformBatchChanges(cancellationToken, items);
-        }
+        // soft deletes (any records with IsBeingSeeded == true since this was set to false for all inserts/updates above)
+        _logger.LogDebug("Determining if any records need to be (soft) deleted");
+        nowTagOn = DateTime.UtcNow;
+        result.Deletes = await _context.Iso3166Countries
+            .Where(c => c.IsBeingSeeded)
+            .ExecuteUpdateAsync(c => c
+                .SetProperty(p => p.IsDeleted, p => true)
+                .SetProperty(p => p.DeletedById, p => tag.Id)
+                .SetProperty(p => p.DeletedByTypeId, p => tag.GetEntityType().Id)
+                .SetProperty(p => p.DeletedOn, p => nowTagOn)
+                .SetProperty(p => p.ModifiedById, p => tag.Id)
+                .SetProperty(p => p.ModifiedByTypeId, p => tag.GetEntityType().Id)
+                .SetProperty(p => p.ModifiedOn, p => nowTagOn), cancellationToken);
+        result.Processed += result.Deletes;
 
         return result;
     }
 
-    private async Task PerformBatchChanges(CancellationToken cancellationToken, List<Iso3166Country>? itemsToAdd = null, bool clearChangeTracker = false)
+    private async Task PerformBatchChanges(CancellationToken cancellationToken, List<Iso3166Country>? batchInserts = null, bool clearChangeTracker = false)
     {
         ++_batchNumber;
-        if (itemsToAdd != null)
+        if (batchInserts != null)
         {
-            await _context.Iso3166Countries.AddRangeAsync(itemsToAdd, cancellationToken);
+            await _context.Iso3166Countries.AddRangeAsync(batchInserts, cancellationToken);
         }
         _logger.LogDebug("Saving changes for batch {batchNumber}", _batchNumber);
         await _context.SaveChangesAsync(cancellationToken);
-        itemsToAdd?.Clear();
+        batchInserts?.Clear();
         if (clearChangeTracker)
         {
             _context.ChangeTracker.Clear();

@@ -4,9 +4,10 @@
 public enum EntityType : ushort
 {
     #pragma warning disable format
-    Unspecified   = 1,
-    EntityType    = 2,
-    Tag           = 3,
-    User          = 4,
+    Unspecified                   = 1,
+    EntityType                    = 2,
+    Tag                           = 3,
+    User                          = 4,
+    Iso3166Country                = 5,
     #pragma warning restore format
 }

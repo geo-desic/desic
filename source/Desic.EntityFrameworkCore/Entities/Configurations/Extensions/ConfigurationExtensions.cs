@@ -1,4 +1,5 @@
-﻿using Desic.EntityFrameworkCore.Extensions;
+﻿using Desic.EntityFrameworkCore.Entities.Infrastructure;
+using Desic.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -49,6 +50,14 @@ internal static class ConfigurationExtensions
         builder.HasIndex(x => x.IsDeleted).IsUnique(false);
         builder.HasIndex(x => x.DeletedById).IsUnique(false);
         builder.HasIndex(x => x.DeletedByTypeId).IsUnique(false);
+        return columnOrder;
+    }
+
+    internal static int ConfigureSeedableSoftDeletableEntity<T>(this EntityTypeBuilder<T> builder, DatabaseFacade databaseFacade) where T : SeedableSoftDeletableEntity
+    {
+        var columnOrder = builder.ConfigureSoftDeletableEntity(databaseFacade);
+        builder.Property(x => x.IsBeingSeeded).HasColumnOrder(columnOrder++);
+        builder.HasIndex(x => x.IsBeingSeeded).IsUnique(false);
         return columnOrder;
     }
 }

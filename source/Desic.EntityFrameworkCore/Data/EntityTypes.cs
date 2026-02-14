@@ -1,4 +1,5 @@
 ﻿using Desic.EntityFrameworkCore.Entities;
+using Desic.EntityFrameworkCore.Entities.Infrastructure;
 
 namespace Desic.EntityFrameworkCore.Data;
 
@@ -32,10 +33,4 @@ internal static class EntityTypes
     }
 
     private static readonly SortedList<Enums.EntityType, ReadOnlyEntityType> _entityTypes;
-
-    internal class ReadOnlyEntityType
-    {
-        public Guid Id { get; init; }
-        public required string Name { get; init; }
-    }
 }

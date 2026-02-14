@@ -1,4 +1,5 @@
 ﻿using Desic.EntityFrameworkCore.Entities;
+using Desic.EntityFrameworkCore.Entities.Infrastructure;
 using Desic.EntityFrameworkCore.Enums;
 
 namespace Desic.EntityFrameworkCore.Data;
@@ -30,7 +31,7 @@ internal static class Tags
         return _systemTags[systemTag];
     }
 
-    private static readonly EntityTypes.ReadOnlyEntityType _entityTypeTag;
+    private static readonly ReadOnlyEntityType _entityTypeTag;
     private static readonly SortedList<SystemTag, ReadOnlyTag> _systemTags;
 
     private static SortedList<SystemTag, ReadOnlyTag> GenerateSystemTagsFromEnum()
@@ -44,11 +45,5 @@ internal static class Tags
             result.Add(value, new ReadOnlyTag { Id = new(guidString), Name = Enum.GetName(value)! });
         }
         return result;
-    }
-
-    internal class ReadOnlyTag
-    {
-        public Guid Id { get; init; }
-        public required string Name { get; init; }
     }
 }

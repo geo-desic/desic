@@ -49,12 +49,12 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     b.Property<string>("Alpha2")
                         .IsRequired()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(12);
+                        .HasColumnOrder(13);
 
                     b.Property<string>("Alpha3")
                         .IsRequired()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(13);
+                        .HasColumnOrder(14);
 
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("TEXT")
@@ -70,11 +70,11 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                         .HasColumnOrder(3)
                         .HasDefaultValueSql("DATETIME('now')");
 
-                    b.Property<Guid>("DeletedById")
+                    b.Property<Guid?>("DeletedById")
                         .HasColumnType("TEXT")
                         .HasColumnOrder(8);
 
-                    b.Property<Guid>("DeletedByTypeId")
+                    b.Property<Guid?>("DeletedByTypeId")
                         .HasColumnType("TEXT")
                         .HasColumnOrder(9);
 
@@ -82,13 +82,17 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnOrder(10);
 
+                    b.Property<bool>("IsBeingSeeded")
+                        .HasColumnType("INTEGER")
+                        .HasColumnOrder(11);
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER")
                         .HasColumnOrder(7);
 
                     b.Property<int>("IsoId")
                         .HasColumnType("INTEGER")
-                        .HasColumnOrder(11);
+                        .HasColumnOrder(12);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("TEXT")
@@ -108,7 +112,7 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(14);
+                        .HasColumnOrder(15);
 
                     b.HasKey("Id");
 
@@ -125,6 +129,8 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     b.HasIndex("DeletedById");
 
                     b.HasIndex("DeletedByTypeId");
+
+                    b.HasIndex("IsBeingSeeded");
 
                     b.HasIndex("IsDeleted");
 

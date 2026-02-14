@@ -53,12 +53,12 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<string>("Alpha2")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
-                        .HasColumnOrder(12);
+                        .HasColumnOrder(13);
 
                     b.Property<string>("Alpha3")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
-                        .HasColumnOrder(13);
+                        .HasColumnOrder(14);
 
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier")
@@ -74,11 +74,11 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                         .HasColumnOrder(3)
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<Guid>("DeletedById")
+                    b.Property<Guid?>("DeletedById")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(8);
 
-                    b.Property<Guid>("DeletedByTypeId")
+                    b.Property<Guid?>("DeletedByTypeId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(9);
 
@@ -86,13 +86,17 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnOrder(10);
 
+                    b.Property<bool>("IsBeingSeeded")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(11);
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
                         .HasColumnOrder(7);
 
                     b.Property<int>("IsoId")
                         .HasColumnType("int")
-                        .HasColumnOrder(11);
+                        .HasColumnOrder(12);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("uniqueidentifier")
@@ -112,7 +116,7 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
-                        .HasColumnOrder(14);
+                        .HasColumnOrder(15);
 
                     b.HasKey("Id");
 
@@ -129,6 +133,8 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                     b.HasIndex("DeletedById");
 
                     b.HasIndex("DeletedByTypeId");
+
+                    b.HasIndex("IsBeingSeeded");
 
                     b.HasIndex("IsDeleted");
 
