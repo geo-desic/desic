@@ -1,8 +1,8 @@
 ﻿using Desic.EntityFrameworkCore.Models;
-using Desic.Testing.Integration.Core.WebApplication;
+using Desic.EntityFrameworkCore.SqlServer;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.MsSql;
 using Xunit;
 
@@ -12,9 +12,12 @@ namespace Desic.Testing.Integration.Core.Db;
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
 public sealed class DesicContextMsSqlContainer : IAsyncLifetime
 {
-    private readonly MsSqlContainer _container = new MsSqlBuilder(TestSettingsConfiguration.Root.GetValue("Containers:MsSql:Image", string.Empty)).Build();
+    private readonly MsSqlContainer _container = new MsSqlBuilder(TestSettingsConfiguration.Root.GetValue<string>("Containers:MsSql:Image")).Build();
+    private string? _connectionStringApp;
+    private string? _connectionStringMigrations;
 
-    public string ConnectionString => _container.GetConnectionString();
+    public string ConnectionStringApp => _connectionStringApp ?? throw new InvalidOperationException($"{nameof(ConnectionStringApp)} has not been initialized");
+    public string ConnectionStringMigrations => _connectionStringMigrations ?? throw new InvalidOperationException($"{nameof(ConnectionStringMigrations)} has not been initialized");
 
     public async ValueTask InitializeAsync()
     {
@@ -22,17 +25,26 @@ public sealed class DesicContextMsSqlContainer : IAsyncLifetime
         await _container.StartAsync();
         Console.WriteLine($"Started mssql container with name = {_container.Name} and id = {_container.Id} and image = {_container.Image.FullName}");
 
+        _connectionStringMigrations = _container.GetConnectionString();
         Console.WriteLine($"Attempting to instantiate a DesicContext");
-        using var factory = new TestWebApplicationFactory<Program>(ConnectionString);
-        var serviceProvider = factory.Services;
-        using var scope = serviceProvider.CreateScope();
-        using var context = scope.ServiceProvider.GetRequiredService<DesicContext>();
+        using var factory = new DesicContextFactory();
+        using var context = factory.CreateDbContext(["--connection", ConnectionStringMigrations]);
         Console.WriteLine($"Successfully instantiated a DesicContext");
 
         Console.WriteLine($"Attempting to initialize the database");
         using var cts = new CancellationTokenSource();
         await context.Database.MigrateAsync(cts.Token);
         Console.WriteLine($"Successfully initialized the database");
+
+        var configKey = "Databases:Desic:AppUserPassword";
+        var appUserPassword = TestSettingsConfiguration.Root.GetValue<string>(configKey);
+        if (string.IsNullOrEmpty(appUserPassword)) throw new Exception($"Configuration value not set: {configKey}");
+        var builder = new SqlConnectionStringBuilder(ConnectionStringMigrations)
+        {
+            UserID = DesicContext.AppUser,
+            Password = appUserPassword,
+        };
+        _connectionStringApp = builder.ConnectionString;
     }
 
     public ValueTask DisposeAsync() => _container.DisposeAsync();

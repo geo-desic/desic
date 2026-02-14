@@ -40,12 +40,6 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
             var inMemoryConfig = new Dictionary<string, string?>
             {
                 ["DbProvider"] = "SqlServer",
-                ["DesicContext:AllowInitialization"] = "false",
-                ["DesicContext:Seeding:Enabled"] = "true",
-                ["DesicContext:Seeding:Users:Enabled"] = "true",
-                ["DesicContext:Seeding:Users:Test:Enabled"] = "true",
-                ["DesicContext:Seeding:Users:Test:Count"] = "5",
-                ["DesicContext:Seeding:Iso3166Countries:Enabled"] = "false",
                 ["HttpLogging:Enabled"] = "false",
             };
             config.AddInMemoryCollection(inMemoryConfig);

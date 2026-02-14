@@ -18,6 +18,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.3" />
     <PackageReference Include="Microsoft.Identity.Web" Version="4.3.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
@@ -27,8 +29,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Desic.Business\Desic.Business.csproj" />
     <ProjectReference Include="..\Desic.Core\Desic.Core.csproj" />
-    <ProjectReference Include="..\Desic.EntityFrameworkCore.Sqlite\Desic.EntityFrameworkCore.Sqlite.csproj" />
-    <ProjectReference Include="..\Desic.EntityFrameworkCore.SqlServer\Desic.EntityFrameworkCore.SqlServer.csproj" />
     <ProjectReference Include="..\Desic.EntityFrameworkCore\Desic.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\MediatR\MediatR.csproj" />
   </ItemGroup>

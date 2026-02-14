@@ -9,6 +9,7 @@
     <DockerServiceName>desic.api</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include=".env.example" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>

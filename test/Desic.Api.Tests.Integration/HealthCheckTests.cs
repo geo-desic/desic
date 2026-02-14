@@ -14,7 +14,7 @@ public class HealthCheckTests : IClassFixture<DesicContextMsSqlContainer>
 
     public HealthCheckTests(DesicContextMsSqlContainer container)
     {
-        _factory = new TestWebApplicationFactory<Program>(container.ConnectionString);
+        _factory = new TestWebApplicationFactory<Program>(container.ConnectionStringApp);
         _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
     }
 

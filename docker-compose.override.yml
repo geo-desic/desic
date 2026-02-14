@@ -6,20 +6,38 @@ services:
       - "1433:1433"
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "4be55771-1b77-41ef-9a98-6c5d1774fbf9"
+      MSSQL_SA_PASSWORD: "${DB_PASSWORD_MIGRATIONS}"
       MSSQL_PID: "Developer"
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-C", "-S", "localhost", "-U", "${DB_USER_MIGRATIONS}", "-P", "${DB_PASSWORD_MIGRATIONS}", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 20s
     volumes:
       - sqlserver_data:/var/opt/mssql
 
+  migrations:
+    image: ${DOCKER_REGISTRY-}desicmigrations
+    build:
+      context: .
+      dockerfile: source/Desic.EntityFrameworkCore.SqlServer/Dockerfile
+    command: ["sh", "-c", "./efbundle --connection \"${CONNECTION_STRINGS_SQLSERVER_MIGRATIONS}\" --verbose"]
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    restart: "no"
+
   desic.api:
     depends_on:
-      - sqlserver
+      migrations:
+        condition: service_completed_successfully
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionString:Sqlite=Data Source=/app/data/desic.db;
-      - ConnectionStrings:SqlServer=Server=sqlserver;Database=Desic;User Id=sa;Password=4be55771-1b77-41ef-9a98-6c5d1774fbf9;TrustServerCertificate=True
+      - ConnectionStrings:Sqlite=${CONNECTION_STRINGS_SQLITE}
+      - ConnectionStrings:SqlServer=${CONNECTION_STRINGS_SQLSERVER_APP}
       - DbProvider=SqlServer
     ports:
       - "8080:8080"

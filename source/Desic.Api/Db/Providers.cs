@@ -4,22 +4,16 @@ namespace Desic.Api.Db;
 
 public static class Providers
 {
-    public static readonly Provider Sqlite = new(nameof(Sqlite), typeof(EntityFrameworkCore.Sqlite.Marker).Assembly.GetName().Name!);
-    public static readonly Provider SqlServer = new(nameof(SqlServer), typeof(EntityFrameworkCore.SqlServer.Marker).Assembly.GetName().Name!);
+    public const string Sqlite = "Sqlite";
+    public const string SqlServer = "SqlServer";
 
-    public static void Configure(DbContextOptionsBuilder options, string dbProvider, IConfiguration config)
+    public static void UseProvider(this DbContextOptionsBuilder options, string dbProvider, IConfiguration config)
     {
-        if (dbProvider == Sqlite.Name)
+        _ = dbProvider switch
         {
-            options.UseSqlite(config.GetConnectionString(Sqlite.Name), x => x.MigrationsAssembly(Sqlite.Assembly));
-        }
-        else if (dbProvider == SqlServer.Name)
-        {
-            options.UseSqlServer(config.GetConnectionString(SqlServer.Name), x => x.MigrationsAssembly(SqlServer.Assembly));
-        }
-        else
-        {
-            throw new Exception($"Unsupported db provider: {dbProvider}");
-        }
+            Sqlite => options.UseSqlite(config.GetConnectionString(Sqlite)),
+            SqlServer => options.UseSqlServer(config.GetConnectionString(SqlServer)),
+            _ => throw new Exception($"Unsupported db provider: {dbProvider}"),
+        };
     }
 }

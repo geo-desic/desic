@@ -1,14 +1,22 @@
 creating migration code:
 
-dotnet ef migrations add Initial --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite --startup-project ./Desic.Api -- --DbProvider Sqlite
-dotnet ef migrations add Initial --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer --startup-project ./Desic.Api -- --DbProvider SqlServer
+dotnet ef migrations add Initial --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite
+dotnet ef migrations add Initial --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer
 
 
 applying migrations to a database:
 
-dotnet ef database update --connection "Data Source=./desic.db;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite --startup-project ./Desic.Api -- --DbProvider Sqlite
-dotnet ef database update --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer --startup-project ./Desic.Api -- --DbProvider SqlServer
+dotnet ef database update --connection "Data Source=./desic.db;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite
+dotnet ef database update --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer
 
-reverting database to <prior-migration-name> (use 0 for beginning)
-dotnet ef database update <prior-migration-name> --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer --startup-project ./Desic.Api -- --DbProvider SqlServer
-dotnet ef database update 0 --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer --startup-project ./Desic.Api -- --DbProvider SqlServer
+reverting database to <prior-migration-name> (use 0 for beginning):
+
+dotnet ef database update <prior-migration-name> --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer
+dotnet ef database update 0 --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer
+
+
+
+
+creating a bundle executable for migrations (does not apply them to any databases):
+(may need to add .csproj to the end of the project relative path)
+dotnet ef migrations bundle --output efbundle --self-contained --verbose --no-build --configuration Release --project ./Desic.EntityFrameworkCore.SqlServer --context DesicContext

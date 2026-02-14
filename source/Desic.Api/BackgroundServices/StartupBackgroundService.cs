@@ -1,5 +1,5 @@
 ﻿using Desic.Api.HealthChecks;
-using Desic.EntityFrameworkCore.Models;
+using System.Diagnostics;
 
 namespace Desic.Api.BackgroundServices;
 
@@ -12,23 +12,19 @@ public class StartupBackgroundService(IConfiguration config, IWebHostEnvironment
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         using var scope = _serviceScopeFactory.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<StartupBackgroundService>>();
-        var allowInitialization = _config.GetValue("DesicContext:AllowInitialization", false);
-        logger.LogDebug("Allow initialization of DesicContext: {desicContextAllowInit}", allowInitialization);
+        logger.LogInformation("Starting {serviceName}", nameof(StartupBackgroundService));
 
-        if (allowInitialization && _environment.IsDevelopment())
-        {
-            var context = scope.ServiceProvider.GetRequiredService<DesicContext>();
-            logger.LogInformation("Starting initialization of DesicContext");
-            await DesicContext.InitializeAsync(context, cancellationToken);
-            logger.LogInformation("Completed initialization of DesicContext");
-        }
-        else if (allowInitialization)
-        {
-            logger.LogWarning("DesicContext initialization is not allowed in non development web application environments");
-        }
+        // any potential time consuming startup tasks
 
         _startupHealthCheck.StartupCompleted = true;
+        // the startup health check can be used to determine when startup has completed
+
+        stopwatch.Stop();
+        logger.LogInformation("Completed {serviceName} in {elapsedTotalMilliseconds}ms", nameof(StartupBackgroundService), stopwatch.Elapsed.TotalMilliseconds);
     }
 }

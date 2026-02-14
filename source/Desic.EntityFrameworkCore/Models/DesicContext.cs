@@ -29,9 +29,4 @@ public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(op
         modelBuilder.ApplyConfiguration(new TagConfiguration(Database));
         modelBuilder.ApplyConfiguration(new UserConfiguration(Database));
     }
-
-    public static async Task InitializeAsync(DesicContext db, CancellationToken cancellationToken)
-    {
-        await db.Database.MigrateAsync(cancellationToken);
-    }
 }

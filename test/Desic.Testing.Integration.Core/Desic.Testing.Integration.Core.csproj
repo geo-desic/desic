@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\source\Desic.Api\Desic.Api.csproj" />
+    <ProjectReference Include="..\..\source\Desic.EntityFrameworkCore.SqlServer\Desic.EntityFrameworkCore.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>

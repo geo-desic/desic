@@ -14,7 +14,7 @@ internal class DesicContextSeeder(DesicContext context, IConfiguration config, I
     private readonly ILogger<DesicContextSeeder> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
-    private const string ConfigKeyBase = "DesicContext:Seeding";
+    private const string ConfigKeyBase = "Databases:Desic:Seeding";
     private const string ConfigKeySeedingEnabled = $"{ConfigKeyBase}:Enabled";
     private const string ConfigKeyIso3166CountriesBase = $"{ConfigKeyBase}:Iso3166Countries";
     private const string ConfigKeyIso3166CountriesEnabled = $"{ConfigKeyIso3166CountriesBase}:Enabled";

@@ -15,7 +15,7 @@ public class UsersControllerTests : IClassFixture<DesicContextMsSqlContainer>
 
     public UsersControllerTests(DesicContextMsSqlContainer container)
     {
-        _factory = new TestWebApplicationFactory<Program>(container.ConnectionString);
+        _factory = new TestWebApplicationFactory<Program>(container.ConnectionStringApp);
         _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
     }
 

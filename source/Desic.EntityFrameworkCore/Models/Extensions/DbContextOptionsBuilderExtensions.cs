@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Desic.EntityFrameworkCore.Models.Extensions;
 
-public static class SeedingExtensions
+public static class DbContextOptionsBuilderExtensions
 {
     public static DbContextOptionsBuilder UseDesicContextSeeding(this DbContextOptionsBuilder options, IServiceProvider serviceProvider)
     {

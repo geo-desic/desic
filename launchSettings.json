@@ -1,10 +1,53 @@
 {
   "profiles": {
-    "Docker Compose": {
+    "All": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "desic.api": "StartDebugging"
+        "desic.api": "StartDebugging",
+        "desic.web": "StartWithoutDebugging",
+        "migrations": "StartWithoutDebugging",
+        "sqlserver": "StartWithoutDebugging"
+      }
+    },
+    "Sql Server": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "desic.api": "DoNotStart",
+        "desic.web": "DoNotStart",
+        "migrations": "DoNotStart",
+        "sqlserver": "StartWithoutDebugging"
+      }
+    },
+    "Migrations": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "desic.api": "DoNotStart",
+        "desic.web": "DoNotStart",
+        "migrations": "StartWithoutDebugging",
+        "sqlserver": "StartWithoutDebugging"
+      }
+    },
+    "Api Only": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "desic.api": "StartDebugging",
+        "desic.web": "DoNotStart",
+        "migrations": "DoNotStart",
+        "sqlserver": "DoNotStart"
+      }
+    },
+    "Api & Web": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "desic.api": "StartDebugging",
+        "desic.web": "StartWithoutDebugging",
+        "migrations": "DoNotStart",
+        "sqlserver": "DoNotStart"
       }
     }
   }

@@ -4,7 +4,6 @@ using Desic.Api.HealthChecks;
 using Desic.Business.Users.Models.Validators;
 using Desic.Core.Mediator;
 using Desic.EntityFrameworkCore.Models;
-using Desic.EntityFrameworkCore.Models.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpLogging;
@@ -22,7 +21,7 @@ ILogger logger = loggerFactory.CreateLogger("BeforeAppBuilt");
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
-var dbProvider = config.GetValue("DbProvider", Providers.SqlServer.Name)!;
+var dbProvider = config.GetValue("DbProvider", Providers.SqlServer)!;
 logger.LogInformation("Database provider determined from configuration: {dbProvider}", dbProvider);
 
 var httpLoggingEnabled = config.GetValue("HttpLogging:Enabled", false);
@@ -40,16 +39,12 @@ builder.Services.AddMediatR(cfg =>
     cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
-builder.Services.AddDbContext<DesicContext>((serviceProvider, options) =>
+builder.Services.AddDbContext<DesicContext>(options =>
 {
-    Providers.Configure(options, dbProvider, config);
-    if (config.GetValue("DesicContext:EnableSensitiveDataLogging", false))
+    options.UseProvider(dbProvider, config);
+    if (config.GetValue("Databases:Desic:EnableSensitiveDataLogging", false))
     {
         options.EnableSensitiveDataLogging();
-    }
-    if (config.GetValue("DesicContext:Seeding:Enabled", false))
-    {
-        options.UseDesicContextSeeding(serviceProvider);
     }
 });
 
@@ -79,6 +74,7 @@ if (httpLoggingEnabled)
 logger.LogInformation("Completed configuration of the web application builder");
 
 var app = builder.Build();
+logger = app.Logger;
 
 app.Logger.LogInformation("Built the web application");
 
