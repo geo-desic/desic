@@ -16,7 +16,7 @@ public static class GuidHelpers
     {
         if (value < 0) value = -value;
         var valueString = value.ToString();
-        var resultString = guid.Substring(0, guid.Length - valueString.Length) + valueString;
+        var resultString = guid[..^valueString.Length] + valueString;
         return new Guid(resultString);
     }
 }
