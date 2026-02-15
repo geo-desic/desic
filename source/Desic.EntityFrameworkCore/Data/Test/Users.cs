@@ -20,20 +20,24 @@ internal static class Users
             const int maxSeconds = 725328000;
             var randomSeconds = random.Next(maxSeconds);
             var createdOn = new DateTime(2000, 1, 1).AddSeconds(randomSeconds);
+            var modifiedOn = random.Next(2) == 0 ? createdOn : createdOn.AddSeconds(random.Next(maxSeconds - randomSeconds));
             var sequentialId = i + 1;
-            var isHidden = !isActive && i % 3 == 0;
+            var isDeleted = !isActive && i % 3 == 0;
             result.Add(new User
             {
                 Id = entityTypeUserId.ToIntBasedGuid(sequentialId),
                 CreatedOn = createdOn,
                 CreatedById = tagSystem.Id,
                 CreatedByTypeId = entityTypeTag.Id,
-                ModifiedOn = random.Next(2) == 0 ? createdOn : createdOn.AddSeconds(random.Next(maxSeconds - randomSeconds)),
+                ModifiedOn = modifiedOn,
                 ModifiedById = tagSystem.Id,
                 ModifiedByTypeId = entityTypeTag.Id,
-                Username = $"user{sequentialId}",
+                IsDeleted = isDeleted,
+                DeletedOn = isDeleted ? modifiedOn : null,
+                DeletedById = isDeleted ? tagSystem.Id : null,
+                DeletedByTypeId = isDeleted ? entityTypeTag.Id : null,
+                Username = $"user-{sequentialId}",
                 IsActive = isActive,
-                IsHidden = isHidden,
             });
             isActive = !isActive;
         }

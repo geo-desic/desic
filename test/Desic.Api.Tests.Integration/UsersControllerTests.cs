@@ -26,7 +26,7 @@ public class UsersControllerTests : IClassFixture<DesicContextMsSqlContainer>
         var expected = new User
         {
             Id = new Guid("00000004-0000-0000-0000-000000000001"),
-            Username = "user1",
+            Username = "user-1",
         };
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{expected.Id}");
 

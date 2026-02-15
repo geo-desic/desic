@@ -19,15 +19,18 @@ public class CreateUserRequestHandler(DesicContext desicContext, ILogger<CreateU
         var now = DateTime.UtcNow;
 
         var user = request.User;
-        user.Id = Guid.NewGuid();
+        user.Id = Guid.CreateVersion7();
         user.CreatedById = tagSystem.Id;
         user.CreatedByTypeId = entityTypeTag.Id;
         user.CreatedOn = now;
         user.ModifiedById = tagSystem.Id;
         user.ModifiedByTypeId = entityTypeTag.Id;
         user.ModifiedOn = now;
+        user.IsDeleted = false;
+        user.DeletedOn = null;
+        user.DeletedById = null;
+        user.DeletedByTypeId = null;
         user.IsActive = true;
-        user.IsHidden = false;
 
         await _desicContext.Users.AddAsync(user, cancellationToken);
         await _desicContext.SaveChangesAsync(cancellationToken);

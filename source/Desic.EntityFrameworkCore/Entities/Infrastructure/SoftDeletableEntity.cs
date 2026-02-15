@@ -1,6 +1,6 @@
 ﻿namespace Desic.EntityFrameworkCore.Entities.Infrastructure;
 
-public abstract class SoftDeletableEntity : ModifiableEntity, ICreatableModifiableSoftDeletable
+public abstract class SoftDeletableEntity : ModifiableEntity, ISoftDeletable
 {
     public bool IsDeleted
     {

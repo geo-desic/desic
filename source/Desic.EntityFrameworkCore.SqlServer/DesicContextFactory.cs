@@ -35,9 +35,8 @@ public class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<Desi
             var inMemoryConfig = new Dictionary<string, string?>
             {
                 [$"{ConfigKeySeeding}:Enabled"] = "true",
-                [$"{ConfigKeySeeding}:Users:Enabled"] = "true",
-                [$"{ConfigKeySeeding}:Users:Test:Enabled"] = "true",
-                [$"{ConfigKeySeeding}:Users:Test:Count"] = "5",
+                [$"{ConfigKeySeeding}:Test:Enabled"] = "true",
+                [$"{ConfigKeySeeding}:Test:Users:Count"] = "5",
                 [$"{ConfigKeySeeding}:Iso3166Countries:Enabled"] = "true",
                 [$"{ConfigKeyBaseLogging}:Microsoft.AspNetCore"] = "Warning",
                 [$"{ConfigKeyBaseLogging}:Microsoft.EntityFrameworkCore"] = "Warning",

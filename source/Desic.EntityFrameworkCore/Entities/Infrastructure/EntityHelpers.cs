@@ -16,7 +16,7 @@ public static class EntityHelpers
         entity.ModifiedOn = on ?? DateTime.UtcNow;
     }
 
-    public static void SetCreatedAndModifiedBy(this ICreatableModifiable entity, IReadOnlyMinimalEntity by, DateTime? on = null)
+    public static void SetCreatedAndModifiedBy<T>(this T entity, IReadOnlyMinimalEntity by, DateTime? on = null) where T : ICreatable, IModifiable
     {
         on ??= DateTime.UtcNow;
         entity.SetCreatedBy(by, on: on);
@@ -31,7 +31,7 @@ public static class EntityHelpers
         entity.DeletedOn = on ?? DateTime.UtcNow;
     }
 
-    public static void SetDeletedAndModifiedBy(this ICreatableModifiableSoftDeletable entity, IReadOnlyMinimalEntity by, DateTime? on = null, bool setIsDeleted = true)
+    public static void SetDeletedAndModifiedBy<T>(this T entity, IReadOnlyMinimalEntity by, DateTime? on = null, bool setIsDeleted = true) where T : IModifiable, ISoftDeletable
     {
         on ??= DateTime.UtcNow;
         entity.SetDeletedBy(by, on: on, setIsDeleted: setIsDeleted);
@@ -46,7 +46,7 @@ public static class EntityHelpers
         entity.DeletedOn = null;
     }
 
-    public static void SetNotDeletedAndModifiedBy(this ICreatableModifiableSoftDeletable entity, IReadOnlyMinimalEntity by, DateTime? on = null)
+    public static void SetNotDeletedAndModifiedBy<T>(this T entity, IReadOnlyMinimalEntity by, DateTime? on = null) where T : IModifiable, ISoftDeletable
     {
         entity.SetNotDeleted();
         entity.SetModifiedBy(by, on);

@@ -1,6 +1,6 @@
 ﻿namespace Desic.EntityFrameworkCore.Entities.Infrastructure;
 
-public abstract class ModifiableEntity : CreatableEntity, ICreatableModifiable
+public abstract class ModifiableEntity : CreatableEntity, IModifiable
 {
     public Guid ModifiedById { get; set; }
     public Guid ModifiedByTypeId { get; set; }

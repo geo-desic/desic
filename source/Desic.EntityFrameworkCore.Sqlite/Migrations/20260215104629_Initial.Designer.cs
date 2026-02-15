@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Desic.EntityFrameworkCore.Sqlite.Migrations
 {
     [DbContext(typeof(DesicContext))]
-    [Migration("20260214145851_Initial")]
+    [Migration("20260215104629_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -170,6 +170,22 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                         .HasColumnOrder(3)
                         .HasDefaultValueSql("DATETIME('now')");
 
+                    b.Property<Guid?>("DeletedById")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(8);
+
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(9);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(10);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER")
+                        .HasColumnOrder(7);
+
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("TEXT")
                         .HasColumnOrder(4);
@@ -187,13 +203,19 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(11);
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("DeletedByTypeId");
+
+                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("ModifiedById");
 
@@ -225,17 +247,27 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                         .HasColumnOrder(3)
                         .HasDefaultValueSql("DATETIME('now')");
 
+                    b.Property<Guid?>("DeletedById")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(8);
+
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(9);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(10);
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(true)
-                        .HasColumnOrder(8);
+                        .HasColumnOrder(12);
 
-                    b.Property<bool>("IsHidden")
-                        .ValueGeneratedOnAdd()
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER")
-                        .HasDefaultValue(false)
-                        .HasColumnOrder(9);
+                        .HasColumnOrder(7);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("TEXT")
@@ -255,13 +287,19 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(11);
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("DeletedByTypeId");
+
+                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("ModifiedById");
 

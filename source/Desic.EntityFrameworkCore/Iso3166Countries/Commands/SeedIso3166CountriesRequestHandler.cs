@@ -4,7 +4,6 @@ using Desic.EntityFrameworkCore.Data.Resources.Queries;
 using Desic.EntityFrameworkCore.Entities;
 using Desic.EntityFrameworkCore.Entities.Infrastructure;
 using Desic.EntityFrameworkCore.Enums;
-using Desic.EntityFrameworkCore.Iso3166Countries.Models;
 using Desic.EntityFrameworkCore.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Desic.EntityFrameworkCore.Iso3166Countries.Commands;
 
-internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, SeedIso3166CountriesRequestHandlerResult>
+internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, DbSetSeedingResult>
 {
     private int _batchNumber = 0;
     private readonly DesicContext _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -20,9 +19,9 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
     private readonly ILogger<SeedIso3166CountriesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
-    public async Task<SeedIso3166CountriesRequestHandlerResult> Handle(SeedIso3166CountriesRequest request, CancellationToken cancellationToken)
+    public async Task<DbSetSeedingResult> Handle(SeedIso3166CountriesRequest request, CancellationToken cancellationToken)
     {
-        var result = new SeedIso3166CountriesRequestHandlerResult();
+        var result = new DbSetSeedingResult();
         _batchNumber = 0;
         request.BatchSize ??= _defaultBatchSize;
 
@@ -31,7 +30,7 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
         var nowTagOn = DateTime.UtcNow;
         var tag = new Tag
         {
-            Id = Guid.NewGuid(),
+            Id = Guid.CreateVersion7(),
             Name = $"Process-SeedIso3166Countries-{nowTagOn:yyyyMMddHHmmss}",
         };
         tag.SetCreatedAndModifiedBy(tagSystem, on: nowTagOn);
@@ -55,11 +54,11 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
         _logger.LogDebug("Creating stream for csv resource = {resourceName} using class map type = {classMapType}", requestStream.ResourceName, requestStream.ClassMapType);
         await foreach (var item in _mediator.CreateStream(requestStream, cancellationToken))
         {
-            ++result.Processed;
+            ++result.ReferenceCount;
             var countryExisting = await _context.Iso3166Countries.AsTracking().FirstOrDefaultAsync(x => x.IsoId == item.IsoId, cancellationToken);
             if (countryExisting == null)
             {
-                item.Id = Guid.NewGuid();
+                item.Id = Guid.CreateVersion7();
                 item.IsBeingSeeded = false;
                 item.SetCreatedAndModifiedBy(tag);
                 batchInserts.Add(item);
@@ -77,13 +76,13 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
                     // will be persisted on next PerformBatchChanges
                 }
             }
-            if (result.Processed % request.BatchSize == 0)
+            if (result.ReferenceCount % request.BatchSize == 0)
             {
                 // no reason to track any inserted/updated items once they are saved to the context
                 await PerformBatchChanges(cancellationToken: cancellationToken, batchInserts: batchInserts, clearChangeTracker: true);
             }
         }
-        if (result.Processed % request.BatchSize != 0) // for potential partial batch at end
+        if (result.ReferenceCount % request.BatchSize != 0) // for potential partial batch at end
         {
             await PerformBatchChanges(cancellationToken: cancellationToken, batchInserts: batchInserts, clearChangeTracker: true);
         }
@@ -101,7 +100,6 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
                 .SetProperty(p => p.ModifiedById, p => tag.Id)
                 .SetProperty(p => p.ModifiedByTypeId, p => tag.GetEntityType().Id)
                 .SetProperty(p => p.ModifiedOn, p => nowTagOn), cancellationToken);
-        result.Processed += result.Deletes;
 
         return result;
     }

@@ -171,6 +171,22 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                         .HasColumnOrder(3)
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<Guid?>("DeletedById")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(8);
+
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(9);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(10);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(7);
+
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(4);
@@ -188,13 +204,19 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(11);
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("DeletedByTypeId");
+
+                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("ModifiedById");
 
@@ -226,17 +248,27 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                         .HasColumnOrder(3)
                         .HasDefaultValueSql("GETUTCDATE()");
 
+                    b.Property<Guid?>("DeletedById")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(8);
+
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(9);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(10);
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true)
-                        .HasColumnOrder(8);
+                        .HasColumnOrder(12);
 
-                    b.Property<bool>("IsHidden")
-                        .ValueGeneratedOnAdd()
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnOrder(9);
+                        .HasColumnOrder(7);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("uniqueidentifier")
@@ -256,13 +288,19 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(11);
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("DeletedByTypeId");
+
+                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("ModifiedById");
 

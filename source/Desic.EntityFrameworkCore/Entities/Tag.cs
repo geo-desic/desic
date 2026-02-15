@@ -2,7 +2,7 @@
 
 namespace Desic.EntityFrameworkCore.Entities;
 
-public class Tag : ModifiableEntity
+public class Tag : SoftDeletableEntity
 {
     public required string Name { get; set; }
 

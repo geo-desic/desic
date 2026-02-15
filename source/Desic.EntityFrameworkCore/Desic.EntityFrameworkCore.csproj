@@ -30,4 +30,8 @@
     <InternalsVisibleTo Include="Desic.EntityFrameworkCore.Tests.Unit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Iso3166Countries\Models\" />
+  </ItemGroup>
+
 </Project>

@@ -8,7 +8,7 @@ public class DesicContextDependencyTests
     protected readonly DesicContext _context;
     private bool _disposed = false;
     protected readonly DbContextOptions<DesicContext> _options = new DbContextOptionsBuilder<DesicContext>()
-        .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // unique name ensures isolation between tests
+        .UseInMemoryDatabase(databaseName: Guid.CreateVersion7().ToString()) // unique name ensures isolation between tests
         .Options;
 
     public DesicContextDependencyTests()
