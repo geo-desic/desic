@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Desic.Api.Tests.Integration;
 
-public class HealthCheckTests : IClassFixture<DesicContextMsSqlContainer>
+public class HealthCheckTests : IClassFixture<DbFixture>
 {
     private readonly TestWebApplicationFactory<Program> _factory;
     private readonly HttpClient _httpClient;
 
-    public HealthCheckTests(DesicContextMsSqlContainer container)
+    public HealthCheckTests(DbFixture dbFixture)
     {
-        _factory = new TestWebApplicationFactory<Program>(container.ConnectionStringApp);
+        _factory = new TestWebApplicationFactory<Program>(dbFixture.ConnectionStringApp);
         _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
     }
 

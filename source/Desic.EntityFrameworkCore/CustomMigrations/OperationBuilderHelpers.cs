@@ -32,7 +32,7 @@ public static class OperationBuilderHelpers
             */
             case ProviderNames.SqlServer:
                 {
-                    migrationBuilder.Sql($"CREATE LOGIN [{AppUserLogin}] WITH PASSWORD = N'{password}';");
+                    migrationBuilder.Sql($"IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE [name] = '{AppUserLogin}') BEGIN CREATE LOGIN [{AppUserLogin}] WITH PASSWORD = N'{password}'; END");
                     migrationBuilder.Sql($"CREATE USER [{DesicContext.AppUser}] FOR LOGIN [{AppUserLogin}];");
                     migrationBuilder.Sql($"CREATE ROLE [{AppRole}];");
                     migrationBuilder.Sql($"GRANT SELECT ON SCHEMA::[{DesicContext.RefSchema}] TO [{AppRole}];");
@@ -73,7 +73,7 @@ public static class OperationBuilderHelpers
                     migrationBuilder.Sql($"ALTER ROLE [{AppRole}] DROP MEMBER [{DesicContext.AppUser}];");
                     migrationBuilder.Sql($"DROP ROLE IF EXISTS [{AppRole}];");
                     migrationBuilder.Sql($"DROP USER IF EXISTS [{DesicContext.AppUser}];");
-                    migrationBuilder.Sql($"DROP LOGIN [{AppUserLogin}];");
+                    migrationBuilder.Sql($"IF EXISTS (SELECT 1 FROM sys.server_principals WHERE [name] = '{AppUserLogin}') BEGIN DROP LOGIN [{AppUserLogin}]; END");
                     return;
                 }
         }

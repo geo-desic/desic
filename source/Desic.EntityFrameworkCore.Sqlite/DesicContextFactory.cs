@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Desic.EntityFrameworkCore.Sqlite;
 
-public class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<DesicContext>
+public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<DesicContext>
 {
     private bool _disposed = false;
     private const string ConfigKeyBase = "Databases:Desic";
@@ -56,7 +56,7 @@ public class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<Desi
             services.AddDbContext<DesicContext>(
                 (serviceProvider, options) =>
                 {
-                    options.UseSqlite(connectionString, x => x.MigrationsAssembly(typeof(Marker).Assembly.GetName().Name));
+                    options.UseSqlite(connectionString, x => x.MigrationsAssembly(typeof(IMarker).Assembly.GetName().Name));
                     options.UseDesicContextSeeding(serviceProvider);
                 });
         });

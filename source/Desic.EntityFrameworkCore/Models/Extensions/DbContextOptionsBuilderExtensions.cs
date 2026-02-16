@@ -13,7 +13,7 @@ public static class DbContextOptionsBuilderExtensions
     public static DbContextOptionsBuilder UseDesicContextSeeding(this DbContextOptionsBuilder options, IServiceProvider serviceProvider)
     {
         var config = serviceProvider.GetRequiredService<IConfiguration>();
-        var logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger<DesicContextSeeder>();
+        var logger = serviceProvider.GetRequiredService<ILogger<DesicContextSeeder>>();
         var mediator = serviceProvider.GetRequiredService<IMediator>();
         DesicContextSeedingOptions bind = new();
         config.GetSection(DesicContextSeedingOptions.SectionName)?.Bind(bind);

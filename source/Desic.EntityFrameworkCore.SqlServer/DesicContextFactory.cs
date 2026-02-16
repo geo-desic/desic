@@ -55,7 +55,7 @@ public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFacto
             services.AddDbContext<DesicContext>(
                 (serviceProvider, options) =>
                 {
-                    options.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(Marker).Assembly.GetName().Name));
+                    options.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(IMarker).Assembly.GetName().Name));
                     options.UseDesicContextSeeding(serviceProvider);
                 });
         });

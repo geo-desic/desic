@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Desic.Api.Tests.Integration;
 
-public class UsersControllerTests : IClassFixture<DesicContextMsSqlContainer>
+public class UsersControllerTests : IClassFixture<DbFixture>
 {
     private readonly TestWebApplicationFactory<Program> _factory;
     private readonly HttpClient _httpClient;
 
-    public UsersControllerTests(DesicContextMsSqlContainer container)
+    public UsersControllerTests(DbFixture dbFixture)
     {
-        _factory = new TestWebApplicationFactory<Program>(container.ConnectionStringApp);
+        _factory = new TestWebApplicationFactory<Program>(dbFixture.ConnectionStringApp);
         _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
     }
 

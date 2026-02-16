@@ -30,7 +30,7 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
 
             services.AddDbContext<DesicContext>((serviceProvider, options) =>
             {
-                options.UseSqlServer(_connectionString, x => x.MigrationsAssembly(typeof(EntityFrameworkCore.SqlServer.Marker).Assembly.GetName().Name));
+                options.UseSqlServer(_connectionString, x => x.MigrationsAssembly(typeof(EntityFrameworkCore.SqlServer.IMarker).Assembly.GetName().Name));
                 options.UseDesicContextSeeding(serviceProvider);
             });
         });
