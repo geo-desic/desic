@@ -13,7 +13,7 @@ public static class Providers
         {
             Sqlite => options.UseSqlite(config.GetConnectionString(Sqlite)),
             SqlServer => options.UseSqlServer(config.GetConnectionString(SqlServer)),
-            _ => throw new Exception($"Unsupported db provider: {dbProvider}"),
+            _ => throw new NotSupportedException($"Unsupported db provider: {dbProvider}"),
         };
     }
 }

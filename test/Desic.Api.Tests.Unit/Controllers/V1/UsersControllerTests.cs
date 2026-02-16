@@ -72,11 +72,12 @@ public class UsersControllerTests
         };
     }
 
-    private static Business.Users.Models.User NewUserBusiness(Guid id = new())
+    private static Business.Users.Models.User NewUserBusiness(Guid? id = null)
     {
+        id ??= Guid.CreateVersion7();
         return new Business.Users.Models.User
         {
-            Id = id,
+            Id = id.Value,
             Username = "username",
         };
     }

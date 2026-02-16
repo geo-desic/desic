@@ -19,7 +19,7 @@ internal static class Users
         {
             const int maxSeconds = 725328000;
             var randomSeconds = random.Next(maxSeconds);
-            var createdOn = new DateTime(2000, 1, 1).AddSeconds(randomSeconds);
+            var createdOn = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(randomSeconds);
             var modifiedOn = random.Next(2) == 0 ? createdOn : createdOn.AddSeconds(random.Next(maxSeconds - randomSeconds));
             var sequentialId = i + 1;
             var isDeleted = !isActive && i % 3 == 0;

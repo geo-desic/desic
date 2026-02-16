@@ -2,7 +2,6 @@
 
 namespace Desic.EntityFrameworkCore.Data;
 
-[Obsolete]
 internal static class Iso3166Countries
 {
     /* data in Generate() is accurate to: 2026-02-10

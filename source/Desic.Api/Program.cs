@@ -22,10 +22,10 @@ var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
 var dbProvider = config.GetValue("DbProvider", Providers.SqlServer)!;
-logger.LogInformation("Database provider determined from configuration: {dbProvider}", dbProvider);
+logger.LogInformation("Database provider determined from configuration: {DbProvider}", dbProvider);
 
 var httpLoggingEnabled = config.GetValue("HttpLogging:Enabled", false);
-logger.LogInformation("Http logging enabled value determined from configuration: {httpLoggingEnabled}", httpLoggingEnabled);
+logger.LogInformation("Http logging enabled value determined from configuration: {HttpLoggingEnabled}", httpLoggingEnabled);
 
 logger.LogInformation("Starting configuration of the web application builder");
 
@@ -35,7 +35,7 @@ logger.LogInformation("Starting configuration of the web application builder");
 // DesicContext seeding uses MediatR so make sure this is before builder.Services.AddDbContext<DesicContext>
 builder.Services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssemblies([typeof(Desic.Business.Marker).Assembly, typeof(Desic.EntityFrameworkCore.Marker).Assembly]);
+    cfg.RegisterServicesFromAssemblies(typeof(Desic.Business.IMarker).Assembly, typeof(Desic.EntityFrameworkCore.IMarker).Assembly);
     cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 
@@ -79,8 +79,8 @@ logger = app.Logger;
 app.Logger.LogInformation("Built the web application");
 
 var isDevelopment = app.Environment.IsDevelopment();
-app.Logger.LogInformation("Application environment: {appEnvironmentName}", app.Environment.EnvironmentName);
-app.Logger.LogInformation("Application is development: {appIsDevelopment}", isDevelopment);
+app.Logger.LogInformation("Application environment: {AppEnvironmentName}", app.Environment.EnvironmentName);
+app.Logger.LogInformation("Application is development: {AppIsDevelopment}", isDevelopment);
 
 if (httpLoggingEnabled)
 {
@@ -105,21 +105,21 @@ app.Logger.LogInformation("Configuring the app to use authorization");
 app.UseAuthorization();
 
 var endpoint = "v1/healthz/live";
-app.Logger.LogInformation($"Configuring the endpoint: {endpoint}");
+app.Logger.LogInformation("Configuring the endpoint: {Endpoint}", endpoint);
 app.MapHealthChecks(endpoint, new HealthCheckOptions
 {
     Predicate = _ => false
 });
 
 endpoint = "v1/healthz/ready";
-app.Logger.LogInformation($"Configuring the endpoint: {endpoint}");
+app.Logger.LogInformation("Configuring the endpoint: {Endpoint}", endpoint);
 app.MapHealthChecks(endpoint, new HealthCheckOptions
 {
     Predicate = healthCheck => healthCheck.Tags.Contains("ready")
 });
 
 endpoint = "v1/healthz/report";
-app.Logger.LogInformation($"Configuring the endpoint: {endpoint}");
+app.Logger.LogInformation("Configuring the endpoint: {Endpoint}", endpoint);
 app.MapHealthChecks(endpoint, new HealthCheckOptions
 {
     ResponseWriter = ResponseWriter.Write

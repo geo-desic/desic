@@ -4,7 +4,7 @@ public static class GuidHelpers
 {
     public static Guid ToGuid(this int value)
     {
-        return default(Guid).ToIntBasedGuid(value);
+        return Guid.Empty.ToIntBasedGuid(value);
     }
 
     public static Guid ToIntBasedGuid(this Guid guid, int value)

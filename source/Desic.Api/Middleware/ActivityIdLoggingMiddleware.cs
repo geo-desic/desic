@@ -11,7 +11,7 @@ public class ActivityIdLoggingMiddleware(RequestDelegate next, ILogger<ActivityI
     public async Task InvokeAsync(HttpContext context)
     {
         var activityId = Activity.Current?.Id ?? context.TraceIdentifier;
-        using (_logger.BeginScope("ActivityId:{activityId}", activityId))
+        using (_logger.BeginScope("ActivityId:{ActivityId}", activityId))
         {
             await _next(context);
         }

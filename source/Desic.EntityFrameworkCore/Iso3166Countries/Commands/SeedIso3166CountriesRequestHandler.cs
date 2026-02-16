@@ -25,7 +25,6 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
         _batchNumber = 0;
         request.BatchSize ??= _defaultBatchSize;
 
-        var entityTypeTag = EntityTypes.Get(Enums.EntityType.Tag);
         var tagSystem = Tags.Get(SystemTag.System);
         var nowTagOn = DateTime.UtcNow;
         var tag = new Tag
@@ -35,7 +34,7 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
         };
         tag.SetCreatedAndModifiedBy(tagSystem, on: nowTagOn);
 
-        _logger.LogDebug("Creating tag {tagName}", tag.Name);
+        _logger.LogDebug("Creating tag {TagName}", tag.Name);
         await _context.AddAsync(tag, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         _context.Entry(tag).State = EntityState.Detached;
@@ -51,7 +50,7 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
 
         var batchInserts = new List<Iso3166Country>();
         _logger.LogDebug("Starting comparison of data to determine if any records need to be inserted or udpated");
-        _logger.LogDebug("Creating stream for csv resource = {resourceName} using class map type = {classMapType}", requestStream.ResourceName, requestStream.ClassMapType);
+        _logger.LogDebug("Creating stream for csv resource = {ResourceName} using class map type = {ClassMapType}", requestStream.ResourceName, requestStream.ClassMapType);
         await foreach (var item in _mediator.CreateStream(requestStream, cancellationToken))
         {
             ++result.ReferenceCount;
@@ -111,7 +110,7 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
         {
             await _context.Iso3166Countries.AddRangeAsync(batchInserts, cancellationToken);
         }
-        _logger.LogDebug("Saving changes for batch {batchNumber}", _batchNumber);
+        _logger.LogDebug("Saving changes for batch {BatchNumber}", _batchNumber);
         await _context.SaveChangesAsync(cancellationToken);
         batchInserts?.Clear();
         if (clearChangeTracker)

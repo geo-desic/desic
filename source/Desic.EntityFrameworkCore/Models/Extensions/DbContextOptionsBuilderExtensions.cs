@@ -20,11 +20,11 @@ public static class DbContextOptionsBuilderExtensions
         var seedingOptions = Options.Create(bind);
         options.UseSeeding((context, seed) =>
         {
-            new DesicContextSeeder(context: (DesicContext)context, seed: seed, options: seedingOptions, logger: logger, mediator: mediator).Apply();
+            new DesicContextSeeder(context: (DesicContext)context, seed: seed, seedingOptions: seedingOptions, logger: logger, mediator: mediator).Apply();
         });
         options.UseAsyncSeeding(async (context, seed, cancellationToken) =>
         {
-            await new DesicContextSeeder(context: (DesicContext)context, seed: seed, options: seedingOptions, logger: logger, mediator: mediator).ApplyAsync(cancellationToken);
+            await new DesicContextSeeder(context: (DesicContext)context, seed: seed, seedingOptions: seedingOptions, logger: logger, mediator: mediator).ApplyAsync(cancellationToken);
         });
         return options;
     }

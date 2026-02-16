@@ -12,8 +12,8 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var requestType = typeof(TRequest).Name;
-        _logger.LogDebug("Handling {requestType}", requestType);
-        _logger.LogTrace("{requestType}: {@request}", requestType, request);
+        _logger.LogDebug("Handling {RequestType}", requestType);
+        _logger.LogTrace("{RequestType}: {@Request}", requestType, request);
         var stopwatch = new Stopwatch();
 
         stopwatch.Start();
@@ -21,8 +21,8 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
         stopwatch.Stop();
 
         var responseType = typeof(TResponse).Name;
-        _logger.LogDebug("Handled {requestType} returning {responseType} in {handlerTotalMilliseconds}ms", requestType, responseType, stopwatch.Elapsed.TotalMilliseconds);
-        _logger.LogTrace("{responseType}: {@response}", responseType, response);
+        _logger.LogDebug("Handled {RequestType} returning {ResponseType} in {HandlerTotalMilliseconds}ms", requestType, responseType, stopwatch.Elapsed.TotalMilliseconds);
+        _logger.LogTrace("{ResponseType}: {@Response}", responseType, response);
 
         return response;
     }

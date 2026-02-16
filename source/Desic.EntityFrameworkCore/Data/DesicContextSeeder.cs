@@ -11,12 +11,12 @@ namespace Desic.EntityFrameworkCore.Data;
 
 // the bool seed argument indicates whether any store management operation was performed
 // see DbContextOptionsBuilder.UseSeeding at https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontextoptionsbuilder.useseeding?view=efcore-10.0
-internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<DesicContextSeedingOptions> options, ILogger<DesicContextSeeder> logger, IMediator mediator)
+internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<DesicContextSeedingOptions> seedingOptions, ILogger<DesicContextSeeder> logger, IMediator mediator)
 {
     private readonly DesicContext _context = context ?? throw new ArgumentNullException(nameof(context));
     private readonly ILogger<DesicContextSeeder> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    private readonly DesicContextSeedingOptions? _options = options?.Value;
+    private readonly DesicContextSeedingOptions? _options = seedingOptions?.Value;
     private readonly bool _seed = seed;
     private readonly DesicContextSeedingMethod _defaultSeedingMethod = seed ? DesicContextSeedingMethod.Full : DesicContextSeedingMethod.Fast; // full when store management operations were performed, otherwise fast
 
@@ -41,7 +41,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
             return;
         }
 
-        _logger.LogInformation("Store management operations were performed: {seed}", _seed);
+        _logger.LogInformation("Store management operations were performed: {StoreManagementOperationsPerformed}", _seed);
 
         // ordering is important due to potential entity dependencies
         await SeedEntityTypes(cancellationToken: cancellationToken, options: options.EntityTypes);
@@ -103,11 +103,11 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
             }
 
             // log result
-            _logger.LogInformation("Seeded {tableName}: reference count = {countReference}, inserts = {countInserts}, updates = {countUpdates}, deletes = {countDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
+            _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
         }
         else
         {
-            _logger.LogDebug("Seeding {tableName} is not enabled", tableName);
+            _logger.LogDebug("Seeding {TableName} is not enabled", tableName);
         }
     }
 
@@ -159,11 +159,11 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
             }
 
             // log result
-            _logger.LogInformation("Seeded {tableName}: reference count = {countReference}, inserts = {countInserts}, updates = {countUpdates}, deletes = {countDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
+            _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
         }
         else
         {
-            _logger.LogDebug("Seeding {tableName} is not enabled", tableName);
+            _logger.LogDebug("Seeding {TableName} is not enabled", tableName);
         }
     }
 
@@ -175,11 +175,11 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
             // TODO: implement support for DesicContextSeedingMethod.Fast
             var request = new SeedIso3166CountriesRequest();
             var result = await _mediator.Send(request, cancellationToken);
-            _logger.LogInformation("Seeded {tableName}: reference count = {countReference}, inserts = {countInserts}, updates = {countUpdates}, deletes = {countDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
+            _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
         }
         else
         {
-            _logger.LogDebug("Seeding {tableName} is not enabled", tableName);
+            _logger.LogDebug("Seeding {TableName} is not enabled", tableName);
         }
     }
 
@@ -218,19 +218,15 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
                 }
                 else // full method
                 {
-                    var tagSystem = Tags.Get(Enums.SystemTag.System);
                     var itemsToAdd = new List<User>();
                     foreach (var item in items)
                     {
                         var existing = await dbSet.AsTracking().FirstOrDefaultAsync(x => x.Id == item.Id, cancellationToken);
                         var existingByUsername = await dbSet.AsNoTracking().FirstOrDefaultAsync(x => x.Username == item.Username, cancellationToken);
-                        if (existing == null) // inserts
+                        if (existing == null && existingByUsername == null) // inserts
                         {
-                            if (existingByUsername == null) // otherwise skip
-                            {
-                                itemsToAdd.Add(item);
-                                ++result.Inserts;
-                            }
+                            itemsToAdd.Add(item);
+                            ++result.Inserts;
                         }
                         // no updates
                     }
@@ -243,11 +239,11 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
             }
 
             // log result
-            _logger.LogInformation("Seeded {tableName}: reference count = {countReference}, inserts = {countInserts}, updates = {countUpdates}, deletes = {countDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
+            _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
         }
         else
         {
-            _logger.LogDebug("Seeding test {tableName} is not enabled", tableName);
+            _logger.LogDebug("Seeding test {TableName} is not enabled", tableName);
         }
     }
 }

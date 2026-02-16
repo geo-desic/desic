@@ -5,11 +5,6 @@ namespace Desic.EntityFrameworkCore.Data;
 
 internal static class EntityTypes
 {
-    static EntityTypes()
-    {
-        _entityTypes = GenerateEntityTypesFromEnum();
-    }
-
     internal static IList<EntityType> Generate()
     {
         return [.. _entityTypes.Select(x => new EntityType { Id = x.Value.Id, Name = x.Value.Name })];
@@ -32,5 +27,5 @@ internal static class EntityTypes
         return result;
     }
 
-    private static readonly SortedList<Enums.EntityType, ReadOnlyEntityType> _entityTypes;
+    private static readonly SortedList<Enums.EntityType, ReadOnlyEntityType> _entityTypes = GenerateEntityTypesFromEnum();
 }

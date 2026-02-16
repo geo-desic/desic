@@ -48,7 +48,7 @@ public class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<Desi
             var config = hostContext.Configuration;
             services.AddMediatR(cfg =>
             {
-                cfg.RegisterServicesFromAssembly(typeof(EntityFrameworkCore.Marker).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(EntityFrameworkCore.IMarker).Assembly);
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             });
             var connectionString = config.GetValue("connection", config.GetConnectionString("SqlServer"));

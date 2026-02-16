@@ -1,5 +1,3 @@
 ﻿namespace Desic.Business;
 
-public class Marker
-{
-}
+public interface IMarker { }

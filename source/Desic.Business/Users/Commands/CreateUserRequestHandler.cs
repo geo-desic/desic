@@ -10,7 +10,7 @@ namespace Desic.Business.Users.Commands;
 public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IMediator mediator, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<User>>
 {
     private readonly ILogger<CreateUserRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException();
+    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     private readonly IValidator<UserCreate> _validator = validator;
 
     public async Task<Result<User>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
@@ -31,7 +31,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
         var user = await _mediator.Send(query, cancellationToken);
         if (user != null)
         {
-            _logger.LogDebug("A user with username {username} already exists: id = {userId}", user.Username, user.Id);
+            _logger.LogDebug("A user with username {Username} already exists: id = {UserId}", user.Username, user.Id);
             return Result.Fail<User>($"A user with username '{user.Username}' already exists");
         }
 
@@ -39,7 +39,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
         var command = new EntityFrameworkCore.Users.Commands.CreateUserRequest { User = user };
         var resultCreate = await _mediator.Send(command, cancellationToken);
 
-        _logger.LogDebug("User was successfully persisted with id = {userId}", resultCreate);
+        _logger.LogDebug("User was successfully persisted with id = {UserId}", resultCreate);
 
         var result = new User
         {

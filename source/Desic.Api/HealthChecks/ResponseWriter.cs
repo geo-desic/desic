@@ -5,21 +5,16 @@ namespace Desic.Api.HealthChecks;
 
 internal static class ResponseWriter
 {
-    private static readonly JsonSerializerOptions _jsonSerializerOptions;
-
-    static ResponseWriter()
+    private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
-        _jsonSerializerOptions = new JsonSerializerOptions
-        {
-            Converters =
+        Converters =
             {
                 new JsonStringEnumConverter(),
             },
-            DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = true,
-        };
-    }
+        DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = true,
+    };
 
     internal static Task Write(HttpContext context, Microsoft.Extensions.Diagnostics.HealthChecks.HealthReport healthReport)
     {

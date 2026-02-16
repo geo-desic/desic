@@ -17,7 +17,7 @@ public class StartupBackgroundService(IConfiguration config, IWebHostEnvironment
 
         using var scope = _serviceScopeFactory.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<StartupBackgroundService>>();
-        logger.LogInformation("Starting {serviceName}", nameof(StartupBackgroundService));
+        logger.LogInformation("Starting {ServiceName}", nameof(StartupBackgroundService));
 
         // any potential time consuming startup tasks
 
@@ -25,6 +25,6 @@ public class StartupBackgroundService(IConfiguration config, IWebHostEnvironment
         // the startup health check can be used to determine when startup has completed
 
         stopwatch.Stop();
-        logger.LogInformation("Completed {serviceName} in {elapsedTotalMilliseconds}ms", nameof(StartupBackgroundService), stopwatch.Elapsed.TotalMilliseconds);
+        logger.LogInformation("Completed {ServiceName} in {ElapsedTotalMilliseconds}ms", nameof(StartupBackgroundService), stopwatch.Elapsed.TotalMilliseconds);
     }
 }

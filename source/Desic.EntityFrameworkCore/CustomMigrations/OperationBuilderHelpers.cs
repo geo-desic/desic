@@ -44,7 +44,7 @@ public static class OperationBuilderHelpers
                     return;
                 }
         }
-        throw new Exception($"Provider is unsupported: {migrationBuilder.ActiveProvider}");
+        throw new NotSupportedException($"Provider is unsupported: {migrationBuilder.ActiveProvider}");
     }
 
     public static void UndoCreateAppUserAndPermissions(this MigrationBuilder migrationBuilder)
@@ -77,6 +77,6 @@ public static class OperationBuilderHelpers
                     return;
                 }
         }
-        throw new Exception($"Provider is unsupported: {migrationBuilder.ActiveProvider}");
+        throw new NotSupportedException($"Provider is unsupported: {migrationBuilder.ActiveProvider}");
     }
 }

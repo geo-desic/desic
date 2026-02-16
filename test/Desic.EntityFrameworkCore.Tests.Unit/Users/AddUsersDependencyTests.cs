@@ -12,7 +12,7 @@ public class AddUsersDependencyTests : DesicContextDependencyTests
     {
         var by = Tags.Get(Enums.SystemTag.System).Id;
         var byType = EntityTypes.Get(Enums.EntityType.Tag).Id;
-        var on = new DateTime(2000, 1, 1);
+        var on = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         id ??= 1.ToGuid();
         username ??= "username";
         return new User
