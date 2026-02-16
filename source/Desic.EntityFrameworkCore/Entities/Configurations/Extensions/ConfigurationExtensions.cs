@@ -16,7 +16,7 @@ internal static class ConfigurationExtensions
         builder.Property(x => x.ModifiedOn).IsRequired().HasDefaultValueSql(databaseFacade.DateTimeUtc()).HasColumnOrder(columnOrder++);
         builder.HasIndex(x => x.ModifiedById).IsUnique(false);
         builder.HasIndex(x => x.ModifiedByTypeId).IsUnique(false);
-        builder.HasOne<EntityType>().WithOne().HasForeignKey<T>(x => x.ModifiedByTypeId).OnDelete(DeleteBehavior.Restrict).IsRequired();
+        builder.HasOne<EntityType>().WithMany().HasForeignKey(x => x.ModifiedByTypeId).OnDelete(DeleteBehavior.NoAction).IsRequired();
         return columnOrder;
     }
 
@@ -28,7 +28,7 @@ internal static class ConfigurationExtensions
         builder.Property(x => x.CreatedOn).IsRequired().HasDefaultValueSql(databaseFacade.DateTimeUtc()).HasColumnOrder(columnOrder++);
         builder.HasIndex(x => x.CreatedById).IsUnique(false);
         builder.HasIndex(x => x.CreatedByTypeId).IsUnique(false);
-        builder.HasOne<EntityType>().WithOne().HasForeignKey<T>(x => x.CreatedByTypeId).OnDelete(DeleteBehavior.Restrict).IsRequired();
+        builder.HasOne<EntityType>().WithMany().HasForeignKey(x => x.CreatedByTypeId).OnDelete(DeleteBehavior.NoAction).IsRequired();
         return columnOrder;
     }
 
@@ -50,6 +50,7 @@ internal static class ConfigurationExtensions
         builder.HasIndex(x => x.IsDeleted).IsUnique(false);
         builder.HasIndex(x => x.DeletedById).IsUnique(false);
         builder.HasIndex(x => x.DeletedByTypeId).IsUnique(false);
+        builder.HasOne<EntityType>().WithMany().HasForeignKey(x => x.DeletedByTypeId).OnDelete(DeleteBehavior.NoAction);
         return columnOrder;
     }
 

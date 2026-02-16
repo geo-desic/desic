@@ -311,45 +311,60 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
             modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.Iso3166Country", b =>
                 {
                     b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
-                        .WithOne()
-                        .HasForeignKey("Desic.EntityFrameworkCore.Entities.Iso3166Country", "CreatedByTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany()
+                        .HasForeignKey("CreatedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
-                        .WithOne()
-                        .HasForeignKey("Desic.EntityFrameworkCore.Entities.Iso3166Country", "ModifiedByTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany()
+                        .HasForeignKey("DeletedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("ModifiedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.Tag", b =>
                 {
                     b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
-                        .WithOne()
-                        .HasForeignKey("Desic.EntityFrameworkCore.Entities.Tag", "CreatedByTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany()
+                        .HasForeignKey("CreatedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
-                        .WithOne()
-                        .HasForeignKey("Desic.EntityFrameworkCore.Entities.Tag", "ModifiedByTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany()
+                        .HasForeignKey("DeletedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("ModifiedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Desic.EntityFrameworkCore.Entities.User", b =>
                 {
                     b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
-                        .WithOne()
-                        .HasForeignKey("Desic.EntityFrameworkCore.Entities.User", "CreatedByTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany()
+                        .HasForeignKey("CreatedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
-                        .WithOne()
-                        .HasForeignKey("Desic.EntityFrameworkCore.Entities.User", "ModifiedByTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany()
+                        .HasForeignKey("DeletedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Desic.EntityFrameworkCore.Entities.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("ModifiedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
