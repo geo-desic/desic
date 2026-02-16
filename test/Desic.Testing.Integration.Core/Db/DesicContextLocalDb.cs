@@ -22,22 +22,14 @@ public sealed class DesicContextLocalDb : IAsyncLifetime
 
     public async ValueTask InitializeAsync()
     {
-        // create a unique file for the LocalDB database
+        // create a unique name for the localdb database
         _databaseName = $"desic_{Guid.NewGuid():N}";
         _databaseFileName = $"{_databaseName}.mdf";
         var tempDir = Path.Combine(Path.GetTempPath(), "desic-tests");
         Directory.CreateDirectory(tempDir);
         _databaseFilePath = Path.Combine(tempDir, _databaseFileName);
 
-        var builder = new SqlConnectionStringBuilder
-        {
-            DataSource = DataSource,
-            InitialCatalog = _databaseName,
-            IntegratedSecurity = true,
-            AttachDBFilename = _databaseFilePath,
-        };
-
-        _connectionStringMigrations = builder.ConnectionString;
+        _connectionStringMigrations = $@"Data Source={DataSource};Initial Catalog={_databaseName};Integrated Security=True;AttachDbFilename={_databaseFilePath}";
 
         using var factory = new DesicContextFactory();
         using var context = factory.CreateDbContext(["--connection", ConnectionStringMigrations]);
@@ -49,41 +41,24 @@ public sealed class DesicContextLocalDb : IAsyncLifetime
         var appUserPassword = TestSettingsConfiguration.Root.GetValue<string>(configKey);
         if (string.IsNullOrEmpty(appUserPassword)) throw new Exception($"Configuration value not set: {configKey}");
 
-        var appBuilder = new SqlConnectionStringBuilder(ConnectionStringMigrations)
-        {
-            DataSource = DataSource,
-            InitialCatalog = _databaseName,
-            AttachDBFilename = _databaseFilePath,
-            UserID = DesicContext.AppUser,
-            Password = appUserPassword,
-        };
-
-        _connectionStringApp = appBuilder.ConnectionString;
+        _connectionStringApp = $@"Data Source={DataSource};Initial Catalog={_databaseName};User ID={DesicContext.AppUser};Password={appUserPassword};AttachDbFilename={_databaseFilePath}";
     }
 
     public async ValueTask DisposeAsync()
     {
-        // attempt to detach and remove the database file
-        try
+        if (!string.IsNullOrEmpty(_databaseFilePath))
         {
-            if (!string.IsNullOrEmpty(_databaseFilePath))
+            using var connection = new SqlConnection(new SqlConnectionStringBuilder { DataSource = DataSource, IntegratedSecurity = true }.ConnectionString);
+            await connection.OpenAsync();
+            using (var command = connection.CreateCommand())
             {
-                using var connection = new SqlConnection(new SqlConnectionStringBuilder { DataSource = DataSource, IntegratedSecurity = true }.ConnectionString);
-                await connection.OpenAsync();
-                using (var command = connection.CreateCommand())
-                {
-                    command.CommandText = $@"IF DB_ID('{_databaseName}') IS NOT NULL BEGIN ALTER DATABASE [{_databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{_databaseName}]; END";
-                    await command.ExecuteNonQueryAsync();
-                }
-                await connection.CloseAsync();
-
-                try { File.Delete(_databaseFilePath); } catch { }
-                try { File.Delete(Path.ChangeExtension(_databaseFilePath, ".ldf")); } catch { }
+                command.CommandText = $@"IF DB_ID('{_databaseName}') IS NOT NULL BEGIN ALTER DATABASE [{_databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{_databaseName}]; END";
+                await command.ExecuteNonQueryAsync();
             }
-        }
-        catch
-        {
-            // swallow any exception during cleanup to avoid breaking test teardown
+            await connection.CloseAsync();
+
+            try { File.Delete(_databaseFilePath); } catch { /* nothing */ }
+            try { File.Delete(Path.ChangeExtension(_databaseFilePath, ".ldf")); } catch { /* nothing */ }
         }
     }
 }
