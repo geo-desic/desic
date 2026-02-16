@@ -1,4 +1,5 @@
-﻿using Desic.EntityFrameworkCore.Models;
+﻿using Desic.EntityFrameworkCore.DbConnections;
+using Desic.EntityFrameworkCore.Models;
 using Desic.EntityFrameworkCore.SqlServer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -45,6 +46,9 @@ public sealed class DesicContextMsSqlContainer : IAsyncLifetime
             Password = appUserPassword,
         };
         _connectionStringApp = builder.ConnectionString;
+
+        using var connection = new SqlConnection(_connectionStringApp);
+        if (!await connection.CanConnectAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
     }
 
     public ValueTask DisposeAsync() => _container.DisposeAsync();

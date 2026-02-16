@@ -1,3 +1,4 @@
+using Desic.EntityFrameworkCore.DbConnections;
 using Desic.EntityFrameworkCore.Models;
 using Desic.EntityFrameworkCore.SqlServer;
 using Microsoft.Data.SqlClient;
@@ -42,6 +43,9 @@ public sealed class DesicContextLocalDb : IAsyncLifetime
         if (string.IsNullOrEmpty(appUserPassword)) throw new Exception($"Configuration value not set: {configKey}");
 
         _connectionStringApp = $"Data Source={DataSource};Initial Catalog={_databaseName};User ID={DesicContext.AppUser};Password={appUserPassword};";
+
+        using var connection = new SqlConnection(_connectionStringApp);
+        if (!await connection.CanConnectAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
     }
 
     public async ValueTask DisposeAsync()
