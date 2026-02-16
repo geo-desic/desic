@@ -3,7 +3,6 @@ using Desic.EntityFrameworkCore.Models;
 using Desic.EntityFrameworkCore.SqlServer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Testcontainers.MsSql;
 using Xunit;
 
@@ -11,11 +10,12 @@ namespace Desic.Testing.Integration.Core.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class DesicContextMsSqlContainer : IAsyncLifetime
+public sealed class DesicContextMsSqlContainer(string image, string appUserPassword) : IAsyncLifetime
 {
-    private readonly MsSqlContainer _container = new MsSqlBuilder(TestSettingsConfiguration.Root.GetValue<string>("Containers:MsSql:Image")).Build();
+    private readonly MsSqlContainer _container = new MsSqlBuilder(image ?? throw new InvalidOperationException("Container image could not be determined")).Build();
     private string? _connectionStringApp;
     private string? _connectionStringMigrations;
+    private readonly string _appUserPassword = appUserPassword ?? throw new InvalidOperationException("App user password could not be determined");
 
     public string ConnectionStringApp => _connectionStringApp ?? throw new InvalidOperationException($"{nameof(ConnectionStringApp)} has not been initialized");
     public string ConnectionStringMigrations => _connectionStringMigrations ?? throw new InvalidOperationException($"{nameof(ConnectionStringMigrations)} has not been initialized");
@@ -37,13 +37,10 @@ public sealed class DesicContextMsSqlContainer : IAsyncLifetime
         await context.Database.MigrateAsync(cts.Token);
         Console.WriteLine($"Successfully initialized the database");
 
-        var configKey = "Databases:Desic:AppUserPassword";
-        var appUserPassword = TestSettingsConfiguration.Root.GetValue<string>(configKey);
-        if (string.IsNullOrEmpty(appUserPassword)) throw new Exception($"Configuration value not set: {configKey}");
         var builder = new SqlConnectionStringBuilder(ConnectionStringMigrations)
         {
             UserID = DesicContext.AppUser,
-            Password = appUserPassword,
+            Password = _appUserPassword,
         };
         _connectionStringApp = builder.ConnectionString;
 

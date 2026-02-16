@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Xunit;
+﻿using Xunit;
 
 namespace Desic.Testing.Integration.Core.Db;
 
@@ -7,7 +6,7 @@ public sealed class DbFixture : IAsyncLifetime
 {
     private DesicContextMsSqlContainer? _container;
     private DesicContextLocalDb? _localDb;
-    private readonly bool _useContainer = TestSettingsConfiguration.Root.GetValue("Databases:Desic:UseContainer", false);
+    private readonly bool _useContainer = TestConfiguration.Options?.Databases?.Desic?.UseContainer ?? false;
 
     public string ConnectionStringApp
     {
@@ -41,16 +40,18 @@ public sealed class DbFixture : IAsyncLifetime
 
     public async ValueTask InitializeAsync()
     {
+        var appUserPassword = TestConfiguration.Options?.Databases?.Desic?.AppUserPassword ?? throw new InvalidOperationException($"App user password is not configured");
         if (_useContainer)
         {
+            var image = TestConfiguration.Options?.Containers?.MsSql?.Image ?? throw new InvalidOperationException($"Container image for SQL Server is not configured");
             Console.WriteLine($"Using container database");
-            _container = new DesicContextMsSqlContainer();
+            _container = new DesicContextMsSqlContainer(image: image, appUserPassword: appUserPassword);
             await _container.InitializeAsync();
         }
         else
         {
             Console.WriteLine($"Using localdb database");
-            _localDb = new DesicContextLocalDb();
+            _localDb = new DesicContextLocalDb(appUserPassword: appUserPassword);
             await _localDb.InitializeAsync();
         }
     }

@@ -3,14 +3,14 @@ using Desic.EntityFrameworkCore.Models;
 using Desic.EntityFrameworkCore.SqlServer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace Desic.Testing.Integration.Core.Db;
 
 // class is sealed for simpler IAsyncLifetime implementation
-public sealed class DesicContextLocalDb : IAsyncLifetime
+public sealed class DesicContextLocalDb(string appUserPassword) : IAsyncLifetime
 {
+    private readonly string _appUserPassword = appUserPassword ?? throw new InvalidOperationException("App user password could not be determined");
     private string? _connectionStringApp;
     private string? _connectionStringMigrations;
     private string? _databaseFilePath;
@@ -38,11 +38,7 @@ public sealed class DesicContextLocalDb : IAsyncLifetime
         using var cts = new CancellationTokenSource();
         await context.Database.MigrateAsync(cts.Token);
 
-        var configKey = "Databases:Desic:AppUserPassword";
-        var appUserPassword = TestSettingsConfiguration.Root.GetValue<string>(configKey);
-        if (string.IsNullOrEmpty(appUserPassword)) throw new Exception($"Configuration value not set: {configKey}");
-
-        _connectionStringApp = $"Data Source={DataSource};Initial Catalog={_databaseName};User ID={DesicContext.AppUser};Password={appUserPassword};";
+        _connectionStringApp = $"Data Source={DataSource};Initial Catalog={_databaseName};User ID={DesicContext.AppUser};Password={_appUserPassword};";
 
         using var connection = new SqlConnection(_connectionStringApp);
         if (!await connection.CanConnectAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
