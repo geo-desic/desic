@@ -37,12 +37,7 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
 
         builder.ConfigureAppConfiguration((context, config) =>
         {
-            var inMemoryConfig = new Dictionary<string, string?>
-            {
-                ["DbProvider"] = "SqlServer",
-                ["HttpLogging:Enabled"] = "false",
-            };
-            config.AddInMemoryCollection(inMemoryConfig);
+            config.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.Test.json"), optional: false, reloadOnChange: true);
         });
 
         builder.UseEnvironment("Development");

@@ -9,7 +9,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Desic.EntityFrameworkCore.SqlServer;
 
-public class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<DesicContext>
+public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<DesicContext>
 {
     private bool _disposed = false;
     private const string ConfigKeyBase = "Databases:Desic";

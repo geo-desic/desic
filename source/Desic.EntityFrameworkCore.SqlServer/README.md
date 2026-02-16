@@ -15,3 +15,12 @@ migrationBuilder.UndoCreateAppUserAndPermissions();
 ```
 
 If the initial migration is ever deleted and automatically recreated these will need to be added again (except for `Sqlite` which does not support database users/logins).
+
+## dotnet format validation
+
+An .editorconfig file in the Migrations folder containing the following should prevent the auto-generated code from being flagged by `dotnet format` as needing formatting changes.
+
+```ini
+[*]
+generated_code = true
+```

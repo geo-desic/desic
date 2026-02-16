@@ -1,8 +1,17 @@
+determine if there are pending model changes (i.e. migration is needed):
+
+dotnet ef migrations has-pending-model-changes --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite
+dotnet ef migrations has-pending-model-changes --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer
+
 creating migration code:
 
 dotnet ef migrations add Initial --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite
 dotnet ef migrations add Initial --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer
 
+creating migrations script (that can subsequently be applied to a database)
+
+dotnet ef migrations script --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.Sqlite -o migration-sqlite.sql
+dotnet ef migrations script --no-build --context DesicContext --project ./Desic.EntityFrameworkCore.SqlServer -o migration-sqlsever.sql
 
 applying migrations to a database:
 
