@@ -29,7 +29,7 @@ public sealed class DesicContextLocalDb : IAsyncLifetime
         Directory.CreateDirectory(tempDir);
         _databaseFilePath = Path.Combine(tempDir, _databaseFileName);
 
-        _connectionStringMigrations = $@"Data Source={DataSource};Initial Catalog={_databaseName};Integrated Security=True;AttachDbFilename={_databaseFilePath}";
+        _connectionStringMigrations = $"Data Source={DataSource};Initial Catalog={_databaseName};Integrated Security=True;AttachDbFilename={_databaseFilePath};";
 
         using var factory = new DesicContextFactory();
         using var context = factory.CreateDbContext(["--connection", ConnectionStringMigrations]);
@@ -41,18 +41,18 @@ public sealed class DesicContextLocalDb : IAsyncLifetime
         var appUserPassword = TestSettingsConfiguration.Root.GetValue<string>(configKey);
         if (string.IsNullOrEmpty(appUserPassword)) throw new Exception($"Configuration value not set: {configKey}");
 
-        _connectionStringApp = $@"Data Source={DataSource};Initial Catalog={_databaseName};User ID={DesicContext.AppUser};Password={appUserPassword};AttachDbFilename={_databaseFilePath}";
+        _connectionStringApp = $"Data Source={DataSource};Initial Catalog={_databaseName};User ID={DesicContext.AppUser};Password={appUserPassword};";
     }
 
     public async ValueTask DisposeAsync()
     {
         if (!string.IsNullOrEmpty(_databaseFilePath))
         {
-            using var connection = new SqlConnection(new SqlConnectionStringBuilder { DataSource = DataSource, IntegratedSecurity = true }.ConnectionString);
+            using var connection = new SqlConnection($"Data Source={DataSource};Integrated Security=True;");
             await connection.OpenAsync();
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $@"IF DB_ID('{_databaseName}') IS NOT NULL BEGIN ALTER DATABASE [{_databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{_databaseName}]; END";
+                command.CommandText = $"IF DB_ID('{_databaseName}') IS NOT NULL BEGIN ALTER DATABASE [{_databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{_databaseName}]; END";
                 await command.ExecuteNonQueryAsync();
             }
             await connection.CloseAsync();
