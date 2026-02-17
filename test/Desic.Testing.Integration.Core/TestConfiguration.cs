@@ -4,7 +4,7 @@ namespace Desic.Testing.Integration.Core;
 
 public static class TestConfiguration
 {
-    private static readonly IConfiguration _configuration = new ConfigurationBuilder()
+    private static readonly IConfigurationRoot _configuration = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile("appsettings.json", optional: true)
         .AddJsonFile("appsettings.Test.json", optional: true)
@@ -20,5 +20,5 @@ public static class TestConfiguration
 
     public static IntegrationTestsOptions Options => _options;
 
-    public static IConfiguration Root => _configuration;
+    public static IConfigurationRoot Root => _configuration;
 }

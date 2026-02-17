@@ -1,6 +1,5 @@
 ﻿using Desic.Core.Mediator;
 using Desic.EntityFrameworkCore.Models;
-using Desic.EntityFrameworkCore.Models.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -51,13 +50,8 @@ public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFacto
                 cfg.RegisterServicesFromAssembly(typeof(EntityFrameworkCore.IMarker).Assembly);
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             });
-            var connectionString = config.GetValue("connection", config.GetConnectionString("Sqlite"));
-            services.AddDbContext<DesicContext>(
-                (serviceProvider, options) =>
-                {
-                    options.UseSqlite(connectionString, x => x.MigrationsAssembly(typeof(IMarker).Assembly.GetName().Name));
-                    options.UseDesicContextSeeding(serviceProvider);
-                });
+            var connectionString = config.GetValue("connection", config.GetConnectionString("Sqlite")) ?? throw new InvalidOperationException("Connection string could not be determined");
+            services.ConfigureDesicContextForSqlite(connectionString: connectionString, setMigrationsAssembly: true, useSeeding: true);
         });
         return result;
     }

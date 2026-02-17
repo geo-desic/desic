@@ -1,11 +1,10 @@
 ﻿using Desic.EntityFrameworkCore.Models;
-using Desic.EntityFrameworkCore.Models.Extensions;
+using Desic.EntityFrameworkCore.Sqlite;
+using Desic.EntityFrameworkCore.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 
 namespace Desic.Testing.Integration.Core.WebApplication;
@@ -30,37 +29,19 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
 
             if (TestConfiguration.Options?.DbProvider == "Sqlite")
             {
-                ConfigureForSqlite(services);
+                services.ConfigureDesicContextForSqlite(_connectionString);
             }
             else // SqlServer
             {
-                ConfigureForSqlServer(services);
+                services.ConfigureDesicContextForSqlServer(_connectionString);
             }
         });
 
         builder.ConfigureAppConfiguration((context, config) =>
         {
-            config.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.Test.json"), optional: false, reloadOnChange: true);
+            config.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.Test.json"), optional: true, reloadOnChange: true);
         });
 
         builder.UseEnvironment("Development");
-    }
-
-    private void ConfigureForSqlite(IServiceCollection services)
-    {
-        services.AddDbContext<DesicContext>((serviceProvider, options) =>
-        {
-            options.UseSqlite(_connectionString, x => x.MigrationsAssembly(typeof(EntityFrameworkCore.SqlServer.IMarker).Assembly.GetName().Name));
-            options.UseDesicContextSeeding(serviceProvider);
-        });
-    }
-
-    private void ConfigureForSqlServer(IServiceCollection services)
-    {
-        services.AddDbContext<DesicContext>((serviceProvider, options) =>
-        {
-            options.UseSqlServer(_connectionString, x => x.MigrationsAssembly(typeof(EntityFrameworkCore.SqlServer.IMarker).Assembly.GetName().Name));
-            options.UseDesicContextSeeding(serviceProvider);
-        });
     }
 }

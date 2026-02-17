@@ -1,6 +1,5 @@
 ﻿using Desic.Core.Mediator;
 using Desic.EntityFrameworkCore.Models;
-using Desic.EntityFrameworkCore.Models.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -51,13 +50,8 @@ public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFacto
                 cfg.RegisterServicesFromAssembly(typeof(EntityFrameworkCore.IMarker).Assembly);
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             });
-            var connectionString = config.GetValue("connection", config.GetConnectionString("SqlServer"));
-            services.AddDbContext<DesicContext>(
-                (serviceProvider, options) =>
-                {
-                    options.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(IMarker).Assembly.GetName().Name));
-                    options.UseDesicContextSeeding(serviceProvider);
-                });
+            var connectionString = config.GetValue("connection", config.GetConnectionString("SqlServer")) ?? throw new InvalidOperationException("Connection string could not be determined");
+            services.ConfigureDesicContextForSqlServer(connectionString: connectionString, setMigrationsAssembly: true, useSeeding: true);
         });
         return result;
     }
