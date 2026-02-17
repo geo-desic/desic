@@ -23,15 +23,18 @@ public sealed class DesicContextLocalDb(string appUserPassword) : IAsyncLifetime
 
     public async ValueTask InitializeAsync()
     {
-        // create a unique name for the localdb database
-        _databaseName = $"desic_{Guid.NewGuid():N}";
-        _databaseFileName = $"{_databaseName}.mdf";
+        // make sure temporary directory for the database files exists
         var tempDir = Path.Combine(Path.GetTempPath(), "desic-tests");
         Directory.CreateDirectory(tempDir);
+
+        // create a unique name for the database
+        _databaseName = $"desic_{Guid.CreateVersion7():N}"; // uuidv7 will be easier to sort in windows file exploer or similiar for debugging purposes
+        _databaseFileName = $"{_databaseName}.mdf";
         _databaseFilePath = Path.Combine(tempDir, _databaseFileName);
 
         _connectionStringMigrations = $"Data Source={DataSource};Initial Catalog={_databaseName};Integrated Security=True;AttachDbFilename={_databaseFilePath};";
 
+        // create the database and apply migrations
         using var factory = new DesicContextFactory();
         using var context = factory.CreateDbContext(["--connection", ConnectionStringMigrations]);
 

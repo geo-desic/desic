@@ -20,10 +20,10 @@ public sealed class DesicContextContainersMsSqlOptions
 public sealed class IntegrationTestsDatabaseOptions
 {
     public IntegrationTestsDatabaseDesicOptions? Desic { get; set; }
+    public bool? UseContainer { get; set; }
 }
 
 public sealed class IntegrationTestsDatabaseDesicOptions
 {
     public string? AppUserPassword { get; set; }
-    public bool? UseContainer { get; set; }
 }

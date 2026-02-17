@@ -6,20 +6,24 @@ public sealed class DbFixture : IAsyncLifetime
 {
     private DesicContextMsSqlContainer? _container;
     private DesicContextLocalDb? _localDb;
-    private readonly bool _useContainer = TestConfiguration.Options?.Databases?.Desic?.UseContainer ?? false;
+    private DesicContextSqlite? _sqlite;
+    private readonly bool _useContainer = TestConfiguration.Options?.Databases?.UseContainer ?? false;
 
     public string ConnectionStringApp
     {
         get
         {
+            if (TestConfiguration.Options?.DbProvider == "Sqlite")
+            {
+                return _sqlite?.ConnectionString ?? throw new InvalidOperationException($"{nameof(_sqlite.ConnectionString)} has not been initialized for localdb database");
+            }
+
+            // sql server
             if (_useContainer)
             {
-                return _container?.ConnectionStringApp ?? throw new InvalidOperationException($"{nameof(ConnectionStringApp)} has not been initialized for container database");
+                return _container?.ConnectionStringApp ?? throw new InvalidOperationException($"{nameof(_container.ConnectionStringApp)} has not been initialized for container database");
             }
-            else
-            {
-                return _localDb?.ConnectionStringApp ?? throw new InvalidOperationException($"{nameof(ConnectionStringApp)} has not been initialized for localdb database");
-            }
+            return _localDb?.ConnectionStringApp ?? throw new InvalidOperationException($"{nameof(_localDb.ConnectionStringApp)} has not been initialized for localdb database");
         }
 
     }
@@ -27,32 +31,44 @@ public sealed class DbFixture : IAsyncLifetime
     {
         get
         {
+            if (TestConfiguration.Options?.DbProvider == "Sqlite")
+            {
+                return _sqlite?.ConnectionString ?? throw new InvalidOperationException($"{nameof(_sqlite.ConnectionString)} has not been initialized for localdb database");
+            }
+
+            // sql server
             if (_useContainer)
             {
-                return _container?.ConnectionStringMigrations ?? throw new InvalidOperationException($"{nameof(ConnectionStringMigrations)} has not been initialized for container database");
+                return _container?.ConnectionStringMigrations ?? throw new InvalidOperationException($"{nameof(_container.ConnectionStringMigrations)} has not been initialized for container database");
             }
-            else
-            {
-                return _localDb?.ConnectionStringMigrations ?? throw new InvalidOperationException($"{nameof(ConnectionStringMigrations)} has not been initialized for localdb database");
-            }
+            return _localDb?.ConnectionStringMigrations ?? throw new InvalidOperationException($"{nameof(_localDb.ConnectionStringMigrations)} has not been initialized for localdb database");
         }
     }
 
     public async ValueTask InitializeAsync()
     {
-        var appUserPassword = TestConfiguration.Options?.Databases?.Desic?.AppUserPassword ?? throw new InvalidOperationException($"App user password is not configured");
-        if (_useContainer)
-        {
-            var image = TestConfiguration.Options?.Containers?.MsSql?.Image ?? throw new InvalidOperationException($"Container image for SQL Server is not configured");
-            Console.WriteLine($"Using container database");
-            _container = new DesicContextMsSqlContainer(image: image, appUserPassword: appUserPassword);
-            await _container.InitializeAsync();
-        }
-        else
+        if (TestConfiguration.Options?.DbProvider == "Sqlite")
         {
             Console.WriteLine($"Using localdb database");
-            _localDb = new DesicContextLocalDb(appUserPassword: appUserPassword);
-            await _localDb.InitializeAsync();
+            _sqlite = new();
+            await _sqlite.InitializeAsync();
+        }
+        else // sql server
+        {
+            var appUserPassword = TestConfiguration.Options?.Databases?.Desic?.AppUserPassword ?? throw new InvalidOperationException($"{nameof(IntegrationTestsDatabaseDesicOptions.AppUserPassword)} is not configured");
+            if (_useContainer)
+            {
+                var image = TestConfiguration.Options?.Containers?.MsSql?.Image ?? throw new InvalidOperationException($"Container image for sql server is not configured");
+                Console.WriteLine($"Using container database");
+                _container = new(image: image, appUserPassword: appUserPassword);
+                await _container.InitializeAsync();
+            }
+            else
+            {
+                Console.WriteLine($"Using localdb database");
+                _localDb = new(appUserPassword: appUserPassword);
+                await _localDb.InitializeAsync();
+            }
         }
     }
 

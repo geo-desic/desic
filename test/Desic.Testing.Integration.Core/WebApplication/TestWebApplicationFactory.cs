@@ -12,7 +12,7 @@ namespace Desic.Testing.Integration.Core.WebApplication;
 
 public class TestWebApplicationFactory<TProgram>(string connectionString) : WebApplicationFactory<TProgram> where TProgram : class
 {
-    private readonly string _connectionString = connectionString;
+    private readonly string _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -28,11 +28,14 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
                 services.Remove(dbConnectionDescriptor);
             }
 
-            services.AddDbContext<DesicContext>((serviceProvider, options) =>
+            if (TestConfiguration.Options?.DbProvider == "Sqlite")
             {
-                options.UseSqlServer(_connectionString, x => x.MigrationsAssembly(typeof(EntityFrameworkCore.SqlServer.IMarker).Assembly.GetName().Name));
-                options.UseDesicContextSeeding(serviceProvider);
-            });
+                ConfigureForSqlite(services);
+            }
+            else // SqlServer
+            {
+                ConfigureForSqlServer(services);
+            }
         });
 
         builder.ConfigureAppConfiguration((context, config) =>
@@ -43,23 +46,21 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
         builder.UseEnvironment("Development");
     }
 
-    /*
-    private static void ConfigureForSqlite(IServiceCollection services)
+    private void ConfigureForSqlite(IServiceCollection services)
     {
-        // create open SqliteConnection so EF won't automatically close it
-        services.AddSingleton<DbConnection>(container =>
+        services.AddDbContext<DesicContext>((serviceProvider, options) =>
         {
-            var connection = new SqliteConnection("DataSource=:memory:");
-            connection.Open();
-
-            return connection;
-        });
-
-        services.AddDbContext<DesicContext>((container, options) =>
-        {
-            var connection = container.GetRequiredService<DbConnection>();
-            options.UseSqlite(connection);
+            options.UseSqlite(_connectionString, x => x.MigrationsAssembly(typeof(EntityFrameworkCore.SqlServer.IMarker).Assembly.GetName().Name));
+            options.UseDesicContextSeeding(serviceProvider);
         });
     }
-    */
+
+    private void ConfigureForSqlServer(IServiceCollection services)
+    {
+        services.AddDbContext<DesicContext>((serviceProvider, options) =>
+        {
+            options.UseSqlServer(_connectionString, x => x.MigrationsAssembly(typeof(EntityFrameworkCore.SqlServer.IMarker).Assembly.GetName().Name));
+            options.UseDesicContextSeeding(serviceProvider);
+        });
+    }
 }
