@@ -50,7 +50,7 @@ public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFacto
                 cfg.RegisterServicesFromAssembly(typeof(EntityFrameworkCore.IMarker).Assembly);
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             });
-            var connectionString = config.GetValue("connection", config.GetConnectionString("SqlServer")) ?? throw new InvalidOperationException("Connection string could not be determined");
+            var connectionString = config.GetValue("connection", config.GetConnectionString("SqlServer"));
             services.ConfigureDesicContextForSqlServer(connectionString: connectionString, setMigrationsAssembly: true, useSeeding: true);
         });
         return result;
