@@ -24,3 +24,18 @@ An .editorconfig file in the Migrations folder containing the following should p
 [*]
 generated_code = true
 ```
+
+## Contained Database
+
+```sql
+EXEC sys.sp_configure 'show advanced', 1;
+GO
+RECONFIGURE;
+GO
+EXEC sys.sp_configure 'contained database authentication', 1;
+GO
+RECONFIGURE;
+GO
+
+CREATE DATABASE [Desic] CONTAINMENT = PARTIAL;
+```

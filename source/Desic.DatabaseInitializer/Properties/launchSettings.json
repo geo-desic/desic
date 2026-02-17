@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Desic.DatabaseInitializer": {
+      "commandName": "Project"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker"
+    }
+  }
+}

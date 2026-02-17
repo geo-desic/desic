@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desic.Core.Tests.Unit", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desic.Business.Tests.Unit", "test\Desic.Business.Tests.Unit\Desic.Business.Tests.Unit.csproj", "{89A02E87-77D1-4CDF-9030-34824E46092D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Desic.DatabaseInitializer", "source\Desic.DatabaseInitializer\Desic.DatabaseInitializer.csproj", "{B758C430-4932-4EAF-A3BF-593CD72565E6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,6 +132,10 @@ Global
 		{89A02E87-77D1-4CDF-9030-34824E46092D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89A02E87-77D1-4CDF-9030-34824E46092D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89A02E87-77D1-4CDF-9030-34824E46092D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B758C430-4932-4EAF-A3BF-593CD72565E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B758C430-4932-4EAF-A3BF-593CD72565E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B758C430-4932-4EAF-A3BF-593CD72565E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B758C430-4932-4EAF-A3BF-593CD72565E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -153,6 +159,7 @@ Global
 		{E6C57112-0778-414B-B354-55FF174612ED} = {08836AD0-2EB2-4332-8915-92BEC19F63E7}
 		{068D19E0-0260-4551-8DDB-C43BD9AF7047} = {08836AD0-2EB2-4332-8915-92BEC19F63E7}
 		{89A02E87-77D1-4CDF-9030-34824E46092D} = {08836AD0-2EB2-4332-8915-92BEC19F63E7}
+		{B758C430-4932-4EAF-A3BF-593CD72565E6} = {6B51A4A2-F505-4342-8A18-9F38BE78C360}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5794C7B4-61C9-4C2E-A0BD-08C2BC358877}

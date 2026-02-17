@@ -1,0 +1,48 @@
+{
+  "Databases": {
+    "Desic": {
+      "SqlServer": {
+        "Contained": true,
+        "Name": "Desic",
+        "Roles": [
+          {
+            "Name": "rl_AppUser",
+            "Grants": [
+              {
+                "Schema": "app",
+                "Permissions": [ "SELECT", "INSERT", "UPDATE", "DELETE" ]
+              },
+              {
+                "Schema": "ref",
+                "Permissions": [ "SELECT" ]
+              }
+            ]
+          }
+        ],
+        "Schemas": [
+          {
+            "Name": "app"
+          },
+          {
+            "Name": "ref"
+          }
+        ],
+        "Users": [
+          {
+            "Name": "AppUser",
+            "Password": "2d4ba4c0-6cd1-4c7c-b08c-0db156c44116",
+            "LoginName": "AppUser",
+            "DefaultSchema": "app",
+            "Roles": [ "rl_AppUser" ]
+          },
+          {
+            "Name": "MigrationsUser",
+            "Password": "6246a106-1ef4-4db7-9c6e-dd20e6e09d4f",
+            "LoginName": "MigrationsUser",
+            "Roles": [ "db_owner" ]
+          }
+        ]
+      }
+    }
+  }
+}
