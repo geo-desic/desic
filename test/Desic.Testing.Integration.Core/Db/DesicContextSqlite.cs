@@ -18,10 +18,10 @@ public sealed class DesicContextSqlite : IAsyncLifetime
         Directory.CreateDirectory(tempDir);
 
         // create a unique name for the database
-        var databaseFileName = $"desic_{Guid.CreateVersion7():N}.db"; // uuidv7 will be easier to sort in windows file exploer or similiar for debugging purposes
+        var databaseFileName = $"desic_{Guid.CreateVersion7():N}.db"; // uuidv7 will be easier to sort in file explorer for debugging purposes
         _databaseFilePath = Path.Combine(tempDir, databaseFileName);
 
-        _connectionString = $"Data Source={_databaseFilePath};";
+        _connectionString = $"Data Source={_databaseFilePath};Pooling=False;"; // pooling is disabled to avoid issues with file locks when deleting the database file after tests are done
 
         // create the database and apply migrations
         using var factory = new DesicContextFactory();

@@ -2,25 +2,25 @@
 
 public sealed class IntegrationTestsOptions
 {
-    public IntegrationTestsContainersOptions? Containers { get; set; }
+    public IntegrationTestsDbProvidersOptions? DbProviders { get; set; }
     public IntegrationTestsDatabaseOptions? Databases { get; set; }
     public string? DbProvider { get; set; }
 }
 
-public sealed class IntegrationTestsContainersOptions
+public sealed class IntegrationTestsDbProvidersOptions
 {
-    public DesicContextContainersMsSqlOptions? MsSql { get; set; }
+    public IntegrationTestsDbProvidersSqlServerOptions? SqlServer { get; set; }
 }
 
-public sealed class DesicContextContainersMsSqlOptions
+public sealed class IntegrationTestsDbProvidersSqlServerOptions
 {
-    public string? Image { get; set; }
+    public bool? UseContainer { get; set; }
+    public string? ContainerImage { get; set; }
 }
 
 public sealed class IntegrationTestsDatabaseOptions
 {
     public IntegrationTestsDatabaseDesicOptions? Desic { get; set; }
-    public bool? UseContainer { get; set; }
 }
 
 public sealed class IntegrationTestsDatabaseDesicOptions

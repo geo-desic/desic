@@ -28,7 +28,7 @@ public sealed class DesicContextLocalDb(string appUserPassword) : IAsyncLifetime
         Directory.CreateDirectory(tempDir);
 
         // create a unique name for the database
-        _databaseName = $"desic_{Guid.CreateVersion7():N}"; // uuidv7 will be easier to sort in windows file exploer or similiar for debugging purposes
+        _databaseName = $"desic_{Guid.CreateVersion7():N}"; // uuidv7 will be easier to sort in file explorer for debugging purposes
         _databaseFileName = $"{_databaseName}.mdf";
         _databaseFilePath = Path.Combine(tempDir, _databaseFileName);
 

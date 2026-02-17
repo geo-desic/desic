@@ -7,7 +7,7 @@ public sealed class DbFixture : IAsyncLifetime
     private DesicContextMsSqlContainer? _container;
     private DesicContextLocalDb? _localDb;
     private DesicContextSqlite? _sqlite;
-    private readonly bool _useContainer = TestConfiguration.Options?.Databases?.UseContainer ?? false;
+    private readonly bool _useContainerSqlServer = TestConfiguration.Options?.DbProviders?.SqlServer?.UseContainer ?? false;
 
     public string ConnectionStringApp
     {
@@ -19,7 +19,7 @@ public sealed class DbFixture : IAsyncLifetime
             }
 
             // sql server
-            if (_useContainer)
+            if (_useContainerSqlServer)
             {
                 return _container?.ConnectionStringApp ?? throw new InvalidOperationException($"{nameof(_container.ConnectionStringApp)} has not been initialized for container database");
             }
@@ -37,7 +37,7 @@ public sealed class DbFixture : IAsyncLifetime
             }
 
             // sql server
-            if (_useContainer)
+            if (_useContainerSqlServer)
             {
                 return _container?.ConnectionStringMigrations ?? throw new InvalidOperationException($"{nameof(_container.ConnectionStringMigrations)} has not been initialized for container database");
             }
@@ -56,9 +56,9 @@ public sealed class DbFixture : IAsyncLifetime
         else // sql server
         {
             var appUserPassword = TestConfiguration.Options?.Databases?.Desic?.AppUserPassword ?? throw new InvalidOperationException($"{nameof(IntegrationTestsDatabaseDesicOptions.AppUserPassword)} is not configured");
-            if (_useContainer)
+            if (_useContainerSqlServer)
             {
-                var image = TestConfiguration.Options?.Containers?.MsSql?.Image ?? throw new InvalidOperationException($"Container image for sql server is not configured");
+                var image = TestConfiguration.Options?.DbProviders?.SqlServer?.ContainerImage ?? throw new InvalidOperationException($"Container image for sql server is not configured");
                 Console.WriteLine($"Using container database");
                 _container = new(image: image, appUserPassword: appUserPassword);
                 await _container.InitializeAsync();
@@ -76,5 +76,6 @@ public sealed class DbFixture : IAsyncLifetime
     {
         _container?.DisposeAsync().AsTask().Wait();
         _localDb?.DisposeAsync().AsTask().Wait();
+        _sqlite?.DisposeAsync().AsTask().Wait();
     }
 }
