@@ -3,12 +3,15 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Microsoft.SqlServer.Management.Common;
+using Microsoft.SqlServer.Management.Smo;
 using System.Data;
 
 namespace Desic.EntityFrameworkCore.SqlServer;
 
 public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, ILogger<DatabaseInitializer> logger)
 {
+    private bool _contained;
     private string? _databaseName;
     private readonly DatabaseInitializerOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
     private readonly ILogger<DatabaseInitializer> _logger = logger ?? NullLogger<DatabaseInitializer>.Instance;
@@ -23,9 +26,46 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
     {
         _databaseName = targetDatabaseName ?? _options.Name ?? throw new InvalidOperationException("Database name is not specified in options or method parameters");
 
+        await ConnectAsync(connection, cancellationToken);
+
+        var serverConnection = new ServerConnection(connection);
+        var server = new Server(serverConnection);
+
+        if (server.Databases.Contains(_databaseName))
+        {
+            if (_options.StopIfExists ?? false)
+            {
+                _logger.LogInformation($"Stopping as the database already exists and '{nameof(_options.StopIfExists)}' is true");
+                return;
+            }
+            _contained = _options.Contained ?? server.Configuration.ContainmentEnabled.ConfigValue == 1;
+        }
+        else
+        {
+            // if contained is not provided default to true if server has it enabled or false otherwise
+            _contained = _options.Contained ?? server.Configuration.ContainmentEnabled.ConfigValue == 1;
+            CreateDatabase(server, _databaseName, _contained);
+            _logger.LogInformation("Database created: '{DatabaseName} with containment = {IsContained}'", _databaseName, _contained);
+        }
+
+        var database = server.Databases[_databaseName];
+
+        // ensure we are connected to the new database before proceeding
+        await connection.ChangeDatabaseAsync(_databaseName, cancellationToken);
+
+        CreateSchemas(database);
+
+        CreateRoles(database);
+
+        CreateUsers(server, database);
+    }
+
+    private async Task ConnectAsync(SqlConnection connection, CancellationToken cancellationToken)
+    {
         if (connection.State == ConnectionState.Closed && !await connection.CanConnectAsync(cancellationToken))
         {
-            connection.ConnectionString = SqlConnectionHelpers.UpdateDatabaseInConnectionString(connection.ConnectionString, "master");
+            // possible the database does not exist, so try to connect to master database
+            connection.ConnectionString = (new SqlConnectionStringBuilder(connection.ConnectionString) { InitialCatalog = "master" }).ConnectionString;
 
             if (!await connection.CanConnectAsync(cancellationToken))
             {
@@ -33,241 +73,158 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
                 throw new InvalidOperationException("Cannot connect to the database server with the provided connection string");
             }
         }
-
-        if (await DatabaseExistsAsync(connection, cancellationToken))
-        {
-            if (_options.StopIfExists ?? false)
-            {
-                _logger.LogInformation($"Stopping as the database already exists and '{nameof(_options.StopIfExists)}' is true");
-                return;
-            }
-        }
-        else
-        {
-            await CreateDatabaseAsync(connection, cancellationToken);
-        }
-
-        // ensure we are connected to the new database before proceeding
-        await connection.ChangeDatabaseAsync(_databaseName, cancellationToken);
-
-        await CreateSchemasAsync(connection, cancellationToken);
-
-        await CreateRolesAsync(connection, cancellationToken);
-
-        await CreateUsersAsync(connection, cancellationToken);
     }
 
     #region Database
-    private async Task<bool> CreateDatabaseAsync(SqlConnection connection, CancellationToken cancellationToken)
+    private static void CreateDatabase(Server server, string name, bool contained)
     {
-        var sql = $"CREATE DATABASE [{_databaseName}]";
-        if (_options.Contained ?? true) sql += " CONTAINMENT = PARTIAL";
-        using (var command = new SqlCommand(sql, connection))
+        var database = new Database(server, name)
         {
-            await command.ExecuteNonQueryAsync(cancellationToken);
-        }
-        _logger.LogInformation("Database created: '{DatabaseName}'", _databaseName);
-        return true;
-    }
+            ContainmentType = contained ? ContainmentType.Partial : ContainmentType.None
+        };
 
-    private async Task<bool> DatabaseExistsAsync(SqlConnection connection, CancellationToken cancellationToken)
-    {
-        if (string.IsNullOrWhiteSpace(_databaseName)) throw new InvalidOperationException("Database name is not specified");
-        using var command = new SqlCommand("SELECT DB_ID(@databaseName)", connection).AddParameterWithValue("@databaseName", _databaseName);
-        var result = await command.ExecuteScalarAsyncAs<int>(cancellationToken);
-        return result != null;
+        database.Create();
     }
     #endregion
 
     #region Logins
-    private async Task<bool> CreateLoginAsync(SqlConnection connection, string? name, string? password, CancellationToken cancellationToken)
+    private void CreateLogin(Server server, string name, string? password, string? defaultDatabase = null)
     {
-        if (string.IsNullOrWhiteSpace(name)) throw new InvalidOperationException("Login name is not specified");
-        if (await LoginExistsAsync(connection, name, cancellationToken))
+        if (string.IsNullOrWhiteSpace(password)) throw new InvalidOperationException("User password is not specified");
+        var login = server.Logins[name];
+        if (login != null)
         {
-            _logger.LogDebug("Login already exists: {LoginName}", name);
-            return false;
+            _logger.LogDebug("Login exists: {UserName}", login.Name);
+            return;
         }
-        if (string.IsNullOrWhiteSpace(password)) throw new InvalidOperationException("Login password is not specified");
-        var sql = $"CREATE LOGIN [{name}] WITH PASSWORD = '{password}'";
-        using (var command = new SqlCommand(sql, connection))
-        {
-            await command.ExecuteNonQueryAsync(cancellationToken);
-        }
-        _logger.LogInformation("Login created: '{LoginName}'", name);
-        return true;
-    }
-
-    private static async Task<bool> LoginExistsAsync(SqlConnection connection, string loginName, CancellationToken cancellationToken)
-    {
-        using var command = new SqlCommand("SELECT SUSER_ID(@loginName)", connection).AddParameterWithValue("@loginName", loginName);
-        var result = await command.ExecuteScalarAsyncAs<int>(cancellationToken);
-        return result != null;
+        login = new Login(server, name);
+        login.LoginType = LoginType.SqlLogin;
+        if (defaultDatabase != null) login.DefaultDatabase = defaultDatabase;
+        login.Create(password);
+        login.Enable();
     }
     #endregion
 
     #region Schemas
-    private async Task<bool> CreateSchemaAsync(SqlConnection connection, DatabaseInitializerSchemaOptions schema, CancellationToken cancellationToken)
+    private void CreateSchema(Database database, DatabaseInitializerSchemaOptions schemaOptions)
     {
-        if (string.IsNullOrWhiteSpace(schema.Name)) throw new InvalidOperationException("Schema name is not specified");
-        if (await SchemaExistsAsync(connection, schema.Name, cancellationToken))
+        if (string.IsNullOrWhiteSpace(schemaOptions.Name)) throw new InvalidOperationException("Schema name is not specified");
+
+        if (database.Schemas[schemaOptions.Name] != null)
         {
-            _logger.LogDebug("Schema already exists: {SchemaName}", schema.Name);
-            return false;
+            _logger.LogDebug("Schema already exists: {SchemaName}", schemaOptions.Name);
+            return;
         }
-        var sql = $"CREATE SCHEMA [{schema.Name}]";
-        if (!string.IsNullOrWhiteSpace(schema.AuthorizationOwnerName)) sql += $" AUTHORIZATION [{schema.AuthorizationOwnerName}]";
-        using (var command = new SqlCommand(sql, connection))
-        {
-            await command.ExecuteNonQueryAsync(cancellationToken);
-        }
+
+        var schema = new Schema(database, schemaOptions.Name);
+        if (!string.IsNullOrWhiteSpace(schemaOptions.AuthorizationOwnerName)) { schema.Owner = schemaOptions.AuthorizationOwnerName; }
+
+        schema.Create();
+
         _logger.LogInformation("Schema created: '{SchemaName}'", schema.Name);
-        return true;
     }
 
-    private async Task<int> CreateSchemasAsync(SqlConnection connection, CancellationToken cancellationToken)
+    private void CreateSchemas(Database database)
     {
-        var result = 0;
         foreach (var schema in _options.Schemas ?? [])
         {
-            await CreateSchemaAsync(connection, schema, cancellationToken);
-            ++result;
+            CreateSchema(database, schema);
         }
-        return result;
-    }
-
-    private static async Task<bool> SchemaExistsAsync(SqlConnection connection, string schemaName, CancellationToken cancellationToken)
-    {
-        using var command = new SqlCommand("SELECT SCHEMA_ID(@schemaName)", connection).AddParameterWithValue("@schemaName", schemaName);
-        var result = await command.ExecuteScalarAsyncAs<int>(cancellationToken);
-        return result != null;
     }
     #endregion
 
     #region Roles
-    private async Task<int> CreateRolesAsync(SqlConnection connection, CancellationToken cancellationToken)
+    private void CreateRoles(Database database)
     {
-        var result = 0;
-        foreach (var role in _options.Roles ?? [])
+        foreach (var roleOptions in _options.Roles ?? [])
         {
-            await CreateRoleAsync(connection, role, cancellationToken);
-            ++result;
-            foreach (var grant in role.Grants ?? [])
+            var role = CreateRole(database, roleOptions);
+            foreach (var grant in roleOptions.Grants ?? [])
             {
-                await CreateRoleGrantsAsync(connection, grant, role.Name!, cancellationToken);
+                CreateRoleGrants(database, grant, role);
             }
         }
-        return result;
     }
 
-    private async Task<bool> CreateRoleAsync(SqlConnection connection, DatabaseInitializerRoleOptions role, CancellationToken cancellationToken)
+    private DatabaseRole CreateRole(Database database, DatabaseInitializerRoleOptions roleOptions)
     {
-        if (string.IsNullOrWhiteSpace(role.Name)) throw new InvalidOperationException("Role name is not specified");
-        if (await RoleExistsAsync(connection, role.Name, cancellationToken))
+        if (string.IsNullOrWhiteSpace(roleOptions.Name)) throw new InvalidOperationException("Role name is not specified");
+        var existingRole = database.Roles[roleOptions.Name];
+        if (existingRole != null)
         {
-            _logger.LogDebug("Role already exists: {RoleName}", role.Name);
-            return false;
+            _logger.LogDebug("Role already exists: {RoleName}", roleOptions.Name);
+            return existingRole;
         }
-        var sql = $"CREATE ROLE [{role.Name}]";
-        if (!string.IsNullOrWhiteSpace(role.AuthorizationOwnerName)) sql += $" AUTHORIZATION [{role.AuthorizationOwnerName}]";
-        using (var command = new SqlCommand(sql, connection))
-        {
-            await command.ExecuteNonQueryAsync(cancellationToken);
-        }
+        var role = new DatabaseRole(database, roleOptions.Name);
+        if (roleOptions.AuthorizationOwnerName != null) { role.Owner = roleOptions.AuthorizationOwnerName; }
+        role.Create();
         _logger.LogInformation("Role created: '{RoleName}'", role.Name);
-        return true;
+        return role;
     }
 
-    private async Task<bool> CreateRoleGrantsAsync(SqlConnection connection, DatabaseInitializerRoleGrantOptions grant, string roleName, CancellationToken cancellationToken)
+    private void CreateRoleGrants(Database database, DatabaseInitializerRoleGrantOptions grant, DatabaseRole role)
     {
         if (string.IsNullOrWhiteSpace(grant.Schema)) throw new InvalidOperationException("Grant schema name is not specified");
-        var permissions = grant.Permissions != null && grant.Permissions.Count > 0
-            ? string.Join(", ", grant.Permissions.Select(p => $"{p}"))
-            : "*";
-        var grantSql = $"GRANT {permissions} ON SCHEMA::[{grant.Schema}] TO [{roleName}]";
-        using (var grantCommand = new SqlCommand(grantSql, connection))
+        var permissions = grant.Permissions ?? [];
+        var permissionSet = new ObjectPermissionSet
         {
-            await grantCommand.ExecuteNonQueryAsync(cancellationToken);
-        }
-        _logger.LogInformation("Granted permissions '{Permissions}' on schema '{SchemaName}' to role '{RoleName}'", permissions, grant.Schema, roleName);
-        return true;
-    }
-
-    private static async Task<bool> RoleExistsAsync(SqlConnection connection, string roleName, CancellationToken cancellationToken)
-    {
-        using var command = new SqlCommand("SELECT DATABASE_PRINCIPAL_ID(@roleName)", connection).AddParameterWithValue("@roleName", roleName);
-        var result = await command.ExecuteScalarAsyncAs<int>(cancellationToken);
-        return result != null;
+            Select = permissions.Contains("SELECT", StringComparer.OrdinalIgnoreCase),
+            Insert = permissions.Contains("INSERT", StringComparer.OrdinalIgnoreCase),
+            Update = permissions.Contains("UPDATE", StringComparer.OrdinalIgnoreCase),
+            Delete = permissions.Contains("DELETE", StringComparer.OrdinalIgnoreCase),
+        };
+        database.Schemas[grant.Schema].Grant(permissionSet, role.Name);
+        _logger.LogInformation("Granted permissions on schema '{SchemaName}' to role '{RoleName}'", grant.Schema, role.Name);
     }
     #endregion
 
     #region Users
-    private async Task<bool> AddUserToRole(SqlConnection connection, string userName, string? roleName, CancellationToken cancellationToken)
+    private void AddUserToRole(Database database, string userName, string? roleName)
     {
         if (string.IsNullOrWhiteSpace(roleName)) throw new InvalidOperationException("User role name is not specified");
-        var addRoleSql = $"ALTER ROLE [{roleName}] ADD MEMBER [{userName}]";
-        using (var addRoleCommand = new SqlCommand(addRoleSql, connection))
-        {
-            await addRoleCommand.ExecuteNonQueryAsync(cancellationToken);
-        }
+        var role = database.Roles[roleName];
+        role.AddMember(userName);
         _logger.LogInformation("User '{UserName}' added to role '{RoleName}'", userName, roleName);
-        return true;
     }
 
-    private async Task<int> CreateUsersAsync(SqlConnection connection, CancellationToken cancellationToken)
+    private void CreateUsers(Server server, Database database)
     {
-        var result = 0;
         foreach (var user in _options.Users ?? [])
         {
-            await CreateUserAsync(connection, user, cancellationToken);
-            ++result;
+            CreateUser(server, database, user);
             foreach (var role in user.Roles ?? [])
             {
-                await AddUserToRole(connection, user.Name!, role, cancellationToken);
+                AddUserToRole(database, user.Name!, role);
             }
         }
-        return result;
     }
 
-    private async Task<bool> CreateUserAsync(SqlConnection connection, DatabaseInitializerUserOptions user, CancellationToken cancellationToken)
+    private void CreateUser(Server server, Database database, DatabaseInitializerUserOptions userOptions)
     {
-        if (string.IsNullOrWhiteSpace(user.Name)) throw new InvalidOperationException("User name is not specified");
-        var contained = _options.Contained ?? true;
-        if (!contained)
+        if (string.IsNullOrWhiteSpace(userOptions.Name)) throw new InvalidOperationException("User name is not specified");
+        if (!_contained)
         {
-            await CreateLoginAsync(connection, user.Name, user.Password, cancellationToken);
+            CreateLogin(server, userOptions.Name, userOptions.Password);
         }
-        if (await UserExistsAsync(connection, user.Name, cancellationToken))
+        var user = database.Users[userOptions.Name];
+        if (user != null)
         {
-            _logger.LogDebug("User already exists: {UserName}", user.Name);
-            return false;
+            _logger.LogDebug("User already exists: {UserName}", userOptions.Name);
+            return;
         }
-        var sql = $"CREATE USER [{user.Name}]";
-        if (contained)
+        user = new User(database, userOptions.Name);
+        if (!string.IsNullOrWhiteSpace(userOptions.DefaultSchema)) { user.DefaultSchema = userOptions.DefaultSchema; }
+
+        if (_contained)
         {
-            if (string.IsNullOrWhiteSpace(user.Password)) throw new InvalidOperationException("User password is not specified");
-            sql += $" WITH PASSWORD = '{user.Password}'";
-            if (!string.IsNullOrWhiteSpace(user.DefaultSchema)) sql += $", DEFAULT_SCHEMA = [{user.DefaultSchema}]";
+            user.Create(userOptions.Password);
         }
         else
         {
-            if (string.IsNullOrWhiteSpace(user.LoginName)) throw new InvalidOperationException("Login name must be specified when Contained is false");
-            sql += $" FOR LOGIN [{user.LoginName}]";
-            if (!string.IsNullOrWhiteSpace(user.DefaultSchema)) sql += $" WITH DEFAULT_SCHEMA = [{user.DefaultSchema}]";
+            user.Login = user.Name;
+            user.Create();
         }
-        using (var command = new SqlCommand(sql, connection))
-        {
-            await command.ExecuteNonQueryAsync(cancellationToken);
-        }
-        _logger.LogInformation("User created: '{UserName}'", user.Name);
-        return true;
-    }
-
-    private static async Task<bool> UserExistsAsync(SqlConnection connection, string userName, CancellationToken cancellationToken)
-    {
-        using var command = new SqlCommand("SELECT USER_ID(@userName)", connection).AddParameterWithValue("@userName", userName);
-        var result = await command.ExecuteScalarAsyncAs<int>(cancellationToken);
-        return result != null;
+        _logger.LogInformation("User created: '{UserName}'", userOptions.Name);
     }
     #endregion
 }
