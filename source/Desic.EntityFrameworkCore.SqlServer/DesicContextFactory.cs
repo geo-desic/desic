@@ -11,9 +11,6 @@ namespace Desic.EntityFrameworkCore.SqlServer;
 public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<DesicContext>
 {
     private bool _disposed = false;
-    private const string ConfigKeyBase = "Databases:Desic";
-    private const string ConfigKeyBaseLogging = "Logging:LogLevel";
-    private const string ConfigKeySeeding = $"{ConfigKeyBase}:Seeding";
     private IHost? _host;
     private IServiceScope? _scope;
 
@@ -31,16 +28,7 @@ public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFacto
         var result = Host.CreateDefaultBuilder(args);
         result.ConfigureAppConfiguration(config =>
         {
-            var inMemoryConfig = new Dictionary<string, string?>
-            {
-                [$"{ConfigKeySeeding}:Enabled"] = "true",
-                [$"{ConfigKeySeeding}:Test:Enabled"] = "true",
-                [$"{ConfigKeySeeding}:Test:Users:Count"] = "5",
-                [$"{ConfigKeySeeding}:Iso3166Countries:Enabled"] = "true",
-                [$"{ConfigKeyBaseLogging}:Microsoft.AspNetCore"] = "Warning",
-                [$"{ConfigKeyBaseLogging}:Microsoft.EntityFrameworkCore"] = "Warning",
-            };
-            config.AddInMemoryCollection(inMemoryConfig);
+            config.AddJsonFile("sqlserver.appsettings.json", optional: true);
         });
         result.ConfigureServices((hostContext, services) =>
         {
@@ -52,6 +40,7 @@ public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFacto
             });
             var connectionString = config.GetValue("connection", config.GetConnectionString("SqlServer"));
             services.ConfigureDesicContextForSqlServer(connectionString: connectionString, setMigrationsAssembly: true, useSeeding: true);
+            services.UseDatabaseInitializer(config);
         });
         return result;
     }

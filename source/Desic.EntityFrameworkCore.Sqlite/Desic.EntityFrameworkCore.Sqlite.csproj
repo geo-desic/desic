@@ -19,4 +19,10 @@
     <ProjectReference Include="..\Desic.EntityFrameworkCore\Desic.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="sqlite.appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

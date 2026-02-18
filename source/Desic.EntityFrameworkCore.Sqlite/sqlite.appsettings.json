@@ -1,0 +1,15 @@
+{
+  "Databases": {
+    "Desic": {
+      "Seeding": {
+        "Enabled": true,
+        "Test": {
+          "Enabled": true,
+          "Users": {
+            "Count": 5
+          }
+        }
+      }
+    }
+  }
+}

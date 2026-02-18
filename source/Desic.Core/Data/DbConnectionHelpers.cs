@@ -26,4 +26,14 @@ public static class DbConnectionHelpers
         catch { /* nothing */ }
         return false;
     }
+
+    public static string? GetDatabaseName(this DbConnection connection)
+    {
+        try
+        {
+            return connection.Database;
+        }
+        catch { /* nothing */ }
+        return null;
+    }
 }

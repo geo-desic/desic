@@ -1,6 +1,7 @@
 ﻿using Desic.EntityFrameworkCore.Models;
 using Desic.EntityFrameworkCore.Models.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Desic.EntityFrameworkCore.SqlServer;
@@ -17,5 +18,11 @@ public static class ServiceCollectionHelpers
             });
             if (useSeeding) options.UseDesicContextSeeding(serviceProvider);
         });
+    }
+
+    public static void UseDatabaseInitializer(this IServiceCollection services, IConfiguration config, string configSectionKey = "Databases:Desic:SqlServer")
+    {
+        services.Configure<DatabaseInitializerOptions>(config.GetSection(key: configSectionKey));
+        services.AddTransient<DatabaseInitializer>();
     }
 }

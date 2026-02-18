@@ -27,8 +27,7 @@ public sealed class DesicContextSqlite : IAsyncLifetime
         using var factory = new DesicContextFactory();
         using var context = factory.CreateDbContext(["--connection", ConnectionString]);
 
-        using var cts = new CancellationTokenSource();
-        await context.Database.MigrateAsync(cts.Token);
+        await context.Database.MigrateAsync();
     }
 
     public ValueTask DisposeAsync()

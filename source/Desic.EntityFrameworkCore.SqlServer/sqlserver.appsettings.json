@@ -1,8 +1,17 @@
 {
   "Databases": {
     "Desic": {
+      "Seeding": {
+        "Enabled": true,
+        "Test": {
+          "Enabled": true,
+          "Users": {
+            "Count": 5
+          }
+        }
+      },
       "SqlServer": {
-        "Contained": true,
+        "Contained": false,
         "Name": "Desic",
         "Roles": [
           {
@@ -44,16 +53,6 @@
           }
         ]
       }
-    }
-  },
-  "Logging": {
-    "Console": {
-      "IncludeScopes": true
-    },
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning",
-      "Microsoft.EntityFrameworkCore": "Warning"
     }
   }
 }

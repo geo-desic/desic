@@ -10,19 +10,19 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["source/Desic.DatabaseInitializer/Desic.DatabaseInitializer.csproj", "source/Desic.DatabaseInitializer/"]
-RUN dotnet restore "./source/Desic.DatabaseInitializer/Desic.DatabaseInitializer.csproj"
+COPY ["source/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj", "source/Desic.DatabaseUpdater/"]
+RUN dotnet restore "./source/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj"
 COPY . .
-WORKDIR "/src/source/Desic.DatabaseInitializer"
-RUN dotnet build "./Desic.DatabaseInitializer.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/source/Desic.DatabaseUpdater"
+RUN dotnet build "./Desic.DatabaseUpdater.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Desic.DatabaseInitializer.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Desic.DatabaseUpdater.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Desic.DatabaseInitializer.dll"]
+ENTRYPOINT ["dotnet", "Desic.DatabaseUpdater.dll"]

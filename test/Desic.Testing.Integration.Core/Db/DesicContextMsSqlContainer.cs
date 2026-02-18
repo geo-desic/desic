@@ -22,23 +22,20 @@ public sealed class DesicContextMsSqlContainer(string image, string appUserPassw
 
     public async ValueTask InitializeAsync()
     {
-        Console.WriteLine($"Starting mssql container");
         await _container.StartAsync();
-        Console.WriteLine($"Started mssql container with name = {_container.Name} and id = {_container.Id} and image = {_container.Image.FullName}");
 
         _connectionStringMigrations = _container.GetConnectionString();
-        Console.WriteLine($"Attempting to instantiate a DesicContext");
+
+        // create the database and apply migrations
         using var factory = new DesicContextFactory();
         using var context = factory.CreateDbContext(["--connection", ConnectionStringMigrations]);
-        Console.WriteLine($"Successfully instantiated a DesicContext");
 
-        Console.WriteLine($"Attempting to initialize the database");
-        using var cts = new CancellationTokenSource();
-        await context.Database.MigrateAsync(cts.Token);
-        Console.WriteLine($"Successfully initialized the database");
+        await context.InitializeAsync();
+        await context.Database.MigrateAsync();
 
         var builder = new SqlConnectionStringBuilder(ConnectionStringMigrations)
         {
+            InitialCatalog = "Desic",
             UserID = DesicContext.AppUser,
             Password = _appUserPassword,
         };

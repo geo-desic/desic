@@ -32,14 +32,14 @@ public sealed class DesicContextLocalDb(string appUserPassword) : IAsyncLifetime
         _databaseFileName = $"{_databaseName}.mdf";
         _databaseFilePath = Path.Combine(tempDir, _databaseFileName);
 
-        _connectionStringMigrations = $"Data Source={DataSource};Initial Catalog={_databaseName};Integrated Security=True;AttachDbFilename={_databaseFilePath};";
+        _connectionStringMigrations = $"Data Source={DataSource};Initial Catalog={_databaseName};Integrated Security=True;";
 
         // create the database and apply migrations
         using var factory = new DesicContextFactory();
         using var context = factory.CreateDbContext(["--connection", ConnectionStringMigrations]);
 
-        using var cts = new CancellationTokenSource();
-        await context.Database.MigrateAsync(cts.Token);
+        await context.InitializeAsync(targetDatabaseName: _databaseName);
+        await context.Database.MigrateAsync();
 
         _connectionStringApp = $"Data Source={DataSource};Initial Catalog={_databaseName};User ID={DesicContext.AppUser};Password={_appUserPassword};";
 
