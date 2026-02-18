@@ -20,7 +20,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
 
     public async Task InitializeAsync(SqlConnection connection, CancellationToken cancellationToken = default)
     {
-        if (connection.State != ConnectionState.Open)
+        if (connection.State == ConnectionState.Closed)
         {
             await connection.OpenAsync(cancellationToken);
         }
@@ -29,7 +29,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         {
             if (_options.StopIfExists ?? false)
             {
-                _logger.LogDebug($"Stopping as the database already exists and '{nameof(_options.StopIfExists)}' is true");
+                _logger.LogInformation($"Stopping as the database already exists and '{nameof(_options.StopIfExists)}' is true");
                 return;
             }
         }

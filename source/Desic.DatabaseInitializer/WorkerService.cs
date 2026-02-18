@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Desic.Core.Data;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -18,19 +20,31 @@ public class WorkerService(EntityFrameworkCore.SqlServer.DatabaseInitializer dat
         if (string.IsNullOrEmpty(connectionString))
         {
             _logger.LogError("No connection string was provided");
-            _exitCode = 1;
+            StopApplication(exitCode: 1);
             return;
         }
 
-        await _databaseInitializer.InitializeAsync(connectionString, stoppingToken);
+        using var connection = new SqlConnection(connectionString);
+        if (!await connection.CanConnectAsync(stoppingToken))
+        {
+            _logger.LogError("Unable to connect to the database using the connection string provided");
+            StopApplication(exitCode: 1);
+            return;
+        }
 
-        _hostApplicationLifetime.StopApplication();
+        await _databaseInitializer.InitializeAsync(connection, stoppingToken);
 
-        _exitCode = 0;
+        StopApplication(exitCode: 0);
     }
 
     public override async Task StopAsync(CancellationToken cancellationToken)
     {
         Environment.ExitCode = _exitCode.GetValueOrDefault(-1);
+    }
+
+    private void StopApplication(int? exitCode = null)
+    {
+        if (exitCode.HasValue) _exitCode = exitCode.Value;
+        _hostApplicationLifetime.StopApplication();
     }
 }
