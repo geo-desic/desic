@@ -44,7 +44,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "desic.api": "StartDebugging",
+        "desic.api": "DoNotStart",
         "desic.databaseupdater": "StartWithoutDebugging",
         "desic.web": "DoNotStart",
         "sqlserver": "DoNotStart"

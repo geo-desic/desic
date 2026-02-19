@@ -55,18 +55,18 @@ public sealed class DbFixture : IAsyncLifetime
         }
         else // sql server
         {
-            var appUserPassword = TestConfiguration.Options?.Databases?.Desic?.AppUserPassword ?? throw new InvalidOperationException($"{nameof(IntegrationTestsDatabaseDesicOptions.AppUserPassword)} is not configured");
+            var apiUserPassword = TestConfiguration.Options?.Databases?.Desic?.ApiUserPassword ?? throw new InvalidOperationException($"{nameof(IntegrationTestsDatabaseDesicOptions.ApiUserPassword)} is not configured");
             if (_useContainerSqlServer)
             {
                 var image = TestConfiguration.Options?.DbProviders?.SqlServer?.ContainerImage ?? throw new InvalidOperationException($"Container image for sql server is not configured");
                 Console.WriteLine($"Using container database");
-                _container = new(image: image, appUserPassword: appUserPassword);
+                _container = new(image: image, apiUserPassword: apiUserPassword);
                 await _container.InitializeAsync();
             }
             else
             {
                 Console.WriteLine($"Using localdb database");
-                _localDb = new(appUserPassword: appUserPassword);
+                _localDb = new(apiUserPassword: apiUserPassword);
                 await _localDb.InitializeAsync();
             }
         }

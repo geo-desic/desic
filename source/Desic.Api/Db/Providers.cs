@@ -4,6 +4,7 @@ namespace Desic.Api.Db;
 
 public static class Providers
 {
+    public const string DbApiUser = "ApiUser"; // database user with limited permissions for the application (no ddl only dml)
     public const string Sqlite = "Sqlite";
     public const string SqlServer = "SqlServer";
 

@@ -11,7 +11,6 @@ public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(op
     public DbSet<Tag> Tags { get; set; }
     public DbSet<User> Users { get; set; }
 
-    public const string AppUser = "AppUser";
     public const string AppSchema = "app"; // application can perform all dml operations (select, insert, update, delete) in this schema
     public const string RefSchema = "ref"; // application can perform only read operations (select) in this schema
 

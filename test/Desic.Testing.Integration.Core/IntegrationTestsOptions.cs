@@ -25,5 +25,5 @@ public sealed class IntegrationTestsDatabaseOptions
 
 public sealed class IntegrationTestsDatabaseDesicOptions
 {
-    public string? AppUserPassword { get; set; }
+    public string? ApiUserPassword { get; set; }
 }

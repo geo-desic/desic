@@ -1,6 +1,6 @@
 ﻿namespace Desic.Api.Logging;
 
-public class LogEvents
+public static class LogEvents
 {
     #pragma warning disable format
     internal const int UserGet         = 10000;

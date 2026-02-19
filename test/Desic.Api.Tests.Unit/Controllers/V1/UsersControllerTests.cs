@@ -35,6 +35,7 @@ public class UsersControllerTests
             result.StatusCode.Should().Be(404);
         }
     }
+
     public class UserControllerTests002 : UsersControllerTests
     {
         [Fact]
