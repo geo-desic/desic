@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
-using System.Data;
 
 namespace Desic.EntityFrameworkCore.SqlServer;
 
@@ -18,16 +17,9 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
 
     public async Task InitializeAsync(string connectionString, string? targetDatabaseName = null, CancellationToken cancellationToken = default)
     {
-        using var connection = new SqlConnection(connectionString);
-        await InitializeAsync(connection, targetDatabaseName, cancellationToken);
-    }
-
-    public async Task InitializeAsync(SqlConnection connection, string? targetDatabaseName = null, CancellationToken cancellationToken = default)
-    {
         _databaseName = targetDatabaseName ?? _options.Name ?? throw new InvalidOperationException("Database name is not specified in options or method parameters");
 
-        await ConnectAsync(connection, cancellationToken);
-
+        using var connection = await GetConnection(connectionString, cancellationToken);
         var serverConnection = new ServerConnection(connection);
         var server = new Server(serverConnection);
 
@@ -64,19 +56,25 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         CreateUsers(server, database);
     }
 
-    private async Task ConnectAsync(SqlConnection connection, CancellationToken cancellationToken)
+    private async Task<SqlConnection> GetConnection(string connectionString, CancellationToken cancellationToken)
     {
-        if (connection.State == ConnectionState.Closed && !await connection.CanConnectAsync(cancellationToken))
+        var builder = new SqlConnectionStringBuilder(connectionString) { ConnectTimeout = 5 };
+        var connection = new SqlConnection(builder.ConnectionString);
+        if (!await connection.CanConnectAsync(cancellationToken))
         {
+            await connection.DisposeAsync();
             // possible the database does not exist, so try to connect to master database
-            connection.ConnectionString = (new SqlConnectionStringBuilder(connection.ConnectionString) { InitialCatalog = "master" }).ConnectionString;
+            builder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master", ConnectTimeout = 5 };
+            var connectionMaster = new SqlConnection(builder.ConnectionString);
 
-            if (!await connection.CanConnectAsync(cancellationToken))
+            if (!await connectionMaster.CanConnectAsync(cancellationToken))
             {
                 _logger.LogError("Cannot connect to the database server with the provided connection string");
                 throw new InvalidOperationException("Cannot connect to the database server with the provided connection string");
             }
+            return connectionMaster;
         }
+        return connection;
     }
 
     #region Containment

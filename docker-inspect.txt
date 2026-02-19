@@ -1,0 +1,1 @@
+docker inspect --format "{{.Path}} {{.Args}}" <container_name_or_id>

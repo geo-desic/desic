@@ -24,18 +24,17 @@ public sealed class DesicContextMsSqlContainer(string image, string appUserPassw
     {
         await _container.StartAsync();
 
-        _connectionStringMigrations = _container.GetConnectionString();
+        _connectionStringMigrations = new SqlConnectionStringBuilder(_container.GetConnectionString()) { InitialCatalog = "Desic" }.ConnectionString;
 
         // create the database and apply migrations
         using var factory = new DesicContextFactory();
         using var context = factory.CreateDbContext(["--connection", ConnectionStringMigrations]);
 
-        await context.InitializeAsync();
+        await context.InitializeAsync(targetDatabaseName: "Desic");
         await context.Database.MigrateAsync();
 
         var builder = new SqlConnectionStringBuilder(ConnectionStringMigrations)
         {
-            InitialCatalog = "Desic",
             UserID = DesicContext.AppUser,
             Password = _appUserPassword,
         };

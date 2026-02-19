@@ -6,7 +6,7 @@
       "serviceActions": {
         "desic.api": "StartDebugging",
         "desic.web": "StartWithoutDebugging",
-        "migrations": "StartWithoutDebugging",
+        "desic.databaseupdater": "StartWithoutDebugging",
         "sqlserver": "StartWithoutDebugging"
       }
     },
@@ -16,17 +16,7 @@
       "serviceActions": {
         "desic.api": "DoNotStart",
         "desic.web": "DoNotStart",
-        "migrations": "DoNotStart",
-        "sqlserver": "StartWithoutDebugging"
-      }
-    },
-    "Migrations": {
-      "commandName": "DockerCompose",
-      "commandVersion": "1.0",
-      "serviceActions": {
-        "desic.api": "DoNotStart",
-        "desic.web": "DoNotStart",
-        "migrations": "StartWithoutDebugging",
+        "desic.databaseupdater": "DoNotStart",
         "sqlserver": "StartWithoutDebugging"
       }
     },
@@ -36,7 +26,7 @@
       "serviceActions": {
         "desic.api": "StartDebugging",
         "desic.web": "DoNotStart",
-        "migrations": "DoNotStart",
+        "desic.databaseupdater": "DoNotStart",
         "sqlserver": "DoNotStart"
       }
     },
@@ -46,7 +36,17 @@
       "serviceActions": {
         "desic.api": "StartDebugging",
         "desic.web": "StartWithoutDebugging",
-        "migrations": "DoNotStart",
+        "desic.databaseupdater": "DoNotStart",
+        "sqlserver": "DoNotStart"
+      }
+    },
+    "Db Updater": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "desic.api": "StartDebugging",
+        "desic.databaseupdater": "StartWithoutDebugging",
+        "desic.web": "DoNotStart",
         "sqlserver": "DoNotStart"
       }
     }

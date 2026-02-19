@@ -17,12 +17,12 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql
 
-  migrations:
-    image: ${DOCKER_REGISTRY-}desicmigrations
+  desic.databaseupdater:
+    image: ${DOCKER_REGISTRY-}desicdatabaseupdater
     build:
       context: .
-      dockerfile: source/Desic.EntityFrameworkCore.SqlServer/Dockerfile
-    command: ["sh", "-c", "./efbundle --connection \"${CONNECTION_STRINGS_SQLSERVER_MIGRATIONS}\" --verbose"]
+      dockerfile: source/Desic.DatabaseUpdater/Dockerfile
+    command: ["--provider", "SqlServer", "--connection", "${CONNECTION_STRINGS_SQLSERVER_MIGRATIONS}"]
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -30,7 +30,7 @@ services:
 
   desic.api:
     depends_on:
-      migrations:
+      desic.databaseupdater:
         condition: service_completed_successfully
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
