@@ -11,6 +11,12 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["source/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj", "source/Desic.DatabaseUpdater/"]
+COPY ["source/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj", "source/Desic.EntityFrameworkCore.Sqlite/"]
+COPY ["source/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "source/Desic.EntityFrameworkCore/"]
+COPY ["source/Desic.Core/Desic.Core.csproj", "source/Desic.Core/"]
+COPY ["source/MediatR/MediatR.csproj", "source/MediatR/"]
+COPY ["source/MediatR.Contracts/MediatR.Contracts.csproj", "source/MediatR.Contracts/"]
+COPY ["source/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj", "source/Desic.EntityFrameworkCore.SqlServer/"]
 RUN dotnet restore "./source/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj"
 COPY . .
 WORKDIR "/src/source/Desic.DatabaseUpdater"
