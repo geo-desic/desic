@@ -13,7 +13,7 @@ public sealed class DatabaseInitializerOptions
 public sealed class DatabaseInitializerRoleOptions
 {
     public string? Name { get; set; }
-    public string? AuthorizationOwnerName { get; set; }
+    public string? OwnerName { get; set; }
     public List<DatabaseInitializerRoleGrantOptions>? Grants { get; set; }
 }
 
@@ -31,7 +31,7 @@ public sealed class DatabaseInitializerRoleSchemaGrantPermissionOptions
 public sealed class DatabaseInitializerSchemaOptions
 {
     public string? Name { get; set; }
-    public string? AuthorizationOwnerName { get; set; }
+    public string? OwnerName { get; set; }
 }
 
 public sealed class DatabaseInitializerUserOptions

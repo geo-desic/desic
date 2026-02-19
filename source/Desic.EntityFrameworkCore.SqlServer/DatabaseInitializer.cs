@@ -31,6 +31,11 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         var serverConnection = new ServerConnection(connection);
         var server = new Server(serverConnection);
 
+        var containmentEnabled = server.Configuration.ContainmentEnabled.ConfigValue == 1;
+
+        // default containment is true if server has it enabled or false otherwise
+        _contained = _options.Contained ?? containmentEnabled;
+
         if (server.Databases.Contains(_databaseName))
         {
             if (_options.StopIfExists ?? false)
@@ -38,12 +43,11 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
                 _logger.LogInformation($"Stopping as the database already exists and '{nameof(_options.StopIfExists)}' is true");
                 return;
             }
-            _contained = _options.Contained ?? server.Configuration.ContainmentEnabled.ConfigValue == 1;
+            if (_contained && !containmentEnabled) SetContainment(server);
         }
         else
         {
-            // if contained is not provided default to true if server has it enabled or false otherwise
-            _contained = _options.Contained ?? server.Configuration.ContainmentEnabled.ConfigValue == 1;
+            if (_contained && !containmentEnabled) SetContainment(server);
             CreateDatabase(server, _databaseName, _contained);
             _logger.LogInformation("Database created: '{DatabaseName} with containment = {IsContained}'", _databaseName, _contained);
         }
@@ -74,6 +78,15 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
             }
         }
     }
+
+    #region Containment
+    private void SetContainment(Server server)
+    {
+        server.Configuration.ContainmentEnabled.ConfigValue = 1;
+        server.Configuration.Alter();
+        _logger.LogInformation("Enabled contained dataabse authentication for the server");
+    }
+    #endregion
 
     #region Database
     private static void CreateDatabase(Server server, string name, bool contained)
@@ -117,7 +130,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         }
 
         var schema = new Schema(database, schemaOptions.Name);
-        if (!string.IsNullOrWhiteSpace(schemaOptions.AuthorizationOwnerName)) { schema.Owner = schemaOptions.AuthorizationOwnerName; }
+        if (!string.IsNullOrWhiteSpace(schemaOptions.OwnerName)) { schema.Owner = schemaOptions.OwnerName; }
 
         schema.Create();
 
@@ -156,7 +169,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
             return existingRole;
         }
         var role = new DatabaseRole(database, roleOptions.Name);
-        if (roleOptions.AuthorizationOwnerName != null) { role.Owner = roleOptions.AuthorizationOwnerName; }
+        if (roleOptions.OwnerName != null) { role.Owner = roleOptions.OwnerName; }
         role.Create();
         _logger.LogInformation("Role created: '{RoleName}'", role.Name);
         return role;
