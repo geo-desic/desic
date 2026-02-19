@@ -2,12 +2,16 @@
   "profiles": {
     "Desic.DatabaseUpdater": {
       "commandName": "Project",
+      "commandLineArgs": "--provider SqlServer --connection \"Server=(localdb)\\MSSQLLocalDB;Database=Desic;Integrated Security=true;\"",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }
     },
     "Container (Dockerfile)": {
-      "commandName": "Docker"
+      "commandName": "Docker",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
     }
   }
 }
