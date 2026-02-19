@@ -23,11 +23,11 @@ string connectionString;
 switch (dbProvider)
 {
     case "Sqlite":
-        connectionString = config.GetConnectionString("connection") ?? config.GetConnectionString("Sqlite") ?? throw new InvalidOperationException("Connection string could not be determined");
+        connectionString = config.GetValue<string>("connection") ?? config.GetConnectionString("Sqlite") ?? throw new InvalidOperationException("Connection string could not be determined");
         builder.Services.ConfigureDesicContextForSqlServer(connectionString: connectionString, setMigrationsAssembly: true, useSeeding: true);
         break;
     case "SqlServer":
-        connectionString = config.GetConnectionString("connection") ?? config.GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string could not be determined");
+        connectionString = config.GetValue<string>("connection") ?? config.GetConnectionString("SqlServer") ?? throw new InvalidOperationException("Connection string could not be determined");
         builder.Services.UseDatabaseInitializer(config);
         builder.Services.ConfigureDesicContextForSqlServer(connectionString: connectionString, setMigrationsAssembly: true, useSeeding: true);
         break;

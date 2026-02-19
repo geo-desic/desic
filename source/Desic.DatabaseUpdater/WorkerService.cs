@@ -1,7 +1,5 @@
-﻿using Desic.Core.Data;
-using Desic.EntityFrameworkCore.Models;
+﻿using Desic.EntityFrameworkCore.Models;
 using Desic.EntityFrameworkCore.SqlServer;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +40,7 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
 
         if (!noInit && dbProvider == "SqlServer") // Sqlite does not require initialization only SqlServer
         {
-            var connectionString = _config.GetConnectionString("connection") ?? _config.GetConnectionString("SqlServer");
+            var connectionString = _config.GetValue<string>("connection") ?? _config.GetConnectionString("SqlServer");
             if (string.IsNullOrEmpty(connectionString))
             {
                 _logger.LogError("No connection string was provided");

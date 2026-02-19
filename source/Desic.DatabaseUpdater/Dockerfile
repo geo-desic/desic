@@ -32,3 +32,5 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Desic.DatabaseUpdater.dll"]
+
+CMD ["--provider", "SqlServer"]
