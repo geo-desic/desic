@@ -18,19 +18,10 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var noInit = _config.GetValue("no-init", false);
-        var noMigrate = _config.GetValue("no-migrate", false);
+        var initilizationPerformed = false;
+        var migrationsPerformed = false;
 
-        if (noInit && noMigrate)
-        {
-            _logger.LogWarning("No initialization or migration performed as both 'no-init' and 'no-migrate' flags are set");
-            StopApplication(exitCode: 0);
-            return;
-        }
-
-        using var scope = _serviceProvider.CreateScope();
-
-        var dbProvider = config.GetValue("provider", config.GetValue<string>("DbProvider"));
+        var dbProvider = _config.GetValue("provider", _config.GetValue<string>("DbProvider"));
         if (dbProvider == null)
         {
             _logger.LogError("Database provider could not be determined");
@@ -38,24 +29,34 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
             return;
         }
 
-        if (!noInit && dbProvider == "SqlServer") // Sqlite does not require initialization only SqlServer
+        // initialization
+        var connectionStringInitialization = _config.GetValue<string>("ci") ?? _config.GetValue<string>("connection-init");
+        if (connectionStringInitialization != null)
         {
-            var connectionString = _config.GetValue<string>("connection") ?? _config.GetConnectionString("SqlServer");
-            if (string.IsNullOrEmpty(connectionString))
-            {
-                _logger.LogError("No connection string was provided");
-                StopApplication(exitCode: 1);
-                return;
-            }
-
-            var databaseInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
-            await databaseInitializer.InitializeAsync(connectionString: connectionString, cancellationToken: stoppingToken);
+            initilizationPerformed = await PerformInitialization(dbProvider: dbProvider, connectionString: connectionStringInitialization, cancellationToken: stoppingToken);
+        }
+        else
+        {
+            _logger.LogInformation("Skipping initialization as no connection string for it was provided");
         }
 
-        if (!noMigrate)
+        // migrations
+        using (var scope = _serviceProvider.CreateScope())
         {
-            var context = scope.ServiceProvider.GetRequiredService<DesicContext>();
-            await context.Database.MigrateAsync(stoppingToken);
+            var context = scope.ServiceProvider.GetService<DesicContext>();
+
+            if (context != null)
+            {
+                await context.Database.MigrateAsync(stoppingToken);
+                migrationsPerformed = true;
+            }
+        }
+
+        if (!initilizationPerformed && !migrationsPerformed)
+        {
+            _logger.LogError("No initialization or migrations were performed because no connection strings were provided for them");
+            StopApplication(exitCode: 1);
+            return;
         }
 
         StopApplication(exitCode: 0);
@@ -70,5 +71,36 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
     {
         if (exitCode.HasValue) _exitCode = exitCode.Value;
         _hostApplicationLifetime.StopApplication();
+    }
+
+    private async Task<bool> PerformInitialization(string dbProvider, string connectionString, CancellationToken cancellationToken)
+    {
+        if (dbProvider == "SqlServer")
+        {
+            if (connectionString == "migrations")
+            {
+                var connectionStringMigrations = _config.GetValue<string>("c") ?? _config.GetValue<string>("connection");
+                if (connectionStringMigrations == null)
+                {
+                    _logger.LogError("Connection string for initialization is 'migrations' but no connection string for migrations was provided");
+                    StopApplication(exitCode: 1);
+                    return false;
+                }
+                connectionString = connectionStringMigrations;
+                _logger.LogDebug("Using migrations connection string for initialization");
+            }
+
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var databaseInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+                await databaseInitializer.InitializeAsync(connectionString: connectionString, cancellationToken: cancellationToken);
+                return true;
+            }
+        }
+        else
+        {
+            _logger.LogWarning("Initialization will be skipped as the pecified database provider does not currently support it");
+        }
+        return false;
     }
 }

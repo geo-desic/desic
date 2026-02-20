@@ -6,10 +6,10 @@ services:
       - "1433:1433"
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "${DB_PASSWORD_MIGRATIONS}"
+      MSSQL_SA_PASSWORD: "${DB_PASSWORD_INIT}"
       MSSQL_PID: "Developer"
     healthcheck:
-      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-C", "-S", "localhost", "-U", "${DB_USER_MIGRATIONS}", "-P", "${DB_PASSWORD_MIGRATIONS}", "-Q", "SELECT 1"]
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-C", "-S", "localhost", "-U", "${DB_USER_INIT}", "-P", "${DB_PASSWORD_INIT}", "-Q", "SELECT 1"]
       interval: 10s
       timeout: 3s
       retries: 10
@@ -22,7 +22,7 @@ services:
     build:
       context: .
       dockerfile: source/Desic.DatabaseUpdater/Dockerfile
-    command: ["--provider", "SqlServer", "--connection", "${CONNECTION_STRINGS_SQLSERVER_MIGRATIONS}"]
+    command: ["--provider", "SqlServer", "--connection-init", "${CONNECTION_STRINGS_SQLSERVER_INIT}", "--connection", "${CONNECTION_STRINGS_SQLSERVER_MIGRATIONS}"]
     depends_on:
       sqlserver:
         condition: service_healthy
