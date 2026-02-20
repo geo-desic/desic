@@ -8,6 +8,8 @@
     <Project Path="src/Desic.Business/Desic.Business.csproj" />
     <Project Path="src/Desic.Core/Desic.Core.csproj" />
     <Project Path="src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj" />
+    <Project Path="src/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj" />
+    <Project Path="src/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj" />
     <Project Path="src/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj" />
     <Project Path="src/Desic.Web/desic.web.esproj">
       <Build />
@@ -15,10 +17,6 @@
     </Project>
     <Project Path="src/MediatR.Contracts/MediatR.Contracts.csproj" />
     <Project Path="src/MediatR/MediatR.csproj" />
-  </Folder>
-  <Folder Name="/src/Migrations/">
-    <Project Path="src/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj" />
-    <Project Path="src/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Desic.Api.Tests.Integration/Desic.Api.Tests.Integration.csproj" />
