@@ -6,9 +6,22 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-var useSeeding = !(args.Contains("--ns") || args.Contains("--no-seeding"));
+HostApplicationBuilderSettings settings = new()
+{
+    Args = args,
+    Configuration = new ConfigurationManager(),
+    ContentRootPath = Directory.GetCurrentDirectory(),
+};
 
-HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+settings.Configuration.AddJsonFile("sqlite.appsettings.json", optional: true);
+settings.Configuration.AddJsonFile("sqlserver.appsettings.json", optional: true);
+settings.Configuration.AddJsonFile("appsettings.json", optional: true);
+settings.Configuration.AddJsonFile($"appsettings.{settings.EnvironmentName}.json", optional: true);
+settings.Configuration.AddUserSecrets<Program>(optional: true);
+settings.Configuration.AddEnvironmentVariables();
+settings.Configuration.AddCommandLine(args);
+
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(settings);
 
 var config = builder.Configuration;
 var dbProvider = config.GetValue("provider", config.GetValue<string>("DbProvider") ?? throw new InvalidOperationException("Database provider could not be determined"));
@@ -17,6 +30,7 @@ builder.Services.AddHostedService<WorkerService>();
 
 var connectionStringMigrations = config.GetValue<string>("c") ?? config.GetValue<string>("connection");
 var connectionStringInitialization = config.GetValue<string>("ci") ?? config.GetValue<string>("connection-init");
+var useSeeding = !(args.Contains("--ns") || args.Contains("--no-seeding"));
 
 if (connectionStringMigrations != null)
 {
