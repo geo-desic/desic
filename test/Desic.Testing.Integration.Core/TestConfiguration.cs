@@ -8,7 +8,7 @@ public static class TestConfiguration
         .SetBasePath(Directory.GetCurrentDirectory())
         .AddJsonFile("appsettings.json", optional: true)
         .AddJsonFile("appsettings.Test.json", optional: true)
-        .AddUserSecrets<Api.IMarker>(optional: true)
+        .AddUserSecrets<IMarker>(optional: true)
         .AddEnvironmentVariables()
         .Build();
 
