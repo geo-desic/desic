@@ -1,7 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Helpers;
 
-namespace Desic.Core.Tests.Unit.Helpers;
+namespace Desic.Tests.Unit.Helpers;
 
 public class NullableHelpersTests
 {

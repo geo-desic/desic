@@ -1,2 +1,2 @@
-dotnet format Desic.sln --verify-no-changes
+dotnet format Desic.slnx --verify-no-changes
 pause

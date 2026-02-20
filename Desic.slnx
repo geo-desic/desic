@@ -22,9 +22,9 @@
     <Project Path="test/Desic.Api.Tests.Integration/Desic.Api.Tests.Integration.csproj" />
     <Project Path="test/Desic.Api.Tests.Unit/Desic.Api.Tests.Unit.csproj" />
     <Project Path="test/Desic.Business.Tests.Unit/Desic.Business.Tests.Unit.csproj" />
-    <Project Path="test/Desic.Core.Tests.Unit/Desic.Core.Tests.Unit.csproj" />
     <Project Path="test/Desic.EntityFrameworkCore.Tests.Unit/Desic.EntityFrameworkCore.Tests.Unit.csproj" />
     <Project Path="test/Desic.Testing.Integration.Core/Desic.Testing.Integration.Core.csproj" />
+    <Project Path="test/Desic.Tests.Unit/Desic.Tests.Unit.csproj" />
     <Project Path="test/MediatR.Benchmarks/MediatR.Benchmarks.csproj" />
     <Project Path="test/MediatR.Tests/MediatR.Tests.csproj" />
   </Folder>
