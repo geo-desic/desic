@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
 
-namespace Desic.Core.Data;
+namespace Desic.Data;
 
 public static class DbConnectionHelpers
 {

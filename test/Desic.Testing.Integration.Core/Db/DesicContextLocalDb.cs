@@ -1,5 +1,5 @@
 using Desic.Api.Db;
-using Desic.Core.Data;
+using Desic.Data;
 using Desic.EntityFrameworkCore.SqlServer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;

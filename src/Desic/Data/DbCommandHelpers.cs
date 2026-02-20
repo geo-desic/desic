@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
 
-namespace Desic.Core.Data;
+namespace Desic.Data;
 
 public static class DbCommandHelpers<T> where T : DbCommand
 {

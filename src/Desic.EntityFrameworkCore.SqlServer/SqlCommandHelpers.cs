@@ -1,4 +1,4 @@
-﻿using Desic.Core.Data;
+﻿using Desic.Data;
 using Microsoft.Data.SqlClient;
 
 namespace Desic.EntityFrameworkCore.SqlServer;

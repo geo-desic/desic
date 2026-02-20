@@ -1,4 +1,4 @@
-﻿using Desic.Core.Helpers;
+﻿using Desic.Helpers;
 
 namespace Desic.EntityFrameworkCore.Entities.Infrastructure;
 

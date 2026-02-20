@@ -6,7 +6,6 @@
   <Folder Name="/src/">
     <Project Path="src/Desic.Api/Desic.Api.csproj" />
     <Project Path="src/Desic.Business/Desic.Business.csproj" />
-    <Project Path="src/Desic.Core/Desic.Core.csproj" />
     <Project Path="src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj" />
     <Project Path="src/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj" />
     <Project Path="src/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj" />
@@ -15,6 +14,7 @@
       <Build />
       <Deploy />
     </Project>
+    <Project Path="src/Desic/Desic.csproj" Id="011b9482-7f1b-41b7-91d8-93c5d9128ae0" />
     <Project Path="src/MediatR.Contracts/MediatR.Contracts.csproj" />
     <Project Path="src/MediatR/MediatR.csproj" />
   </Folder>

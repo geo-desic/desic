@@ -1,5 +1,5 @@
 ﻿// source: https://github.com/bitfoundation/bitplatform/blob/develop/src/Templates/Boilerplate/Bit.Boilerplate/src/Shared/Infrastructure/Extensions/GuidExtensions.cs
-namespace Desic.Core.Helpers;
+namespace Desic.Helpers;
 
 public static class GuidExtensions
 {

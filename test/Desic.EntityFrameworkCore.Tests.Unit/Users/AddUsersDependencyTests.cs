@@ -1,7 +1,7 @@
-﻿using Desic.Core.Helpers;
-using Desic.EntityFrameworkCore.Data;
+﻿using Desic.EntityFrameworkCore.Data;
 using Desic.EntityFrameworkCore.Entities;
 using Desic.EntityFrameworkCore.Models;
+using Desic.Helpers;
 
 namespace Desic.EntityFrameworkCore.Tests.Unit.Users;
 

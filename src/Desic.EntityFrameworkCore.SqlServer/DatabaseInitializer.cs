@@ -1,4 +1,4 @@
-﻿using Desic.Core.Data;
+﻿using Desic.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;

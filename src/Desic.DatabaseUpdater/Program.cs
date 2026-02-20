@@ -1,7 +1,7 @@
-﻿using Desic.Core.Mediator;
-using Desic.DatabaseUpdater;
+﻿using Desic.DatabaseUpdater;
 using Desic.EntityFrameworkCore.Sqlite;
 using Desic.EntityFrameworkCore.SqlServer;
+using Desic.Mediator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

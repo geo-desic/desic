@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace Desic.Core.Mediator;
+namespace Desic.Mediator;
 
 public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

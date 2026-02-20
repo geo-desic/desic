@@ -1,5 +1,5 @@
-﻿using Desic.Core.Mediator;
-using Desic.EntityFrameworkCore.Models;
+﻿using Desic.EntityFrameworkCore.Models;
+using Desic.Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;

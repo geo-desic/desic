@@ -1,4 +1,4 @@
-﻿namespace Desic.Core.Helpers;
+﻿namespace Desic.Helpers;
 
 public static class NullableHelpers
 {
