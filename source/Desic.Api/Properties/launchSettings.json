@@ -22,7 +22,6 @@
     },
     "IIS Express": {
       "commandName": "IISExpress",
-      "commandLineArgs": "DbProvider=SqlServer",
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
