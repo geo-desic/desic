@@ -9,7 +9,7 @@ While it is recommended to install both of the following, at least one will be n
   - this is required to utilize the docker-compose functionality
 
 ### User Secrets
-The project uses [User Secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) to store sensitive information during development. To set up your own user secrets, follow these steps:
+The projects use [User Secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) to store sensitive information during development. To set up your own user secrets, follow these steps:
 
 1. Right click on the project in Visual Studio and select "Manage User Secrets". This will open a `secrets.json` file where you can add your secrets. There may be a few already present, but you will need to add some additional ones.
 
