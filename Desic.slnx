@@ -1,0 +1,36 @@
+<Solution>
+  <Folder Name="/solution-items/">
+    <File Path=".editorconfig" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/source/">
+    <Project Path="source/Desic.Api/Desic.Api.csproj" />
+    <Project Path="source/Desic.Business/Desic.Business.csproj" />
+    <Project Path="source/Desic.Core/Desic.Core.csproj" />
+    <Project Path="source/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj" />
+    <Project Path="source/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj" />
+    <Project Path="source/Desic.Web/desic.web.esproj">
+      <Build />
+      <Deploy />
+    </Project>
+    <Project Path="source/MediatR.Contracts/MediatR.Contracts.csproj" />
+    <Project Path="source/MediatR/MediatR.csproj" />
+  </Folder>
+  <Folder Name="/source/Migrations/">
+    <Project Path="source/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj" />
+    <Project Path="source/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Desic.Api.Tests.Integration/Desic.Api.Tests.Integration.csproj" />
+    <Project Path="test/Desic.Api.Tests.Unit/Desic.Api.Tests.Unit.csproj" />
+    <Project Path="test/Desic.Business.Tests.Unit/Desic.Business.Tests.Unit.csproj" />
+    <Project Path="test/Desic.Core.Tests.Unit/Desic.Core.Tests.Unit.csproj" />
+    <Project Path="test/Desic.EntityFrameworkCore.Tests.Unit/Desic.EntityFrameworkCore.Tests.Unit.csproj" />
+    <Project Path="test/Desic.Testing.Integration.Core/Desic.Testing.Integration.Core.csproj" />
+    <Project Path="test/MediatR.Benchmarks/MediatR.Benchmarks.csproj" />
+    <Project Path="test/MediatR.Tests/MediatR.Tests.csproj" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+</Solution>
