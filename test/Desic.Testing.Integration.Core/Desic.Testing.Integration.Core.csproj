@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\source\Desic.Api\Desic.Api.csproj" />
-    <ProjectReference Include="..\..\source\Desic.EntityFrameworkCore.Sqlite\Desic.EntityFrameworkCore.Sqlite.csproj" />
-    <ProjectReference Include="..\..\source\Desic.EntityFrameworkCore.SqlServer\Desic.EntityFrameworkCore.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\Desic.Api\Desic.Api.csproj" />
+    <ProjectReference Include="..\..\src\Desic.EntityFrameworkCore.Sqlite\Desic.EntityFrameworkCore.Sqlite.csproj" />
+    <ProjectReference Include="..\..\src\Desic.EntityFrameworkCore.SqlServer\Desic.EntityFrameworkCore.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>

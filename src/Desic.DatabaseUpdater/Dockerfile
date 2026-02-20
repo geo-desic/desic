@@ -10,16 +10,16 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["source/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj", "source/Desic.DatabaseUpdater/"]
-COPY ["source/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj", "source/Desic.EntityFrameworkCore.Sqlite/"]
-COPY ["source/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "source/Desic.EntityFrameworkCore/"]
-COPY ["source/Desic.Core/Desic.Core.csproj", "source/Desic.Core/"]
-COPY ["source/MediatR/MediatR.csproj", "source/MediatR/"]
-COPY ["source/MediatR.Contracts/MediatR.Contracts.csproj", "source/MediatR.Contracts/"]
-COPY ["source/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj", "source/Desic.EntityFrameworkCore.SqlServer/"]
-RUN dotnet restore "./source/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj"
+COPY ["src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj", "src/Desic.DatabaseUpdater/"]
+COPY ["src/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj", "src/Desic.EntityFrameworkCore.Sqlite/"]
+COPY ["src/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "src/Desic.EntityFrameworkCore/"]
+COPY ["src/Desic.Core/Desic.Core.csproj", "src/Desic.Core/"]
+COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
+COPY ["src/MediatR.Contracts/MediatR.Contracts.csproj", "src/MediatR.Contracts/"]
+COPY ["src/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj", "src/Desic.EntityFrameworkCore.SqlServer/"]
+RUN dotnet restore "./src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj"
 COPY . .
-WORKDIR "/src/source/Desic.DatabaseUpdater"
+WORKDIR "/src/src/Desic.DatabaseUpdater"
 RUN dotnet build "./Desic.DatabaseUpdater.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage

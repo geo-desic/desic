@@ -21,7 +21,7 @@ services:
     image: ${DOCKER_REGISTRY-}desicdatabaseupdater
     build:
       context: .
-      dockerfile: source/Desic.DatabaseUpdater/Dockerfile
+      dockerfile: src/Desic.DatabaseUpdater/Dockerfile
     command: ["--provider", "SqlServer", "--connection-init", "${CONNECTION_STRINGS_SQLSERVER_INIT}", "--connection", "${CONNECTION_STRINGS_SQLSERVER_MIGRATIONS}"]
     depends_on:
       sqlserver:
@@ -56,7 +56,7 @@ services:
     ports:
       - "56054:56054"
     volumes:
-      - ./source/Desic.Web:/app # mounts local project directory to the container's working directory
+      - ./src/Desic.Web:/app # mounts local project directory to the container's working directory
       - /app/node_modules # creates an anonymous volume to prevent host's node_modules from overwriting container's
 
 volumes:

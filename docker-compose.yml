@@ -3,12 +3,12 @@ services:
     image: ${DOCKER_REGISTRY-}desicapi
     build:
       context: .
-      dockerfile: source/Desic.Api/Dockerfile
+      dockerfile: src/Desic.Api/Dockerfile
 
   desic.web:
     image: ${DOCKER_REGISTRY-}desicweb
     build:
-      context: source/Desic.Web
+      context: src/Desic.Web
       dockerfile: Dockerfile
     command: sh -c "npm start"
     depends_on:

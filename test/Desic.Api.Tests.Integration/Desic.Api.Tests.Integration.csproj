@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\source\Desic.Api\Desic.Api.csproj" />
+    <ProjectReference Include="..\..\src\Desic.Api\Desic.Api.csproj" />
     <ProjectReference Include="..\Desic.Testing.Integration.Core\Desic.Testing.Integration.Core.csproj" />
   </ItemGroup>
 

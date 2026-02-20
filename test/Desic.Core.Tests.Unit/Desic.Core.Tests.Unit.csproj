@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\source\Desic.Core\Desic.Core.csproj" />
+    <ProjectReference Include="..\..\src\Desic.Core\Desic.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

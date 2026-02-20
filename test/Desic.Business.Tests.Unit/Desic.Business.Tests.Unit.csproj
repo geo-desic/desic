@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\source\Desic.Business\Desic.Business.csproj" />
+    <ProjectReference Include="..\..\src\Desic.Business\Desic.Business.csproj" />
   </ItemGroup>
 
   <ItemGroup>

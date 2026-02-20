@@ -3,22 +3,22 @@
     <File Path=".editorconfig" />
     <File Path="README.md" />
   </Folder>
-  <Folder Name="/source/">
-    <Project Path="source/Desic.Api/Desic.Api.csproj" />
-    <Project Path="source/Desic.Business/Desic.Business.csproj" />
-    <Project Path="source/Desic.Core/Desic.Core.csproj" />
-    <Project Path="source/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj" />
-    <Project Path="source/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj" />
-    <Project Path="source/Desic.Web/desic.web.esproj">
+  <Folder Name="/src/">
+    <Project Path="src/Desic.Api/Desic.Api.csproj" />
+    <Project Path="src/Desic.Business/Desic.Business.csproj" />
+    <Project Path="src/Desic.Core/Desic.Core.csproj" />
+    <Project Path="src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj" />
+    <Project Path="src/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj" />
+    <Project Path="src/Desic.Web/desic.web.esproj">
       <Build />
       <Deploy />
     </Project>
-    <Project Path="source/MediatR.Contracts/MediatR.Contracts.csproj" />
-    <Project Path="source/MediatR/MediatR.csproj" />
+    <Project Path="src/MediatR.Contracts/MediatR.Contracts.csproj" />
+    <Project Path="src/MediatR/MediatR.csproj" />
   </Folder>
-  <Folder Name="/source/Migrations/">
-    <Project Path="source/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj" />
-    <Project Path="source/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj" />
+  <Folder Name="/src/Migrations/">
+    <Project Path="src/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj" />
+    <Project Path="src/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj" />
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Desic.Api.Tests.Integration/Desic.Api.Tests.Integration.csproj" />

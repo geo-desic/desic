@@ -13,17 +13,17 @@ RUN mkdir -p /app/data && chown $APP_UID:$APP_UID /app/data # this is for sqlite
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["source/Desic.Api/Desic.Api.csproj", "source/Desic.Api/"]
-COPY ["source/Desic.Business/Desic.Business.csproj", "source/Desic.Business/"]
-COPY ["source/Desic.Core/Desic.Core.csproj", "source/Desic.Core/"]
-COPY ["source/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "source/Desic.EntityFrameworkCore/"]
-COPY ["source/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj", "source/Desic.EntityFrameworkCore.Sqlite/"]
-COPY ["source/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj", "source/Desic.EntityFrameworkCore.SqlServer/"]
-COPY ["source/MediatR/MediatR.csproj", "source/MediatR/"]
-COPY ["source/MediatR.Contracts/MediatR.Contracts.csproj", "source/MediatR.Contracts/"]
-RUN dotnet restore "./source/Desic.Api/Desic.Api.csproj"
+COPY ["src/Desic.Api/Desic.Api.csproj", "src/Desic.Api/"]
+COPY ["src/Desic.Business/Desic.Business.csproj", "src/Desic.Business/"]
+COPY ["src/Desic.Core/Desic.Core.csproj", "src/Desic.Core/"]
+COPY ["src/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "src/Desic.EntityFrameworkCore/"]
+COPY ["src/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj", "src/Desic.EntityFrameworkCore.Sqlite/"]
+COPY ["src/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj", "src/Desic.EntityFrameworkCore.SqlServer/"]
+COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
+COPY ["src/MediatR.Contracts/MediatR.Contracts.csproj", "src/MediatR.Contracts/"]
+RUN dotnet restore "./src/Desic.Api/Desic.Api.csproj"
 COPY . .
-WORKDIR "/src/source/Desic.Api"
+WORKDIR "/src/src/Desic.Api"
 RUN dotnet build "./Desic.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
