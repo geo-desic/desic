@@ -1,11 +1,11 @@
 ﻿using Desic.Data.Entities;
-using Desic.EntityFrameworkCore.Entities.Configurations.Extensions;
-using Desic.EntityFrameworkCore.Models;
+using Desic.EntityFrameworkCore.Data;
+using Desic.EntityFrameworkCore.Data.Configurations.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Desic.EntityFrameworkCore.Entities.Configurations;
+namespace Desic.EntityFrameworkCore.Data.Configurations;
 
 internal class Iso3166CountryConfiguration(DatabaseFacade databaseFacade) : IEntityTypeConfiguration<Iso3166Country>
 {

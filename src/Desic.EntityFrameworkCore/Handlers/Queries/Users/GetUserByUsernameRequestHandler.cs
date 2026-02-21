@@ -1,6 +1,6 @@
 ﻿using Desic.Data.Entities;
 using Desic.Data.Requests.Queries.Users;
-using Desic.EntityFrameworkCore.Models;
+using Desic.EntityFrameworkCore.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

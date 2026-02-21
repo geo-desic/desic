@@ -1,10 +1,9 @@
-﻿using Desic.EntityFrameworkCore.Models;
+﻿using Desic.EntityFrameworkCore.Data;
 using Desic.EntityFrameworkCore.Sqlite;
 using Desic.EntityFrameworkCore.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.Extensions.Configuration;
 using System.Data.Common;
 
 namespace Desic.Testing.Integration.Core.WebApplication;
@@ -15,6 +14,8 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment("Test");
+
         builder.ConfigureServices(services =>
         {
             var dbContextDescriptor = services.Single(d => d.ServiceType == typeof(IDbContextOptionsConfiguration<DesicContext>));
@@ -36,12 +37,5 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
                 services.ConfigureDesicContextForSqlServer(_connectionString);
             }
         });
-
-        builder.ConfigureAppConfiguration((context, config) =>
-        {
-            config.AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), "appsettings.Test.json"), optional: true, reloadOnChange: true);
-        });
-
-        builder.UseEnvironment("Development");
     }
 }

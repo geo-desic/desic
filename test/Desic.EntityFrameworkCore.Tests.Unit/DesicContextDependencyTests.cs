@@ -1,4 +1,4 @@
-﻿using Desic.EntityFrameworkCore.Models;
+﻿using Desic.EntityFrameworkCore.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Desic.EntityFrameworkCore.Tests.Unit;

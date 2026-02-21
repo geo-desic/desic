@@ -13,34 +13,32 @@ namespace Desic.Testing.Integration.Core.Db;
 public sealed class DesicContextMsSqlContainer(string image, string apiUserPassword) : IAsyncLifetime
 {
     private readonly MsSqlContainer _container = new MsSqlBuilder(image ?? throw new InvalidOperationException("Container image could not be determined")).Build();
-    private string? _connectionStringApp;
-    private string? _connectionStringMigrations;
+    private string? _connectionString;
     private readonly string _apiUserPassword = apiUserPassword ?? throw new InvalidOperationException("Api user password could not be determined");
 
-    public string ConnectionStringApp => _connectionStringApp ?? throw new InvalidOperationException($"{nameof(ConnectionStringApp)} has not been initialized");
-    public string ConnectionStringMigrations => _connectionStringMigrations ?? throw new InvalidOperationException($"{nameof(ConnectionStringMigrations)} has not been initialized");
+    public string ConnectionString => _connectionString ?? throw new InvalidOperationException($"{nameof(ConnectionString)} has not been initialized");
 
     public async ValueTask InitializeAsync()
     {
         await _container.StartAsync();
 
-        _connectionStringMigrations = new SqlConnectionStringBuilder(_container.GetConnectionString()) { InitialCatalog = "Desic" }.ConnectionString;
+        var connectionStringInit = new SqlConnectionStringBuilder(_container.GetConnectionString()) { InitialCatalog = "Desic" }.ConnectionString;
 
         // create the database and apply migrations
         using var factory = new DesicContextFactory();
-        using var context = factory.CreateDbContext(["--connection", ConnectionStringMigrations]);
+        using var context = factory.CreateDbContext(["--connection", connectionStringInit]);
 
         await context.InitializeAsync(targetDatabaseName: "Desic");
         await context.Database.MigrateAsync();
 
-        var builder = new SqlConnectionStringBuilder(ConnectionStringMigrations)
+        var builder = new SqlConnectionStringBuilder(connectionStringInit)
         {
             UserID = Providers.DbApiUser,
             Password = _apiUserPassword,
         };
-        _connectionStringApp = builder.ConnectionString;
+        _connectionString = builder.ConnectionString;
 
-        using var connection = new SqlConnection(_connectionStringApp);
+        using var connection = new SqlConnection(_connectionString);
         if (!await connection.CanConnectAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
     }
 

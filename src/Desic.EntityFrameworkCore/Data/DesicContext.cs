@@ -1,8 +1,8 @@
 ﻿using Desic.Data.Entities;
-using Desic.EntityFrameworkCore.Entities.Configurations;
+using Desic.EntityFrameworkCore.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Desic.EntityFrameworkCore.Models;
+namespace Desic.EntityFrameworkCore.Data;
 
 public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(options)
 {
@@ -22,6 +22,7 @@ public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(op
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema(AppSchema);
         modelBuilder.ApplyConfiguration(new EntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new Iso3166CountryConfiguration(Database));

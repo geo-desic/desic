@@ -1,13 +1,12 @@
 ﻿using Desic.Data.Entities;
-using Desic.EntityFrameworkCore.Models;
+using Desic.Data.Entities.Infrastructure;
+using Desic.Data.Models;
+using Desic.Data.Requests.Commands.Iso3166Countries;
+using Desic.Data.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Desic.Data.Requests.Commands.Iso3166Countries;
-using Desic.Data.Models;
-using Desic.Data.Entities.Infrastructure;
-using Desic.Data.Test;
 
 namespace Desic.EntityFrameworkCore.Data;
 

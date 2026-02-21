@@ -1,4 +1,4 @@
-﻿using Desic.EntityFrameworkCore.Models;
+﻿using Desic.EntityFrameworkCore.Data;
 using Desic.Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;

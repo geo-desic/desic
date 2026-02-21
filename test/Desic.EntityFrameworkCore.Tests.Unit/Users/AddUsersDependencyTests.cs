@@ -1,6 +1,6 @@
 ﻿using Desic.Data.Entities;
 using Desic.Data.Entities.Infrastructure;
-using Desic.EntityFrameworkCore.Models;
+using Desic.EntityFrameworkCore.Data;
 using Desic.Helpers;
 
 namespace Desic.EntityFrameworkCore.Tests.Unit.Users;

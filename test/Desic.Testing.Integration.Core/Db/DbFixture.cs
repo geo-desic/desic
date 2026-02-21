@@ -15,34 +15,17 @@ public sealed class DbFixture : IAsyncLifetime
         {
             if (TestConfiguration.Options?.DbProvider == "Sqlite")
             {
-                return _sqlite?.ConnectionString ?? throw new InvalidOperationException($"{nameof(_sqlite.ConnectionString)} has not been initialized for localdb database");
+                return _sqlite?.ConnectionString ?? throw new InvalidOperationException("Database has not been initialized");
             }
 
             // sql server
             if (_useContainerSqlServer)
             {
-                return _container?.ConnectionStringApp ?? throw new InvalidOperationException($"{nameof(_container.ConnectionStringApp)} has not been initialized for container database");
+                return _container?.ConnectionString ?? throw new InvalidOperationException("Database has not been initialized");
             }
-            return _localDb?.ConnectionStringApp ?? throw new InvalidOperationException($"{nameof(_localDb.ConnectionStringApp)} has not been initialized for localdb database");
+            return _localDb?.ConnectionString ?? throw new InvalidOperationException("Database has not been initialized");
         }
 
-    }
-    public string ConnectionStringMigrations
-    {
-        get
-        {
-            if (TestConfiguration.Options?.DbProvider == "Sqlite")
-            {
-                return _sqlite?.ConnectionString ?? throw new InvalidOperationException($"{nameof(_sqlite.ConnectionString)} has not been initialized for localdb database");
-            }
-
-            // sql server
-            if (_useContainerSqlServer)
-            {
-                return _container?.ConnectionStringMigrations ?? throw new InvalidOperationException($"{nameof(_container.ConnectionStringMigrations)} has not been initialized for container database");
-            }
-            return _localDb?.ConnectionStringMigrations ?? throw new InvalidOperationException($"{nameof(_localDb.ConnectionStringMigrations)} has not been initialized for localdb database");
-        }
     }
 
     public async ValueTask InitializeAsync()

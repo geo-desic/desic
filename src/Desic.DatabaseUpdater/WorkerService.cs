@@ -1,4 +1,4 @@
-﻿using Desic.EntityFrameworkCore.Models;
+﻿using Desic.EntityFrameworkCore.Data;
 using Desic.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

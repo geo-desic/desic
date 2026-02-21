@@ -5,7 +5,7 @@ using Desic.Data.Models;
 using Desic.Data.Requests.Commands.Iso3166Countries;
 using Desic.Data.Requests.Queries.Resources;
 using Desic.Data.Resources.ClassMaps;
-using Desic.EntityFrameworkCore.Models;
+using Desic.EntityFrameworkCore.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

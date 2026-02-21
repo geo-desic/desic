@@ -18,8 +18,7 @@ public sealed class DesicContextLocalDb(string apiUserPassword) : IAsyncLifetime
     private string? _databaseName;
     private const string DataSource = @"(localdb)\MSSQLLocalDB";
 
-    public string ConnectionStringApp => _connectionStringApp ?? throw new InvalidOperationException($"{nameof(ConnectionStringApp)} has not been initialized");
-    public string ConnectionStringMigrations => _connectionStringMigrations ?? throw new InvalidOperationException($"{nameof(ConnectionStringMigrations)} has not been initialized");
+    public string ConnectionString => _connectionStringApp ?? throw new InvalidOperationException($"{nameof(ConnectionString)} has not been initialized");
 
     public async ValueTask InitializeAsync()
     {
@@ -36,7 +35,7 @@ public sealed class DesicContextLocalDb(string apiUserPassword) : IAsyncLifetime
 
         // create the database and apply migrations
         using var factory = new DesicContextFactory();
-        using var context = factory.CreateDbContext(["--connection", ConnectionStringMigrations]);
+        using var context = factory.CreateDbContext(["--connection", _connectionStringMigrations]);
 
         await context.InitializeAsync(targetDatabaseName: _databaseName);
         await context.Database.MigrateAsync();

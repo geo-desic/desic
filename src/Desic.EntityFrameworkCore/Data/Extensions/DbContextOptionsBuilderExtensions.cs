@@ -1,12 +1,11 @@
-﻿using Desic.EntityFrameworkCore.Data;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Desic.EntityFrameworkCore.Models.Extensions;
+namespace Desic.EntityFrameworkCore.Data.Extensions;
 
 public static class DbContextOptionsBuilderExtensions
 {

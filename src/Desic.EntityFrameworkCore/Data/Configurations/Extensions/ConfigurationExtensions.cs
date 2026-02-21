@@ -1,11 +1,10 @@
 ﻿using Desic.Data.Entities;
 using Desic.Data.Entities.Infrastructure;
-using Desic.EntityFrameworkCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Desic.EntityFrameworkCore.Entities.Configurations.Extensions;
+namespace Desic.EntityFrameworkCore.Data.Configurations.Extensions;
 
 internal static class ConfigurationExtensions
 {
