@@ -1,4 +1,5 @@
-﻿using Desic.EntityFrameworkCore.Entities.Configurations.Extensions;
+﻿using Desic.Data.Entities;
+using Desic.EntityFrameworkCore.Entities.Configurations.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

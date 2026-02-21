@@ -1,11 +1,13 @@
-﻿using Desic.EntityFrameworkCore.Entities;
-using Desic.EntityFrameworkCore.Entities.Infrastructure;
-using Desic.EntityFrameworkCore.Iso3166Countries.Commands;
+﻿using Desic.Data.Entities;
 using Desic.EntityFrameworkCore.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Desic.Data.Requests.Commands.Iso3166Countries;
+using Desic.Data.Models;
+using Desic.Data.Entities.Infrastructure;
+using Desic.Data.Test;
 
 namespace Desic.EntityFrameworkCore.Data;
 
@@ -58,7 +60,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         var tableName = nameof(_context.EntityTypes);
         if (options?.Enabled ?? true)
         {
-            var result = new DbSetSeedingResult();
+            var result = new EntitySetSeedingResult();
             var any = await dbSet.AnyAsync(cancellationToken);
             if (!any || (options?.Method ?? _defaultSeedingMethod) == DesicContextSeedingMethod.Full)
             {
@@ -117,7 +119,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         var tableName = nameof(_context.Tags);
         if (options?.Enabled ?? true)
         {
-            var result = new DbSetSeedingResult();
+            var result = new EntitySetSeedingResult();
             var any = await dbSet.AnyAsync(cancellationToken);
             if (!any || (options?.Method ?? _defaultSeedingMethod) == DesicContextSeedingMethod.Full)
             {
@@ -130,7 +132,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
                 }
                 else // full method
                 {
-                    var tagSystem = Tags.Get(Enums.SystemTag.System);
+                    var tagSystem = Tags.Get(Desic.Data.Enums.SystemTag.System);
                     var itemsToAdd = new List<Tag>();
                     foreach (var item in items)
                     {
@@ -205,11 +207,11 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         var tableName = nameof(_context.Users);
         if (options?.Enabled ?? true)
         {
-            var result = new DbSetSeedingResult();
+            var result = new EntitySetSeedingResult();
             var any = await dbSet.AnyAsync(cancellationToken);
             if (!any || (options?.Method ?? _defaultSeedingMethod) == DesicContextSeedingMethod.Full)
             {
-                var items = Test.Users.Generate(options?.Count ?? 10);
+                var items = Users.Generate(options?.Count ?? 10);
                 result.ReferenceCount = items.Count;
                 if (!any) // fast method
                 {

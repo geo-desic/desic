@@ -1,5 +1,5 @@
-﻿using Desic.EntityFrameworkCore.Data;
-using Desic.EntityFrameworkCore.Entities;
+﻿using Desic.Data.Entities;
+using Desic.Data.Entities.Infrastructure;
 using Desic.EntityFrameworkCore.Models;
 using Desic.Helpers;
 
@@ -10,8 +10,8 @@ public class AddUsersDependencyTests : DesicContextDependencyTests
     #region helpers
     public static User NewUser(Guid? id = null, string? username = null)
     {
-        var by = Tags.Get(Enums.SystemTag.System).Id;
-        var byType = EntityTypes.Get(Enums.EntityType.Tag).Id;
+        var by = Tags.Get(Desic.Data.Enums.SystemTag.System).Id;
+        var byType = EntityTypes.Get(Desic.Data.Enums.EntityType.Tag).Id;
         var on = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         id ??= 1.ToGuid();
         username ??= "username";

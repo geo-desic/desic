@@ -1,7 +1,7 @@
 using Desic.Api.BackgroundServices;
 using Desic.Api.Db;
 using Desic.Api.HealthChecks;
-using Desic.Business.Users.Models.Validators;
+using Desic.Business.Validators.Users;
 using Desic.EntityFrameworkCore.Models;
 using Desic.Mediator;
 using FluentValidation;

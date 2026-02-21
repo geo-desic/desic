@@ -9,10 +9,11 @@
   <ItemGroup>
     <PackageReference Include="FluentResults" Version="4.0.0" />
     <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Desic.EntityFrameworkCore\Desic.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\Desic.Data\Desic.Data.csproj" />
     <ProjectReference Include="..\MediatR\MediatR.csproj" />
   </ItemGroup>
 

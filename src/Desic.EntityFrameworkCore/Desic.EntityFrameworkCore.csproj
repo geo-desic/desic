@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Data\Resources\iso-3166-countries.csv" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.3" />
@@ -18,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Desic.Data\Desic.Data.csproj" />
     <ProjectReference Include="..\Desic\Desic.csproj" />
     <ProjectReference Include="..\MediatR\MediatR.csproj" />
   </ItemGroup>

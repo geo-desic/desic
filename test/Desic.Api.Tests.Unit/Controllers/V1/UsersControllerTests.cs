@@ -1,7 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Api.Controllers.V1;
 using Desic.Api.Dtos.Users;
-using Desic.Business.Users.Queries;
+using Desic.Business.Requests.Queries.Users;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -64,7 +64,7 @@ public class UsersControllerTests
         return new UsersController(logger: logger, mediator: mediator.Object);
     }
 
-    private static User ExpectedUserDto(Business.Users.Models.User user)
+    private static User ExpectedUserDto(Business.Models.Users.User user)
     {
         return new User
         {
@@ -73,10 +73,10 @@ public class UsersControllerTests
         };
     }
 
-    private static Business.Users.Models.User NewUserBusiness(Guid? id = null)
+    private static Business.Models.Users.User NewUserBusiness(Guid? id = null)
     {
         id ??= Guid.CreateVersion7();
-        return new Business.Users.Models.User
+        return new Business.Models.Users.User
         {
             Id = id.Value,
             Username = "username",

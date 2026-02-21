@@ -1,4 +1,4 @@
-﻿using Desic.EntityFrameworkCore.Entities;
+﻿using Desic.Data.Entities;
 using Desic.EntityFrameworkCore.Entities.Configurations;
 using Microsoft.EntityFrameworkCore;
 
