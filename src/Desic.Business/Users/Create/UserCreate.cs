@@ -1,4 +1,4 @@
-﻿namespace Desic.Business.Models.Users;
+﻿namespace Desic.Business.Users.Create;
 
 public class UserCreate
 {

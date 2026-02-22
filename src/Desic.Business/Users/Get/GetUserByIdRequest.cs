@@ -1,8 +1,7 @@
-﻿using Desic.Business.Models.Users;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 
-namespace Desic.Business.Requests.Queries.Users;
+namespace Desic.Business.Users.Get;
 
 public class GetUserByIdRequest : IRequest<Result<User>>
 {

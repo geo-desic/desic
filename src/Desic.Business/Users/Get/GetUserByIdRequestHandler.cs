@@ -1,10 +1,8 @@
-﻿using Desic.Business.Models.Users;
-using Desic.Business.Requests.Queries.Users;
-using FluentResults;
+﻿using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.Business.Handlers.Queries.Users;
+namespace Desic.Business.Users.Get;
 
 public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger, IMediator mediator) : IRequestHandler<GetUserByIdRequest, Result<User>>
 {

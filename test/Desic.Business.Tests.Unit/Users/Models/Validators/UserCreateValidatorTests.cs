@@ -1,5 +1,4 @@
-﻿using Desic.Business.Models.Users;
-using Desic.Business.Validators.Users;
+﻿using Desic.Business.Users.Create;
 using FluentValidation.TestHelper;
 using System.Text;
 

@@ -1,8 +1,8 @@
 using Desic.Api.Dtos.Users;
 using Desic.Api.Logging;
 using Desic.Api.Mappings;
-using Desic.Business.Requests.Commands.Users;
-using Desic.Business.Requests.Queries.Users;
+using Desic.Business.Users.Create;
+using Desic.Business.Users.Get;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +44,7 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<User>> Create([FromBody] UserCreate user, [FromHeader(Name = "Prefer")] string? preferHeaderValue)
+    public async Task<ActionResult<User>> Create([FromBody] Dtos.Users.UserCreate user, [FromHeader(Name = "Prefer")] string? preferHeaderValue)
     {
         using var loggerScope2 = _logger.BeginScope("Username:{username}", user.Username);
 
