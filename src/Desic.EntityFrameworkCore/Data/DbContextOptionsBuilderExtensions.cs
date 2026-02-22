@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Desic.EntityFrameworkCore.Data.Extensions;
+namespace Desic.EntityFrameworkCore.Data;
 
 public static class DbContextOptionsBuilderExtensions
 {

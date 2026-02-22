@@ -1,5 +1,4 @@
 ﻿using Desic.EntityFrameworkCore.Data;
-using Desic.EntityFrameworkCore.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
