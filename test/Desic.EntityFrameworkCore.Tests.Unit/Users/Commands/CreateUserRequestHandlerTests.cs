@@ -1,6 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Data.Users;
-using Desic.EntityFrameworkCore.Handlers.Commands.Users;
+using Desic.EntityFrameworkCore.Data.Handlers.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;

@@ -1,5 +1,4 @@
 ﻿using Desic.Data.Iso3166Countries;
-using Desic.EntityFrameworkCore.Data;
 using Desic.EntityFrameworkCore.Data.Configurations.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;

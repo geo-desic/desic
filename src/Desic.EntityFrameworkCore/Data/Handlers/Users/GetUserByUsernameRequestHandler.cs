@@ -1,10 +1,9 @@
 ﻿using Desic.Data.Users;
-using Desic.EntityFrameworkCore.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.EntityFrameworkCore.Handlers.Queries.Users;
+namespace Desic.EntityFrameworkCore.Data.Handlers.Users;
 
 public class GetUserByUsernameRequestHandler(DesicContext desicContext, ILogger<GetUserByUsernameRequestHandler> logger) : IRequestHandler<GetUserByUsernameRequest, User?>
 {

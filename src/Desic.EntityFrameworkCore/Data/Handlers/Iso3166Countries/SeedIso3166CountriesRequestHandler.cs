@@ -2,12 +2,11 @@
 using Desic.Data.Shared;
 using Desic.Data.Shared.Entities;
 using Desic.Data.Tags;
-using Desic.EntityFrameworkCore.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.EntityFrameworkCore.Handlers.Commands.Iso3166Countries;
+namespace Desic.EntityFrameworkCore.Data.Handlers.Iso3166Countries;
 
 internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, EntitySetSeedingResult>
 {

@@ -1,12 +1,11 @@
 ﻿using Desic.Data.EntityTypes;
 using Desic.Data.Tags;
 using Desic.Data.Users;
-using Desic.EntityFrameworkCore.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.EntityFrameworkCore.Handlers.Commands.Users;
+namespace Desic.EntityFrameworkCore.Data.Handlers.Users;
 
 public class CreateUserRequestHandler(DesicContext desicContext, ILogger<CreateUserRequestHandler> logger) : IRequestHandler<CreateUserRequest, Guid>
 {
