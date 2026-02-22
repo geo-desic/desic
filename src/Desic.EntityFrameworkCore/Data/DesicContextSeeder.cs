@@ -1,8 +1,10 @@
-﻿using Desic.Data.Entities;
-using Desic.Data.Entities.Infrastructure;
-using Desic.Data.Models;
-using Desic.Data.Requests.Commands.Iso3166Countries;
-using Desic.Data.Test;
+﻿using Desic.Data.EntityTypes;
+using Desic.Data.Iso3166Countries;
+using Desic.Data.Shared;
+using Desic.Data.Shared.Entities;
+using Desic.Data.Tags;
+using Desic.Data.Users;
+using Desic.Data.Users.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -63,7 +65,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
             var any = await dbSet.AnyAsync(cancellationToken);
             if (!any || (options?.Method ?? _defaultSeedingMethod) == DesicContextSeedingMethod.Full)
             {
-                var items = EntityTypes.Generate();
+                var items = SystemEntityTypes.Generate();
                 result.ReferenceCount = items.Count;
                 if (!any) // fast method
                 {
@@ -122,7 +124,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
             var any = await dbSet.AnyAsync(cancellationToken);
             if (!any || (options?.Method ?? _defaultSeedingMethod) == DesicContextSeedingMethod.Full)
             {
-                var items = Tags.Generate(); // system generated tags
+                var items = SystemTags.Generate(); // system generated tags
                 result.ReferenceCount = items.Count;
                 if (!any) // fast method
                 {
@@ -131,7 +133,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
                 }
                 else // full method
                 {
-                    var tagSystem = Tags.Get(Desic.Data.Enums.SystemTag.System);
+                    var tagSystem = SystemTags.Get(SystemTag.System);
                     var itemsToAdd = new List<Tag>();
                     foreach (var item in items)
                     {

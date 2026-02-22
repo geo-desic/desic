@@ -11,7 +11,7 @@ public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger
 
     public async Task<Result<User>> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
     {
-        var query = new Data.Requests.Queries.Users.GetUserByIdRequest { UserId = request.UserId };
+        var query = new Data.Users.GetUserByIdRequest { UserId = request.UserId };
         var user = await _mediator.Send(query, cancellationToken);
 
         if (user == null)

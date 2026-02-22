@@ -1,5 +1,4 @@
-﻿using Desic.Data.Entities;
-using Desic.Data.Requests.Queries.Users;
+﻿using Desic.Data.Users;
 using Desic.EntityFrameworkCore.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

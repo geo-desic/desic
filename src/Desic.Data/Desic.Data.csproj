@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\iso-3166-countries.csv" />
+    <EmbeddedResource Include="Iso3166Countries\iso-3166-countries.csv" />
   </ItemGroup>
 
   <ItemGroup>

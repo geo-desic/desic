@@ -1,0 +1,6 @@
+﻿using Desic.Data.Resources;
+using MediatR;
+
+namespace Desic.Data.Iso3166Countries;
+
+public class Iso3166CountriesResourceStreamRequest : CsvResourceStreamRequest<Iso3166Country>, IStreamRequest<Iso3166Country> { }

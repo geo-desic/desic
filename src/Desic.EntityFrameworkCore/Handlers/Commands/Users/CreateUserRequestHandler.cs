@@ -1,5 +1,6 @@
-﻿using Desic.Data.Entities.Infrastructure;
-using Desic.Data.Requests.Commands.Users;
+﻿using Desic.Data.EntityTypes;
+using Desic.Data.Tags;
+using Desic.Data.Users;
 using Desic.EntityFrameworkCore.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -15,8 +16,8 @@ public class CreateUserRequestHandler(DesicContext desicContext, ILogger<CreateU
     public async Task<Guid> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
         // change later to user who created this user
-        var entityTypeTag = EntityTypes.Get(Desic.Data.Enums.EntityType.Tag);
-        var tagSystem = Tags.Get(Desic.Data.Enums.SystemTag.System);
+        var entityTypeTag = SystemEntityTypes.Get(SystemEntityType.Tag);
+        var tagSystem = SystemTags.Get(SystemTag.System);
         var now = DateTime.UtcNow;
 
         var user = request.User;
