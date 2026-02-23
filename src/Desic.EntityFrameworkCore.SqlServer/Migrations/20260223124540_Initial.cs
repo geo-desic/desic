@@ -12,14 +12,14 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.EnsureSchema(
-                name: "app");
+                name: "ref");
 
             migrationBuilder.EnsureSchema(
-                name: "ref");
+                name: "app");
 
             migrationBuilder.CreateTable(
                 name: "EntityTypes",
-                schema: "app",
+                schema: "ref",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -58,19 +58,19 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                     table.ForeignKey(
                         name: "FK_Iso3166Countries_EntityTypes_CreatedByTypeId",
                         column: x => x.CreatedByTypeId,
-                        principalSchema: "app",
+                        principalSchema: "ref",
                         principalTable: "EntityTypes",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Iso3166Countries_EntityTypes_DeletedByTypeId",
                         column: x => x.DeletedByTypeId,
-                        principalSchema: "app",
+                        principalSchema: "ref",
                         principalTable: "EntityTypes",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Iso3166Countries_EntityTypes_ModifiedByTypeId",
                         column: x => x.ModifiedByTypeId,
-                        principalSchema: "app",
+                        principalSchema: "ref",
                         principalTable: "EntityTypes",
                         principalColumn: "Id");
                 });
@@ -99,19 +99,19 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                     table.ForeignKey(
                         name: "FK_Tags_EntityTypes_CreatedByTypeId",
                         column: x => x.CreatedByTypeId,
-                        principalSchema: "app",
+                        principalSchema: "ref",
                         principalTable: "EntityTypes",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tags_EntityTypes_DeletedByTypeId",
                         column: x => x.DeletedByTypeId,
-                        principalSchema: "app",
+                        principalSchema: "ref",
                         principalTable: "EntityTypes",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tags_EntityTypes_ModifiedByTypeId",
                         column: x => x.ModifiedByTypeId,
-                        principalSchema: "app",
+                        principalSchema: "ref",
                         principalTable: "EntityTypes",
                         principalColumn: "Id");
                 });
@@ -141,26 +141,26 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
                     table.ForeignKey(
                         name: "FK_Users_EntityTypes_CreatedByTypeId",
                         column: x => x.CreatedByTypeId,
-                        principalSchema: "app",
+                        principalSchema: "ref",
                         principalTable: "EntityTypes",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Users_EntityTypes_DeletedByTypeId",
                         column: x => x.DeletedByTypeId,
-                        principalSchema: "app",
+                        principalSchema: "ref",
                         principalTable: "EntityTypes",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Users_EntityTypes_ModifiedByTypeId",
                         column: x => x.ModifiedByTypeId,
-                        principalSchema: "app",
+                        principalSchema: "ref",
                         principalTable: "EntityTypes",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_EntityTypes_Name",
-                schema: "app",
+                schema: "ref",
                 table: "EntityTypes",
                 column: "Name",
                 unique: true);
@@ -355,7 +355,7 @@ namespace Desic.EntityFrameworkCore.SqlServer.Migrations
 
             migrationBuilder.DropTable(
                 name: "EntityTypes",
-                schema: "app");
+                schema: "ref");
         }
     }
 }

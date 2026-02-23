@@ -19,7 +19,7 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                 .HasDefaultSchema("app")
                 .HasAnnotation("ProductVersion", "10.0.3");
 
-            modelBuilder.Entity("Desic.Data.Entities.EntityType", b =>
+            modelBuilder.Entity("Desic.Data.EntityTypes.EntityType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -36,10 +36,10 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("EntityTypes", "app");
+                    b.ToTable("EntityTypes", "ref");
                 });
 
-            modelBuilder.Entity("Desic.Data.Entities.Iso3166Country", b =>
+            modelBuilder.Entity("Desic.Data.Iso3166Countries.Iso3166Country", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -146,7 +146,7 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     b.ToTable("Iso3166Countries", "ref");
                 });
 
-            modelBuilder.Entity("Desic.Data.Entities.Tag", b =>
+            modelBuilder.Entity("Desic.Data.Tags.Tag", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -223,7 +223,7 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     b.ToTable("Tags", "app");
                 });
 
-            modelBuilder.Entity("Desic.Data.Entities.User", b =>
+            modelBuilder.Entity("Desic.Data.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -308,60 +308,60 @@ namespace Desic.EntityFrameworkCore.Sqlite.Migrations
                     b.ToTable("Users", "app");
                 });
 
-            modelBuilder.Entity("Desic.Data.Entities.Iso3166Country", b =>
+            modelBuilder.Entity("Desic.Data.Iso3166Countries.Iso3166Country", b =>
                 {
-                    b.HasOne("Desic.Data.Entities.EntityType", null)
+                    b.HasOne("Desic.Data.EntityTypes.EntityType", null)
                         .WithMany()
                         .HasForeignKey("CreatedByTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Desic.Data.Entities.EntityType", null)
+                    b.HasOne("Desic.Data.EntityTypes.EntityType", null)
                         .WithMany()
                         .HasForeignKey("DeletedByTypeId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("Desic.Data.Entities.EntityType", null)
+                    b.HasOne("Desic.Data.EntityTypes.EntityType", null)
                         .WithMany()
                         .HasForeignKey("ModifiedByTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Desic.Data.Entities.Tag", b =>
+            modelBuilder.Entity("Desic.Data.Tags.Tag", b =>
                 {
-                    b.HasOne("Desic.Data.Entities.EntityType", null)
+                    b.HasOne("Desic.Data.EntityTypes.EntityType", null)
                         .WithMany()
                         .HasForeignKey("CreatedByTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Desic.Data.Entities.EntityType", null)
+                    b.HasOne("Desic.Data.EntityTypes.EntityType", null)
                         .WithMany()
                         .HasForeignKey("DeletedByTypeId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("Desic.Data.Entities.EntityType", null)
+                    b.HasOne("Desic.Data.EntityTypes.EntityType", null)
                         .WithMany()
                         .HasForeignKey("ModifiedByTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Desic.Data.Entities.User", b =>
+            modelBuilder.Entity("Desic.Data.Users.User", b =>
                 {
-                    b.HasOne("Desic.Data.Entities.EntityType", null)
+                    b.HasOne("Desic.Data.EntityTypes.EntityType", null)
                         .WithMany()
                         .HasForeignKey("CreatedByTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Desic.Data.Entities.EntityType", null)
+                    b.HasOne("Desic.Data.EntityTypes.EntityType", null)
                         .WithMany()
                         .HasForeignKey("DeletedByTypeId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("Desic.Data.Entities.EntityType", null)
+                    b.HasOne("Desic.Data.EntityTypes.EntityType", null)
                         .WithMany()
                         .HasForeignKey("ModifiedByTypeId")
                         .OnDelete(DeleteBehavior.NoAction)
