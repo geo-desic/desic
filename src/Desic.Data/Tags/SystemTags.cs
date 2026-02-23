@@ -24,7 +24,7 @@ public static class SystemTags
         return _systemTags[systemTag];
     }
 
-    private static readonly ReadOnlyEntityType _entityTypeTag = EntityTypes.SystemEntityTypes.Get(SystemEntityType.Tag);
+    private static readonly ReadOnlyEntityType _entityTypeTag = SystemEntityTypes.Get(SystemEntityType.Tag);
     private static readonly SortedList<SystemTag, ReadOnlyTag> _systemTags = GenerateSystemTagsFromEnum();
 
     private static SortedList<SystemTag, ReadOnlyTag> GenerateSystemTagsFromEnum()
