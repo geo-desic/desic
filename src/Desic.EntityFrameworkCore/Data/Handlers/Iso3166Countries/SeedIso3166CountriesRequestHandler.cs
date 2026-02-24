@@ -1,7 +1,7 @@
-﻿using Desic.Core.Iso3166Countries;
-using Desic.Core.Shared;
-using Desic.Core.Shared.Entities;
-using Desic.Core.Tags;
+﻿using Desic.Domain.Iso3166Countries;
+using Desic.Domain.Shared;
+using Desic.Domain.Shared.Entities;
+using Desic.Domain.Tags;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -42,7 +42,7 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
         var requestStream = new Iso3166CountriesResourceStreamRequest
         {
             ClassMapType = typeof(Iso3166CountryClassMap),
-            ResourceName = "Desic.Core.Iso3166Countries.iso-3166-countries.csv",
+            ResourceName = "Desic.Domain.Iso3166Countries.iso-3166-countries.csv",
         };
 
         var batchInserts = new List<Iso3166Country>();

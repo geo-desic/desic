@@ -1,10 +1,10 @@
-﻿using Desic.Core.EntityTypes;
-using Desic.Core.Iso3166Countries;
-using Desic.Core.Shared;
-using Desic.Core.Shared.Entities;
-using Desic.Core.Tags;
-using Desic.Core.Users;
-using Desic.Core.Users.Test;
+﻿using Desic.Domain.EntityTypes;
+using Desic.Domain.Iso3166Countries;
+using Desic.Domain.Shared;
+using Desic.Domain.Shared.Entities;
+using Desic.Domain.Tags;
+using Desic.Domain.Users;
+using Desic.Domain.Users.Test;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

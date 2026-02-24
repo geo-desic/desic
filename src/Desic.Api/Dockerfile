@@ -15,9 +15,9 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Desic.Api/Desic.Api.csproj", "src/Desic.Api/"]
 COPY ["src/Application/Application.csproj", "src/Application/"]
-COPY ["src/Core/Core.csproj", "src/Core/"]
 COPY ["src/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "src/Desic.EntityFrameworkCore/"]
 COPY ["src/Desic/Desic.csproj", "src/Desic/"]
+COPY ["src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
 COPY ["src/MediatR.Contracts/MediatR.Contracts.csproj", "src/MediatR.Contracts/"]
 RUN dotnet restore "./src/Desic.Api/Desic.Api.csproj"

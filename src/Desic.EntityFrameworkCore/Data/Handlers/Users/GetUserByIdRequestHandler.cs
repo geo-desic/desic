@@ -1,4 +1,4 @@
-﻿using Desic.Core.Users;
+﻿using Desic.Domain.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

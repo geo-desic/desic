@@ -1,7 +1,7 @@
-﻿using Desic.Core.EntityTypes;
-using Desic.Core.Iso3166Countries;
-using Desic.Core.Tags;
-using Desic.Core.Users;
+﻿using Desic.Domain.EntityTypes;
+using Desic.Domain.Iso3166Countries;
+using Desic.Domain.Tags;
+using Desic.Domain.Users;
 using Desic.EntityFrameworkCore.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 

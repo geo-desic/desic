@@ -26,7 +26,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
             return validationResult.ToFailResult<User>();
         }
 
-        var query = new Core.Users.GetUserByUsernameRequest { Username = request.User.Username };
+        var query = new Domain.Users.GetUserByUsernameRequest { Username = request.User.Username };
         var user = await _mediator.Send(query, cancellationToken);
         if (user != null)
         {
@@ -34,8 +34,8 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
             return Result.Fail<User>($"A user with username '{user.Username}' already exists");
         }
 
-        user = new Core.Users.User { Username = request.User.Username! };
-        var command = new Core.Users.CreateUserRequest { User = user };
+        user = new Domain.Users.User { Username = request.User.Username! };
+        var command = new Domain.Users.CreateUserRequest { User = user };
         var resultCreate = await _mediator.Send(command, cancellationToken);
 
         _logger.LogDebug("User was successfully persisted with id = {UserId}", resultCreate);

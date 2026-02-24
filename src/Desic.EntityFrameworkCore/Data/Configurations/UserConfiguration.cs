@@ -1,4 +1,4 @@
-﻿using Desic.Core.Users;
+﻿using Desic.Domain.Users;
 using Desic.EntityFrameworkCore.Data.Configurations.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;

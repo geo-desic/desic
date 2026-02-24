@@ -1,4 +1,4 @@
-﻿using Desic.Core.Tags;
+﻿using Desic.Domain.Tags;
 using Desic.EntityFrameworkCore.Data.Configurations.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;

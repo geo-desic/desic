@@ -1,4 +1,4 @@
-﻿using Desic.Core.Shared;
+﻿using Desic.Domain.Shared;
 using Desic.EntityFrameworkCore.Data;
 using Microsoft.Extensions.DependencyInjection;
 
