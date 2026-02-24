@@ -35,7 +35,7 @@ public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFacto
             var config = hostContext.Configuration;
             services.AddMediatR(cfg =>
             {
-                cfg.RegisterServicesFromAssemblies(typeof(Desic.Data.IMarker).Assembly, typeof(EntityFrameworkCore.IMarker).Assembly);
+                cfg.RegisterServicesFromAssemblies(typeof(Desic.Core.IMarker).Assembly, typeof(EntityFrameworkCore.IMarker).Assembly);
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             });
             var connectionString = config.GetValue("connection", config.GetConnectionString("Sqlite"));

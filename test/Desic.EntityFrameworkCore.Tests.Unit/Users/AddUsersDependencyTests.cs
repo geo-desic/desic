@@ -1,6 +1,6 @@
-﻿using Desic.Data.EntityTypes;
-using Desic.Data.Tags;
-using Desic.Data.Users;
+﻿using Desic.Core.EntityTypes;
+using Desic.Core.Tags;
+using Desic.Core.Users;
 using Desic.EntityFrameworkCore.Data;
 using Desic.Helpers;
 

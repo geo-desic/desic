@@ -1,5 +1,5 @@
-﻿using Desic.Data.EntityTypes;
-using Desic.Data.Shared.Entities;
+﻿using Desic.Core.EntityTypes;
+using Desic.Core.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

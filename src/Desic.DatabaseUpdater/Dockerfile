@@ -12,7 +12,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj", "src/Desic.DatabaseUpdater/"]
 COPY ["src/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj", "src/Desic.EntityFrameworkCore.Sqlite/"]
-COPY ["src/Desic.Data/Desic.Data.csproj", "src/Desic.Data/"]
+COPY ["src/Core/Core.csproj", "src/Core/"]
 COPY ["src/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "src/Desic.EntityFrameworkCore/"]
 COPY ["src/Desic/Desic.csproj", "src/Desic.Core/"]
 COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]

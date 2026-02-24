@@ -15,7 +15,7 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Desic.Api/Desic.Api.csproj", "src/Desic.Api/"]
 COPY ["src/Desic.Business/Desic.Business.csproj", "src/Desic.Business/"]
-COPY ["src/Desic.Data/Desic.Data.csproj", "src/Desic.Data/"]
+COPY ["src/Core/Core.csproj", "src/Core/"]
 COPY ["src/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "src/Desic.EntityFrameworkCore/"]
 COPY ["src/Desic/Desic.csproj", "src/Desic/"]
 COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]

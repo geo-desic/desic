@@ -4,9 +4,9 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/">
+    <Project Path="src/Core/Core.csproj" Id="4bbca6a1-4d58-4a89-856c-05c29f40a047" />
     <Project Path="src/Desic.Api/Desic.Api.csproj" />
     <Project Path="src/Desic.Business/Desic.Business.csproj" />
-    <Project Path="src/Desic.Data/Desic.Data.csproj" Id="e51cc3e8-1e4c-4084-bd22-ebc4d324df02" />
     <Project Path="src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj" />
     <Project Path="src/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj" />
     <Project Path="src/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj" />

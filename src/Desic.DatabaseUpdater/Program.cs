@@ -36,7 +36,7 @@ if (connectionStringMigrations != null)
 {
     builder.Services.AddMediatR(cfg =>
     {
-        cfg.RegisterServicesFromAssemblies(typeof(Desic.Data.IMarker).Assembly, typeof(Desic.EntityFrameworkCore.IMarker).Assembly);
+        cfg.RegisterServicesFromAssemblies(typeof(Desic.Core.IMarker).Assembly, typeof(Desic.EntityFrameworkCore.IMarker).Assembly);
         cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
     });
 }
