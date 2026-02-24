@@ -1,12 +1,11 @@
-﻿using Desic.Infrastructure.Data;
-using Desic.Mediator;
+﻿using Desic.Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Desic.Infrastructure.SqlServer;
+namespace Desic.Infrastructure.Data.SqlServer;
 
 public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<DesicContext>
 {

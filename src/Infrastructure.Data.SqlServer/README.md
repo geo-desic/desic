@@ -1,4 +1,4 @@
-# Entity Framework Core Migration Projects
+# Sql Server Infrastructure Project
 
 ## dotnet format validation
 

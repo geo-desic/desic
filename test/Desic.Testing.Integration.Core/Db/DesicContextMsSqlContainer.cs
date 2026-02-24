@@ -1,6 +1,6 @@
 ﻿using Desic.Api.Db;
 using Desic.Data;
-using Desic.Infrastructure.SqlServer;
+using Desic.Infrastructure.Data.SqlServer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.MsSql;

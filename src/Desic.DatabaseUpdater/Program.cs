@@ -1,6 +1,6 @@
 ﻿using Desic.DatabaseUpdater;
 using Desic.Infrastructure.Data.Sqlite;
-using Desic.Infrastructure.SqlServer;
+using Desic.Infrastructure.Data.SqlServer;
 using Desic.Mediator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

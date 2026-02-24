@@ -15,9 +15,9 @@ COPY ["src/Desic/Desic.csproj", "src/Desic/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 COPY ["src/Infrastructure.Data.Sqlite/Infrastructure.Data.Sqlite.csproj", "src/Infrastructure.Data.Sqlite/"]
+COPY ["src/Infrastructure.Data.SqlServer/Infrastructure.Data.SqlServer.csproj", "src/Infrastructure.Data.SqlServer/"]
 COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
 COPY ["src/MediatR.Contracts/MediatR.Contracts.csproj", "src/MediatR.Contracts/"]
-COPY ["src/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj", "src/Desic.EntityFrameworkCore.SqlServer/"]
 RUN dotnet restore "./src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj"
 COPY . .
 WORKDIR "/src/src/Desic.DatabaseUpdater"

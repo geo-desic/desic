@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Desic.Infrastructure.SqlServer;
+namespace Desic.Infrastructure.Data.SqlServer;
 
 // source: https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/
 public static class DependencyInjection
