@@ -5,10 +5,10 @@ services:
       context: .
       dockerfile: src/Api/Dockerfile
 
-  desic.web:
-    image: ${DOCKER_REGISTRY-}desicweb
+  web:
+    image: ${DOCKER_REGISTRY-}web
     build:
-      context: src/Desic.Web
+      context: src/web
       dockerfile: Dockerfile
     command: sh -c "npm start"
     depends_on:

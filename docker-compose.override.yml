@@ -49,14 +49,14 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - sqlite_data:/app/data
 
-  desic.web:
+  web:
     command: sh -c "npm run dev"
     environment:
       - NODE_ENV=development
     ports:
-      - "56054:56054"
+      - "62565:62565"
     volumes:
-      - ./src/Desic.Web:/app # mounts local project directory to the container's working directory
+      - ./src/web:/app # mounts local project directory to the container's working directory
       - /app/node_modules # creates an anonymous volume to prevent host's node_modules from overwriting container's
 
 volumes:

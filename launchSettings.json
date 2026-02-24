@@ -5,7 +5,7 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "api": "StartDebugging",
-        "desic.web": "StartWithoutDebugging",
+        "web": "StartWithoutDebugging",
         "dbupdater": "StartWithoutDebugging",
         "sqlserver": "StartWithoutDebugging"
       }
@@ -15,7 +15,7 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "api": "DoNotStart",
-        "desic.web": "DoNotStart",
+        "web": "DoNotStart",
         "dbupdater": "DoNotStart",
         "sqlserver": "StartWithoutDebugging"
       }
@@ -23,9 +23,12 @@
     "Api Only": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "api",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/openapi/v1.json",
       "serviceActions": {
         "api": "StartDebugging",
-        "desic.web": "DoNotStart",
+        "web": "DoNotStart",
         "dbupdater": "DoNotStart",
         "sqlserver": "DoNotStart"
       }
@@ -35,7 +38,7 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "api": "StartDebugging",
-        "desic.web": "StartWithoutDebugging",
+        "web": "StartWithoutDebugging",
         "dbupdater": "DoNotStart",
         "sqlserver": "DoNotStart"
       }
@@ -46,7 +49,7 @@
       "serviceActions": {
         "api": "DoNotStart",
         "dbupdater": "StartWithoutDebugging",
-        "desic.web": "DoNotStart",
+        "web": "DoNotStart",
         "sqlserver": "StartWithoutDebugging"
       }
     }

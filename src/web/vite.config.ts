@@ -6,6 +6,6 @@ export default defineConfig({
     plugins: [plugin()],
     server: {
         host: true, // needed when running inside Docker container
-        port: 56054,
+        port: 62565
     }
 })
