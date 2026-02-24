@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Application\Application.csproj" />
     <ProjectReference Include="..\..\src\Desic.Api\Desic.Api.csproj" />
-    <ProjectReference Include="..\..\src\Desic.Business\Desic.Business.csproj" />
     <ProjectReference Include="..\..\src\MediatR\MediatR.csproj" />
   </ItemGroup>
 

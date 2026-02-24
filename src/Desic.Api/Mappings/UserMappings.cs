@@ -4,7 +4,7 @@ namespace Desic.Api.Mappings;
 
 public static class UserMappings
 {
-    public static User ToDto(this Business.Users.User source)
+    public static User ToDto(this Application.Users.User source)
     {
         return new User
         {
@@ -13,9 +13,9 @@ public static class UserMappings
         };
     }
 
-    public static Business.Users.Create.UserCreate ToBusinessModel(this UserCreate source)
+    public static Application.Users.Create.UserCreate ToBusinessModel(this UserCreate source)
     {
-        return new Business.Users.Create.UserCreate
+        return new Application.Users.Create.UserCreate
         {
             Username = source.Username,
         };

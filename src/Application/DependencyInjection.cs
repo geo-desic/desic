@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Desic.Business;
+namespace Desic.Application;
 
 // source: https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/
 public static class DependencyInjection

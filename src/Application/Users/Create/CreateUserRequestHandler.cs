@@ -1,10 +1,10 @@
-﻿using Desic.Business.Results;
+﻿using Desic.Application.Results;
 using FluentResults;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.Business.Users.Create;
+namespace Desic.Application.Users.Create;
 
 public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IMediator mediator, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<User>>
 {

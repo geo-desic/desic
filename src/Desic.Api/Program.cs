@@ -1,7 +1,7 @@
 using Desic.Api.BackgroundServices;
 using Desic.Api.Db;
 using Desic.Api.HealthChecks;
-using Desic.Business.Users.Create;
+using Desic.Application.Users.Create;
 using Desic.EntityFrameworkCore.Data;
 using Desic.Mediator;
 using FluentValidation;
@@ -35,7 +35,7 @@ logger.LogInformation("Starting configuration of the web application builder");
 // DesicContext seeding uses MediatR so make sure this is before builder.Services.AddDbContext<DesicContext>
 builder.Services.AddMediatR(cfg =>
 {
-    cfg.RegisterServicesFromAssemblies(typeof(Desic.Business.IMarker).Assembly, typeof(Desic.EntityFrameworkCore.IMarker).Assembly);
+    cfg.RegisterServicesFromAssemblies(typeof(Desic.Application.IMarker).Assembly, typeof(Desic.EntityFrameworkCore.IMarker).Assembly);
     cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 

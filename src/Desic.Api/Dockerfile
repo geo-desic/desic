@@ -14,7 +14,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Desic.Api/Desic.Api.csproj", "src/Desic.Api/"]
-COPY ["src/Desic.Business/Desic.Business.csproj", "src/Desic.Business/"]
+COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Core/Core.csproj", "src/Core/"]
 COPY ["src/Desic.EntityFrameworkCore/Desic.EntityFrameworkCore.csproj", "src/Desic.EntityFrameworkCore/"]
 COPY ["src/Desic/Desic.csproj", "src/Desic/"]

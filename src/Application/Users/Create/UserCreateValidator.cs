@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Desic.Business.Users.Create;
+namespace Desic.Application.Users.Create;
 
 public class UserCreateValidator : AbstractValidator<UserCreate>
 {

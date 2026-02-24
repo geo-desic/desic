@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 
-namespace Desic.Business.Results;
+namespace Desic.Application.Results;
 
 internal class ValidationResultError(string message, string? propertyName, string? severity) : Error(message)
 {

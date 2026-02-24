@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.Business.Users.Get;
+namespace Desic.Application.Users.Get;
 
 public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger, IMediator mediator) : IRequestHandler<GetUserByIdRequest, Result<User>>
 {

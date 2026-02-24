@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using FluentValidation.Results;
 
-namespace Desic.Business.Results;
+namespace Desic.Application.Results;
 
 internal static class ValidationHelpers
 {

@@ -1,4 +1,4 @@
-﻿namespace Desic.Business.Users;
+﻿namespace Desic.Application.Users;
 
 public class User
 {

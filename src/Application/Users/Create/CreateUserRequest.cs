@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 
-namespace Desic.Business.Users.Create;
+namespace Desic.Application.Users.Create;
 
 public class CreateUserRequest : IRequest<Result<User>>
 {
