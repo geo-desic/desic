@@ -1,10 +1,10 @@
 ﻿using AwesomeAssertions;
 using Desic.Domain.Users;
-using Desic.EntityFrameworkCore.Data.Handlers.Users;
+using Desic.Infrastructure.Data.Handlers.Users;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace Desic.EntityFrameworkCore.Tests.Unit.Users.Queries;
+namespace Desic.Infrastructure.Tests.Unit.Users.Queries;
 
 public class GetUserByIdRequestHandlerTests : AddUsersDependencyTests
 {

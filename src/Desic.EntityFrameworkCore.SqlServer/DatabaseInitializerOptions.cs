@@ -1,4 +1,4 @@
-﻿namespace Desic.EntityFrameworkCore.SqlServer;
+﻿namespace Desic.Infrastructure.SqlServer;
 
 public sealed class DatabaseInitializerOptions
 {

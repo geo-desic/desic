@@ -1,6 +1,6 @@
 ﻿using Desic.DatabaseUpdater;
-using Desic.EntityFrameworkCore.Sqlite;
-using Desic.EntityFrameworkCore.SqlServer;
+using Desic.Infrastructure.Sqlite;
+using Desic.Infrastructure.SqlServer;
 using Desic.Mediator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +36,7 @@ if (connectionStringMigrations != null)
 {
     builder.Services.AddMediatR(cfg =>
     {
-        cfg.RegisterServicesFromAssemblies(typeof(Desic.Domain.IMarker).Assembly, typeof(Desic.EntityFrameworkCore.IMarker).Assembly);
+        cfg.RegisterServicesFromAssemblies(typeof(Desic.Domain.IMarker).Assembly, typeof(Desic.Infrastructure.IMarker).Assembly);
         cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
     });
 }

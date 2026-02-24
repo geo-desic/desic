@@ -1,4 +1,4 @@
-﻿using Desic.EntityFrameworkCore.Sqlite;
+﻿using Desic.Infrastructure.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 

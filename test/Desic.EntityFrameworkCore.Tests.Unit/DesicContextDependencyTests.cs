@@ -1,7 +1,7 @@
-﻿using Desic.EntityFrameworkCore.Data;
+﻿using Desic.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Desic.EntityFrameworkCore.Tests.Unit;
+namespace Desic.Infrastructure.Tests.Unit;
 
 public class DesicContextDependencyTests
 {

@@ -1,5 +1,5 @@
-﻿using Desic.EntityFrameworkCore.Data;
-using Desic.EntityFrameworkCore.SqlServer;
+﻿using Desic.Infrastructure.Data;
+using Desic.Infrastructure.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

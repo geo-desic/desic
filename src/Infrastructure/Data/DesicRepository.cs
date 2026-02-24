@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Desic.EntityFrameworkCore.Data;
+namespace Desic.Infrastructure.Data;
 
 public class DesicRepository<T>(DesicContext context) : IRepository<T> where T : class
 {

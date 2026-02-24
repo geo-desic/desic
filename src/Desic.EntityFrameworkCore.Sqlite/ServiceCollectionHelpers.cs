@@ -1,8 +1,8 @@
-﻿using Desic.EntityFrameworkCore.Data;
+﻿using Desic.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Desic.EntityFrameworkCore.Sqlite;
+namespace Desic.Infrastructure.Sqlite;
 
 public static class ServiceCollectionHelpers
 {

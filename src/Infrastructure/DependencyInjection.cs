@@ -1,8 +1,8 @@
 ﻿using Desic.Domain.Shared;
-using Desic.EntityFrameworkCore.Data;
+using Desic.Infrastructure.Data;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Desic.EntityFrameworkCore;
+namespace Desic.Infrastructure;
 
 // source: https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/
 public static class DependencyInjection

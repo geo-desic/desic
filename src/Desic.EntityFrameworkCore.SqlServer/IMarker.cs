@@ -1,3 +1,3 @@
-﻿namespace Desic.EntityFrameworkCore.SqlServer;
+﻿namespace Desic.Infrastructure.SqlServer;
 
 public interface IMarker { }

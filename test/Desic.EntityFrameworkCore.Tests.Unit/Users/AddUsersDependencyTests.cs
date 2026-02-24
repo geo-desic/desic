@@ -1,10 +1,10 @@
 ﻿using Desic.Domain.EntityTypes;
 using Desic.Domain.Tags;
 using Desic.Domain.Users;
-using Desic.EntityFrameworkCore.Data;
+using Desic.Infrastructure.Data;
 using Desic.Helpers;
 
-namespace Desic.EntityFrameworkCore.Tests.Unit.Users;
+namespace Desic.Infrastructure.Tests.Unit.Users;
 
 public class AddUsersDependencyTests : DesicContextDependencyTests
 {

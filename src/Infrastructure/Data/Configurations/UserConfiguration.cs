@@ -1,10 +1,10 @@
 ﻿using Desic.Domain.Users;
-using Desic.EntityFrameworkCore.Data.Configurations.Extensions;
+using Desic.Infrastructure.Data.Configurations.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Desic.EntityFrameworkCore.Data.Configurations;
+namespace Desic.Infrastructure.Data.Configurations;
 
 internal class UserConfiguration(DatabaseFacade databaseFacade) : IEntityTypeConfiguration<User>
 {

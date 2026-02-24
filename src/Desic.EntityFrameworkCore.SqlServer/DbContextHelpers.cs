@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Desic.EntityFrameworkCore.SqlServer;
+namespace Desic.Infrastructure.SqlServer;
 
 public static class DbContextHelpers
 {

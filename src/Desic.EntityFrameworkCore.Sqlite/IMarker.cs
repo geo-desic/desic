@@ -1,3 +1,3 @@
-﻿namespace Desic.EntityFrameworkCore.Sqlite;
+﻿namespace Desic.Infrastructure.Sqlite;
 
 public interface IMarker { }

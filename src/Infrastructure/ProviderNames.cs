@@ -1,4 +1,4 @@
-﻿namespace Desic.EntityFrameworkCore;
+﻿namespace Desic.Infrastructure;
 
 internal static class ProviderNames
 {

@@ -1,6 +1,6 @@
-﻿using Desic.EntityFrameworkCore.Data;
-using Desic.EntityFrameworkCore.Sqlite;
-using Desic.EntityFrameworkCore.SqlServer;
+﻿using Desic.Infrastructure.Data;
+using Desic.Infrastructure.Sqlite;
+using Desic.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore.Infrastructure;

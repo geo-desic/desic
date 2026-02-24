@@ -1,9 +1,9 @@
-﻿using Desic.EntityFrameworkCore.Data;
+﻿using Desic.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Desic.EntityFrameworkCore.SqlServer;
+namespace Desic.Infrastructure.SqlServer;
 
 public static class ServiceCollectionHelpers
 {

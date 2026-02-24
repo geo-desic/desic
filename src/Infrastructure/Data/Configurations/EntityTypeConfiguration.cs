@@ -1,9 +1,9 @@
 ﻿using Desic.Domain.EntityTypes;
-using Desic.EntityFrameworkCore.Data.Configurations.Extensions;
+using Desic.Infrastructure.Data.Configurations.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Desic.EntityFrameworkCore.Data.Configurations;
+namespace Desic.Infrastructure.Data.Configurations;
 
 internal class EntityTypeConfiguration : IEntityTypeConfiguration<EntityType>
 {

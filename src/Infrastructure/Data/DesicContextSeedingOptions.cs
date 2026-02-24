@@ -1,4 +1,4 @@
-﻿namespace Desic.EntityFrameworkCore.Data;
+﻿namespace Desic.Infrastructure.Data;
 
 public sealed class DesicContextSeedingOptions
 {

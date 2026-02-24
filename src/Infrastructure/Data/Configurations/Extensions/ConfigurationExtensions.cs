@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Desic.EntityFrameworkCore.Data.Configurations.Extensions;
+namespace Desic.Infrastructure.Data.Configurations.Extensions;
 
 internal static class ConfigurationExtensions
 {

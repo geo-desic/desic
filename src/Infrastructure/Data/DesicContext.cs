@@ -2,10 +2,10 @@
 using Desic.Domain.Iso3166Countries;
 using Desic.Domain.Tags;
 using Desic.Domain.Users;
-using Desic.EntityFrameworkCore.Data.Configurations;
+using Desic.Infrastructure.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 
-namespace Desic.EntityFrameworkCore.Data;
+namespace Desic.Infrastructure.Data;
 
 public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(options)
 {

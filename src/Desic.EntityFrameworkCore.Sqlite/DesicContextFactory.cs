@@ -1,4 +1,4 @@
-﻿using Desic.EntityFrameworkCore.Data;
+﻿using Desic.Infrastructure.Data;
 using Desic.Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Desic.EntityFrameworkCore.Sqlite;
+namespace Desic.Infrastructure.Sqlite;
 
 public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFactory<DesicContext>
 {
@@ -35,7 +35,7 @@ public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFacto
             var config = hostContext.Configuration;
             services.AddMediatR(cfg =>
             {
-                cfg.RegisterServicesFromAssemblies(typeof(Desic.Domain.IMarker).Assembly, typeof(EntityFrameworkCore.IMarker).Assembly);
+                cfg.RegisterServicesFromAssemblies(typeof(Desic.Domain.IMarker).Assembly, typeof(Infrastructure.IMarker).Assembly);
                 cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             });
             var connectionString = config.GetValue("connection", config.GetConnectionString("Sqlite"));

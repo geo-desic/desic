@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
 
-namespace Desic.EntityFrameworkCore.SqlServer;
+namespace Desic.Infrastructure.SqlServer;
 
 public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, ILogger<DatabaseInitializer> logger)
 {

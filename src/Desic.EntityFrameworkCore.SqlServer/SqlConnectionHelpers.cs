@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace Desic.EntityFrameworkCore.SqlServer;
+namespace Desic.Infrastructure.SqlServer;
 
 public static class SqlConnectionHelpers
 {
