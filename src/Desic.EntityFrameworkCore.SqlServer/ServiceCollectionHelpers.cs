@@ -7,7 +7,7 @@ namespace Desic.EntityFrameworkCore.SqlServer;
 
 public static class ServiceCollectionHelpers
 {
-    public static void ConfigureDesicContextForSqlServer(this IServiceCollection services, string? connectionString, bool setMigrationsAssembly = false, bool useSeeding = false)
+    public static IServiceCollection ConfigureDesicContextForSqlServer(this IServiceCollection services, string? connectionString, bool setMigrationsAssembly = false, bool useSeeding = false)
     {
         services.AddDbContext<DesicContext>((serviceProvider, options) =>
         {
@@ -17,11 +17,13 @@ public static class ServiceCollectionHelpers
             });
             if (useSeeding) options.UseDesicContextSeeding(serviceProvider);
         });
+        return services;
     }
 
-    public static void UseDatabaseInitializer(this IServiceCollection services, IConfiguration config, string configSectionKey = "Databases:Desic:SqlServer")
+    public static IServiceCollection UseDatabaseInitializer(this IServiceCollection services, IConfiguration config, string configSectionKey = "Databases:Desic:SqlServer")
     {
         services.Configure<DatabaseInitializerOptions>(config.GetSection(key: configSectionKey));
         services.AddTransient<DatabaseInitializer>();
+        return services;
     }
 }

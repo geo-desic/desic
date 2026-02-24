@@ -6,7 +6,7 @@ namespace Desic.EntityFrameworkCore.Sqlite;
 
 public static class ServiceCollectionHelpers
 {
-    public static void ConfigureDesicContextForSqlite(this IServiceCollection services, string? connectionString, bool setMigrationsAssembly = false, bool useSeeding = false)
+    public static IServiceCollection ConfigureDesicContextForSqlite(this IServiceCollection services, string? connectionString, bool setMigrationsAssembly = false, bool useSeeding = false)
     {
         services.AddDbContext<DesicContext>((serviceProvider, options) =>
         {
@@ -16,5 +16,6 @@ public static class ServiceCollectionHelpers
             });
             if (useSeeding) options.UseDesicContextSeeding(serviceProvider);
         });
+        return services;
     }
 }
