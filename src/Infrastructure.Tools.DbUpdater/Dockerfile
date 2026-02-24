@@ -10,28 +10,28 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj", "src/Desic.DatabaseUpdater/"]
-COPY ["src/Desic/Desic.csproj", "src/Desic/"]
-COPY ["src/Domain/Domain.csproj", "src/Domain/"]
-COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
+COPY ["src/Infrastructure.Tools.DbUpdater/Infrastructure.Tools.DbUpdater.csproj", "src/Infrastructure.Tools.DbUpdater/"]
 COPY ["src/Infrastructure.Data.Sqlite/Infrastructure.Data.Sqlite.csproj", "src/Infrastructure.Data.Sqlite/"]
-COPY ["src/Infrastructure.Data.SqlServer/Infrastructure.Data.SqlServer.csproj", "src/Infrastructure.Data.SqlServer/"]
+COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
+COPY ["src/Desic/Desic.csproj", "src/Desic/"]
 COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
 COPY ["src/MediatR.Contracts/MediatR.Contracts.csproj", "src/MediatR.Contracts/"]
-RUN dotnet restore "./src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj"
+COPY ["src/Domain/Domain.csproj", "src/Domain/"]
+COPY ["src/Infrastructure.Data.SqlServer/Infrastructure.Data.SqlServer.csproj", "src/Infrastructure.Data.SqlServer/"]
+RUN dotnet restore "./src/Infrastructure.Tools.DbUpdater/Infrastructure.Tools.DbUpdater.csproj"
 COPY . .
-WORKDIR "/src/src/Desic.DatabaseUpdater"
-RUN dotnet build "./Desic.DatabaseUpdater.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/src/Infrastructure.Tools.DbUpdater"
+RUN dotnet build "./Infrastructure.Tools.DbUpdater.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Desic.DatabaseUpdater.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Infrastructure.Tools.DbUpdater.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Desic.DatabaseUpdater.dll"]
+ENTRYPOINT ["dotnet", "Desic.Infrastructure.Tools.DbUpdater.dll"]
 
 CMD ["--provider", "SqlServer"]

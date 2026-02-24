@@ -17,11 +17,11 @@ services:
     volumes:
       - sqlserver_data:/var/opt/mssql
 
-  desic.databaseupdater:
-    image: ${DOCKER_REGISTRY-}desicdatabaseupdater
+  dbupdater:
+    image: ${DOCKER_REGISTRY-}dbupdater
     build:
       context: .
-      dockerfile: src/Desic.DatabaseUpdater/Dockerfile
+      dockerfile: src/Infrastructure.Tools.DbUpdater/Dockerfile
     command: ["--provider", "SqlServer", "--connection-init", "${CONNECTION_STRINGS_SQLSERVER_INIT}", "--connection", "${CONNECTION_STRINGS_SQLSERVER_MIGRATIONS}"]
     depends_on:
       sqlserver:
@@ -30,7 +30,7 @@ services:
 
   desic.api:
     depends_on:
-      desic.databaseupdater:
+      dbupdater:
         condition: service_completed_successfully
     environment:
       - ASPNETCORE_ENVIRONMENT=Development

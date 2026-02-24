@@ -6,7 +6,7 @@
       "serviceActions": {
         "desic.api": "StartDebugging",
         "desic.web": "StartWithoutDebugging",
-        "desic.databaseupdater": "StartWithoutDebugging",
+        "dbupdater": "StartWithoutDebugging",
         "sqlserver": "StartWithoutDebugging"
       }
     },
@@ -16,7 +16,7 @@
       "serviceActions": {
         "desic.api": "DoNotStart",
         "desic.web": "DoNotStart",
-        "desic.databaseupdater": "DoNotStart",
+        "dbupdater": "DoNotStart",
         "sqlserver": "StartWithoutDebugging"
       }
     },
@@ -26,7 +26,7 @@
       "serviceActions": {
         "desic.api": "StartDebugging",
         "desic.web": "DoNotStart",
-        "desic.databaseupdater": "DoNotStart",
+        "dbupdater": "DoNotStart",
         "sqlserver": "DoNotStart"
       }
     },
@@ -36,7 +36,7 @@
       "serviceActions": {
         "desic.api": "StartDebugging",
         "desic.web": "StartWithoutDebugging",
-        "desic.databaseupdater": "DoNotStart",
+        "dbupdater": "DoNotStart",
         "sqlserver": "DoNotStart"
       }
     },
@@ -45,9 +45,9 @@
       "commandVersion": "1.0",
       "serviceActions": {
         "desic.api": "DoNotStart",
-        "desic.databaseupdater": "StartWithoutDebugging",
+        "dbupdater": "StartWithoutDebugging",
         "desic.web": "DoNotStart",
-        "sqlserver": "DoNotStart"
+        "sqlserver": "StartWithoutDebugging"
       }
     }
   }
