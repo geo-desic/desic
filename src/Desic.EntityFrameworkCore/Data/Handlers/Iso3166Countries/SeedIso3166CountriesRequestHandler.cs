@@ -42,7 +42,7 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
         var requestStream = new Iso3166CountriesResourceStreamRequest
         {
             ClassMapType = typeof(Iso3166CountryClassMap),
-            ResourceName = "Desic.Domain.Iso3166Countries.iso-3166-countries.csv",
+            ResourceName = $"{typeof(Iso3166Country).Namespace}.iso-3166-countries.csv",
         };
 
         var batchInserts = new List<Iso3166Country>();

@@ -1,6 +1,6 @@
 # Desic Core Project
 
-This project is the [core](https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/#the-core-layer) (aka [domain](https://github.com/jasontaylordev/CleanArchitecture/tree/main/src/Domain)) layer mainly for defining the following.
+This project is the [domain](https://github.com/jasontaylordev/CleanArchitecture/tree/main/src/Domain) (aka [core](https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/#the-core-layer)) layer mainly for defining the following.
 - [Request](Requests) and response **format** to get or manipulate data, e.g.
   - Get a user by their id or username
   - Update the username for a user
@@ -15,4 +15,4 @@ This library is not for **handling** requests to get or manipulate data. Those h
 - [Query handlers](Handlers/Queries) for data that does not require a data provider such as getting the records in an embedded resource, e.g. [iso-3166-countries.csv](Iso3166Countries/iso-3166-countries.csv)
 - Generation (but not persistence) of [Test](Users/Test) data
 
-This library should not have project references nor dependencies to the outer layers: Application, Infrastructure, Api, Web
+This library should not have project references nor dependencies to the outer layers: Application, Infrastructure, Api, or Web
