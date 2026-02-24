@@ -4,7 +4,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "desic.api": "StartDebugging",
+        "api": "StartDebugging",
         "desic.web": "StartWithoutDebugging",
         "dbupdater": "StartWithoutDebugging",
         "sqlserver": "StartWithoutDebugging"
@@ -14,7 +14,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "desic.api": "DoNotStart",
+        "api": "DoNotStart",
         "desic.web": "DoNotStart",
         "dbupdater": "DoNotStart",
         "sqlserver": "StartWithoutDebugging"
@@ -24,7 +24,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "desic.api": "StartDebugging",
+        "api": "StartDebugging",
         "desic.web": "DoNotStart",
         "dbupdater": "DoNotStart",
         "sqlserver": "DoNotStart"
@@ -34,7 +34,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "desic.api": "StartDebugging",
+        "api": "StartDebugging",
         "desic.web": "StartWithoutDebugging",
         "dbupdater": "DoNotStart",
         "sqlserver": "DoNotStart"
@@ -44,7 +44,7 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "desic.api": "DoNotStart",
+        "api": "DoNotStart",
         "dbupdater": "StartWithoutDebugging",
         "desic.web": "DoNotStart",
         "sqlserver": "StartWithoutDebugging"

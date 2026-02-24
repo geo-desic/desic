@@ -52,14 +52,17 @@ builder.Services.AddHostedService<StartupBackgroundService>();
 builder.Services.AddSingleton<StartupHealthCheck>();
 
 builder.Services.AddControllers();
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
+
 builder.Services.AddHealthChecks()
     .AddCheck("Alive", x => HealthCheckResult.Healthy())
     .AddDbContextCheck<DesicContext>(tags: ["ready"])
     .AddCheck<StartupHealthCheck>("Startup", tags: ["ready"]);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen();
 
 builder.Services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
 if (httpLoggingEnabled)
@@ -90,9 +93,10 @@ if (httpLoggingEnabled)
 
 if (isDevelopment)
 {
-    app.Logger.LogInformation("Configuring the app for swagger support");
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.Logger.LogInformation("Configuring the app for mapping open api");
+    app.MapOpenApi();
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
 }
 
 app.Logger.LogInformation("Configuring the app to use https redirection");

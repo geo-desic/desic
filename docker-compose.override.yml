@@ -28,7 +28,7 @@ services:
         condition: service_healthy
     restart: "no"
 
-  desic.api:
+  api:
     depends_on:
       dbupdater:
         condition: service_completed_successfully

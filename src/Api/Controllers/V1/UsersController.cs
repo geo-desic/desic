@@ -11,6 +11,7 @@ namespace Desic.Api.Controllers.V1;
 
 [ApiController]
 [Route("v1/[controller]")]
+//[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 public class UsersController(ILogger<UsersController> logger, IMediator mediator) : ControllerBase
 {
     private readonly ILogger<UsersController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));

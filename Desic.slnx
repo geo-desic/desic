@@ -4,8 +4,8 @@
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/">
+    <Project Path="src/Api/Api.csproj" Id="2d0b624e-4fcc-4ab0-a3f3-7f91db2352d9" />
     <Project Path="src/Application/Application.csproj" Id="1e5f7908-e7d6-4c3b-8809-591e02d57297" />
-    <Project Path="src/Desic.Api/Desic.Api.csproj" />
     <Project Path="src/Desic.Web/desic.web.esproj">
       <Build />
       <Deploy />
