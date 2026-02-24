@@ -1,5 +1,5 @@
 ﻿using Desic.DatabaseUpdater;
-using Desic.Infrastructure.Sqlite;
+using Desic.Infrastructure.Data.Sqlite;
 using Desic.Infrastructure.SqlServer;
 using Desic.Mediator;
 using Microsoft.Extensions.Configuration;

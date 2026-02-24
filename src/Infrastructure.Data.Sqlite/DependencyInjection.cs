@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Desic.Infrastructure.Sqlite;
+namespace Desic.Infrastructure.Data.Sqlite;
 
 // source: https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/
 public static class DependencyInjection

@@ -1,5 +1,5 @@
 ﻿using Desic.Infrastructure.Data;
-using Desic.Infrastructure.Sqlite;
+using Desic.Infrastructure.Data.Sqlite;
 using Desic.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;

@@ -4,6 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace>Desic.Infrastructure.Data.Sqlite</RootNamespace>
+    <AssemblyName>Desic.Infrastructure.Data.Sqlite</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

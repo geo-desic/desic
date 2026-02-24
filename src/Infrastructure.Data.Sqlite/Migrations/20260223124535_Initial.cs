@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Desic.Infrastructure.Sqlite.Migrations
+namespace Desic.Infrastructure.Data.Sqlite.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration

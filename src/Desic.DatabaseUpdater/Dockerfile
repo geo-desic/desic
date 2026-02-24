@@ -11,10 +11,10 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Desic.DatabaseUpdater/Desic.DatabaseUpdater.csproj", "src/Desic.DatabaseUpdater/"]
-COPY ["src/Desic.EntityFrameworkCore.Sqlite/Desic.EntityFrameworkCore.Sqlite.csproj", "src/Desic.EntityFrameworkCore.Sqlite/"]
 COPY ["src/Desic/Desic.csproj", "src/Desic/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
+COPY ["src/Infrastructure.Data.Sqlite/Infrastructure.Data.Sqlite.csproj", "src/Infrastructure.Data.Sqlite/"]
 COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
 COPY ["src/MediatR.Contracts/MediatR.Contracts.csproj", "src/MediatR.Contracts/"]
 COPY ["src/Desic.EntityFrameworkCore.SqlServer/Desic.EntityFrameworkCore.SqlServer.csproj", "src/Desic.EntityFrameworkCore.SqlServer/"]

@@ -15,8 +15,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Desic.Api\Desic.Api.csproj" />
-    <ProjectReference Include="..\..\src\Desic.EntityFrameworkCore.Sqlite\Desic.EntityFrameworkCore.Sqlite.csproj" />
     <ProjectReference Include="..\..\src\Desic.EntityFrameworkCore.SqlServer\Desic.EntityFrameworkCore.SqlServer.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure.Data.Sqlite\Infrastructure.Data.Sqlite.csproj" />
   </ItemGroup>
 
 </Project>
