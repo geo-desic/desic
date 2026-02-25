@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace Desic.Testing.Integration.Core;
+namespace Desic.Testing.Integration;
 
 public static class TestConfiguration
 {

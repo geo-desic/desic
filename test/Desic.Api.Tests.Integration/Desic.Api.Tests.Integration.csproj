@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Api\Api.csproj" />
-    <ProjectReference Include="..\Desic.Testing.Integration.Core\Desic.Testing.Integration.Core.csproj" />
+    <ProjectReference Include="..\Testing.Integration\Testing.Integration.csproj" />
   </ItemGroup>
 
   <ItemGroup>

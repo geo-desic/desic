@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Desic.Testing.Integration.Core.Db;
+namespace Desic.Testing.Integration.Db;
 
 public sealed class DbFixture : IAsyncLifetime
 {

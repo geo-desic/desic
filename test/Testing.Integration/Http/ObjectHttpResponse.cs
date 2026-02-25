@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Xunit;
 
-namespace Desic.Testing.Integration.Core.Http;
+namespace Desic.Testing.Integration.Http;
 
 public class ObjectHttpResponse<T>(HttpResponseMessage response)
 {

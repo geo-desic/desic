@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Testcontainers.MsSql;
 using Xunit;
 
-namespace Desic.Testing.Integration.Core.Db;
+namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern

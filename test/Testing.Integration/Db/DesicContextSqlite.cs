@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
-namespace Desic.Testing.Integration.Core.Db;
+namespace Desic.Testing.Integration.Db;
 
 public sealed class DesicContextSqlite : IAsyncLifetime
 {

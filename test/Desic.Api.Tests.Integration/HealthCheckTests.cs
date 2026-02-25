@@ -1,8 +1,8 @@
 ﻿using AwesomeAssertions;
 using Desic.Api.Dtos.HealthChecks;
-using Desic.Testing.Integration.Core.Db;
-using Desic.Testing.Integration.Core.Http;
-using Desic.Testing.Integration.Core.WebApplication;
+using Desic.Testing.Integration.Db;
+using Desic.Testing.Integration.Http;
+using Desic.Testing.Integration.WebApplication;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Desic.Api.Tests.Integration;

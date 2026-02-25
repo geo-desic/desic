@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Xunit;
 
-namespace Desic.Testing.Integration.Core.Http;
+namespace Desic.Testing.Integration.Http;
 
 public class StringHttpResponse(HttpResponseMessage response)
 {

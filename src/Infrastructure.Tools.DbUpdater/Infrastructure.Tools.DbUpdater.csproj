@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+    <UserSecretsId>c121f405-33f5-48cb-b6f5-f4287fc75de8</UserSecretsId>
     <RootNamespace>Desic.Infrastructure.Tools.DbUpdater</RootNamespace>
     <AssemblyName>Desic.Infrastructure.Tools.DbUpdater</AssemblyName>
   </PropertyGroup>

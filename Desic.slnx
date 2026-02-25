@@ -24,10 +24,10 @@
     <Project Path="test/Desic.Api.Tests.Unit/Desic.Api.Tests.Unit.csproj" />
     <Project Path="test/Desic.Business.Tests.Unit/Desic.Business.Tests.Unit.csproj" />
     <Project Path="test/Desic.EntityFrameworkCore.Tests.Unit/Desic.EntityFrameworkCore.Tests.Unit.csproj" />
-    <Project Path="test/Desic.Testing.Integration.Core/Desic.Testing.Integration.Core.csproj" />
     <Project Path="test/Desic.Tests.Unit/Desic.Tests.Unit.csproj" />
     <Project Path="test/MediatR.Benchmarks/MediatR.Benchmarks.csproj" />
     <Project Path="test/MediatR.Tests/MediatR.Tests.csproj" />
+    <Project Path="test/Testing.Integration/Testing.Integration.csproj" Id="defdd080-770f-45a6-b39b-fc2a941b1710" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />

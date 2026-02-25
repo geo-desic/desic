@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Data.Common;
 
-namespace Desic.Testing.Integration.Core.WebApplication;
+namespace Desic.Testing.Integration.WebApplication;
 
 public class TestWebApplicationFactory<TProgram>(string connectionString) : WebApplicationFactory<TProgram> where TProgram : class
 {

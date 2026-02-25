@@ -3,8 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>c121f405-33f5-48cb-b6f5-f4287fc75de8</UserSecretsId>
     <Nullable>enable</Nullable>
+    <UserSecretsId>c121f405-33f5-48cb-b6f5-f4287fc75de8</UserSecretsId>
+    <RootNamespace>Desic.Testing.Integration</RootNamespace>
+    <AssemblyName>Desic.Testing.Integration</AssemblyName>      
   </PropertyGroup>
 
   <ItemGroup>

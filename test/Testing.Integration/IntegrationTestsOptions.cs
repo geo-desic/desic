@@ -1,4 +1,4 @@
-﻿namespace Desic.Testing.Integration.Core;
+﻿namespace Desic.Testing.Integration;
 
 public sealed class IntegrationTestsOptions
 {

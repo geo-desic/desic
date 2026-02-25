@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace Desic.Testing.Integration.Core.Http;
+namespace Desic.Testing.Integration.Http;
 
 public class FluentHttpRequest(HttpMethod httpMethod, string? requestUri)
 {
