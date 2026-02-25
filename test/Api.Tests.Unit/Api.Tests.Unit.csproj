@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
+    <RootNamespace>Desic.Api.Tests.Unit</RootNamespace>
+    <AssemblyName>Desic.Api.Tests.Unit</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
