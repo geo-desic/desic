@@ -6,7 +6,7 @@ using Desic.Testing.Integration.WebApplication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Desic.Api.Tests.Integration;
+namespace Desic.Api.Tests.Functional;
 
 public class UsersControllerTests : IClassFixture<DbFixture>
 {

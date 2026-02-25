@@ -7,6 +7,8 @@
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
+    <RootNamespace>Desic.Api.Tests.Functional</RootNamespace>
+    <AssemblyName>Desic.Api.Tests.Functional</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
