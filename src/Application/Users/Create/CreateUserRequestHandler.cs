@@ -1,6 +1,6 @@
 ﻿using Desic.Application.Results;
-using Desic.Domain.Shared;
-using Desic.Domain.Shared.Entities;
+using Desic.Domain.Common;
+using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
 using FluentResults;
 using FluentValidation;
@@ -29,7 +29,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
             return validationResult.ToFailResult<User>();
         }
 
-        if (await _repository.AnyAsync(x => x.Username == request.User.Username))
+        if (await _repository.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
         {
             _logger.LogDebug("A user with username '{Username}' already exists", request.User.Username);
             return Result.Fail<User>($"A user with username '{request.User.Username}' already exists");

@@ -1,4 +1,4 @@
-﻿using Desic.Domain.Shared;
+﻿using Desic.Domain.Common;
 using MediatR;
 
 namespace Desic.Domain.Iso3166Countries;

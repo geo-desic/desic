@@ -2,7 +2,7 @@
 // modified replacing specification references with linq expressions
 using System.Linq.Expressions;
 
-namespace Desic.Domain.Shared;
+namespace Desic.Domain.Common;
 
 /// <summary>
 /// <para>

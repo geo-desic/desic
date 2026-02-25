@@ -1,6 +1,6 @@
-﻿using Desic.Domain.Iso3166Countries;
-using Desic.Domain.Shared;
-using Desic.Domain.Shared.Entities;
+﻿using Desic.Domain.Common;
+using Desic.Domain.Common.Entities;
+using Desic.Domain.Iso3166Countries;
 using Desic.Domain.Tags;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

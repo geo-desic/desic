@@ -1,7 +1,7 @@
-﻿using Desic.Domain.EntityTypes;
+﻿using Desic.Domain.Common;
+using Desic.Domain.Common.Entities;
+using Desic.Domain.EntityTypes;
 using Desic.Domain.Iso3166Countries;
-using Desic.Domain.Shared;
-using Desic.Domain.Shared.Entities;
 using Desic.Domain.Tags;
 using Desic.Domain.Users;
 using Desic.Domain.Users.Test;

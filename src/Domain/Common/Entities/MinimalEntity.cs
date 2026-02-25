@@ -1,6 +1,6 @@
 ﻿using Desic.Domain.EntityTypes;
 
-namespace Desic.Domain.Shared.Entities;
+namespace Desic.Domain.Common.Entities;
 
 public abstract class MinimalEntity : IReadOnlyMinimalEntity
 {

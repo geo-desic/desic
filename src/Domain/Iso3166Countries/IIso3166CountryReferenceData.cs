@@ -1,4 +1,4 @@
-﻿using Desic.Domain.Shared.Entities;
+﻿using Desic.Domain.Common.Entities;
 
 namespace Desic.Domain.Iso3166Countries;
 

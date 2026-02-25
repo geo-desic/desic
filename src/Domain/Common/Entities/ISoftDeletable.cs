@@ -1,4 +1,4 @@
-﻿namespace Desic.Domain.Shared.Entities;
+﻿namespace Desic.Domain.Common.Entities;
 
 public interface ISoftDeletable
 {

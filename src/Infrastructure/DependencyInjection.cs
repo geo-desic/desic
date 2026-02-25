@@ -1,4 +1,4 @@
-﻿using Desic.Domain.Shared;
+﻿using Desic.Domain.Common;
 using Desic.Infrastructure.Data;
 using Microsoft.Extensions.DependencyInjection;
 

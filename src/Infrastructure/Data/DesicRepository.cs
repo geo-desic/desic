@@ -1,4 +1,4 @@
-﻿using Desic.Domain.Shared;
+﻿using Desic.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 

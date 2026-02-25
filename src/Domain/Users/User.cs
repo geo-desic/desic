@@ -1,5 +1,5 @@
-﻿using Desic.Domain.EntityTypes;
-using Desic.Domain.Shared.Entities;
+﻿using Desic.Domain.Common.Entities;
+using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Users;
 
