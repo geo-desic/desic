@@ -28,7 +28,7 @@ Content-Type: application/json
 Prefer: return=representation
 
 {
-  "username": "user-prefer-representation"
+  "username": "test-user-pr-{{$datetime "yyyyMMddhhmmss"}}"
 }
 
 ###
@@ -39,5 +39,5 @@ Content-Type: application/json
 Prefer: return=minimal
 
 {
-  "username": "user-prefer-minimal"
+  "username": "test-user-pm-{{$datetime "yyyyMMddhhmmss"}}"
 }

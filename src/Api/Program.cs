@@ -1,10 +1,10 @@
 using Desic.Api.BackgroundServices;
 using Desic.Api.Db;
 using Desic.Api.HealthChecks;
-using Desic.Application.Users.Create;
+using Desic.Application;
+using Desic.Domain;
+using Desic.Infrastructure;
 using Desic.Infrastructure.Data;
-using Desic.Mediator;
-using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -29,15 +29,13 @@ logger.LogInformation("Http logging enabled value determined from configuration:
 
 logger.LogInformation("Starting configuration of the web application builder");
 
+builder.Services
+    .AddDomain()
+    .AddApplication()
+    .AddInfrastructure();
+
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-
-// DesicContext seeding uses MediatR so make sure this is before builder.Services.AddDbContext<DesicContext>
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssemblies(typeof(Desic.Application.IMarker).Assembly, typeof(Desic.Infrastructure.IMarker).Assembly);
-    cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
-});
 
 builder.Services.AddDbContext<DesicContext>(options =>
 {
@@ -52,19 +50,19 @@ builder.Services.AddHostedService<StartupBackgroundService>();
 builder.Services.AddSingleton<StartupHealthCheck>();
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
 
 builder.Services.AddHealthChecks()
     .AddCheck("Alive", x => HealthCheckResult.Healthy())
     .AddDbContextCheck<DesicContext>(tags: ["ready"])
     .AddCheck<StartupHealthCheck>("Startup", tags: ["ready"]);
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddSwaggerGen();
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
 
-builder.Services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 if (httpLoggingEnabled)
 {
     builder.Services.AddHttpLogging(logging =>
@@ -95,8 +93,8 @@ if (isDevelopment)
 {
     app.Logger.LogInformation("Configuring the app for mapping open api");
     app.MapOpenApi();
-    //app.UseSwagger();
-    //app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.Logger.LogInformation("Configuring the app to use https redirection");
