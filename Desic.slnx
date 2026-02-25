@@ -20,9 +20,9 @@
     </Project>
   </Folder>
   <Folder Name="/test/">
+    <Project Path="test/Application.Tests.Unit/Application.Tests.Unit.csproj" />
     <Project Path="test/Desic.Api.Tests.Integration/Desic.Api.Tests.Integration.csproj" />
     <Project Path="test/Desic.Api.Tests.Unit/Desic.Api.Tests.Unit.csproj" />
-    <Project Path="test/Desic.Business.Tests.Unit/Desic.Business.Tests.Unit.csproj" />
     <Project Path="test/Desic.Tests.Unit/Desic.Tests.Unit.csproj" />
     <Project Path="test/Infrastructure.Tests.Unit/Infrastructure.Tests.Unit.csproj" />
     <Project Path="test/MediatR.Benchmarks/MediatR.Benchmarks.csproj" />
