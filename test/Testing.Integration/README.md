@@ -1,4 +1,4 @@
-# Integration Testing Core Library
+# Integration Testing Library
 
 All integration tests require a database provider. The provider is set using the configuration element `DbProvider` which currently supports the following values.
 - `Sqlite`
