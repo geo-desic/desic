@@ -92,7 +92,9 @@ public class DesicRepository<T>(DesicContext context) : IRepository<T> where T :
 
     public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return await _context.SaveChangesAsync(cancellationToken);
+        var result = await _context.SaveChangesAsync(cancellationToken);
+        _context.ChangeTracker.Clear();
+        return result;
     }
 
     public async Task<T?> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)

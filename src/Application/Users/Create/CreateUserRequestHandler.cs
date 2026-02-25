@@ -1,4 +1,7 @@
 ﻿using Desic.Application.Results;
+using Desic.Domain.Shared;
+using Desic.Domain.Shared.Entities;
+using Desic.Domain.Tags;
 using FluentResults;
 using FluentValidation;
 using MediatR;
@@ -6,10 +9,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Users.Create;
 
-public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IMediator mediator, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<User>>
+public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IRepository<Domain.Users.User> repository, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<User>>
 {
     private readonly ILogger<CreateUserRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    private readonly IRepository<Domain.Users.User> _repository = repository ?? throw new ArgumentNullException(nameof(repository));
     private readonly IValidator<UserCreate> _validator = validator;
 
     public async Task<Result<User>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
@@ -26,19 +29,24 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
             return validationResult.ToFailResult<User>();
         }
 
-        var query = new Domain.Users.GetUserByUsernameRequest { Username = request.User.Username };
-        var user = await _mediator.Send(query, cancellationToken);
-        if (user != null)
+        if (await _repository.AnyAsync(x => x.Username == request.User.Username))
         {
-            _logger.LogDebug("A user with username {Username} already exists: id = {UserId}", user.Username, user.Id);
-            return Result.Fail<User>($"A user with username '{user.Username}' already exists");
+            _logger.LogDebug("A user with username '{Username}' already exists", request.User.Username);
+            return Result.Fail<User>($"A user with username '{request.User.Username}' already exists");
         }
 
-        user = new Domain.Users.User { Username = request.User.Username! };
-        var command = new Domain.Users.CreateUserRequest { User = user };
-        var resultCreate = await _mediator.Send(command, cancellationToken);
+        var user = new Domain.Users.User
+        {
+            Id = Guid.CreateVersion7(),
+            IsActive = true,
+            Username = request.User.Username!
+        };
 
-        _logger.LogDebug("User was successfully persisted with id = {UserId}", resultCreate);
+        user.SetCreatedAndModifiedBy(by: SystemTags.Get(SystemTag.System), on: DateTime.UtcNow);
+
+        await _repository.AddAsync(user, cancellationToken);
+
+        _logger.LogDebug("User was successfully persisted with id = {UserId}", user.Id);
 
         var result = new User
         {
