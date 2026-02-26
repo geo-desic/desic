@@ -1,9 +1,9 @@
 using Desic.Api.Dtos.Users;
 using Desic.Api.Logging;
 using Desic.Api.Mappings;
+using Desic.Application.Common.Exceptions;
 using Desic.Application.Users.Create;
 using Desic.Application.Users.Get;
-using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,12 +31,7 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
         var request = new GetUserByIdRequest { UserId = id };
         var result = await _mediator.Send(request);
 
-        if (result.IsFailed)
-        {
-            _logger.LogInformation(LogEvents.UserGet, "User with id {Id} not found", id);
-            return NotFound();
-        }
-        return Ok(result.Value.ToDto());
+        return result.Match(onSuccess: u => Ok(u.ToDto()), onFailure: e => Problem(e), onNull: () => NotFound());
     }
 
     [HttpPost]
@@ -51,27 +46,28 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
 
         _logger.LogInformation(LogEvents.UserCreate, "Create(user, {PreferHeaderValue})", preferHeaderValue);
 
-        var request = new CreateUserRequest { User = user.ToBusinessModel(), ReturnResult = "return=representation".Equals(preferHeaderValue, StringComparison.OrdinalIgnoreCase) };
+        var request = new CreateUserRequest { User = user.ToBusinessModel(), ReturnRepresentation = "return=representation".Equals(preferHeaderValue, StringComparison.OrdinalIgnoreCase) };
         var resultCreate = await _mediator.Send(request);
-        if (resultCreate.IsFailed)
-        {
-            return Problem(resultCreate);
-        }
-        var userBusiness = resultCreate.Value;
-        _logger.LogDebug(LogEvents.UserCreate, "Adding 'Entity-Id' response header with value {EntityId}", userBusiness.Id);
-        HttpContext.Response.Headers.Append("Entity-Id", userBusiness.Id.ToString()); // always attach this header on success regardless of prefer header value
-        if (request.ReturnResult)
+        if (resultCreate.IsFailure) return Problem(resultCreate.Exception);
+        var value = resultCreate.Value;
+        _logger.LogDebug(LogEvents.UserCreate, "Adding 'Entity-Id' response header with value {EntityId}", value.Id);
+        HttpContext.Response.Headers.Append("Entity-Id", value.Id.ToString()); // always attach this header on success regardless of prefer header value
+        if (value.Entity != null)
         {
             _logger.LogDebug(LogEvents.UserCreate, "Returning status code {StatusCode} and created user", StatusCodes.Status201Created);
-            var userResult = userBusiness.ToDto();
-            return CreatedAtAction(nameof(Get), new { id = userResult.Id }, userResult);
+            return CreatedAtAction(nameof(Get), new { id = value.Id }, value.Entity.ToDto());
         }
         _logger.LogDebug(LogEvents.UserCreate, "Returning status code {StatusCode}", StatusCodes.Status204NoContent);
         return NoContent();
     }
 
-    protected ObjectResult Problem<T>(Result<T> result)
+    protected ActionResult Problem(Exception exception)
     {
-        return Problem(statusCode: 400, detail: "One or more error occurred", extensions: new Dictionary<string, object?> { ["errors"] = result.Errors.Select(e => e.Message) });
+        if (exception is ValidationException v)
+        {
+            var details = new ValidationProblemDetails(v.Errors);
+            return ValidationProblem(details);
+        }
+        return Problem(statusCode: 400, detail: "One or more error occurred");
     }
 }

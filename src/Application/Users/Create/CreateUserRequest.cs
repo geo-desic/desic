@@ -1,10 +1,11 @@
-﻿using FluentResults;
+﻿using Desic.Application.Common;
+using Desic.Domain.Results;
 using MediatR;
 
 namespace Desic.Application.Users.Create;
 
-public class CreateUserRequest : IRequest<Result<User>>
+public class CreateUserRequest : IRequest<Result<CreateResult<User>>>
 {
     public required UserCreate User { get; set; }
-    public bool ReturnResult { get; set; }
+    public bool ReturnRepresentation { get; set; }
 }

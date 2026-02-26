@@ -1,6 +1,6 @@
 ﻿using Desic.Application.Common;
 using Desic.Application.Common.Interfaces;
-using FluentResults;
+using Desic.Domain.Results;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -18,7 +18,7 @@ public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger
         if (user == null)
         {
             _logger.LogDebug("User with id {UserId} not found", request.UserId);
-            return Result.Fail<User>($"User with id {request.UserId} not found");
+            return (User?)null;
         }
         return new User
         {

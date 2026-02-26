@@ -2,7 +2,7 @@
 using Desic.Api.Controllers.V1;
 using Desic.Api.Dtos.Users;
 using Desic.Application.Users.Get;
-using FluentResults;
+using Desic.Domain.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,7 +24,7 @@ public class UsersControllerTests
         public async Task Get_UserDoesNotExist_Status404NotFound()
         {
             // arrange
-            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(Result.Fail($"User with id {_id} not found"));
+            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(new Result<Application.Users.User>());
             var controller = NewUsersController();
 
             // act
@@ -43,7 +43,7 @@ public class UsersControllerTests
         {
             // arrange
             var userBusiness = NewUserBusiness();
-            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(Result.Ok(userBusiness));
+            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(new Result<Application.Users.User>(userBusiness));
             var controller = NewUsersController();
             var userExpected = ExpectedUserDto(userBusiness);
 

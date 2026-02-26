@@ -28,7 +28,7 @@ public class CreateUserRequestHandlerTests
             var request = new CreateUserRequest
             {
                 User = new UserCreate { Username = "username" },
-                ReturnResult = returnResult,
+                ReturnRepresentation = returnResult,
             };
 
             // act
@@ -40,7 +40,11 @@ public class CreateUserRequestHandlerTests
             _desicContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
             result.Value.Should().NotBeNull();
             result.Value.Id.Should().NotBeEmpty();
-            if (returnResult) result.Value.Username.Should().Be(request.User.Username);
+            if (returnResult)
+            {
+                result.Value.Entity.Should().NotBeNull();
+                result.Value.Entity.Username.Should().Be(request.User.Username);
+            }
         }
     }
 
@@ -55,7 +59,7 @@ public class CreateUserRequestHandlerTests
             var request = new CreateUserRequest
             {
                 User = new UserCreate { Username = "invalid username" }, // contains space character
-                ReturnResult = true,
+                ReturnRepresentation = true,
             };
 
             // act
@@ -80,7 +84,7 @@ public class CreateUserRequestHandlerTests
             var request = new CreateUserRequest
             {
                 User = new UserCreate { Username = username },
-                ReturnResult = true,
+                ReturnRepresentation = true,
             };
 
             // act
