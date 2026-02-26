@@ -1,5 +1,4 @@
-﻿using Desic.Domain.Common.Entities;
-using Desic.Domain.EntityTypes;
+﻿using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Tags;
 

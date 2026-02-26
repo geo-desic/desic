@@ -1,6 +1,4 @@
-﻿using Desic.Domain.Common.Entities;
-
-namespace Desic.Domain.EntityTypes;
+﻿namespace Desic.Domain.EntityTypes;
 
 public static class SystemEntityTypes
 {

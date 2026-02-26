@@ -1,6 +1,6 @@
-﻿using Desic.Domain.EntityTypes;
+﻿using Desic.Domain.Common.Entities;
 
-namespace Desic.Domain.Common.Entities;
+namespace Desic.Domain.EntityTypes;
 
 public class ReadOnlyEntityType : IStaticEntityType, IReadOnlyEntityType, IReadOnlyMinimalEntity
 {
