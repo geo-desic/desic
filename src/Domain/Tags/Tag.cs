@@ -3,9 +3,10 @@ using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Tags;
 
-public class Tag : SoftDeletableEntity
+public class Tag : SoftDeletableEntity, IStaticEntityType
 {
-    public required string Name { get; set; }
+    public static IReadOnlyEntityType EntityType { get; } = SystemEntityTypes.Get(SystemEntityType.Tag);
+    public override IReadOnlyEntityType GetEntityType() => EntityType;
 
-    protected override SystemEntityType EnumEntityType => SystemEntityType.Tag;
+    public required string Name { get; set; }
 }

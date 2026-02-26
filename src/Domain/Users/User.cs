@@ -3,8 +3,11 @@ using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Users;
 
-public class User : SoftDeletableEntity
+public class User : SoftDeletableEntity, IStaticEntityType
 {
+    public static IReadOnlyEntityType EntityType { get; } = SystemEntityTypes.Get(SystemEntityType.User);
+    public override IReadOnlyEntityType GetEntityType() => EntityType;
+
     public required string Username { get; set; }
     public bool IsActive
     {
@@ -12,6 +15,4 @@ public class User : SoftDeletableEntity
         set => _iaActive = value;
     }
     private bool? _iaActive;
-
-    protected override SystemEntityType EnumEntityType => SystemEntityType.User;
 }

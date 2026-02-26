@@ -24,6 +24,7 @@
     <Project Path="test/Api.Tests.Unit/Api.Tests.Unit.csproj" />
     <Project Path="test/Application.Tests.Unit/Application.Tests.Unit.csproj" />
     <Project Path="test/Desic.Tests.Unit/Desic.Tests.Unit.csproj" />
+    <Project Path="test/Domain.Tests.Unit/Domain.Tests.Unit.csproj" Id="c346b4c4-4fd3-45dd-934b-16acbe117e6f" />
     <Project Path="test/Infrastructure.Tests.Unit/Infrastructure.Tests.Unit.csproj" />
     <Project Path="test/MediatR.Benchmarks/MediatR.Benchmarks.csproj" />
     <Project Path="test/MediatR.Tests/MediatR.Tests.csproj" />

@@ -3,5 +3,6 @@
 public interface IReadOnlyMinimalEntity
 {
     Guid Id { get; }
+
     IReadOnlyEntityType GetEntityType();
 }

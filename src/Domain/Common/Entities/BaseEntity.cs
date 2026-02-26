@@ -4,8 +4,7 @@ namespace Desic.Domain.Common.Entities;
 
 public abstract class BaseEntity : IReadOnlyMinimalEntity
 {
-    public Guid Id { get; set; }
+    public abstract IReadOnlyEntityType GetEntityType();
 
-    protected abstract SystemEntityType EnumEntityType { get; }
-    public virtual IReadOnlyEntityType GetEntityType() => SystemEntityTypes.Get(EnumEntityType);
+    public Guid Id { get; set; }
 }

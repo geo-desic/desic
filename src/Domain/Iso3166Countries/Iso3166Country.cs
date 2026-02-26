@@ -3,14 +3,15 @@ using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Iso3166Countries;
 
-public class Iso3166Country : SeedableSoftDeletableEntity, IIso3166CountryReferenceData
+public class Iso3166Country : SeedableSoftDeletableEntity, IStaticEntityType, IIso3166CountryReferenceData
 {
+    public static IReadOnlyEntityType EntityType { get; } = SystemEntityTypes.Get(SystemEntityType.Iso3166Country);
+    public override IReadOnlyEntityType GetEntityType() => EntityType;
+
     public required int IsoId { get; set; }
     public required string Alpha2 { get; set; }
     public required string Alpha3 { get; set; }
     public required string Name { get; set; }
-
-    protected override SystemEntityType EnumEntityType => SystemEntityType.Iso3166Country;
 
     void IUpdatableFrom<IIso3166CountryReferenceData>.UpdateFrom(IIso3166CountryReferenceData from) => Iso3166CountryHelpers.UpdateFrom(this, from);
 
