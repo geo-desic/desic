@@ -2,7 +2,7 @@
 
 namespace Desic.Domain.EntityTypes;
 
-public class EntityType : MinimalEntity, IReadOnlyEntityType
+public class EntityType : BaseEntity, IReadOnlyEntityType
 {
     public required string Name { get; set; }
 

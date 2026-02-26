@@ -2,7 +2,7 @@
 
 namespace Desic.Domain.Common.Entities;
 
-public abstract class MinimalEntity : IReadOnlyMinimalEntity
+public abstract class BaseEntity : IReadOnlyMinimalEntity
 {
     public Guid Id { get; set; }
 

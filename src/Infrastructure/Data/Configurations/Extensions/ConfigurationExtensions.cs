@@ -22,7 +22,7 @@ internal static class ConfigurationExtensions
 
     internal static int ConfigureCreatableEntity<T>(this EntityTypeBuilder<T> builder, DatabaseFacade databaseFacade) where T : CreatableEntity
     {
-        var columnOrder = builder.ConfigureMinimalEntity();
+        var columnOrder = builder.ConfigureBaseEntity();
         builder.Property(x => x.CreatedById).IsRequired().HasColumnOrder(columnOrder++);
         builder.Property(x => x.CreatedByTypeId).IsRequired().HasColumnOrder(columnOrder++);
         builder.Property(x => x.CreatedOn).IsRequired().HasDefaultValueSql(databaseFacade.DateTimeUtc()).HasColumnOrder(columnOrder++);
@@ -32,7 +32,7 @@ internal static class ConfigurationExtensions
         return columnOrder;
     }
 
-    internal static int ConfigureMinimalEntity<T>(this EntityTypeBuilder<T> builder) where T : MinimalEntity
+    internal static int ConfigureBaseEntity<T>(this EntityTypeBuilder<T> builder) where T : BaseEntity
     {
         var columnOrder = 0;
         builder.Property(x => x.Id).IsRequired().HasColumnOrder(columnOrder++);

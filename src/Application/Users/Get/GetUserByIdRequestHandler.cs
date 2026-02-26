@@ -1,23 +1,24 @@
-﻿using FluentResults;
+﻿using Desic.Application.Common;
+using Desic.Application.Common.Interfaces;
+using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Users.Get;
 
-public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger, IMediator mediator) : IRequestHandler<GetUserByIdRequest, Result<User>>
+public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger, IDesicContext desicContext) : IRequestHandler<GetUserByIdRequest, Result<User>>
 {
     private readonly ILogger<GetUserByIdRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    private readonly IDesicContext _desicContext = desicContext ?? throw new ArgumentNullException(nameof(desicContext));
 
     public async Task<Result<User>> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
     {
-        var query = new Domain.Users.GetUserByIdRequest { UserId = request.UserId };
-        var user = await _mediator.Send(query, cancellationToken);
+        var user = await _desicContext.Users.GetEntityByIdAsync(request.UserId, cancellationToken);
 
         if (user == null)
         {
             _logger.LogDebug("User with id {UserId} not found", request.UserId);
-            return Result.Fail($"User with id {request.UserId} not found");
+            return Result.Fail<User>($"User with id {request.UserId} not found");
         }
         return new User
         {

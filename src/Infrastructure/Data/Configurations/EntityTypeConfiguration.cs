@@ -10,7 +10,7 @@ internal class EntityTypeConfiguration : IEntityTypeConfiguration<EntityType>
     public void Configure(EntityTypeBuilder<EntityType> builder)
     {
         builder.ToTable("EntityTypes", DesicContext.RefSchema);
-        var columnOrder = builder.ConfigureMinimalEntity();
+        var columnOrder = builder.ConfigureBaseEntity();
         builder.Property(x => x.Name).IsRequired().HasColumnOrder(columnOrder++);
         builder.HasIndex(x => x.Name).IsUnique();
     }
