@@ -2,7 +2,7 @@
 using FluentValidation.TestHelper;
 using System.Text;
 
-namespace Desic.Application.Tests.Unit.Users.Models.Validators;
+namespace Desic.Application.Tests.Unit.Users.Create;
 
 public class UserCreateValidatorTests
 {

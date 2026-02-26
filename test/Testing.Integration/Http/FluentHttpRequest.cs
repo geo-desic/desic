@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace Desic.Testing.Integration.Http;
 
@@ -50,5 +51,11 @@ public class FluentHttpRequest(HttpMethod httpMethod, string? requestUri)
     {
         var value = new AuthenticationHeaderValue(scheme, parameter);
         return SetAuthorizationHeader(value);
+    }
+
+    public FluentHttpRequest SetJsonContent<T>(T content)
+    {
+        HttpRequestMessage.Content = JsonContent.Create(content, options: Constants.DefaultJsonSerializerOptions);
+        return this;
     }
 }

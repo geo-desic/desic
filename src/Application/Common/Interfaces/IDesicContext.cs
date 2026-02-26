@@ -1,0 +1,17 @@
+﻿using Desic.Domain.EntityTypes;
+using Desic.Domain.Iso3166Countries;
+using Desic.Domain.Tags;
+using Desic.Domain.Users;
+using Microsoft.EntityFrameworkCore;
+
+namespace Desic.Application.Common.Interfaces;
+
+public interface IDesicContext
+{
+    DbSet<EntityType> EntityTypes { get; }
+    DbSet<Iso3166Country> Iso3166Countries { get; }
+    DbSet<Tag> Tags { get; }
+    DbSet<User> Users { get; }
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+}

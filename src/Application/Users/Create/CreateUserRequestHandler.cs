@@ -1,18 +1,19 @@
-﻿using Desic.Application.Results;
-using Desic.Domain.Common;
+﻿using Desic.Application.Common.Interfaces;
+using Desic.Application.Results;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
 using FluentResults;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Users.Create;
 
-public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IRepository<Domain.Users.User> repository, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<User>>
+public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IDesicContext desicContext, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<User>>
 {
     private readonly ILogger<CreateUserRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    private readonly IRepository<Domain.Users.User> _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+    private readonly IDesicContext _desicContext = desicContext ?? throw new ArgumentNullException(nameof(desicContext));
     private readonly IValidator<UserCreate> _validator = validator;
 
     public async Task<Result<User>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
@@ -22,6 +23,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
             _logger.LogDebug("User was not supplied");
             return Result.Fail<User>("User was not supplied");
         }
+
         var validationResult = _validator.Validate(request.User);
         if (!validationResult.IsValid)
         {
@@ -29,7 +31,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
             return validationResult.ToFailResult<User>();
         }
 
-        if (await _repository.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
+        if (await _desicContext.Users.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
         {
             _logger.LogDebug("A user with username '{Username}' already exists", request.User.Username);
             return Result.Fail<User>($"A user with username '{request.User.Username}' already exists");
@@ -44,7 +46,9 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
         user.SetCreatedAndModifiedBy(by: SystemTags.Get(SystemTag.System), on: DateTime.UtcNow);
 
-        await _repository.AddAsync(user, cancellationToken);
+        _desicContext.Users.Add(user);
+
+        await _desicContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogDebug("User was successfully persisted with id = {UserId}", user.Id);
 

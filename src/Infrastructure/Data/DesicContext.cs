@@ -1,4 +1,5 @@
-﻿using Desic.Domain.EntityTypes;
+﻿using Desic.Application.Common.Interfaces;
+using Desic.Domain.EntityTypes;
 using Desic.Domain.Iso3166Countries;
 using Desic.Domain.Tags;
 using Desic.Domain.Users;
@@ -7,8 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Infrastructure.Data;
 
-public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(options)
+public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(options), IDesicContext
 {
+    // note: when adding a new DbSet<T> also add it to the IApplicationDbContext inside the Application project (if it needs to use it)
     public DbSet<EntityType> EntityTypes { get; set; }
     public DbSet<Iso3166Country> Iso3166Countries { get; set; }
     public DbSet<Tag> Tags { get; set; }
