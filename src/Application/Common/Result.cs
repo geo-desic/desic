@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.Contracts;
 
-namespace Desic.Domain.Results;
+namespace Desic.Application.Common;
 
 // source: https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/
 public readonly struct Result<T>

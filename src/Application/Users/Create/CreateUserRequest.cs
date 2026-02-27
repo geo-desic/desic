@@ -1,5 +1,4 @@
 ﻿using Desic.Application.Common;
-using Desic.Domain.Results;
 using MediatR;
 
 namespace Desic.Application.Users.Create;

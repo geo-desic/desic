@@ -1,4 +1,4 @@
-﻿using Desic.Domain.Results;
+﻿using Desic.Application.Common;
 using MediatR;
 
 namespace Desic.Application.Users.Get;

@@ -1,7 +1,6 @@
 ﻿using Desic.Application.Common;
 using Desic.Application.Common.Interfaces;
 using Desic.Domain.Common.Entities;
-using Desic.Domain.Results;
 using Desic.Domain.Tags;
 using FluentValidation;
 using MediatR;

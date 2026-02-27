@@ -1,8 +1,8 @@
 ﻿using AwesomeAssertions;
 using Desic.Api.Controllers.V1;
 using Desic.Api.Dtos.Users;
+using Desic.Application.Common;
 using Desic.Application.Users.Get;
-using Desic.Domain.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
