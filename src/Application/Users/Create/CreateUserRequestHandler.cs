@@ -21,7 +21,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
         if (await _desicContext.Users.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
         {
-            _logger.LogDebug("A user with username '{Username}' already exists", request.User.Username);
+            _logger.LogDebug(LogEvents.UserCreate, "A user with username '{Username}' already exists", request.User.Username);
             return new Error($"A user with username '{request.User.Username}' already exists");
         }
 
@@ -38,7 +38,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
         await _desicContext.SaveChangesAsync(cancellationToken);
 
-        _logger.LogDebug("User was successfully persisted with id = {UserId}", user.Id);
+        _logger.LogDebug(LogEvents.UserCreate, "User was successfully persisted with id = {UserId}", user.Id);
 
         var result = new CreateResult<User> { Id = user.Id };
 

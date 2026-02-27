@@ -1,4 +1,4 @@
-using Desic.Api.Logging;
+using Desic.Api.Common;
 using Desic.Application.Common;
 using Desic.Application.Users;
 using Desic.Application.Users.Create;
@@ -23,9 +23,8 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<User>> Get([FromRoute] Guid id)
     {
-        using var loggerScope2 = _logger.BeginScope("UserId:{userId}", id);
-
-        _logger.LogInformation(LogEvents.UserGet, "Get({Id})", id);
+        using var loggerScope = _logger.BeginScope("UserId:{userId}", id);
+        _logger.LogInformation(LogEvents.UserGet, $"{nameof(UsersController)}.{nameof(Get)}" + "({Id})", id);
 
         var request = new GetUserByIdRequest { UserId = id };
         var result = await _mediator.Send(request);
@@ -41,22 +40,19 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<User>> Create([FromBody] UserCreate user, [FromHeader(Name = "Prefer")] string? preferHeaderValue)
     {
-        using var loggerScope2 = _logger.BeginScope("Username:{username}", user.Username);
+        using var loggerScope = _logger.BeginScope("Username:{username}", user.Username);
+        _logger.LogInformation(LogEvents.UserCreate, $"{nameof(UsersController)}.{nameof(Create)}" + "(user, {PreferHeaderValue})", preferHeaderValue);
 
-        _logger.LogInformation(LogEvents.UserCreate, "Create(user, {PreferHeaderValue})", preferHeaderValue);
-
-        var request = new CreateUserRequest { User = user, ReturnRepresentation = "return=representation".Equals(preferHeaderValue, StringComparison.OrdinalIgnoreCase) };
+        var request = new CreateUserRequest { User = user, ReturnRepresentation = Headers.PreferRepresentation(preferHeaderValue) };
         var resultCreate = await _mediator.Send(request);
         if (resultCreate.IsFailure) return Problem(resultCreate.Error);
         var value = resultCreate.Value;
         _logger.LogDebug(LogEvents.UserCreate, "Adding 'Entity-Id' response header with value {EntityId}", value.Id);
-        HttpContext.Response.Headers.Append("Entity-Id", value.Id.ToString()); // always attach this header on success regardless of prefer header value
+        HttpContext.AddResponseHeaderEntityId(value.Id);
         if (value.Entity != null)
         {
-            _logger.LogDebug(LogEvents.UserCreate, "Returning status code {StatusCode} and created user", StatusCodes.Status201Created);
             return CreatedAtAction(nameof(Get), new { id = value.Id }, value.Entity);
         }
-        _logger.LogDebug(LogEvents.UserCreate, "Returning status code {StatusCode}", StatusCodes.Status204NoContent);
         return NoContent();
     }
 

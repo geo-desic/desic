@@ -16,7 +16,7 @@ public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger
 
         if (user == null)
         {
-            _logger.LogDebug("User with id {UserId} not found", request.UserId);
+            _logger.LogDebug(LogEvents.UserGet, "User with id {UserId} not found", request.UserId);
             return (User?)null;
         }
         return new User
