@@ -35,7 +35,7 @@ public sealed class DesicContextLocalDb(string apiUserPassword) : IAsyncLifetime
 
         // create the database and apply migrations
         using var factory = new DesicContextFactory();
-        using var context = factory.CreateDbContext(["--connection", _connectionStringMigrations]);
+        using var context = factory.CreateDbContext(["--connection", _connectionStringMigrations, "--environment", Constants.TestEnvironmentName]);
 
         await context.InitializeAsync(targetDatabaseName: _databaseName);
         await context.Database.MigrateAsync();

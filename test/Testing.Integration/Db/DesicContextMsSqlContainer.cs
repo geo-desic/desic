@@ -26,7 +26,7 @@ public sealed class DesicContextMsSqlContainer(string image, string apiUserPassw
 
         // create the database and apply migrations
         using var factory = new DesicContextFactory();
-        using var context = factory.CreateDbContext(["--connection", connectionStringInit]);
+        using var context = factory.CreateDbContext(["--connection", connectionStringInit, "--environment", Constants.TestEnvironmentName]);
 
         await context.InitializeAsync(targetDatabaseName: "Desic");
         await context.Database.MigrateAsync();

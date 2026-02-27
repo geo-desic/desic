@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Desic.Testing.Integration.Http;
+namespace Desic.Testing.Integration;
 
 public static class Constants
 {
@@ -10,4 +10,6 @@ public static class Constants
         Converters = { new JsonStringEnumConverter() },
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
+
+    public const string TestEnvironmentName = "Test";
 }

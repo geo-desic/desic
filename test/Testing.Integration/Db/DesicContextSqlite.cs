@@ -25,7 +25,7 @@ public sealed class DesicContextSqlite : IAsyncLifetime
 
         // create the database and apply migrations
         using var factory = new DesicContextFactory();
-        using var context = factory.CreateDbContext(["--connection", ConnectionString]);
+        using var context = factory.CreateDbContext(["--connection", ConnectionString, "--environment", Constants.TestEnvironmentName]);
 
         await context.Database.MigrateAsync();
     }

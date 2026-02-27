@@ -1,7 +1,8 @@
-﻿using Desic.Mediator;
+﻿using Desic.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -27,16 +28,15 @@ public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFacto
         var result = Host.CreateDefaultBuilder(args);
         result.ConfigureAppConfiguration(config =>
         {
-            config.AddJsonFile("sqlserver.appsettings.json", optional: true);
+            var initialConfig = new JsonConfigurationSource() { Path = "sqlserver.appsettings.json", Optional = true };
+            config.Sources.Insert(0, initialConfig);
         });
         result.ConfigureServices((hostContext, services) =>
         {
             var config = hostContext.Configuration;
-            services.AddMediatR(cfg =>
-            {
-                cfg.RegisterServicesFromAssemblies(typeof(Domain.IMarker).Assembly, typeof(Infrastructure.IMarker).Assembly);
-                cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
-            });
+            services
+                .AddDomain()
+                .AddInfrastructure();
             var connectionString = config.GetValue("connection", config.GetConnectionString("SqlServer"));
             services.ConfigureDesicContextForSqlServer(connectionString: connectionString, setMigrationsAssembly: true, useSeeding: true);
             services.UseDatabaseInitializer(config);
