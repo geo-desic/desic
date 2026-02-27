@@ -1,6 +1,9 @@
-﻿namespace Desic.Application.Users.Create;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Desic.Application.Users.Create;
 
 public class UserCreate
 {
-    public string? Username { get; set; }
+    [Required]
+    public required string Username { get; set; }
 }

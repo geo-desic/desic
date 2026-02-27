@@ -1,5 +1,6 @@
 ﻿using AwesomeAssertions;
-using Desic.Api.Dtos.Users;
+using Desic.Application.Users;
+using Desic.Application.Users.Create;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Http;
 using Desic.Testing.Integration.WebApplication;

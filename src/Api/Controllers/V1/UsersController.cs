@@ -1,7 +1,6 @@
-using Desic.Api.Dtos.Users;
 using Desic.Api.Logging;
-using Desic.Api.Mappings;
 using Desic.Application.Common;
+using Desic.Application.Users;
 using Desic.Application.Users.Create;
 using Desic.Application.Users.Get;
 using MediatR;
@@ -31,7 +30,7 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
         var request = new GetUserByIdRequest { UserId = id };
         var result = await _mediator.Send(request);
 
-        return result.Match(onSuccess: u => Ok(u.ToDto()), onFailure: e => Problem(e), onNull: () => NotFound());
+        return result.Match(onSuccess: u => Ok(u), onFailure: e => Problem(e), onNull: () => NotFound());
     }
 
     [HttpPost]
@@ -40,13 +39,13 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<User>> Create([FromBody] Dtos.Users.UserCreate user, [FromHeader(Name = "Prefer")] string? preferHeaderValue)
+    public async Task<ActionResult<User>> Create([FromBody] UserCreate user, [FromHeader(Name = "Prefer")] string? preferHeaderValue)
     {
         using var loggerScope2 = _logger.BeginScope("Username:{username}", user.Username);
 
         _logger.LogInformation(LogEvents.UserCreate, "Create(user, {PreferHeaderValue})", preferHeaderValue);
 
-        var request = new CreateUserRequest { User = user.ToBusinessModel(), ReturnRepresentation = "return=representation".Equals(preferHeaderValue, StringComparison.OrdinalIgnoreCase) };
+        var request = new CreateUserRequest { User = user, ReturnRepresentation = "return=representation".Equals(preferHeaderValue, StringComparison.OrdinalIgnoreCase) };
         var resultCreate = await _mediator.Send(request);
         if (resultCreate.IsFailure) return Problem(resultCreate.Error);
         var value = resultCreate.Value;
@@ -55,7 +54,7 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
         if (value.Entity != null)
         {
             _logger.LogDebug(LogEvents.UserCreate, "Returning status code {StatusCode} and created user", StatusCodes.Status201Created);
-            return CreatedAtAction(nameof(Get), new { id = value.Id }, value.Entity.ToDto());
+            return CreatedAtAction(nameof(Get), new { id = value.Id }, value.Entity);
         }
         _logger.LogDebug(LogEvents.UserCreate, "Returning status code {StatusCode}", StatusCodes.Status204NoContent);
         return NoContent();

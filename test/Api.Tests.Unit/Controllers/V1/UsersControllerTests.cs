@@ -1,7 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Api.Controllers.V1;
-using Desic.Api.Dtos.Users;
 using Desic.Application.Common;
+using Desic.Application.Users;
 using Desic.Application.Users.Get;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,7 @@ public class UsersControllerTests
         public async Task Get_UserDoesNotExist_Status404NotFound()
         {
             // arrange
-            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(new Result<Application.Users.User>());
+            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(new Result<User>());
             var controller = NewUsersController();
 
             // act
@@ -42,10 +42,9 @@ public class UsersControllerTests
         public async Task Get_UserExists_Status200OK()
         {
             // arrange
-            var userBusiness = NewUserBusiness();
-            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(new Result<Application.Users.User>(userBusiness));
+            var userExpected = NewUserBusiness();
+            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(new Result<User>(userExpected));
             var controller = NewUsersController();
-            var userExpected = ExpectedUserDto(userBusiness);
 
             // act
             var result = (await controller.Get(_id))?.Result as OkObjectResult;
@@ -64,19 +63,10 @@ public class UsersControllerTests
         return new UsersController(logger: logger, mediator: mediator.Object);
     }
 
-    private static User ExpectedUserDto(Application.Users.User user)
-    {
-        return new User
-        {
-            Id = user.Id,
-            Username = user.Username,
-        };
-    }
-
-    private static Application.Users.User NewUserBusiness(Guid? id = null)
+    private static User NewUserBusiness(Guid? id = null)
     {
         id ??= Guid.CreateVersion7();
-        return new Application.Users.User
+        return new User
         {
             Id = id.Value,
             Username = "username",
