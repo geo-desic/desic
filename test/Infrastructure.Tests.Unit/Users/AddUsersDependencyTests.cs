@@ -1,8 +1,8 @@
 ﻿using Desic.Domain.EntityTypes;
 using Desic.Domain.Tags;
 using Desic.Domain.Users;
-using Desic.Infrastructure.Data;
 using Desic.Helpers;
+using Desic.Infrastructure.Data;
 
 namespace Desic.Infrastructure.Tests.Unit.Users;
 
