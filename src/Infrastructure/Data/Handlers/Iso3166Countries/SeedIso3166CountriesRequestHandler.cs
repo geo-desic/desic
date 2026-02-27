@@ -8,10 +8,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Desic.Infrastructure.Data.Handlers.Iso3166Countries;
 
-internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, EntitySetSeedingResult>
+internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, EntitySetSeedingResult>
 {
     private int _batchNumber = 0;
-    private readonly DesicContext _context = context ?? throw new ArgumentNullException(nameof(context));
+    private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
     private const int _defaultBatchSize = 50;
     private readonly ILogger<SeedIso3166CountriesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));

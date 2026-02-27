@@ -36,7 +36,6 @@ Prefer: return=representation
 POST {{Api_HostAddress}}/v1/users/
 Accept: application/json
 Content-Type: application/json
-Prefer: return=minimal
 
 {
   "username": "test-user-pm-{{$datetime "yyyyMMddhhmmss"}}"

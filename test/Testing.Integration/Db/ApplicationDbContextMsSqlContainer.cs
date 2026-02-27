@@ -10,7 +10,7 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class DesicContextMsSqlContainer(string image, string apiUserPassword) : IAsyncLifetime
+public sealed class ApplicationDbContextMsSqlContainer(string image, string apiUserPassword) : IAsyncLifetime
 {
     private readonly MsSqlContainer _container = new MsSqlBuilder(image ?? throw new InvalidOperationException("Container image could not be determined")).Build();
     private string? _connectionString;
@@ -26,7 +26,7 @@ public sealed class DesicContextMsSqlContainer(string image, string apiUserPassw
         var connectionStringInit = new SqlConnectionStringBuilder(_container.GetConnectionString()) { InitialCatalog = DatabaseName }.ConnectionString;
 
         // create the database and apply migrations
-        using var factory = new DesicContextFactory();
+        using var factory = new ApplicationDbContextFactory();
         using var context = factory.CreateDbContext(["--connection", connectionStringInit, "--environment", Constants.TestEnvironmentName]);
 
         await context.InitializeAsync(targetDatabaseName: DatabaseName);

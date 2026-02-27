@@ -1,5 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Api.Dtos.HealthChecks;
+using Desic.Infrastructure.Data;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Http;
 using Desic.Testing.Integration.WebApplication;
@@ -57,7 +58,7 @@ public class HealthCheckTests : IClassFixture<DbFixture>
             Entries =
             [
                 new() { Name = "Alive", Status = healthy, Tags = [], Data = new Dictionary<string, object>() },
-                new() { Name = "DesicContext", Status = healthy, Tags = ["ready"], Data = new Dictionary<string, object>() },
+                new() { Name = nameof(ApplicationDbContext), Status = healthy, Tags = ["ready"], Data = new Dictionary<string, object>() },
                 new() { Name = "Startup", Status = healthy, Tags = ["ready"], Data = new Dictionary<string, object>() },
             ]
         };

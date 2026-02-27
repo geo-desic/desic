@@ -8,7 +8,7 @@ using Xunit;
 namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simpler IAsyncLifetime implementation
-public sealed class DesicContextLocalDb(string apiUserPassword) : IAsyncLifetime
+public sealed class ApplicationDbContextLocalDb(string apiUserPassword) : IAsyncLifetime
 {
     private readonly string _apiUserPassword = apiUserPassword ?? throw new InvalidOperationException("Api user password could not be determined");
     private string? _connectionStringApp;
@@ -34,7 +34,7 @@ public sealed class DesicContextLocalDb(string apiUserPassword) : IAsyncLifetime
         _connectionStringMigrations = $"Data Source={DataSource};Initial Catalog={_databaseName};Integrated Security=True;";
 
         // create the database and apply migrations
-        using var factory = new DesicContextFactory();
+        using var factory = new ApplicationDbContextFactory();
         using var context = factory.CreateDbContext(["--connection", _connectionStringMigrations, "--environment", Constants.TestEnvironmentName]);
 
         await context.InitializeAsync(targetDatabaseName: _databaseName);

@@ -18,7 +18,7 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
 
         builder.ConfigureServices(services =>
         {
-            var dbContextDescriptor = services.Single(d => d.ServiceType == typeof(IDbContextOptionsConfiguration<DesicContext>));
+            var dbContextDescriptor = services.Single(d => d.ServiceType == typeof(IDbContextOptionsConfiguration<ApplicationDbContext>));
 
             services.Remove(dbContextDescriptor);
 
@@ -30,11 +30,11 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
 
             if (TestConfiguration.Options?.DbProvider == "Sqlite")
             {
-                services.ConfigureDesicContextForSqlite(connectionString: _connectionString, setMigrationsAssembly: false, useSeeding: false);
+                services.ConfigureApplicationDbContextForSqlite(connectionString: _connectionString, setMigrationsAssembly: false, useSeeding: false);
             }
             else // SqlServer
             {
-                services.ConfigureDesicContextForSqlServer(connectionString: _connectionString, setMigrationsAssembly: false, useSeeding: false);
+                services.ConfigureApplicationDbContextForSqlServer(connectionString: _connectionString, setMigrationsAssembly: false, useSeeding: false);
             }
         });
     }

@@ -5,15 +5,15 @@ namespace Desic.Infrastructure.Data.Sqlite;
 
 public static class ServiceCollectionHelpers
 {
-    public static IServiceCollection ConfigureDesicContextForSqlite(this IServiceCollection services, string? connectionString, bool setMigrationsAssembly = false, bool useSeeding = false)
+    public static IServiceCollection ConfigureApplicationDbContextForSqlite(this IServiceCollection services, string? connectionString, bool setMigrationsAssembly = false, bool useSeeding = false)
     {
-        services.AddDbContext<DesicContext>((serviceProvider, options) =>
+        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
         {
             options.UseSqlite(connectionString, x =>
             {
                 if (setMigrationsAssembly) x.MigrationsAssembly(typeof(IMarker).Assembly.GetName().Name);
             });
-            if (useSeeding) options.UseDesicContextSeeding(serviceProvider);
+            if (useSeeding) options.UseApplicationDbContextSeeding(serviceProvider);
         });
         return services;
     }

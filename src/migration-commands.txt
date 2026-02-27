@@ -1,31 +1,31 @@
 determine if there are pending model changes (i.e. migration is needed):
 
-dotnet ef migrations has-pending-model-changes --no-build --context DesicContext --project ./Infrastructure.Data.Sqlite
-dotnet ef migrations has-pending-model-changes --no-build --context DesicContext --project ./Infrastructure.Data.SqlServer
+dotnet ef migrations has-pending-model-changes --no-build --context ApplicationDbContext --project ./Infrastructure.Data.Sqlite
+dotnet ef migrations has-pending-model-changes --no-build --context ApplicationDbContext --project ./Infrastructure.Data.SqlServer
 
 creating migration code:
 
-dotnet ef migrations add Initial --no-build --context DesicContext --project ./Infrastructure.Data.Sqlite
-dotnet ef migrations add Initial --no-build --context DesicContext --project ./Infrastructure.Data.SqlServer
+dotnet ef migrations add Initial --no-build --context ApplicationDbContext --project ./Infrastructure.Data.Sqlite
+dotnet ef migrations add Initial --no-build --context ApplicationDbContext --project ./Infrastructure.Data.SqlServer
 
 creating migrations script (that can subsequently be applied to a database)
 
-dotnet ef migrations script --no-build --context DesicContext --project ./Infrastructure.Data.Sqlite -o migration-sqlite.sql
-dotnet ef migrations script --no-build --context DesicContext --project ./Infrastructure.Data.SqlServer -o migration-sqlsever.sql
+dotnet ef migrations script --no-build --context ApplicationDbContext --project ./Infrastructure.Data.Sqlite -o migration-sqlite.sql
+dotnet ef migrations script --no-build --context ApplicationDbContext --project ./Infrastructure.Data.SqlServer -o migration-sqlsever.sql
 
 applying migrations to a database:
 
-dotnet ef database update --no-build --connection "Data Source=./desic.db;" --context DesicContext --project ./Infrastructure.Data.Sqlite
-dotnet ef database update --no-build --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --context DesicContext --project ./Infrastructure.Data.SqlServer
+dotnet ef database update --no-build --connection "Data Source=./desic.db;" --context ApplicationDbContext --project ./Infrastructure.Data.Sqlite
+dotnet ef database update --no-build --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --context ApplicationDbContext --project ./Infrastructure.Data.SqlServer
 
 reverting database to <prior-migration-name> (use 0 for beginning):
 
-dotnet ef database update <prior-migration-name> --no-build --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --context DesicContext --project ./Infrastructure.Data.SqlServer
-dotnet ef database update 0 --no-build --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --context DesicContext --project ./Infrastructure.Data.SqlServer
+dotnet ef database update <prior-migration-name> --no-build --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --context ApplicationDbContext --project ./Infrastructure.Data.SqlServer
+dotnet ef database update 0 --no-build --connection "Server=(localdb)\MSSQLLocalDB;Database=Desic;Trusted_Connection=True;" --context ApplicationDbContext --project ./Infrastructure.Data.SqlServer
 
 
 
 
 creating a bundle executable for migrations (does not apply them to any databases):
 (may need to add .csproj to the end of the project relative path)
-dotnet ef migrations bundle --no-build --output efbundle --self-contained --verbose --configuration Release --project ./Infrastructure.Data.SqlServer --context DesicContext
+dotnet ef migrations bundle --no-build --output efbundle --self-contained --verbose --configuration Release --project ./Infrastructure.Data.SqlServer --context ApplicationDbContext

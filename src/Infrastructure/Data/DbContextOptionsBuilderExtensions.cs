@@ -9,21 +9,21 @@ namespace Desic.Infrastructure.Data;
 
 public static class DbContextOptionsBuilderExtensions
 {
-    public static DbContextOptionsBuilder UseDesicContextSeeding(this DbContextOptionsBuilder options, IServiceProvider serviceProvider)
+    public static DbContextOptionsBuilder UseApplicationDbContextSeeding(this DbContextOptionsBuilder options, IServiceProvider serviceProvider)
     {
         var config = serviceProvider.GetRequiredService<IConfiguration>();
-        var logger = serviceProvider.GetRequiredService<ILogger<DesicContextSeeder>>();
+        var logger = serviceProvider.GetRequiredService<ILogger<ApplicationDbContextSeeder>>();
         var mediator = serviceProvider.GetRequiredService<IMediator>();
-        DesicContextSeedingOptions bind = new();
-        config.GetSection(DesicContextSeedingOptions.SectionName)?.Bind(bind);
+        ApplicationDbContextSeedingOptions bind = new();
+        config.GetSection(ApplicationDbContextSeedingOptions.SectionName)?.Bind(bind);
         var seedingOptions = Options.Create(bind);
         options.UseSeeding((context, seed) =>
         {
-            new DesicContextSeeder(context: (DesicContext)context, seed: seed, seedingOptions: seedingOptions, logger: logger, mediator: mediator).Apply();
+            new ApplicationDbContextSeeder(context: (ApplicationDbContext)context, seed: seed, seedingOptions: seedingOptions, logger: logger, mediator: mediator).Apply();
         });
         options.UseAsyncSeeding(async (context, seed, cancellationToken) =>
         {
-            await new DesicContextSeeder(context: (DesicContext)context, seed: seed, seedingOptions: seedingOptions, logger: logger, mediator: mediator).ApplyAsync(cancellationToken);
+            await new ApplicationDbContextSeeder(context: (ApplicationDbContext)context, seed: seed, seedingOptions: seedingOptions, logger: logger, mediator: mediator).ApplyAsync(cancellationToken);
         });
         return options;
     }

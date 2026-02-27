@@ -6,7 +6,7 @@ using Desic.Infrastructure.Data;
 
 namespace Desic.Infrastructure.Tests.Unit.Users;
 
-public class AddUsersDependencyTests : DesicContextDependencyTests
+public class AddUsersDependencyTests : ApplicationDbContextDependencyTests
 {
     #region helpers
     public static User NewUser(Guid? id = null, string? username = null)
@@ -44,7 +44,7 @@ public class AddUsersDependencyTests : DesicContextDependencyTests
         return AddUsers(_context, count);
     }
 
-    public static List<User> AddUsers(DesicContext context, int count)
+    public static List<User> AddUsers(ApplicationDbContext context, int count)
     {
         var result = NewUsers(count);
         context.Users.AddRange(result);

@@ -4,9 +4,9 @@ namespace Desic.Testing.Integration.Db;
 
 public sealed class DbFixture : IAsyncLifetime
 {
-    private DesicContextMsSqlContainer? _container;
-    private DesicContextLocalDb? _localDb;
-    private DesicContextSqlite? _sqlite;
+    private ApplicationDbContextMsSqlContainer? _container;
+    private ApplicationDbContextLocalDb? _localDb;
+    private ApplicationDbContextSqlite? _sqlite;
     private readonly bool _useContainerSqlServer = TestConfiguration.Options?.DbProviders?.SqlServer?.UseContainer ?? false;
 
     public string ConnectionStringApp

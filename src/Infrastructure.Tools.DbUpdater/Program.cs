@@ -44,11 +44,11 @@ if (connectionStringMigrations != null)
 switch (dbProvider)
 {
     case "Sqlite":
-        if (connectionStringMigrations != null) builder.Services.ConfigureDesicContextForSqlite(connectionString: connectionStringMigrations, setMigrationsAssembly: true, useSeeding: useSeeding);
+        if (connectionStringMigrations != null) builder.Services.ConfigureApplicationDbContextForSqlite(connectionString: connectionStringMigrations, setMigrationsAssembly: true, useSeeding: useSeeding);
         break;
     case "SqlServer":
         if (connectionStringInitialization != null) builder.Services.UseDatabaseInitializer(config);
-        if (connectionStringMigrations != null) builder.Services.ConfigureDesicContextForSqlServer(connectionString: connectionStringMigrations, setMigrationsAssembly: true, useSeeding: useSeeding);
+        if (connectionStringMigrations != null) builder.Services.ConfigureApplicationDbContextForSqlServer(connectionString: connectionStringMigrations, setMigrationsAssembly: true, useSeeding: useSeeding);
         break;
     default:
         throw new NotSupportedException($"Unsupported database provider: {dbProvider}");

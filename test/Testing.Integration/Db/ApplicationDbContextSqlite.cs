@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Desic.Testing.Integration.Db;
 
-public sealed class DesicContextSqlite : IAsyncLifetime
+public sealed class ApplicationDbContextSqlite : IAsyncLifetime
 {
     private string? _connectionString;
     private string? _databaseFilePath;
@@ -24,7 +24,7 @@ public sealed class DesicContextSqlite : IAsyncLifetime
         _connectionString = $"Data Source={_databaseFilePath};Pooling=False;"; // pooling is disabled to avoid issues with file locks when deleting the database file after tests are done
 
         // create the database and apply migrations
-        using var factory = new DesicContextFactory();
+        using var factory = new ApplicationDbContextFactory();
         using var context = factory.CreateDbContext(["--connection", ConnectionString, "--environment", Constants.TestEnvironmentName]);
 
         await context.Database.MigrateAsync();

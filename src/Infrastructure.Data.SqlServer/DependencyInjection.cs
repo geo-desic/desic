@@ -10,5 +10,5 @@ public static class DependencyInjection
         => services
             .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IMarker>())
             .UseDatabaseInitializer(config)
-            .ConfigureDesicContextForSqlServer(connectionString: connectionString ?? config.GetValue("connection", config.GetConnectionString("SqlServer")), setMigrationsAssembly: config.GetValue("Databases:Desic:Migrations:Enabled", true), useSeeding: config.GetValue("Databases:Desic:Seeding:Enabled", false));
+            .ConfigureApplicationDbContextForSqlServer(connectionString: connectionString ?? config.GetValue("connection", config.GetConnectionString("SqlServer")), setMigrationsAssembly: config.GetValue("Databases:Desic:Migrations:Enabled", true), useSeeding: config.GetValue("Databases:Desic:Seeding:Enabled", false));
 }

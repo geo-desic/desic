@@ -14,14 +14,14 @@ namespace Desic.Infrastructure.Data;
 
 // the bool seed argument indicates whether any store management operation was performed
 // see DbContextOptionsBuilder.UseSeeding at https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontextoptionsbuilder.useseeding?view=efcore-10.0
-internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<DesicContextSeedingOptions> seedingOptions, ILogger<DesicContextSeeder> logger, IMediator mediator)
+internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool seed, IOptions<ApplicationDbContextSeedingOptions> seedingOptions, ILogger<ApplicationDbContextSeeder> logger, IMediator mediator)
 {
-    private readonly DesicContext _context = context ?? throw new ArgumentNullException(nameof(context));
-    private readonly ILogger<DesicContextSeeder> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
+    private readonly ILogger<ApplicationDbContextSeeder> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    private readonly DesicContextSeedingOptions? _options = seedingOptions?.Value;
+    private readonly ApplicationDbContextSeedingOptions? _options = seedingOptions?.Value;
     private readonly bool _seed = seed;
-    private readonly DesicContextSeedingMethod _defaultSeedingMethod = seed ? DesicContextSeedingMethod.Full : DesicContextSeedingMethod.Fast; // full when store management operations were performed, otherwise fast
+    private readonly ApplicationDbContextSeedingMethod _defaultSeedingMethod = seed ? ApplicationDbContextSeedingMethod.Full : ApplicationDbContextSeedingMethod.Fast; // full when store management operations were performed, otherwise fast
 
     // this is needed because EF tooling does not (yet?) support async
     // see https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontextoptionsbuilder.useasyncseeding?view=efcore-10.0#microsoft-entityframeworkcore-dbcontextoptionsbuilder-useasyncseeding(system-func((microsoft-entityframeworkcore-dbcontext-system-boolean-system-threading-cancellationtoken-system-threading-tasks-task))):~:text=It%20is%20recomended%20to%20also%20call%20UseSeeding(Action%3CDbContext%2CBoolean%3E)%20with%20the%20same%20logic.
@@ -55,7 +55,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         await SeedTestData(cancellationToken: cancellationToken, options: options.Test);
     }
 
-    private async Task SeedEntityTypes(CancellationToken cancellationToken, DesicContextSeedingEntityTypesOptions? options = null)
+    private async Task SeedEntityTypes(CancellationToken cancellationToken, ApplicationDbContextSeedingEntityTypesOptions? options = null)
     {
         var dbSet = _context.EntityTypes;
         var tableName = nameof(_context.EntityTypes);
@@ -66,7 +66,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         }
 
         var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && (options?.Method ?? _defaultSeedingMethod) != DesicContextSeedingMethod.Full)
+        if (any && (options?.Method ?? _defaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
         {
             _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
             return;
@@ -115,7 +115,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
     }
 
-    private async Task SeedTags(CancellationToken cancellationToken, DesicContextSeedingTagsOptions? options = null)
+    private async Task SeedTags(CancellationToken cancellationToken, ApplicationDbContextSeedingTagsOptions? options = null)
     {
         var dbSet = _context.Tags;
         var tableName = nameof(_context.Tags);
@@ -126,7 +126,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         }
 
         var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && (options?.Method ?? _defaultSeedingMethod) != DesicContextSeedingMethod.Full)
+        if (any && (options?.Method ?? _defaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
         {
             _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
             return;
@@ -172,7 +172,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
     }
 
-    private async Task SeedIso3166Countries(CancellationToken cancellationToken, DesicContextSeedingIso3166CountriesOptions? options = null)
+    private async Task SeedIso3166Countries(CancellationToken cancellationToken, ApplicationDbContextSeedingIso3166CountriesOptions? options = null)
     {
         var dbSet = _context.Iso3166Countries;
         var tableName = nameof(_context.Iso3166Countries);
@@ -183,7 +183,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         }
 
         var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && (options?.Method ?? _defaultSeedingMethod) != DesicContextSeedingMethod.Full)
+        if (any && (options?.Method ?? _defaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
         {
             _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
             return;
@@ -194,7 +194,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
     }
 
-    private async Task SeedTestData(CancellationToken cancellationToken, DesicContextSeedingTestOptions? options = null)
+    private async Task SeedTestData(CancellationToken cancellationToken, ApplicationDbContextSeedingTestOptions? options = null)
     {
         if (!(options?.Enabled ?? false)) // unlike others if not explicitly configured seeding of test data defaults to false
         {
@@ -207,7 +207,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         _logger.LogDebug("Completed seeding of test data");
     }
 
-    private async Task SeedTestUsers(CancellationToken cancellationToken, DesicContextSeedingTestUsersOptions? options = null)
+    private async Task SeedTestUsers(CancellationToken cancellationToken, ApplicationDbContextSeedingTestUsersOptions? options = null)
     {
         var dbSet = _context.Users;
         var tableName = nameof(_context.Users);
@@ -218,7 +218,7 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
         }
 
         var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && (options?.Method ?? _defaultSeedingMethod) != DesicContextSeedingMethod.Full)
+        if (any && (options?.Method ?? _defaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
         {
             _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
             return;

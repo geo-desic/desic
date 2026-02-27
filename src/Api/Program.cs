@@ -37,7 +37,7 @@ builder.Services
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-builder.Services.AddDbContext<DesicContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseProvider(dbProvider, config);
     if (config.GetValue("Databases:Desic:EnableSensitiveDataLogging", false))
@@ -53,7 +53,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddHealthChecks()
     .AddCheck("Alive", x => HealthCheckResult.Healthy())
-    .AddDbContextCheck<DesicContext>(tags: ["ready"])
+    .AddDbContextCheck<ApplicationDbContext>(tags: ["ready"])
     .AddCheck<StartupHealthCheck>("Startup", tags: ["ready"]);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

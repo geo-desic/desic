@@ -3,15 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Infrastructure.Tests.Unit;
 
-public class DesicContextDependencyTests
+public class ApplicationDbContextDependencyTests
 {
-    protected readonly DesicContext _context;
+    protected readonly ApplicationDbContext _context;
     private bool _disposed = false;
-    protected readonly DbContextOptions<DesicContext> _options = new DbContextOptionsBuilder<DesicContext>()
+    protected readonly DbContextOptions<ApplicationDbContext> _options = new DbContextOptionsBuilder<ApplicationDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.CreateVersion7().ToString()) // unique name ensures isolation between tests
         .Options;
 
-    public DesicContextDependencyTests()
+    public ApplicationDbContextDependencyTests()
     {
         _context = new(_options);
         _context.Database.EnsureCreated();

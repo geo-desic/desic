@@ -6,15 +6,15 @@ namespace Desic.Infrastructure.Data.SqlServer;
 
 public static class ServiceCollectionHelpers
 {
-    public static IServiceCollection ConfigureDesicContextForSqlServer(this IServiceCollection services, string? connectionString, bool setMigrationsAssembly = false, bool useSeeding = false)
+    public static IServiceCollection ConfigureApplicationDbContextForSqlServer(this IServiceCollection services, string? connectionString, bool setMigrationsAssembly = false, bool useSeeding = false)
     {
-        services.AddDbContext<DesicContext>((serviceProvider, options) =>
+        services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
         {
             options.UseSqlServer(connectionString, x =>
             {
                 if (setMigrationsAssembly) x.MigrationsAssembly(typeof(IMarker).Assembly.GetName().Name);
             });
-            if (useSeeding) options.UseDesicContextSeeding(serviceProvider);
+            if (useSeeding) options.UseApplicationDbContextSeeding(serviceProvider);
         });
         return services;
     }

@@ -43,7 +43,7 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
         // migrations
         using (var scope = _serviceProvider.CreateScope())
         {
-            var context = scope.ServiceProvider.GetService<DesicContext>();
+            var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
 
             if (context != null)
             {
