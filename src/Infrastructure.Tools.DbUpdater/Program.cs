@@ -3,27 +3,16 @@ using Desic.Infrastructure.Data.Sqlite;
 using Desic.Infrastructure.Data.SqlServer;
 using Desic.Mediator;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-HostApplicationBuilderSettings settings = new()
-{
-    Args = args,
-    Configuration = new ConfigurationManager(),
-    ContentRootPath = Directory.GetCurrentDirectory(),
-};
-
-settings.Configuration.AddJsonFile("sqlite.appsettings.json", optional: true);
-settings.Configuration.AddJsonFile("sqlserver.appsettings.json", optional: true);
-settings.Configuration.AddJsonFile("appsettings.json", optional: true);
-settings.Configuration.AddJsonFile($"appsettings.{settings.EnvironmentName}.json", optional: true);
-settings.Configuration.AddUserSecrets<Program>(optional: true);
-settings.Configuration.AddEnvironmentVariables();
-settings.Configuration.AddCommandLine(args);
-
-HostApplicationBuilder builder = Host.CreateApplicationBuilder(settings);
-
+var builder = Host.CreateApplicationBuilder();
 var config = builder.Configuration;
+config.Sources.Insert(0, new JsonConfigurationSource() { Path = "sqlserver.appsettings.json", Optional = true });
+config.Sources.Insert(0, new JsonConfigurationSource() { Path = "sqlite.appsettings.json", Optional = true });
+config.AddCommandLine(args);
+
 var dbProvider = config.GetValue("provider", config.GetValue<string>("DbProvider") ?? throw new InvalidOperationException("Database provider could not be determined"));
 
 builder.Services.AddHostedService<WorkerService>();
