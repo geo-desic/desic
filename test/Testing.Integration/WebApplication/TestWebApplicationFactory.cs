@@ -14,7 +14,7 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Test");
+        builder.UseEnvironment(Constants.TestEnvironmentName);
 
         builder.ConfigureServices(services =>
         {
