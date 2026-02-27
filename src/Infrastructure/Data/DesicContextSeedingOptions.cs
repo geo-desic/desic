@@ -22,6 +22,7 @@ public sealed class DesicContextSeedingEntityTypesOptions
 public sealed class DesicContextSeedingIso3166CountriesOptions
 {
     public bool? Enabled { get; set; }
+    public DesicContextSeedingMethod? Method { get; set; }
 }
 
 public sealed class DesicContextSeedingUsersOptions

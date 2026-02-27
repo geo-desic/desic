@@ -46,7 +46,7 @@ internal class SeedIso3166CountriesRequestHandler(DesicContext context, ILogger<
         };
 
         var batchInserts = new List<Iso3166Country>();
-        _logger.LogDebug("Starting comparison of data to determine if any records need to be inserted or udpated");
+        _logger.LogDebug("Starting comparison of data to determine if any records need to be inserted or updated");
         _logger.LogDebug("Creating stream for csv resource = {ResourceName} using class map type = {ClassMapType}", requestStream.ResourceName, requestStream.ClassMapType);
         await foreach (var item in _mediator.CreateStream(requestStream, cancellationToken))
         {

@@ -59,194 +59,200 @@ internal class DesicContextSeeder(DesicContext context, bool seed, IOptions<Desi
     {
         var dbSet = _context.EntityTypes;
         var tableName = nameof(_context.EntityTypes);
-        if (options?.Enabled ?? true)
-        {
-            var result = new EntitySetSeedingResult();
-            var any = await dbSet.AnyAsync(cancellationToken);
-            if (!any || (options?.Method ?? _defaultSeedingMethod) == DesicContextSeedingMethod.Full)
-            {
-                var items = SystemEntityTypes.Generate();
-                result.ReferenceCount = items.Count;
-                if (!any) // fast method
-                {
-                    await dbSet.AddRangeAsync(items, cancellationToken);
-                    result.Inserts = await _context.SaveChangesAsync(cancellationToken);
-                }
-                else // full method
-                {
-                    var itemsToAdd = new List<EntityType>();
-                    foreach (var item in items)
-                    {
-                        var existing = await dbSet.AsTracking().FirstOrDefaultAsync(x => x.Id == item.Id, cancellationToken);
-                        if (existing == null) // inserts
-                        {
-                            itemsToAdd.Add(item);
-                            ++result.Inserts;
-                        }
-                        else // updates
-                        {
-                            if (existing.Name != item.Name) // so result.Updates will accurately reflect if an update occurred
-                            {
-                                existing.Name = item.Name;
-                                ++result.Updates;
-                            }
-                        }
-                    }
-                    await dbSet.AddRangeAsync(itemsToAdd, cancellationToken);
-                    await _context.SaveChangesAsync(cancellationToken);
-
-                    // deletes
-                    var ids = items.Select(x => x.Id).ToList();
-                    // note: this bulk delete method will likely not be appropriate for other entity types
-                    // this is safe because the set of all entity types is small and completely defined by this assembly; for reference see Enums.EntityTypes and Data.EntityTypes.Generate()
-                    // therefore database inserts/updates/deletes (other that this seeding code) should never occur and if it does it is safe to overwrite/delete it (e.g. corrupted database table data)
-                    result.Deletes = await dbSet.Where(e => !ids.Contains(e.Id)).ExecuteDeleteAsync(cancellationToken);
-                }
-                _context.ChangeTracker.Clear(); // no reason to track entities after the changes have been saved
-            }
-
-            // log result
-            _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
-        }
-        else
+        if (!(options?.Enabled ?? true))
         {
             _logger.LogDebug("Seeding {TableName} is not enabled", tableName);
+            return;
         }
+
+        var any = await dbSet.AnyAsync(cancellationToken);
+        if (any && (options?.Method ?? _defaultSeedingMethod) != DesicContextSeedingMethod.Full)
+        {
+            _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
+            return;
+        }
+
+        var result = new EntitySetSeedingResult();
+        var items = SystemEntityTypes.Generate();
+        result.ReferenceCount = items.Count;
+        if (!any) // fast method
+        {
+            await dbSet.AddRangeAsync(items, cancellationToken);
+            result.Inserts = await _context.SaveChangesAsync(cancellationToken);
+        }
+        else // full method
+        {
+            var itemsToAdd = new List<EntityType>();
+            foreach (var item in items)
+            {
+                var existing = await dbSet.AsTracking().FirstOrDefaultAsync(x => x.Id == item.Id, cancellationToken);
+                if (existing == null) // inserts
+                {
+                    itemsToAdd.Add(item);
+                    ++result.Inserts;
+                }
+                else // updates
+                {
+                    if (existing.Name != item.Name) // so result.Updates will accurately reflect if an update occurred
+                    {
+                        existing.Name = item.Name;
+                        ++result.Updates;
+                    }
+                }
+            }
+            await dbSet.AddRangeAsync(itemsToAdd, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            // deletes
+            var ids = items.Select(x => x.Id).ToList();
+            // note: this bulk delete method will likely not be appropriate for other entity types
+            // this is safe because the set of all entity types is small and completely defined by the Desic.Domain assembly; for reference see Desic.Domain.EntityTypes.SystemEntityType and SystemEntityTypes.Generate()
+            // therefore database inserts/updates/deletes (other that this seeding code) should never occur and if it does it is safe to overwrite/delete it (e.g. corrupted database table data)
+            result.Deletes = await dbSet.Where(e => !ids.Contains(e.Id)).ExecuteDeleteAsync(cancellationToken);
+        }
+        _context.ChangeTracker.Clear(); // no reason to track entities after the changes have been saved
+
+        _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
     }
 
     private async Task SeedTags(CancellationToken cancellationToken, DesicContextSeedingTagsOptions? options = null)
     {
         var dbSet = _context.Tags;
         var tableName = nameof(_context.Tags);
-        if (options?.Enabled ?? true)
-        {
-            var result = new EntitySetSeedingResult();
-            var any = await dbSet.AnyAsync(cancellationToken);
-            if (!any || (options?.Method ?? _defaultSeedingMethod) == DesicContextSeedingMethod.Full)
-            {
-                var items = SystemTags.Generate(); // system generated tags
-                result.ReferenceCount = items.Count;
-                if (!any) // fast method
-                {
-                    await dbSet.AddRangeAsync(items, cancellationToken);
-                    result.Inserts = await _context.SaveChangesAsync(cancellationToken);
-                }
-                else // full method
-                {
-                    var tagSystem = SystemTags.Get(SystemTag.System);
-                    var itemsToAdd = new List<Tag>();
-                    foreach (var item in items)
-                    {
-                        var existing = await dbSet.AsTracking().FirstOrDefaultAsync(x => x.Id == item.Id, cancellationToken);
-                        if (existing == null) // inserts
-                        {
-                            itemsToAdd.Add(item);
-                            ++result.Inserts;
-                        }
-                        else // updates
-                        {
-                            if (existing.Name != item.Name) // so result.Updates will accurately reflect if an update occurred
-                            {
-                                existing.Name = item.Name;
-                                existing.SetNotDeletedAndModifiedBy(tagSystem);
-                                ++result.Updates;
-                            }
-                        }
-                    }
-                    await dbSet.AddRangeAsync(itemsToAdd, cancellationToken);
-                    await _context.SaveChangesAsync(cancellationToken);
-
-                    // no deletes
-                }
-                _context.ChangeTracker.Clear(); // no reason to track entities after the changes have been saved
-            }
-
-            // log result
-            _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
-        }
-        else
+        if (!(options?.Enabled ?? true))
         {
             _logger.LogDebug("Seeding {TableName} is not enabled", tableName);
+            return;
         }
+
+        var any = await dbSet.AnyAsync(cancellationToken);
+        if (any && (options?.Method ?? _defaultSeedingMethod) != DesicContextSeedingMethod.Full)
+        {
+            _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
+            return;
+        }
+
+        var result = new EntitySetSeedingResult();
+        var items = SystemTags.Generate(); // system generated tags
+        result.ReferenceCount = items.Count;
+        if (!any) // fast method
+        {
+            await dbSet.AddRangeAsync(items, cancellationToken);
+            result.Inserts = await _context.SaveChangesAsync(cancellationToken);
+        }
+        else // full method
+        {
+            var tagSystem = SystemTags.Get(SystemTag.System);
+            var itemsToAdd = new List<Tag>();
+            foreach (var item in items)
+            {
+                var existing = await dbSet.AsTracking().FirstOrDefaultAsync(x => x.Id == item.Id, cancellationToken);
+                if (existing == null) // inserts
+                {
+                    itemsToAdd.Add(item);
+                    ++result.Inserts;
+                }
+                else // updates
+                {
+                    if (existing.Name != item.Name) // so result.Updates will accurately reflect if an update occurred
+                    {
+                        existing.Name = item.Name;
+                        existing.SetNotDeletedAndModifiedBy(tagSystem);
+                        ++result.Updates;
+                    }
+                }
+            }
+            await dbSet.AddRangeAsync(itemsToAdd, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            // no deletes
+        }
+        _context.ChangeTracker.Clear(); // no reason to track entities after the changes have been saved
+
+        _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
     }
 
     private async Task SeedIso3166Countries(CancellationToken cancellationToken, DesicContextSeedingIso3166CountriesOptions? options = null)
     {
+        var dbSet = _context.Iso3166Countries;
         var tableName = nameof(_context.Iso3166Countries);
-        if (options?.Enabled ?? true)
-        {
-            // TODO: implement support for DesicContextSeedingMethod.Fast
-            var request = new SeedIso3166CountriesRequest();
-            var result = await _mediator.Send(request, cancellationToken);
-            _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
-        }
-        else
+        if (!(options?.Enabled ?? true))
         {
             _logger.LogDebug("Seeding {TableName} is not enabled", tableName);
+            return;
         }
+
+        var any = await dbSet.AnyAsync(cancellationToken);
+        if (any && (options?.Method ?? _defaultSeedingMethod) != DesicContextSeedingMethod.Full)
+        {
+            _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
+            return;
+        }
+
+        var request = new SeedIso3166CountriesRequest();
+        var result = await _mediator.Send(request, cancellationToken);
+        _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
     }
 
     private async Task SeedTestData(CancellationToken cancellationToken, DesicContextSeedingTestOptions? options = null)
     {
-        if (options?.Enabled ?? false)
-        {
-            _logger.LogDebug("Starting seeding of test data");
-
-            await SeedTestUsers(cancellationToken: cancellationToken, options: options.Users);
-
-            _logger.LogDebug("Completed seeding of test data");
-        }
-        else
+        if (!(options?.Enabled ?? false)) // unlike others if not explicitly configured seeding of test data defaults to false
         {
             _logger.LogDebug("Seeding test data is not enabled");
+            return;
         }
+
+        _logger.LogDebug("Starting seeding of test data");
+        await SeedTestUsers(cancellationToken: cancellationToken, options: options?.Users);
+        _logger.LogDebug("Completed seeding of test data");
     }
 
     private async Task SeedTestUsers(CancellationToken cancellationToken, DesicContextSeedingTestUsersOptions? options = null)
     {
         var dbSet = _context.Users;
         var tableName = nameof(_context.Users);
-        if (options?.Enabled ?? true)
-        {
-            var result = new EntitySetSeedingResult();
-            var any = await dbSet.AnyAsync(cancellationToken);
-            if (!any || (options?.Method ?? _defaultSeedingMethod) == DesicContextSeedingMethod.Full)
-            {
-                var items = Users.Generate(options?.Count ?? 10);
-                result.ReferenceCount = items.Count;
-                if (!any) // fast method
-                {
-                    await dbSet.AddRangeAsync(items, cancellationToken);
-                    result.Inserts = await _context.SaveChangesAsync(cancellationToken);
-                }
-                else // full method
-                {
-                    var itemsToAdd = new List<User>();
-                    foreach (var item in items)
-                    {
-                        var existing = await dbSet.AsTracking().FirstOrDefaultAsync(x => x.Id == item.Id, cancellationToken);
-                        var existingByUsername = await dbSet.AsNoTracking().FirstOrDefaultAsync(x => x.Username == item.Username, cancellationToken);
-                        if (existing == null && existingByUsername == null) // inserts
-                        {
-                            itemsToAdd.Add(item);
-                            ++result.Inserts;
-                        }
-                        // no updates
-                    }
-                    await dbSet.AddRangeAsync(itemsToAdd, cancellationToken);
-                    await _context.SaveChangesAsync(cancellationToken);
-
-                    // no deletes
-                }
-                _context.ChangeTracker.Clear(); // no reason to track entities after the changes have been saved
-            }
-
-            // log result
-            _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
-        }
-        else
+        if (!(options?.Enabled ?? true))
         {
             _logger.LogDebug("Seeding test {TableName} is not enabled", tableName);
+            return;
         }
+
+        var any = await dbSet.AnyAsync(cancellationToken);
+        if (any && (options?.Method ?? _defaultSeedingMethod) != DesicContextSeedingMethod.Full)
+        {
+            _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
+            return;
+        }
+
+        var result = new EntitySetSeedingResult();
+        var items = Users.Generate(options?.Count ?? 10);
+        result.ReferenceCount = items.Count;
+        if (!any) // fast method
+        {
+            await dbSet.AddRangeAsync(items, cancellationToken);
+            result.Inserts = await _context.SaveChangesAsync(cancellationToken);
+        }
+        else // full method
+        {
+            var itemsToAdd = new List<User>();
+            foreach (var item in items)
+            {
+                var existing = await dbSet.AsTracking().FirstOrDefaultAsync(x => x.Id == item.Id, cancellationToken);
+                var existingByUsername = await dbSet.AsNoTracking().FirstOrDefaultAsync(x => x.Username == item.Username, cancellationToken);
+                if (existing == null && existingByUsername == null) // inserts
+                {
+                    itemsToAdd.Add(item);
+                    ++result.Inserts;
+                }
+                // no updates
+            }
+            await dbSet.AddRangeAsync(itemsToAdd, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            // no deletes
+        }
+        _context.ChangeTracker.Clear(); // no reason to track entities after the changes have been saved
+
+        _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
     }
 }
