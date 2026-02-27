@@ -14,7 +14,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 {
     private readonly ILogger<CreateUserRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IDesicContext _desicContext = desicContext ?? throw new ArgumentNullException(nameof(desicContext));
-    private readonly IValidator<UserCreate> _validator = validator;
+    private readonly IValidator<UserCreate> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
     public async Task<Result<CreateResult<User>>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
