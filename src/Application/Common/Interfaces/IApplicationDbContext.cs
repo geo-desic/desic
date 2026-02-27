@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Application.Common.Interfaces;
 
-public interface IDesicContext
+public interface IApplicationDbContext
 {
     DbSet<EntityType> EntityTypes { get; }
     DbSet<Iso3166Country> Iso3166Countries { get; }

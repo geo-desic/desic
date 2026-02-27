@@ -5,14 +5,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Users.Get;
 
-public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger, IDesicContext desicContext) : IRequestHandler<GetUserByIdRequest, Result<User>>
+public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger, IApplicationDbContext dbContext) : IRequestHandler<GetUserByIdRequest, Result<User>>
 {
     private readonly ILogger<GetUserByIdRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    private readonly IDesicContext _desicContext = desicContext ?? throw new ArgumentNullException(nameof(desicContext));
+    private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
     public async Task<Result<User>> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
     {
-        var user = await _desicContext.Users.GetEntityByIdAsync(request.UserId, cancellationToken);
+        var user = await _dbContext.Users.GetEntityByIdAsync(request.UserId, cancellationToken);
 
         if (user == null)
         {

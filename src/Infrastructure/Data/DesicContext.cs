@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Infrastructure.Data;
 
-public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(options), IDesicContext
+public class DesicContext(DbContextOptions<DesicContext> options) : DbContext(options), IApplicationDbContext
 {
     // note: when adding a new DbSet<T> also add it to the IApplicationDbContext inside the Application project (if it needs to use it)
     public DbSet<EntityType> EntityTypes { get; set; }

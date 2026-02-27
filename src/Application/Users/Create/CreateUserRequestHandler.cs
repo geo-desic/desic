@@ -9,17 +9,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Users.Create;
 
-public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IDesicContext desicContext, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<CreateResult<User>>>
+public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IApplicationDbContext dbContext, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<CreateResult<User>>>
 {
     private readonly ILogger<CreateUserRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    private readonly IDesicContext _desicContext = desicContext ?? throw new ArgumentNullException(nameof(desicContext));
+    private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     private readonly IValidator<UserCreate> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
     public async Task<Result<CreateResult<User>>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
         if (_validator.ValidationError(request.User) is ValidationError error) return error;
 
-        if (await _desicContext.Users.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
+        if (await _dbContext.Users.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
         {
             _logger.LogDebug(LogEvents.UserCreate, "A user with username '{Username}' already exists", request.User.Username);
             return new Error($"A user with username '{request.User.Username}' already exists");
@@ -34,9 +34,9 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
         user.SetCreatedAndModifiedBy(by: SystemTags.Get(SystemTag.System), on: DateTime.UtcNow);
 
-        _desicContext.Users.Add(user);
+        _dbContext.Users.Add(user);
 
-        await _desicContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogDebug(LogEvents.UserCreate, "User was successfully persisted with id = {UserId}", user.Id);
 

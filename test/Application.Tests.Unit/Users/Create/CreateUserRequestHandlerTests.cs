@@ -12,7 +12,7 @@ namespace Desic.Application.Tests.Unit.Users.Create;
 public class CreateUserRequestHandlerTests
 {
     private readonly ILogger<CreateUserRequestHandler> _logger = NullLogger<CreateUserRequestHandler>.Instance;
-    private readonly Mock<IDesicContext> _desicContext = new();
+    private readonly Mock<IApplicationDbContext> _dbContext = new();
     private readonly IValidator<UserCreate> _validator = new UserCreateValidator();
 
     public class CreateUserRequestHandlerTests001 : CreateUserRequestHandlerTests
@@ -24,7 +24,7 @@ public class CreateUserRequestHandlerTests
         {
             // arrange
             Setup();
-            var handler = new CreateUserRequestHandler(logger: _logger, desicContext: _desicContext.Object, validator: _validator);
+            var handler = new CreateUserRequestHandler(logger: _logger, dbContext: _dbContext.Object, validator: _validator);
             var request = new CreateUserRequest
             {
                 User = new UserCreate { Username = "username" },
@@ -36,8 +36,8 @@ public class CreateUserRequestHandlerTests
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            _desicContext.Verify(x => x.Users.Add(It.IsAny<Domain.Users.User>()), Times.Once());
-            _desicContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
+            _dbContext.Verify(x => x.Users.Add(It.IsAny<Domain.Users.User>()), Times.Once());
+            _dbContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
             result.Value.Should().NotBeNull();
             result.Value.Id.Should().NotBeEmpty();
             if (returnResult)
@@ -55,7 +55,7 @@ public class CreateUserRequestHandlerTests
         {
             // arrange
             Setup();
-            var handler = new CreateUserRequestHandler(logger: _logger, desicContext: _desicContext.Object, validator: _validator);
+            var handler = new CreateUserRequestHandler(logger: _logger, dbContext: _dbContext.Object, validator: _validator);
             var request = new CreateUserRequest
             {
                 User = new UserCreate { Username = "invalid username" }, // contains space character
@@ -66,8 +66,8 @@ public class CreateUserRequestHandlerTests
 
             // assert
             result.IsSuccess.Should().BeFalse();
-            _desicContext.Verify(x => x.Users.Add(It.IsAny<Domain.Users.User>()), Times.Never());
-            _desicContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never());
+            _dbContext.Verify(x => x.Users.Add(It.IsAny<Domain.Users.User>()), Times.Never());
+            _dbContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
     }
 
@@ -79,7 +79,7 @@ public class CreateUserRequestHandlerTests
             // arrange
             var username = "username";
             Setup(usernameSeed: username);
-            var handler = new CreateUserRequestHandler(logger: _logger, desicContext: _desicContext.Object, validator: _validator);
+            var handler = new CreateUserRequestHandler(logger: _logger, dbContext: _dbContext.Object, validator: _validator);
             var request = new CreateUserRequest
             {
                 User = new UserCreate { Username = username },
@@ -90,8 +90,8 @@ public class CreateUserRequestHandlerTests
 
             // assert
             result.IsSuccess.Should().BeFalse();
-            _desicContext.Verify(x => x.Users.Add(It.IsAny<Domain.Users.User>()), Times.Never());
-            _desicContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never());
+            _dbContext.Verify(x => x.Users.Add(It.IsAny<Domain.Users.User>()), Times.Never());
+            _dbContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Never());
         }
     }
 
@@ -99,6 +99,6 @@ public class CreateUserRequestHandlerTests
     {
         var users = new List<Domain.Users.User>();
         if (usernameSeed != null) users.Add(new Domain.Users.User { Username = usernameSeed });
-        _desicContext.Setup(x => x.Users).ReturnsDbSet(users);
+        _dbContext.Setup(x => x.Users).ReturnsDbSet(users);
     }
 }

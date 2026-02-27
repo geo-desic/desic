@@ -10,5 +10,5 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         => services
             .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IMarker>())
-            .AddScoped<IDesicContext>(provider => provider.GetRequiredService<DesicContext>());
+            .AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<DesicContext>());
 }
