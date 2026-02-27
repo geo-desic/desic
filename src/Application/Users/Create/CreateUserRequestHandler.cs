@@ -18,47 +18,39 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
     public async Task<Result<CreateResult<User>>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
-        try
+        if (_validator.ValidationException(request.User) is Common.Exceptions.ValidationException e) return e;
+
+        if (await _desicContext.Users.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
         {
-            _validator.GuardAgainstInvalid(request.User);
-
-            if (await _desicContext.Users.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
-            {
-                _logger.LogDebug("A user with username '{Username}' already exists", request.User.Username);
-                throw new ValidationException($"A user with username '{request.User.Username}' already exists");
-            }
-
-            var user = new Domain.Users.User
-            {
-                Id = Guid.CreateVersion7(),
-                IsActive = true,
-                Username = request.User.Username!
-            };
-
-            user.SetCreatedAndModifiedBy(by: SystemTags.Get(SystemTag.System), on: DateTime.UtcNow);
-
-            _desicContext.Users.Add(user);
-
-            await _desicContext.SaveChangesAsync(cancellationToken);
-
-            _logger.LogDebug("User was successfully persisted with id = {UserId}", user.Id);
-
-            var result = new CreateResult<User> { Id = user.Id };
-
-            if (!request.ReturnRepresentation) return result;
-
-            result.Entity = new User
-            {
-                Id = user.Id,
-                Username = user.Username,
-            };
-
-            return result; // always return a result on success, but if if !ReturnResult only Id will be properly set
+            _logger.LogDebug("A user with username '{Username}' already exists", request.User.Username);
+            return new ValidationException($"A user with username '{request.User.Username}' already exists");
         }
-        catch (Exception ex)
+
+        var user = new Domain.Users.User
         {
-            _logger.LogDebug(ex.Message);
-            return ex;
-        }
+            Id = Guid.CreateVersion7(),
+            IsActive = true,
+            Username = request.User.Username!
+        };
+
+        user.SetCreatedAndModifiedBy(by: SystemTags.Get(SystemTag.System), on: DateTime.UtcNow);
+
+        _desicContext.Users.Add(user);
+
+        await _desicContext.SaveChangesAsync(cancellationToken);
+
+        _logger.LogDebug("User was successfully persisted with id = {UserId}", user.Id);
+
+        var result = new CreateResult<User> { Id = user.Id };
+
+        if (!request.ReturnRepresentation) return result;
+
+        result.Entity = new User
+        {
+            Id = user.Id,
+            Username = user.Username,
+        };
+
+        return result;
     }
 }

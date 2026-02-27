@@ -59,7 +59,6 @@ public class CreateUserRequestHandlerTests
             var request = new CreateUserRequest
             {
                 User = new UserCreate { Username = "invalid username" }, // contains space character
-                ReturnRepresentation = true,
             };
 
             // act
@@ -84,7 +83,6 @@ public class CreateUserRequestHandlerTests
             var request = new CreateUserRequest
             {
                 User = new UserCreate { Username = username },
-                ReturnRepresentation = true,
             };
 
             // act
