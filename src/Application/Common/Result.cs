@@ -15,7 +15,7 @@ public readonly struct Result<T>
     private readonly ResultState _state;
 
     public T Value { get; }
-    public Exception Exception { get; }
+    public Error Error { get; }
 
     public bool IsSuccess => _state == ResultState.Success;
     public bool IsFailure => _state == ResultState.Failure;
@@ -24,25 +24,26 @@ public readonly struct Result<T>
     public Result(T value)
     {
         Value = value;
-        Exception = null!;
+        Error = null!;
         _state = ResultState.Success;
     }
 
-    public Result(Exception exception)
+    public Result(Error error)
     {
         Value = default!;
-        Exception = exception;
+        Error = error;
         _state = ResultState.Failure;
     }
 
     [Pure]
-    public TR Match<TR>(Func<T, TR> onSuccess, Func<Exception, TR> onFailure, Func<TR>? onNull = null) =>
-        IsSuccess ? onSuccess(Value) :
-        IsFailure ? onFailure(Exception) :
-        onNull is not null
-            ? onNull()
-            : throw new InvalidOperationException("Result is null, but no onNull function was provided.");
+    public TR Match<TR>(Func<T, TR> onSuccess, Func<Error, TR> onFailure, Func<TR>? onNull = null)
+    {
+        if (IsSuccess) return onSuccess(Value);
+        if (IsFailure) return onFailure(Error);
+        if (onNull is not null) return onNull();
+        throw new InvalidOperationException("Result is null, but no onNull function was provided.");
+    }
 
     public static implicit operator Result<T>(T? value) => value is not null ? new Result<T>(value) : new Result<T>();
-    public static implicit operator Result<T>(Exception exception) => new(exception);
+    public static implicit operator Result<T>(Error error) => new(error);
 }

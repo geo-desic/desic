@@ -1,7 +1,7 @@
 using Desic.Api.Dtos.Users;
 using Desic.Api.Logging;
 using Desic.Api.Mappings;
-using Desic.Application.Common.Exceptions;
+using Desic.Application.Common;
 using Desic.Application.Users.Create;
 using Desic.Application.Users.Get;
 using MediatR;
@@ -48,7 +48,7 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
 
         var request = new CreateUserRequest { User = user.ToBusinessModel(), ReturnRepresentation = "return=representation".Equals(preferHeaderValue, StringComparison.OrdinalIgnoreCase) };
         var resultCreate = await _mediator.Send(request);
-        if (resultCreate.IsFailure) return Problem(resultCreate.Exception);
+        if (resultCreate.IsFailure) return Problem(resultCreate.Error);
         var value = resultCreate.Value;
         _logger.LogDebug(LogEvents.UserCreate, "Adding 'Entity-Id' response header with value {EntityId}", value.Id);
         HttpContext.Response.Headers.Append("Entity-Id", value.Id.ToString()); // always attach this header on success regardless of prefer header value
@@ -61,13 +61,13 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
         return NoContent();
     }
 
-    protected ActionResult Problem(Exception exception)
+    protected ActionResult Problem(Error error)
     {
-        if (exception is ValidationException v)
+        if (error is ValidationError v)
         {
-            var details = new ValidationProblemDetails(v.Errors);
+            var details = new ValidationProblemDetails(v.Failures);
             return ValidationProblem(details);
         }
-        return Problem(statusCode: 400, detail: "One or more error occurred");
+        return Problem(statusCode: 400, detail: error.Message);
     }
 }

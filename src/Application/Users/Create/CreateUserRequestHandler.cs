@@ -17,12 +17,12 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
     public async Task<Result<CreateResult<User>>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
-        if (_validator.ValidationException(request.User) is Common.Exceptions.ValidationException e) return e;
+        if (_validator.ValidationError(request.User) is ValidationError error) return error;
 
         if (await _desicContext.Users.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
         {
             _logger.LogDebug("A user with username '{Username}' already exists", request.User.Username);
-            return new ValidationException($"A user with username '{request.User.Username}' already exists");
+            return new Error($"A user with username '{request.User.Username}' already exists");
         }
 
         var user = new Domain.Users.User
