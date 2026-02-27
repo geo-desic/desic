@@ -14,6 +14,7 @@ public sealed class DesicContextMsSqlContainer(string image, string apiUserPassw
 {
     private readonly MsSqlContainer _container = new MsSqlBuilder(image ?? throw new InvalidOperationException("Container image could not be determined")).Build();
     private string? _connectionString;
+    private const string DatabaseName = "Desic";
     private readonly string _apiUserPassword = apiUserPassword ?? throw new InvalidOperationException("Api user password could not be determined");
 
     public string ConnectionString => _connectionString ?? throw new InvalidOperationException($"{nameof(ConnectionString)} has not been initialized");
@@ -22,13 +23,13 @@ public sealed class DesicContextMsSqlContainer(string image, string apiUserPassw
     {
         await _container.StartAsync();
 
-        var connectionStringInit = new SqlConnectionStringBuilder(_container.GetConnectionString()) { InitialCatalog = "Desic" }.ConnectionString;
+        var connectionStringInit = new SqlConnectionStringBuilder(_container.GetConnectionString()) { InitialCatalog = DatabaseName }.ConnectionString;
 
         // create the database and apply migrations
         using var factory = new DesicContextFactory();
         using var context = factory.CreateDbContext(["--connection", connectionStringInit, "--environment", Constants.TestEnvironmentName]);
 
-        await context.InitializeAsync(targetDatabaseName: "Desic");
+        await context.InitializeAsync(targetDatabaseName: DatabaseName);
         await context.Database.MigrateAsync();
 
         var builder = new SqlConnectionStringBuilder(connectionStringInit)
