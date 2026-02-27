@@ -30,11 +30,11 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
 
             if (TestConfiguration.Options?.DbProvider == "Sqlite")
             {
-                services.ConfigureDesicContextForSqlite(_connectionString);
+                services.ConfigureDesicContextForSqlite(connectionString: _connectionString, setMigrationsAssembly: false, useSeeding: false);
             }
             else // SqlServer
             {
-                services.ConfigureDesicContextForSqlServer(_connectionString);
+                services.ConfigureDesicContextForSqlServer(connectionString: _connectionString, setMigrationsAssembly: false, useSeeding: false);
             }
         });
     }

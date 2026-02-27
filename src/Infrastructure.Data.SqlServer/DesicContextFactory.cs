@@ -1,7 +1,5 @@
 ﻿using Desic.Domain;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -33,13 +31,10 @@ public sealed class DesicContextFactory : IDisposable, IDesignTimeDbContextFacto
         });
         result.ConfigureServices((hostContext, services) =>
         {
-            var config = hostContext.Configuration;
             services
                 .AddDomain()
-                .AddInfrastructure();
-            var connectionString = config.GetValue("connection", config.GetConnectionString("SqlServer"));
-            services.ConfigureDesicContextForSqlServer(connectionString: connectionString, setMigrationsAssembly: true, useSeeding: true);
-            services.UseDatabaseInitializer(config);
+                .AddInfrastructure()
+                .AddSqlServerInfrastructure(hostContext.Configuration);
         });
         return result;
     }
