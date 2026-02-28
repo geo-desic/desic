@@ -1,18 +1,13 @@
 # Desic Core Project
 
 This project is the [domain](https://github.com/jasontaylordev/CleanArchitecture/tree/main/src/Domain) (aka [core](https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/#the-core-layer)) layer mainly for defining the following.
-- [Request](Requests) and response **format** to get or manipulate data, e.g.
-  - Get a user by their id or username
-  - Update the username for a user
-- Data **format**
-  - The [Entities](Entities) folder data is essentially the same as it will persisted in the data provider (e.g. database table definition)
-    - Note that this data format in many cases will not be the same as what is returned from the API. The data can be reshaped potentially from multiple entities before being returned in a data transfer object from the API.
-- Abstraction interfaces (e.g. [IRepository](Shared/IRepository.cs))
+- Data **format** for domain entities (e.g. [User](Users/User.cs))
+  - This does not include any persistence concerns (e.g. database table definitions) which are in the Infrastructure project (Data/Configurations)
+  - Note that this data format in many cases will not be the same as what is returned from the API. The data can be reshaped (both incoming and outgoing) by data transfer objects which will be used in API.
+- Abstraction interfaces
 - Exception classes
 - Enums (e.g. [SystemEntityType](EntityTypes/SystemEntityType.cs))
 
-This library is not for **handling** requests to get or manipulate data. Those handlers should be in the application or infrastructure projects. The only exceptions are requests for data that does not require business logic or a data provider. Some examples of that are the following.
-- [Query handlers](Handlers/Queries) for data that does not require a data provider such as getting the records in an embedded resource, e.g. [iso-3166-countries.csv](Iso3166Countries/iso-3166-countries.csv)
-- Generation (but not persistence) of [Test](Users/Test) data
+This library is not for **handling** requests to get or manipulate data. Those handlers should be in the application or infrastructure projects.
 
-This library should not have project references nor dependencies to the outer layers: Application, Infrastructure, Api, or Web
+This library should **not** have project references nor dependencies to the outer layers: Application, Infrastructure, Api, or Web
