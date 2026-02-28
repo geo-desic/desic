@@ -31,14 +31,14 @@
         "Users": [
           {
             "Name": "api",
-            "Password": "2d4ba4c0-6cd1-4c7c-b08c-0db156c44116",
+            "PasswordConfigKey": "Databases:Application:ApiUserPassword",
             "LoginName": "api",
             "DefaultSchema": "app",
             "Roles": [ "rl_api" ]
           },
           {
             "Name": "migrations",
-            "Password": "6246a106-1ef4-4db7-9c6e-dd20e6e09d4f",
+            "PasswordConfigKey": "Databases:Application:MigrationsUserPassword",
             "LoginName": "migrations",
             "Roles": [ "db_owner" ]
           }

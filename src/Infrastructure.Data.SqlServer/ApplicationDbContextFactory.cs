@@ -1,5 +1,6 @@
 ﻿using Desic.Domain;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,10 +25,18 @@ public sealed class ApplicationDbContextFactory : IDisposable, IDesignTimeDbCont
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
         var result = Host.CreateDefaultBuilder(args);
-        result.ConfigureAppConfiguration(config =>
+        result.ConfigureAppConfiguration((hostContext, config) =>
         {
             var initialConfig = new JsonConfigurationSource() { Path = "sqlserver.appsettings.json", Optional = true };
             config.Sources.Insert(0, initialConfig);
+            // for adding user secrets in a couple more environments
+            if ((new string[] { "Test", "Local" }).Contains(hostContext.HostingEnvironment.EnvironmentName)) // Development already covered by Host.CreateDefaultBuilder above
+            {
+                config.AddUserSecrets<IMarker>();
+                // re-apply these so they will potentially override the user secrets (see the exact order in Host.CreateDefaultBuilder above)
+                config.AddEnvironmentVariables();
+                config.AddCommandLine(args);
+            }
         });
         result.ConfigureServices((hostContext, services) =>
         {

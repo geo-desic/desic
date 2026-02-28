@@ -38,6 +38,7 @@ public sealed class DatabaseInitializerUserOptions
 {
     public string? Name { get; set; }
     public string? Password { get; set; }
+    public string? PasswordConfigKey { get; set; }
     public string? LoginName { get; set; }
     public string? DefaultSchema { get; set; }
     public List<string?>? Roles { get; set; }

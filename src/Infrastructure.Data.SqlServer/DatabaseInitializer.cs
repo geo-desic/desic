@@ -1,5 +1,6 @@
 ﻿using Desic.Data;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -8,12 +9,13 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
-public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, ILogger<DatabaseInitializer> logger)
+public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, ILogger<DatabaseInitializer> logger, IConfiguration config)
 {
     private bool _contained;
     private string? _databaseName;
-    private readonly DatabaseInitializerOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+    private readonly IConfiguration _config = config ?? throw new ArgumentNullException(nameof(config));
     private readonly ILogger<DatabaseInitializer> _logger = logger ?? NullLogger<DatabaseInitializer>.Instance;
+    private readonly DatabaseInitializerOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
 
     public async Task InitializeAsync(string connectionString, string? targetDatabaseName = null, CancellationToken cancellationToken = default)
     {
@@ -99,17 +101,18 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
     #endregion
 
     #region Logins
-    private void CreateLogin(Server server, string name, string? password, string? defaultDatabase = null)
+    private void CreateLogin(Server server, string name, string password, string? defaultDatabase = null)
     {
-        if (string.IsNullOrWhiteSpace(password)) throw new InvalidOperationException("User password is not specified");
         var login = server.Logins[name];
         if (login != null)
         {
-            _logger.LogDebug("Login exists: {UserName}", login.Name);
+            _logger.LogDebug("Login already exists: {UserName}", login.Name);
             return;
         }
-        login = new Login(server, name);
-        login.LoginType = LoginType.SqlLogin;
+        login = new Login(server, name)
+        {
+            LoginType = LoginType.SqlLogin
+        };
         if (defaultDatabase != null) login.DefaultDatabase = defaultDatabase;
         login.Create(password);
         login.Enable();
@@ -213,9 +216,15 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
     private void CreateUser(Server server, Database database, DatabaseInitializerUserOptions userOptions)
     {
         if (string.IsNullOrWhiteSpace(userOptions.Name)) throw new InvalidOperationException("User name is not specified");
+        var userPassword = userOptions.Password;
+        if (string.IsNullOrWhiteSpace(userPassword))
+        {
+            userPassword = _config.GetValue<string>(userOptions.PasswordConfigKey ?? throw new InvalidArgumentException("Neither password nor config key for user is specified"))
+                ?? throw new InvalidArgumentException($"Password could not be resolved using the specified config key: {userOptions.PasswordConfigKey}");
+        }
         if (!_contained)
         {
-            CreateLogin(server, userOptions.Name, userOptions.Password);
+            CreateLogin(server: server, name: userOptions.Name, password: userPassword, defaultDatabase: _databaseName);
         }
         var user = database.Users[userOptions.Name];
         if (user != null)
@@ -228,7 +237,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
 
         if (_contained)
         {
-            user.Create(userOptions.Password);
+            user.Create(userPassword);
         }
         else
         {
