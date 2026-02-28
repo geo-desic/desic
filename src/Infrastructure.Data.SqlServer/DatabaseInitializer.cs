@@ -43,7 +43,6 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         {
             if (_contained && !containmentEnabled) SetContainment(server);
             CreateDatabase(server, _databaseName, _contained);
-            _logger.LogInformation("Database created: '{DatabaseName} with containment = {IsContained}'", _databaseName, _contained);
         }
 
         var database = server.Databases[_databaseName];
@@ -84,12 +83,12 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
     {
         server.Configuration.ContainmentEnabled.ConfigValue = 1;
         server.Configuration.Alter();
-        _logger.LogInformation("Enabled contained dataabse authentication for the server");
+        _logger.LogInformation("Enabled contained database authentication for the server");
     }
     #endregion
 
     #region Database
-    private static void CreateDatabase(Server server, string name, bool contained)
+    private void CreateDatabase(Server server, string name, bool contained)
     {
         var database = new Database(server, name)
         {
@@ -97,6 +96,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         };
 
         database.Create();
+        _logger.LogInformation("Database '{DatabaseName}' created with containment = {IsContained}", name, contained);
     }
     #endregion
 
@@ -106,7 +106,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         var login = server.Logins[name];
         if (login != null)
         {
-            _logger.LogDebug("Login already exists: {UserName}", login.Name);
+            _logger.LogDebug("Login already exists: {UserName}", name);
             return;
         }
         login = new Login(server, name)
@@ -116,6 +116,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         if (defaultDatabase != null) login.DefaultDatabase = defaultDatabase;
         login.Create(password);
         login.Enable();
+        _logger.LogInformation("Login created: {UserName}", name);
     }
     #endregion
 
@@ -134,7 +135,6 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         if (!string.IsNullOrWhiteSpace(schemaOptions.OwnerName)) { schema.Owner = schemaOptions.OwnerName; }
 
         schema.Create();
-
         _logger.LogInformation("Schema created: '{SchemaName}'", schema.Name);
     }
 
@@ -219,8 +219,8 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         var userPassword = userOptions.Password;
         if (string.IsNullOrWhiteSpace(userPassword))
         {
-            userPassword = _config.GetValue<string>(userOptions.PasswordConfigKey ?? throw new InvalidArgumentException("Neither password nor config key for user is specified"))
-                ?? throw new InvalidArgumentException($"Password could not be resolved using the specified config key: {userOptions.PasswordConfigKey}");
+            userPassword = _config.GetValue<string>(userOptions.PasswordConfigKey ?? throw new InvalidArgumentException("Neither password nor password configuration key for user is specified"))
+                ?? throw new InvalidArgumentException($"Password could not be resolved using the specified configuration key: {userOptions.PasswordConfigKey}");
         }
         if (!_contained)
         {
