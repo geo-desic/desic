@@ -1,4 +1,4 @@
-﻿namespace Desic.Infrastructure;
+﻿namespace Desic.Infrastructure.Data;
 
 internal static class ProviderNames
 {

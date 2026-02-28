@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Infrastructure;
 
-namespace Desic.Infrastructure;
+namespace Desic.Infrastructure.Data;
 
 internal static class DatabaseFacadeExtensions
 {
