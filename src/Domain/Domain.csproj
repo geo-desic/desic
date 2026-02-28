@@ -18,4 +18,8 @@
     <ProjectReference Include="..\MediatR.Contracts\MediatR.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Tests.Unit" />
+  </ItemGroup>
+
 </Project>

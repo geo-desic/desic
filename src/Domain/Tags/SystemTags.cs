@@ -7,18 +7,7 @@ public static class SystemTags
 
     public static IEnumerable<Tag> AllAsEntities()
     {
-        foreach (var value in All())
-        {
-            yield return new()
-            {
-                Id = value.Id,
-                CreatedByTypeId = Tag.ClassEntityType.Id,
-                CreatedById = System.Id,
-                ModifiedByTypeId = Tag.ClassEntityType.Id,
-                ModifiedById = System.Id,
-                Name = value.Name,
-            };
-        }
+        foreach (var value in All()) yield return value.ToEntity();
     }
 
     // when adding a new system tag make sure to also add it to the All() method
@@ -29,7 +18,7 @@ public static class SystemTags
     public static readonly SystemTag System               = new(Id: new("00000003-0000-0000-0000-000000000001"), Name: nameof(System));
     #pragma warning restore format
 
-    private static IEnumerable<SystemTag> All()
+    internal static IEnumerable<SystemTag> All()
     {
         yield return System;
     }

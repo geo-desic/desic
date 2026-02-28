@@ -8,12 +8,12 @@ public static class SystemEntityTypes
 
     public static IEnumerable<EntityType> AllAsEntities()
     {
-        foreach (var value in All()) yield return new() { Id = value.Id, Key = value.Key, Name = value.Name };
+        foreach (var value in All()) yield return value.ToEntity();
     }
 
     // when adding a new entity type make sure to also add it to the All() method
     // all fields (Id, Name, and Key) should be unique (case-insensitive) across all records
-    // all keys should be exactly 4 alphabetic ascii lowercase characters (i.e. each character has an ascii decimal value between 97 and 122 inclusive)
+    // see SystemEntityTypeValidator for validation rules
     // do not change any values for existing records after it has been added to a non-development database
     // this list should be ordered by Id
     #pragma warning disable format
@@ -25,7 +25,7 @@ public static class SystemEntityTypes
     #pragma warning restore format
 
     // this should be ordered by Id (i.e. same order as list above)
-    private static IEnumerable<SystemEntityType> All()
+    internal static IEnumerable<SystemEntityType> All()
     {
         yield return Unspecified;
         yield return EntityType;
