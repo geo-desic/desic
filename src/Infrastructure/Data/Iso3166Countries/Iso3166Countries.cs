@@ -1,4 +1,6 @@
-﻿namespace Desic.Domain.Iso3166Countries;
+﻿using Desic.Domain.Iso3166Countries;
+
+namespace Desic.Infrastructure.Data.Iso3166Countries;
 
 [Obsolete("These are currently loaded using seeding")]
 internal static class Iso3166Countries

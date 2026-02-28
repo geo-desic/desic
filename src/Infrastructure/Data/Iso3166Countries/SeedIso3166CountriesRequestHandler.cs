@@ -1,12 +1,12 @@
-﻿using Desic.Domain.Common;
-using Desic.Domain.Common.Entities;
+﻿using Desic.Domain.Common.Entities;
 using Desic.Domain.Iso3166Countries;
 using Desic.Domain.Tags;
+using Desic.Infrastructure.Data.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.Infrastructure.Data.Handlers.Iso3166Countries;
+namespace Desic.Infrastructure.Data.Iso3166Countries;
 
 internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, EntitySetSeedingResult>
 {
@@ -42,7 +42,7 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
         var requestStream = new Iso3166CountriesResourceStreamRequest
         {
             ClassMapType = typeof(Iso3166CountryClassMap),
-            ResourceName = $"{typeof(Iso3166Country).Namespace}.iso-3166-countries.csv",
+            ResourceName = $"{typeof(Iso3166CountryClassMap).Namespace}.iso-3166-countries.csv",
         };
 
         var batchInserts = new List<Iso3166Country>();

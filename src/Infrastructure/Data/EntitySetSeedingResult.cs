@@ -1,4 +1,4 @@
-﻿namespace Desic.Domain.Common;
+﻿namespace Desic.Infrastructure.Data.Common;
 
 public class EntitySetSeedingResult
 {

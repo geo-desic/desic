@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Desic.Mediator;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Desic.Application;
@@ -8,6 +9,6 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
         => services
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IMarker>())
+            .AddMediatR(cfg => { cfg.RegisterServicesFromAssemblyContaining<IMarker>(); cfg.AddOpenBehavior(typeof(LoggingBehavior<,>)); })
             .AddValidatorsFromAssemblyContaining<IMarker>();
 }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
-namespace Desic.Domain.Resources;
+namespace Desic.Infrastructure.Data.Resources;
 
 public class CsvResourceStreamRequestHandler<T>(ILogger<CsvResourceStreamRequestHandler<T>> logger) : IStreamRequestHandler<CsvResourceStreamRequest<T>, T>
 {

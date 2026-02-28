@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.Text;
 
-namespace Desic.Domain.Resources;
+namespace Desic.Infrastructure.Data.Resources;
 
 public class CsvResourceStreamRequest<T> : IStreamRequest<T>
 {

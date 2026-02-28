@@ -9,11 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Iso3166Countries\iso-3166-countries.csv" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
   </ItemGroup>

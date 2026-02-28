@@ -1,10 +1,10 @@
-﻿using Desic.Domain.Common;
-using Desic.Domain.Common.Entities;
+﻿using Desic.Domain.Common.Entities;
 using Desic.Domain.EntityTypes;
-using Desic.Domain.Iso3166Countries;
 using Desic.Domain.Tags;
 using Desic.Domain.Users;
 using Desic.Domain.Users.Test;
+using Desic.Infrastructure.Data.Common;
+using Desic.Infrastructure.Data.Iso3166Countries;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
