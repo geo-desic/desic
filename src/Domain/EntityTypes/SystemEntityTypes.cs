@@ -19,7 +19,7 @@ public static class SystemEntityTypes
     #pragma warning disable format
     public static readonly SystemEntityType Unspecified          = new(Id: new("00000001-0000-0000-0000-000000000000"), Key: "unsp", Name: nameof(Unspecified));
     public static readonly SystemEntityType EntityType           = new(Id: new("00000002-0000-0000-0000-000000000000"), Key: "enty", Name: nameof(EntityType));
-    public static readonly SystemEntityType Tag                  = new(Id: new("00000003-0000-0000-0000-000000000000"), Key: "stag", Name: nameof(Tag));
+    public static readonly SystemEntityType Tag                  = new(Id: new("00000003-0000-0000-0000-000000000000"), Key: "tags", Name: nameof(Tag));
     public static readonly SystemEntityType User                 = new(Id: new("00000004-0000-0000-0000-000000000000"), Key: "user", Name: nameof(User));
     public static readonly SystemEntityType Iso3166Country       = new(Id: new("00000005-0000-0000-0000-000000000000"), Key: "ctry", Name: nameof(Iso3166Country));
     #pragma warning restore format
