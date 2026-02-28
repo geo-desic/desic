@@ -40,7 +40,7 @@ builder.Services
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseProvider(dbProvider, config);
-    if (config.GetValue("Databases:Desic:EnableSensitiveDataLogging", false))
+    if (config.GetValue("Databases:Application:EnableSensitiveDataLogging", false))
     {
         options.EnableSensitiveDataLogging();
     }

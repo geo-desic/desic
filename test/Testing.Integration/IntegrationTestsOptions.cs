@@ -20,7 +20,7 @@ public sealed class IntegrationTestsDbProvidersSqlServerOptions
 
 public sealed class IntegrationTestsDatabaseOptions
 {
-    public IntegrationTestsDatabaseDesicOptions? Desic { get; set; }
+    public IntegrationTestsDatabaseDesicOptions? Application { get; set; }
 }
 
 public sealed class IntegrationTestsDatabaseDesicOptions

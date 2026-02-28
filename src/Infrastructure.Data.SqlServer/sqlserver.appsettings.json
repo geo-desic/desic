@@ -1,6 +1,6 @@
 {
   "Databases": {
-    "Desic": {
+    "Application": {
       "SqlServer": {
         "Contained": true,
         "Name": "Desic",

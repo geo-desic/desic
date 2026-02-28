@@ -2,7 +2,7 @@
 
 public sealed class ApplicationDbContextSeedingOptions
 {
-    public const string SectionName = "Databases:Desic:Seeding";
+    public const string SectionName = "Databases:Application:Seeding";
 
     public bool? Enabled { get; set; }
     public ApplicationDbContextSeedingEntityTypesOptions? EntityTypes { get; set; }

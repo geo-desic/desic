@@ -1,4 +1,4 @@
-# Desic Core Project
+# Domain Project
 
 This project is the [domain](https://github.com/jasontaylordev/CleanArchitecture/tree/main/src/Domain) (aka [core](https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/#the-core-layer)) layer mainly for defining the following.
 - Data **format** for domain entities (e.g. [User](Users/User.cs))

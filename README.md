@@ -18,8 +18,8 @@ The following is an example (not to be used as is) of what your `secrets.json` f
 ```json
 {
   \\ potentially other secrets may already be present, but append the following to the file replacing the GUIDs with your own
-  "Databases:Desic:ApiUserPassword": "00000000-0000-0000-0000-000000000001",
-  "Databases:Desic:InitializationUserPassword": "00000000-0000-0000-0000-000000000002",
-  "Databases:Desic:MigrationsUserPassword": "00000000-0000-0000-0000-000000000003"
+  "Databases:Application:ApiUserPassword": "00000000-0000-0000-0000-000000000001",
+  "Databases:Application:InitializationUserPassword": "00000000-0000-0000-0000-000000000002",
+  "Databases:Application:MigrationsUserPassword": "00000000-0000-0000-0000-000000000003"
 }
 ```
