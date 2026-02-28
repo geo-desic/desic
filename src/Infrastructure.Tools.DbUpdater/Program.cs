@@ -1,7 +1,8 @@
 ﻿using Desic.DatabaseUpdater;
+using Desic.Domain;
+using Desic.Infrastructure;
 using Desic.Infrastructure.Data.Sqlite;
 using Desic.Infrastructure.Data.SqlServer;
-using Desic.Mediator;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,14 +22,7 @@ var connectionStringMigrations = config.GetValue<string>("c") ?? config.GetValue
 var connectionStringInitialization = config.GetValue<string>("ci") ?? config.GetValue<string>("connection-init");
 var useSeeding = !(args.Contains("--ns") || args.Contains("--no-seeding"));
 
-if (connectionStringMigrations != null)
-{
-    builder.Services.AddMediatR(cfg =>
-    {
-        cfg.RegisterServicesFromAssemblies(typeof(Desic.Domain.IMarker).Assembly, typeof(Desic.Infrastructure.IMarker).Assembly);
-        cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
-    });
-}
+if (connectionStringMigrations != null) builder.Services.AddDomain().AddInfrastructure();
 
 switch (dbProvider)
 {
