@@ -22,14 +22,13 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
         _batchNumber = 0;
         request.BatchSize ??= _defaultBatchSize;
 
-        var tagSystem = SystemTags.Get(SystemTag.System);
         var nowTagOn = DateTime.UtcNow;
         var tag = new Tag
         {
             Id = Guid.CreateVersion7(),
             Name = $"Process-SeedIso3166Countries-{nowTagOn:yyyyMMddHHmmss}",
         };
-        tag.SetCreatedAndModifiedBy(tagSystem, on: nowTagOn);
+        tag.SetCreatedAndModifiedBy(SystemTags.System, on: nowTagOn);
 
         _logger.LogDebug("Creating tag {TagName}", tag.Name);
         await _context.AddAsync(tag, cancellationToken);

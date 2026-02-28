@@ -32,7 +32,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
             Username = request.User.Username!
         };
 
-        user.SetCreatedAndModifiedBy(by: SystemTags.Get(SystemTag.System), on: DateTime.UtcNow);
+        user.SetCreatedAndModifiedBy(by: SystemTags.System, on: DateTime.UtcNow);
 
         _dbContext.Users.Add(user);
 

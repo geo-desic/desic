@@ -73,7 +73,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
         }
 
         var result = new EntitySetSeedingResult();
-        var items = SystemEntityTypes.Generate().ToList();
+        var items = SystemEntityTypes.AllAsEntities().ToList();
         result.ReferenceCount = items.Count;
         if (!any) // fast method
         {
@@ -133,7 +133,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
         }
 
         var result = new EntitySetSeedingResult();
-        var items = SystemTags.Generate(); // system generated tags
+        var items = SystemTags.AllAsEntities().ToList();
         result.ReferenceCount = items.Count;
         if (!any) // fast method
         {
@@ -142,7 +142,6 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
         }
         else // full method
         {
-            var tagSystem = SystemTags.Get(SystemTag.System);
             var itemsToAdd = new List<Tag>();
             foreach (var item in items)
             {
@@ -157,7 +156,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
                     if (existing.Name != item.Name) // so result.Updates will accurately reflect if an update occurred
                     {
                         existing.Name = item.Name;
-                        existing.SetNotDeletedAndModifiedBy(tagSystem);
+                        existing.SetNotDeletedAndModifiedBy(SystemTags.System);
                         ++result.Updates;
                     }
                 }

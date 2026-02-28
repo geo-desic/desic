@@ -1,7 +1,9 @@
-﻿namespace Desic.Domain.Tags;
+﻿using Desic.Domain.Common.Entities;
+using Desic.Domain.EntityTypes;
 
-// do not change ushort values => used to generate ids in the database
-public enum SystemTag : ushort
+namespace Desic.Domain.Tags;
+
+public record SystemTag(Guid Id, string Name) : IReadOnlyMinimalEntity
 {
-    System = 1,
+    public SystemEntityType SystemEntityType => SystemEntityTypes.Tag;
 }

@@ -6,15 +6,15 @@ public static class SystemEntityTypes
     public static SystemEntityType? GetByKey(string key) => _dictionaryByKey.TryGetValue(key, out var value) ? value : null;
     public static SystemEntityType? GetByName(string name) => _dictionaryByName.TryGetValue(name, out var value) ? value : null;
 
-    public static IEnumerable<EntityType> Generate()
+    public static IEnumerable<EntityType> AllAsEntities()
     {
         foreach (var value in All()) yield return new() { Id = value.Id, Key = value.Key, Name = value.Name };
     }
 
-    // when adding a new entity type make sure to also add it to the All() function
-    // all record fields (Id, Name, and Key) should be unique (case-insensitive) across all entity types
+    // when adding a new entity type make sure to also add it to the All() method
+    // all fields (Id, Name, and Key) should be unique (case-insensitive) across all records
     // all keys should be exactly 4 alphabetic ascii lowercase characters (i.e. each character has an ascii decimal value between 97 and 122 inclusive)
-    // do not change any values for existing entity types after it has been added to a non-development database
+    // do not change any values for existing records after it has been added to a non-development database
     // this list should be ordered by Id
     #pragma warning disable format
     public static readonly SystemEntityType Unspecified          = new(Id: new("00000001-0000-0000-0000-000000000000"), Key: "unsp", Name: nameof(Unspecified));

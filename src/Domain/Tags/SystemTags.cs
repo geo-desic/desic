@@ -2,37 +2,38 @@
 
 public static class SystemTags
 {
-    public static IList<Tag> Generate()
+    public static SystemTag? GetById(Guid Id) => _dictionaryById.TryGetValue(Id, out var value) ? value : null;
+    public static SystemTag? GetByName(string name) => _dictionaryByName.TryGetValue(name, out var value) ? value : null;
+
+    public static IEnumerable<Tag> AllAsEntities()
     {
-        var tagSystem = Get(SystemTag.System);
-        return [.. _systemTags.Select(x => new Tag
+        foreach (var value in All())
         {
-            Id = x.Value.Id,
-            CreatedByTypeId = Tag.ClassEntityType.Id,
-            CreatedById = tagSystem.Id,
-            ModifiedByTypeId = Tag.ClassEntityType.Id,
-            ModifiedById = tagSystem.Id,
-            Name = x.Value.Name,
-        })];
-    }
-
-    public static ReadOnlyTag Get(SystemTag systemTag)
-    {
-        return _systemTags[systemTag];
-    }
-
-    private static readonly SortedList<SystemTag, ReadOnlyTag> _systemTags = GenerateSystemTagsFromEnum();
-
-    private static SortedList<SystemTag, ReadOnlyTag> GenerateSystemTagsFromEnum()
-    {
-        var result = new SortedList<SystemTag, ReadOnlyTag>();
-        var entityTypeTagIdString = Tag.ClassEntityType.Id.ToString();
-        foreach (var value in Enum.GetValues<SystemTag>())
-        {
-            var integerIdString = $"{(int)value}";
-            var guidString = entityTypeTagIdString[..^integerIdString.Length] + integerIdString;
-            result.Add(value, new ReadOnlyTag { Id = new(guidString), Name = Enum.GetName(value)! });
+            yield return new()
+            {
+                Id = value.Id,
+                CreatedByTypeId = Tag.ClassEntityType.Id,
+                CreatedById = System.Id,
+                ModifiedByTypeId = Tag.ClassEntityType.Id,
+                ModifiedById = System.Id,
+                Name = value.Name,
+            };
         }
-        return result;
     }
+
+    // when adding a new system tag make sure to also add it to the All() method
+    // all fields (Id, Name) should be unique (case-insensitive) across all records
+    // do not change any values for existing records after it has been added to a non-development database
+    // this list should be ordered by Id
+    #pragma warning disable format
+    public static readonly SystemTag System               = new(Id: new("00000003-0000-0000-0000-000000000001"), Name: nameof(System));
+    #pragma warning restore format
+
+    private static IEnumerable<SystemTag> All()
+    {
+        yield return System;
+    }
+
+    private static readonly Dictionary<Guid, SystemTag> _dictionaryById = All().ToDictionary(x => x.Id);
+    private static readonly Dictionary<string, SystemTag> _dictionaryByName = All().ToDictionary(x => x.Name, comparer: StringComparer.OrdinalIgnoreCase);
 }

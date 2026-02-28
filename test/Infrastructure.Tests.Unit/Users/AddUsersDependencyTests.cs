@@ -10,8 +10,6 @@ public class AddUsersDependencyTests : ApplicationDbContextDependencyTests
     #region helpers
     public static User NewUser(Guid? id = null, string? username = null)
     {
-        var by = SystemTags.Get(SystemTag.System).Id;
-        var byType = Tag.ClassEntityType.Id;
         var on = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         id ??= 1.ToGuid();
         username ??= "username";
@@ -19,11 +17,11 @@ public class AddUsersDependencyTests : ApplicationDbContextDependencyTests
         {
             Id = id.Value,
             Username = username,
-            CreatedById = by,
-            CreatedByTypeId = byType,
+            CreatedById = SystemTags.System.Id,
+            CreatedByTypeId = SystemTags.System.SystemEntityType.Id,
             CreatedOn = on,
-            ModifiedById = by,
-            ModifiedByTypeId = byType,
+            ModifiedById = SystemTags.System.Id,
+            ModifiedByTypeId = SystemTags.System.SystemEntityType.Id,
             ModifiedOn = on,
         };
     }

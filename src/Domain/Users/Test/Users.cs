@@ -12,7 +12,6 @@ public static class Users
         var result = new List<User>();
         var random = new Random(RandomSeed);
         var isActive = true;
-        var tagSystem = Tags.SystemTags.Get(SystemTag.System);
         for (var i = 0; i < count; ++i)
         {
             const int maxSeconds = 725328000;
@@ -25,14 +24,14 @@ public static class Users
             {
                 Id = User.ClassEntityType.Id.ToIntBasedGuid(sequentialId),
                 CreatedOn = createdOn,
-                CreatedById = tagSystem.Id,
+                CreatedById = SystemTags.System.Id,
                 CreatedByTypeId = Tag.ClassEntityType.Id,
                 ModifiedOn = modifiedOn,
-                ModifiedById = tagSystem.Id,
+                ModifiedById = SystemTags.System.Id,
                 ModifiedByTypeId = Tag.ClassEntityType.Id,
                 IsDeleted = isDeleted,
                 DeletedOn = isDeleted ? modifiedOn : null,
-                DeletedById = isDeleted ? tagSystem.Id : null,
+                DeletedById = isDeleted ? SystemTags.System.Id : null,
                 DeletedByTypeId = isDeleted ? Tag.ClassEntityType.Id : null,
                 Username = $"user-{sequentialId}",
                 IsActive = isActive,

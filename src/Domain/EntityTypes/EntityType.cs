@@ -2,7 +2,7 @@
 
 namespace Desic.Domain.EntityTypes;
 
-public class EntityType : BaseEntity, IStaticEntityType, IReadOnlyEntityType
+public class EntityType : BaseEntity, IStaticEntityType
 {
     public static SystemEntityType ClassEntityType => SystemEntityTypes.EntityType;
     public override SystemEntityType SystemEntityType => ClassEntityType;
