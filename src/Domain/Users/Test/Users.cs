@@ -1,5 +1,4 @@
-﻿using Desic.Domain.EntityTypes;
-using Desic.Domain.Tags;
+﻿using Desic.Domain.Tags;
 using Desic.Helpers;
 
 namespace Desic.Domain.Users.Test;
@@ -13,8 +12,6 @@ public static class Users
         var result = new List<User>();
         var random = new Random(RandomSeed);
         var isActive = true;
-        var entityTypeTag = EntityTypes.SystemEntityTypes.Get(SystemEntityType.Tag);
-        var entityTypeUserId = EntityTypes.SystemEntityTypes.Get(SystemEntityType.User).Id;
         var tagSystem = Tags.SystemTags.Get(SystemTag.System);
         for (var i = 0; i < count; ++i)
         {
@@ -26,17 +23,17 @@ public static class Users
             var isDeleted = !isActive && i % 3 == 0;
             result.Add(new User
             {
-                Id = entityTypeUserId.ToIntBasedGuid(sequentialId),
+                Id = User.ClassEntityType.Id.ToIntBasedGuid(sequentialId),
                 CreatedOn = createdOn,
                 CreatedById = tagSystem.Id,
-                CreatedByTypeId = entityTypeTag.Id,
+                CreatedByTypeId = Tag.ClassEntityType.Id,
                 ModifiedOn = modifiedOn,
                 ModifiedById = tagSystem.Id,
-                ModifiedByTypeId = entityTypeTag.Id,
+                ModifiedByTypeId = Tag.ClassEntityType.Id,
                 IsDeleted = isDeleted,
                 DeletedOn = isDeleted ? modifiedOn : null,
                 DeletedById = isDeleted ? tagSystem.Id : null,
-                DeletedByTypeId = isDeleted ? entityTypeTag.Id : null,
+                DeletedByTypeId = isDeleted ? Tag.ClassEntityType.Id : null,
                 Username = $"user-{sequentialId}",
                 IsActive = isActive,
             });

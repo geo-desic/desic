@@ -1,6 +1,4 @@
-﻿using Desic.Domain.EntityTypes;
-
-namespace Desic.Domain.Tags;
+﻿namespace Desic.Domain.Tags;
 
 public static class SystemTags
 {
@@ -10,9 +8,9 @@ public static class SystemTags
         return [.. _systemTags.Select(x => new Tag
         {
             Id = x.Value.Id,
-            CreatedByTypeId = _entityTypeTag.Id,
+            CreatedByTypeId = Tag.ClassEntityType.Id,
             CreatedById = tagSystem.Id,
-            ModifiedByTypeId = _entityTypeTag.Id,
+            ModifiedByTypeId = Tag.ClassEntityType.Id,
             ModifiedById = tagSystem.Id,
             Name = x.Value.Name,
         })];
@@ -23,13 +21,12 @@ public static class SystemTags
         return _systemTags[systemTag];
     }
 
-    private static readonly ReadOnlyEntityType _entityTypeTag = SystemEntityTypes.Get(SystemEntityType.Tag);
     private static readonly SortedList<SystemTag, ReadOnlyTag> _systemTags = GenerateSystemTagsFromEnum();
 
     private static SortedList<SystemTag, ReadOnlyTag> GenerateSystemTagsFromEnum()
     {
         var result = new SortedList<SystemTag, ReadOnlyTag>();
-        var entityTypeTagIdString = _entityTypeTag.Id.ToString();
+        var entityTypeTagIdString = Tag.ClassEntityType.Id.ToString();
         foreach (var value in Enum.GetValues<SystemTag>())
         {
             var integerIdString = $"{(int)value}";

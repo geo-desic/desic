@@ -5,14 +5,14 @@ public static class EntityHelpers
     public static void SetCreatedBy(this ICreatable entity, IReadOnlyMinimalEntity by, DateTime? on = null)
     {
         entity.CreatedById = by.Id;
-        entity.CreatedByTypeId = by.GetEntityType().Id;
+        entity.CreatedByTypeId = by.SystemEntityType.Id;
         entity.CreatedOn = on ?? DateTime.UtcNow;
     }
 
     public static void SetModifiedBy(this IModifiable entity, IReadOnlyMinimalEntity by, DateTime? on = null)
     {
         entity.ModifiedById = by.Id;
-        entity.ModifiedByTypeId = by.GetEntityType().Id;
+        entity.ModifiedByTypeId = by.SystemEntityType.Id;
         entity.ModifiedOn = on ?? DateTime.UtcNow;
     }
 
@@ -27,7 +27,7 @@ public static class EntityHelpers
     {
         if (setIsDeleted) entity.IsDeleted = true;
         entity.DeletedById = by.Id;
-        entity.DeletedByTypeId = by.GetEntityType().Id;
+        entity.DeletedByTypeId = by.SystemEntityType.Id;
         entity.DeletedOn = on ?? DateTime.UtcNow;
     }
 

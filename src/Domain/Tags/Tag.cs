@@ -5,8 +5,8 @@ namespace Desic.Domain.Tags;
 
 public class Tag : SoftDeletableEntity, IStaticEntityType
 {
-    public static IReadOnlyEntityType EntityType { get; } = SystemEntityTypes.Get(SystemEntityType.Tag);
-    public override IReadOnlyEntityType GetEntityType() => EntityType;
+    public static SystemEntityType ClassEntityType => SystemEntityTypes.Tag;
+    public override SystemEntityType SystemEntityType => ClassEntityType;
 
     public required string Name { get; set; }
 }

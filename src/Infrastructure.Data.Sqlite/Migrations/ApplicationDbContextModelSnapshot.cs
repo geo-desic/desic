@@ -26,12 +26,20 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnOrder(0);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Key")
                         .IsRequired()
                         .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(2);
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Key")
+                        .IsUnique();
 
                     b.HasIndex("Name")
                         .IsUnique();

@@ -91,10 +91,10 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
             .ExecuteUpdateAsync(c => c
                 .SetProperty(p => p.IsDeleted, p => true)
                 .SetProperty(p => p.DeletedById, p => tag.Id)
-                .SetProperty(p => p.DeletedByTypeId, p => tag.GetEntityType().Id)
+                .SetProperty(p => p.DeletedByTypeId, p => Tag.ClassEntityType.Id)
                 .SetProperty(p => p.DeletedOn, p => nowTagOn)
                 .SetProperty(p => p.ModifiedById, p => tag.Id)
-                .SetProperty(p => p.ModifiedByTypeId, p => tag.GetEntityType().Id)
+                .SetProperty(p => p.ModifiedByTypeId, p => Tag.ClassEntityType.Id)
                 .SetProperty(p => p.ModifiedOn, p => nowTagOn), cancellationToken);
 
         return result;

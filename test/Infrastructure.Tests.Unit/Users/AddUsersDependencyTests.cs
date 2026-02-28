@@ -1,5 +1,4 @@
-﻿using Desic.Domain.EntityTypes;
-using Desic.Domain.Tags;
+﻿using Desic.Domain.Tags;
 using Desic.Domain.Users;
 using Desic.Helpers;
 using Desic.Infrastructure.Data;
@@ -12,7 +11,7 @@ public class AddUsersDependencyTests : ApplicationDbContextDependencyTests
     public static User NewUser(Guid? id = null, string? username = null)
     {
         var by = SystemTags.Get(SystemTag.System).Id;
-        var byType = SystemEntityTypes.Get(SystemEntityType.Tag).Id;
+        var byType = Tag.ClassEntityType.Id;
         var on = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         id ??= 1.ToGuid();
         username ??= "username";

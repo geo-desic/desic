@@ -1,6 +1,8 @@
-﻿namespace Desic.Domain.Common.Entities;
+﻿using Desic.Domain.EntityTypes;
+
+namespace Desic.Domain.Common.Entities;
 
 public interface IStaticEntityType
 {
-    static abstract IReadOnlyEntityType EntityType { get; }
+    static abstract SystemEntityType ClassEntityType { get; }
 }

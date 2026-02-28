@@ -5,8 +5,8 @@ namespace Desic.Domain.Iso3166Countries;
 
 public class Iso3166Country : SeedableSoftDeletableEntity, IStaticEntityType, IIso3166CountryReferenceData
 {
-    public static IReadOnlyEntityType EntityType { get; } = SystemEntityTypes.Get(SystemEntityType.Iso3166Country);
-    public override IReadOnlyEntityType GetEntityType() => EntityType;
+    public static SystemEntityType ClassEntityType => SystemEntityTypes.Iso3166Country;
+    public override SystemEntityType SystemEntityType => ClassEntityType;
 
     public required int IsoId { get; set; }
     public required string Alpha2 { get; set; }

@@ -73,7 +73,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
         }
 
         var result = new EntitySetSeedingResult();
-        var items = SystemEntityTypes.Generate();
+        var items = SystemEntityTypes.Generate().ToList();
         result.ReferenceCount = items.Count;
         if (!any) // fast method
         {

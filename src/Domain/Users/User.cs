@@ -5,8 +5,8 @@ namespace Desic.Domain.Users;
 
 public class User : SoftDeletableEntity, IStaticEntityType
 {
-    public static IReadOnlyEntityType EntityType { get; } = SystemEntityTypes.Get(SystemEntityType.User);
-    public override IReadOnlyEntityType GetEntityType() => EntityType;
+    public static SystemEntityType ClassEntityType => SystemEntityTypes.User;
+    public override SystemEntityType SystemEntityType => ClassEntityType;
 
     public required string Username { get; set; }
     public bool IsActive
