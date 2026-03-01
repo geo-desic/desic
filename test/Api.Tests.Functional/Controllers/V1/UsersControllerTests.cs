@@ -1,6 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Users;
 using Desic.Application.Users.Create;
+using Desic.Domain.Tags;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Http;
 using Desic.Testing.Integration.WebApplication;
@@ -13,6 +14,7 @@ public class UsersControllerTests : IClassFixture<DbFixture>
 {
     private readonly TestWebApplicationFactory<Program> _factory;
     private readonly HttpClient _httpClient;
+    private readonly TimeSpan _acceptablePrecision = TimeSpan.FromSeconds(1);
 
     public UsersControllerTests(DbFixture dbFixture)
     {
@@ -28,6 +30,41 @@ public class UsersControllerTests : IClassFixture<DbFixture>
         {
             Id = new Guid("00000004-0000-0000-0000-000000000001"),
             Username = "user-1",
+            Created = new()
+            {
+                By = new()
+                {
+                    Id = SystemTags.System.Id,
+                    Type = new()
+                    {
+                        Id = SystemTags.System.SystemEntityType.Id,
+                        Name = SystemTags.System.SystemEntityType.Name,
+                    }
+                }
+            },
+            Modified = new()
+            {
+                By = new()
+                {
+                    Id = SystemTags.System.Id,
+                    Type = new()
+                    {
+                        Id = SystemTags.System.SystemEntityType.Id,
+                        Name = SystemTags.System.SystemEntityType.Name,
+                    }
+                }
+            },
+            Deleted = new()
+            {
+                By = new()
+                {
+                    Id = null,
+                    Type = new()
+                    {
+                        Id = null,
+                    }
+                }
+            },
         };
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{expected.Id}");
 
@@ -36,7 +73,7 @@ public class UsersControllerTests : IClassFixture<DbFixture>
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        response.Content.Should().BeEquivalentTo(expected);
+        response.Content.Should().BeEquivalentTo(expected, x => x.Excluding(x => x.Created.On).Excluding(x => x.Modified.On).Excluding(x => x.Deleted.On));
     }
 
     [Fact]
@@ -104,9 +141,48 @@ public class UsersControllerTests : IClassFixture<DbFixture>
         {
             Username = "username-does-not-exist-2",
         };
+        var on = DateTime.UtcNow;
         var expected = new User
         {
             Username = user.Username,
+            Created = new()
+            {
+                By = new()
+                {
+                    Id = SystemTags.System.Id,
+                    Type = new()
+                    {
+                        Id = SystemTags.System.SystemEntityType.Id,
+                        Name = SystemTags.System.SystemEntityType.Name,
+                    }
+                },
+                On = on,
+            },
+            Modified = new()
+            {
+                By = new()
+                {
+                    Id = SystemTags.System.Id,
+                    Type = new()
+                    {
+                        Id = SystemTags.System.SystemEntityType.Id,
+                        Name = SystemTags.System.SystemEntityType.Name,
+                    }
+                },
+                On = on,
+            },
+            Deleted = new()
+            {
+                By = new()
+                {
+                    Id = null,
+                    Type = new()
+                    {
+                        Id = null,
+                    }
+                },
+                On = null,
+            },
         };
         var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user).AddHeader("Prefer", "return=representation");
 
@@ -118,6 +194,9 @@ public class UsersControllerTests : IClassFixture<DbFixture>
         response.Message.Headers.TryGetValues("Entity-Id", out var values).Should().BeTrue();
         values.Should().HaveCount(1);
         Guid.TryParse(values.First(), out _).Should().BeTrue();
-        response.Content.Should().BeEquivalentTo(expected, x => x.Excluding(x => x.Id));
+        response.Content.Should().BeEquivalentTo(expected, x => x
+            .Excluding(x => x.Id)
+            .Using<DateTime>(x => x.Subject.Should().BeCloseTo(x.Expectation, _acceptablePrecision)).WhenTypeIs<DateTime>()
+            .Using<DateTime?>(x => x.Subject.GetValueOrDefault().Should().BeCloseTo(x.Expectation.GetValueOrDefault(), _acceptablePrecision)).WhenTypeIs<DateTime?>());
     }
 }

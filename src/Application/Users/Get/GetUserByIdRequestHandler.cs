@@ -1,4 +1,5 @@
 ﻿using Desic.Application.Common;
+using Desic.Application.Common.Helpers;
 using Desic.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -19,10 +20,12 @@ public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger
             _logger.LogDebug(LogEvents.UserGet, "User with id {UserId} not found", request.UserId);
             return (User?)null;
         }
-        return new User
+        var result = new User
         {
             Id = user.Id,
             Username = user.Username,
         };
+        result.MapCreatedModifiedDeleted(user);
+        return result;
     }
 }

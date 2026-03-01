@@ -1,4 +1,5 @@
 ﻿using Desic.Application.Common;
+using Desic.Application.Common.Helpers;
 using Desic.Application.Common.Interfaces;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
@@ -49,6 +50,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
             Id = user.Id,
             Username = user.Username,
         };
+        result.Entity.MapCreatedModifiedDeleted(user);
 
         return result;
     }
