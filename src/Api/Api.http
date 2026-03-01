@@ -17,6 +17,11 @@ Accept: application/json
 
 ###
 
+GET {{Api_HostAddress}}/v1/entitytypes
+Accept: application/json
+
+###
+
 GET {{Api_HostAddress}}/v1/users/00000004-0000-0000-0000-000000000001
 Accept: application/json
 

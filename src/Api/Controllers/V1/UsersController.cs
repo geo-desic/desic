@@ -8,10 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desic.Api.Controllers.V1;
 
-[ApiController]
 [Route("v1/[controller]")]
-//[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
-public class UsersController(ILogger<UsersController> logger, IMediator mediator) : ControllerBase
+public class UsersController(ILogger<UsersController> logger, IMediator mediator) : ApiControllerBase
 {
     private readonly ILogger<UsersController> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
@@ -54,15 +52,5 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
             return CreatedAtAction(nameof(Get), new { id = value.Id }, value.Entity);
         }
         return NoContent();
-    }
-
-    protected ActionResult Problem(Error error)
-    {
-        if (error is ValidationError v)
-        {
-            var details = new ValidationProblemDetails(v.Failures);
-            return ValidationProblem(details);
-        }
-        return Problem(statusCode: 400, detail: error.Message);
     }
 }
