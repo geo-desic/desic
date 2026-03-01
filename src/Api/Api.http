@@ -1,33 +1,31 @@
-#@Api_HostAddress = http://localhost:5029
-@Api_HostAddress = https://localhost:7076
-#@Api_HostAddress = https://localhost:8081
+// use top right drop down to set desired environment
 
-GET {{Api_HostAddress}}/v1/healthz/live
+GET {{HostAddressApi}}/v1/healthz/live
 Accept: text/plain
 
 ###
 
-GET {{Api_HostAddress}}/v1/healthz/ready
+GET {{HostAddressApi}}/v1/healthz/ready
 Accept: text/plain
 
 ###
 
-GET {{Api_HostAddress}}/v1/healthz/report
+GET {{HostAddressApi}}/v1/healthz/report
 Accept: application/json
 
 ###
 
-GET {{Api_HostAddress}}/v1/entitytypes
+GET {{HostAddressApi}}/v1/entitytypes?startIndex=1&count=3
 Accept: application/json
 
 ###
 
-GET {{Api_HostAddress}}/v1/users/00000004-0000-0000-0000-000000000001
+GET {{HostAddressApi}}/v1/users/00000004-0000-0000-0000-000000000001
 Accept: application/json
 
 ###
 
-POST {{Api_HostAddress}}/v1/users/
+POST {{HostAddressApi}}/v1/users/
 Accept: application/json
 Content-Type: application/json
 Prefer: return=representation
@@ -38,7 +36,7 @@ Prefer: return=representation
 
 ###
 
-POST {{Api_HostAddress}}/v1/users/
+POST {{HostAddressApi}}/v1/users/
 Accept: application/json
 Content-Type: application/json
 

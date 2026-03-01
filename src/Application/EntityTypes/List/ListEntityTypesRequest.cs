@@ -6,5 +6,6 @@ namespace Desic.Application.EntityTypes.List;
 
 public class ListEntityTypesRequest : IRequest<Result<PaginatedList<EntityType>>>
 {
-    public int Offset { get; set; } = 0;
+    public int? Count { get; set; }
+    public int StartIndex { get; set; }
 }
