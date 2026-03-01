@@ -1,6 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Users;
 using Desic.Application.Users.Create;
+using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Http;
@@ -26,46 +27,7 @@ public class UsersControllerTests : IClassFixture<DbFixture>
     public async Task Get_UserExists_Status200OkAndUserReturned()
     {
         // arrange
-        var expected = new User
-        {
-            Id = new Guid("00000004-0000-0000-0000-000000000001"),
-            Username = "user-1",
-            Created = new()
-            {
-                By = new()
-                {
-                    Id = SystemTags.System.Id,
-                    Type = new()
-                    {
-                        Key = SystemTags.System.SystemEntityType.Key,
-                        Name = SystemTags.System.SystemEntityType.Name,
-                    }
-                }
-            },
-            Modified = new()
-            {
-                By = new()
-                {
-                    Id = SystemTags.System.Id,
-                    Type = new()
-                    {
-                        Key = SystemTags.System.SystemEntityType.Key,
-                        Name = SystemTags.System.SystemEntityType.Name,
-                    }
-                }
-            },
-            Deleted = new()
-            {
-                By = new()
-                {
-                    Id = null,
-                    Type = new()
-                    {
-                        Key = null,
-                    }
-                }
-            },
-        };
+        var expected = NewUser(id: new Guid("00000004-0000-0000-0000-000000000001"), username: "user-1", by: SystemTags.System); // this should exist in the db by test user seeding
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{expected.Id}");
 
         // act
@@ -141,49 +103,7 @@ public class UsersControllerTests : IClassFixture<DbFixture>
         {
             Username = "username-does-not-exist-2",
         };
-        var on = DateTime.UtcNow;
-        var expected = new User
-        {
-            Username = user.Username,
-            Created = new()
-            {
-                By = new()
-                {
-                    Id = SystemTags.System.Id,
-                    Type = new()
-                    {
-                        Key = SystemTags.System.SystemEntityType.Key,
-                        Name = SystemTags.System.SystemEntityType.Name,
-                    }
-                },
-                On = on,
-            },
-            Modified = new()
-            {
-                By = new()
-                {
-                    Id = SystemTags.System.Id,
-                    Type = new()
-                    {
-                        Key = SystemTags.System.SystemEntityType.Key,
-                        Name = SystemTags.System.SystemEntityType.Name,
-                    }
-                },
-                On = on,
-            },
-            Deleted = new()
-            {
-                By = new()
-                {
-                    Id = null,
-                    Type = new()
-                    {
-                        Key = null,
-                    }
-                },
-                On = null,
-            },
-        };
+        var expected = NewUser(username: "username-does-not-exist-2");
         var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user).AddHeader("Prefer", "return=representation");
 
         // act
@@ -198,5 +118,54 @@ public class UsersControllerTests : IClassFixture<DbFixture>
             .Excluding(x => x.Id)
             .Using<DateTime>(x => x.Subject.Should().BeCloseTo(x.Expectation, _acceptablePrecision)).WhenTypeIs<DateTime>()
             .Using<DateTime?>(x => x.Subject.GetValueOrDefault().Should().BeCloseTo(x.Expectation.GetValueOrDefault(), _acceptablePrecision)).WhenTypeIs<DateTime?>());
+    }
+
+    private static User NewUser(Guid? id = null, string? username = null, DateTime? on = null, IReadOnlyMinimalEntity? by = null)
+    {
+        on ??= DateTime.UtcNow;
+        by ??= SystemTags.System;
+        return new User
+        {
+            Id = id ?? Guid.Empty,
+            Username = username ?? "username",
+            Created = new()
+            {
+                By = new()
+                {
+                    Id = by.Id,
+                    Type = new()
+                    {
+                        Key = by.SystemEntityType.Key,
+                        Name = by.SystemEntityType.Name,
+                    }
+                },
+                On = on.Value,
+            },
+            Modified = new()
+            {
+                By = new()
+                {
+                    Id = by.Id,
+                    Type = new()
+                    {
+                        Key = by.SystemEntityType.Key,
+                        Name = by.SystemEntityType.Name,
+                    }
+                },
+                On = on.Value,
+            },
+            Deleted = new()
+            {
+                By = new()
+                {
+                    Id = null,
+                    Type = new()
+                    {
+                        Key = null,
+                    }
+                },
+                On = null,
+            },
+        };
     }
 }
