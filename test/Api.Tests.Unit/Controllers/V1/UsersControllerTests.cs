@@ -42,7 +42,7 @@ public class UsersControllerTests
         public async Task Get_UserExists_Status200OK()
         {
             // arrange
-            var userExpected = NewUserBusiness();
+            var userExpected = NewUser();
             _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(new Result<User>(userExpected));
             var controller = NewUsersController();
 
@@ -63,7 +63,7 @@ public class UsersControllerTests
         return new UsersController(logger: logger, mediator: mediator.Object);
     }
 
-    private static User NewUserBusiness(Guid? id = null)
+    private static User NewUser(Guid? id = null)
     {
         id ??= Guid.CreateVersion7();
         return new User
