@@ -37,7 +37,7 @@ public class UsersControllerTests : IClassFixture<DbFixture>
                     Id = SystemTags.System.Id,
                     Type = new()
                     {
-                        Id = SystemTags.System.SystemEntityType.Id,
+                        Key = SystemTags.System.SystemEntityType.Key,
                         Name = SystemTags.System.SystemEntityType.Name,
                     }
                 }
@@ -49,7 +49,7 @@ public class UsersControllerTests : IClassFixture<DbFixture>
                     Id = SystemTags.System.Id,
                     Type = new()
                     {
-                        Id = SystemTags.System.SystemEntityType.Id,
+                        Key = SystemTags.System.SystemEntityType.Key,
                         Name = SystemTags.System.SystemEntityType.Name,
                     }
                 }
@@ -61,7 +61,7 @@ public class UsersControllerTests : IClassFixture<DbFixture>
                     Id = null,
                     Type = new()
                     {
-                        Id = null,
+                        Key = null,
                     }
                 }
             },
@@ -152,7 +152,7 @@ public class UsersControllerTests : IClassFixture<DbFixture>
                     Id = SystemTags.System.Id,
                     Type = new()
                     {
-                        Id = SystemTags.System.SystemEntityType.Id,
+                        Key = SystemTags.System.SystemEntityType.Key,
                         Name = SystemTags.System.SystemEntityType.Name,
                     }
                 },
@@ -165,7 +165,7 @@ public class UsersControllerTests : IClassFixture<DbFixture>
                     Id = SystemTags.System.Id,
                     Type = new()
                     {
-                        Id = SystemTags.System.SystemEntityType.Id,
+                        Key = SystemTags.System.SystemEntityType.Key,
                         Name = SystemTags.System.SystemEntityType.Name,
                     }
                 },
@@ -178,7 +178,7 @@ public class UsersControllerTests : IClassFixture<DbFixture>
                     Id = null,
                     Type = new()
                     {
-                        Id = null,
+                        Key = null,
                     }
                 },
                 On = null,

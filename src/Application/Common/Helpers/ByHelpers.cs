@@ -8,25 +8,28 @@ internal static class ByHelpers
 {
     public static void MapCreated(this ICreated item, ICreatable entity)
     {
+        var entityType = SystemEntityTypes.GetById(entity.CreatedByTypeId);
         item.Created.By.Id = entity.CreatedById;
-        item.Created.By.Type.Id = entity.CreatedByTypeId;
-        item.Created.By.Type.Name = SystemEntityTypes.GetById(entity.CreatedByTypeId)?.Name ?? string.Empty;
+        item.Created.By.Type.Key = entityType?.Key ?? string.Empty;
+        item.Created.By.Type.Name = entityType?.Name ?? string.Empty;
         item.Created.On = entity.CreatedOn;
     }
 
     public static void MapModified(this IModified item, IModifiable entity)
     {
+        var entityType = SystemEntityTypes.GetById(entity.ModifiedByTypeId);
         item.Modified.By.Id = entity.ModifiedById;
-        item.Modified.By.Type.Id = entity.ModifiedByTypeId;
-        item.Modified.By.Type.Name = SystemEntityTypes.GetById(entity.ModifiedByTypeId)?.Name ?? string.Empty;
+        item.Modified.By.Type.Key = entityType?.Key ?? string.Empty;
+        item.Modified.By.Type.Name = entityType?.Name ?? string.Empty;
         item.Modified.On = entity.ModifiedOn;
     }
 
     public static void MapDeleted(this ISoftDeleted item, ISoftDeletable entity)
     {
+        var entityType = entity.DeletedByTypeId.HasValue ? SystemEntityTypes.GetById(entity.DeletedByTypeId.Value) : null;
         item.Deleted.By.Id = entity.DeletedById;
-        item.Deleted.By.Type.Id = entity.DeletedByTypeId;
-        item.Deleted.By.Type.Name = entity.DeletedByTypeId.HasValue ? SystemEntityTypes.GetById(entity.DeletedByTypeId.Value)?.Name : null;
+        item.Deleted.By.Type.Key = entityType?.Key;
+        item.Deleted.By.Type.Name = entityType?.Name;
         item.Deleted.On = entity.DeletedOn;
     }
 
