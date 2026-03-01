@@ -15,6 +15,7 @@ namespace Desic.Api.Tests.Unit.Controllers.V1;
 public class UsersControllerTests
 {
     private readonly Guid _id = new("00000000-0000-0000-0000-000000000001");
+    private readonly ILogger<UsersController> _logger = NullLogger<UsersController>.Instance;
     private readonly Mock<IMediator> _mediator = new();
 
     // each test has its own class so it can be run in parallel
@@ -24,7 +25,7 @@ public class UsersControllerTests
         public async Task Get_UserDoesNotExist_Status404NotFound()
         {
             // arrange
-            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(new Result<User>());
+            Setup(user: null);
             var controller = NewUsersController();
 
             // act
@@ -43,7 +44,7 @@ public class UsersControllerTests
         {
             // arrange
             var userExpected = NewUser();
-            _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(new Result<User>(userExpected));
+            Setup(user: userExpected);
             var controller = NewUsersController();
 
             // act
@@ -56,11 +57,15 @@ public class UsersControllerTests
         }
     }
 
-    private UsersController NewUsersController(ILogger<UsersController>? logger = null, Mock<IMediator>? mediator = null)
+    private void Setup(User? user)
     {
-        logger ??= NullLogger<UsersController>.Instance;
-        mediator ??= _mediator;
-        return new UsersController(logger: logger, mediator: mediator.Object);
+        var result = user == null ? new Result<User>() : new Result<User>(user);
+        _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(result);
+    }
+
+    private UsersController NewUsersController()
+    {
+        return new UsersController(logger: _logger, mediator: _mediator.Object);
     }
 
     private static User NewUser(Guid? id = null)
