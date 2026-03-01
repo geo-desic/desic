@@ -20,12 +20,6 @@ public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger
             _logger.LogDebug(LogEvents.UserGet, "User with id {UserId} not found", request.UserId);
             return (User?)null;
         }
-        var result = new User
-        {
-            Id = user.Id,
-            Username = user.Username,
-        };
-        result.MapCreatedModifiedDeleted(user);
-        return result;
+        return user.ToDto();
     }
 }
