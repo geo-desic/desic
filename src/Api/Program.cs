@@ -54,7 +54,7 @@ builder.Services.AddSingleton<StartupHealthCheck>();
 builder.Services.AddControllers();
 
 builder.Services.AddHealthChecks()
-    .AddCheck("Alive", x => HealthCheckResult.Healthy())
+    .AddCheck("Alive", x => HealthCheckResult.Healthy(), tags: ["live"])
     .AddDbContextCheck<ApplicationDbContext>(tags: ["ready"])
     .AddCheck<StartupHealthCheck>("Startup", tags: ["ready"]);
 

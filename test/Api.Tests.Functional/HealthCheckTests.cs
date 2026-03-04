@@ -57,7 +57,8 @@ public class HealthCheckTests : IClassFixture<DbFixture>
             OverallStatus = healthy,
             Entries =
             [
-                new() { Name = "Alive", Status = healthy, Tags = [], Data = new Dictionary<string, object>() },
+                new() { Name = "self", Status = healthy, Tags = ["live"], Data = new Dictionary<string, object>() },
+                new() { Name = "Alive", Status = healthy, Tags = ["live"], Data = new Dictionary<string, object>() },
                 new() { Name = nameof(ApplicationDbContext), Status = healthy, Tags = ["ready"], Data = new Dictionary<string, object>() },
                 new() { Name = "Startup", Status = healthy, Tags = ["ready"], Data = new Dictionary<string, object>() },
             ]

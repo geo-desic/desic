@@ -8,7 +8,6 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileRunArguments>--mount type=bind,source="C:/ProgramData/Desic",target="/usr/share/desic"</DockerfileRunArguments>
     <DockerfileContext>..\..</DockerfileContext>
-    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
     <RootNamespace>Desic.Api</RootNamespace>
     <AssemblyName>Desic.Api</AssemblyName>
   </PropertyGroup>

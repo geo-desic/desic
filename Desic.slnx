@@ -32,7 +32,4 @@
     <Project Path="test/MediatR.Tests/MediatR.Tests.csproj" />
     <Project Path="test/Testing.Integration/Testing.Integration.csproj" Id="defdd080-770f-45a6-b39b-fc2a941b1710" />
   </Folder>
-  <Project Path="docker-compose.dcproj">
-    <Build />
-  </Project>
 </Solution>

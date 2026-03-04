@@ -6,7 +6,7 @@
 While it is recommended to install both of the following, at least one will be needed to set up the database for development:
 - [LocalDB](https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb)
 - [Docker desktop](https://www.docker.com/products/docker-desktop/)
-  - this is required to utilize the aspire and docker-compose functionality
+  - this is required to utilize the aspire functionality
 
 ### User Secrets
 The projects use [User Secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) to store sensitive information during development. To set up your own user secrets, the simplest way is to run the AppHost project. It currently has support for creating the necessary user secrets if they do not exist. However, you can also manually create them as shown below.

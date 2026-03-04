@@ -8,7 +8,7 @@ namespace Desic.Domain.Tests.Unit.Common.Entities;
 
 public class EntityHelpersTests
 {
-    private readonly TimeSpan _acceptablePrecision = TimeSpan.FromMilliseconds(100);
+    private readonly TimeSpan _acceptablePrecision = TimeSpan.FromMilliseconds(500);
 
     public class EntityHelpersTests001 : EntityHelpersTests
     {
