@@ -25,10 +25,10 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         var serverConnection = new ServerConnection(connection);
         var server = new Server(serverConnection);
 
-        var containmentEnabled = server.Configuration.ContainmentEnabled.ConfigValue == 1;
+        var serverContainmentEnabled = server.Configuration.ContainmentEnabled.ConfigValue == 1;
 
         // default containment is true if server has it enabled or false otherwise
-        _contained = _options.Contained ?? containmentEnabled;
+        _contained = _options.Contained ?? serverContainmentEnabled;
 
         var database = server.Databases[_databaseName];
         if (database != null)
@@ -38,11 +38,15 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
                 _logger.LogInformation($"Stopping as the database already exists and '{nameof(_options.StopIfExists)}' is true");
                 return;
             }
-            if (_contained && !containmentEnabled) SetContainment(server, database);
+            // if containment is not specified in config, reset default containment based on whether the pre-existing database is contained (overriding default server logic above)
+            var databaseContainmentEnabled = database.ContainmentType == ContainmentType.Partial;
+            if (!_options.Contained.HasValue) _contained = databaseContainmentEnabled;
+            if (_contained && !serverContainmentEnabled) SetServerContainment(server);
+            if (_contained && !databaseContainmentEnabled) SetDatabaseContainment(database);
         }
         else
         {
-            if (_contained && !containmentEnabled) SetContainment(server);
+            if (_contained && !serverContainmentEnabled) SetServerContainment(server);
             CreateDatabase(server, _databaseName, _contained);
             database = server.Databases[_databaseName];
         }
@@ -78,17 +82,14 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         return connection;
     }
 
-    #region Containment
-    private void SetContainment(Server server, Database? database = null)
+    #region Server
+    private void SetServerContainment(Server server)
     {
-        server.Configuration.ContainmentEnabled.ConfigValue = 1;
-        server.Configuration.Alter();
-        _logger.LogInformation("Enabled contained database authentication for the server");
-        if (database != null && database.ContainmentType == ContainmentType.None)
+        if (server.Configuration.ContainmentEnabled.ConfigValue != 1)
         {
-            database.ContainmentType = ContainmentType.Partial;
-            database.Alter();
-            _logger.LogInformation("Enabled contained database authentication for the database: {DatabaseName}", database.Name);
+            server.Configuration.ContainmentEnabled.ConfigValue = 1;
+            server.Configuration.Alter();
+            _logger.LogInformation("Enabled contained database authentication for the server");
         }
     }
     #endregion
@@ -103,6 +104,16 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
 
         database.Create();
         _logger.LogInformation("Database '{DatabaseName}' created with containment = {IsContained}", name, contained);
+    }
+
+    private void SetDatabaseContainment(Database database)
+    {
+        if (database.ContainmentType != ContainmentType.Partial)
+        {
+            database.ContainmentType = ContainmentType.Partial;
+            database.Alter();
+            _logger.LogInformation("Enabled contained database authentication for database: {DatabaseName}", database.Name);
+        }
     }
     #endregion
 
