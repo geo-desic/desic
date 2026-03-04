@@ -29,6 +29,8 @@ logger.LogInformation("Http logging enabled value determined from configuration:
 
 logger.LogInformation("Starting configuration of the web application builder");
 
+builder.AddServiceDefaults();
+
 builder.Services
     .AddDomain()
     .AddApplication()
@@ -82,6 +84,8 @@ app.Logger.LogInformation("Built the web application");
 var isDevelopment = app.Environment.IsDevelopment();
 app.Logger.LogInformation("Application environment: {AppEnvironmentName}", app.Environment.EnvironmentName);
 app.Logger.LogInformation("Application is development: {AppIsDevelopment}", isDevelopment);
+
+app.MapDefaultEndpoints();
 
 if (httpLoggingEnabled)
 {

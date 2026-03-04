@@ -30,22 +30,22 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         // default containment is true if server has it enabled or false otherwise
         _contained = _options.Contained ?? containmentEnabled;
 
-        if (server.Databases.Contains(_databaseName))
+        var database = server.Databases[_databaseName];
+        if (database != null)
         {
             if (_options.StopIfExists ?? false)
             {
                 _logger.LogInformation($"Stopping as the database already exists and '{nameof(_options.StopIfExists)}' is true");
                 return;
             }
-            if (_contained && !containmentEnabled) SetContainment(server);
+            if (_contained && !containmentEnabled) SetContainment(server, database);
         }
         else
         {
             if (_contained && !containmentEnabled) SetContainment(server);
             CreateDatabase(server, _databaseName, _contained);
+            database = server.Databases[_databaseName];
         }
-
-        var database = server.Databases[_databaseName];
 
         // ensure we are connected to the new database before proceeding
         await connection.ChangeDatabaseAsync(_databaseName, cancellationToken);
@@ -79,11 +79,17 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
     }
 
     #region Containment
-    private void SetContainment(Server server)
+    private void SetContainment(Server server, Database? database = null)
     {
         server.Configuration.ContainmentEnabled.ConfigValue = 1;
         server.Configuration.Alter();
         _logger.LogInformation("Enabled contained database authentication for the server");
+        if (database != null && database.ContainmentType == ContainmentType.None)
+        {
+            database.ContainmentType = ContainmentType.Partial;
+            database.Alter();
+            _logger.LogInformation("Enabled contained database authentication for the database: {DatabaseName}", database.Name);
+        }
     }
     #endregion
 
