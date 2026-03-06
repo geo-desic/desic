@@ -101,11 +101,16 @@ else
 projectResourceDbUpdater
     .WithArgs(callbackArgsDbUpdater);
 
-builder.AddProject<Projects.Api>("api")
+var projectResourceApi = builder.AddProject<Projects.Api>("api")
     .WithEnvironment("DbProvider", dbProvider)
     .WithEnvironment(callbackEnvironmentApi)
     .WithEnvironment("ASPNETCORE_ENVIRONMENT", builder.Environment.EnvironmentName)
     .WaitFor(database)
     .WaitForCompletion(projectResourceDbUpdater);
+
+builder.AddViteApp(name: "web-resource", appDirectory: "../web")
+    .WithReference(projectResourceApi)
+    .WaitFor(projectResourceApi)
+    .WithNpm();
 
 builder.Build().Run();
