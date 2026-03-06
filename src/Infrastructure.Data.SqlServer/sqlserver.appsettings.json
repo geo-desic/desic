@@ -27,7 +27,7 @@
             "Name": "ref"
           }
         ],
-        "StopIfExists": true,
+        "NoInitIfDbExists": true,
         "Users": [
           {
             "Name": "api",

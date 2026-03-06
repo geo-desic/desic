@@ -4,7 +4,7 @@ public sealed class DatabaseInitializerOptions
 {
     public string? Name { get; set; }
     public bool? Contained { get; set; }
-    public bool? StopIfExists { get; set; }
+    public bool? NoInitIfDbExists { get; set; }
     public List<DatabaseInitializerRoleOptions>? Roles { get; set; }
     public List<DatabaseInitializerSchemaOptions>? Schemas { get; set; }
     public List<DatabaseInitializerUserOptions>? Users { get; set; }

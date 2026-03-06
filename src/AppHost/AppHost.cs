@@ -61,8 +61,6 @@ if (dbProvider == "SqlServer")
         c.Args.Add(connectionStringInitialization);
         c.Args.Add("--c");
         c.Args.Add(connectionStringMigrations);
-        c.Args.Add("--Databases:Application:SqlServer:StopIfExists");
-        c.Args.Add("false");
     };
 
     callbackEnvironmentApi = async (c) =>
