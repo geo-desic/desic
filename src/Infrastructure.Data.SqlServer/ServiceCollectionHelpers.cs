@@ -21,7 +21,7 @@ public static class ServiceCollectionHelpers
 
     public static IServiceCollection UseDatabaseInitializer(this IServiceCollection services, IConfiguration config, string configSectionKey = "Databases:Application:SqlServer")
     {
-        services.Configure<DatabaseInitializerOptions>(config.GetSection(key: configSectionKey));
+        services.AddOptions<DatabaseInitializerOptions>().BindConfiguration(configSectionKey).ValidateDataAnnotations().ValidateOnStart();
         services.AddTransient<DatabaseInitializer>();
         return services;
     }

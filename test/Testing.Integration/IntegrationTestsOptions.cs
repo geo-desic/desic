@@ -20,10 +20,20 @@ public sealed class IntegrationTestsDbProvidersSqlServerOptions
 
 public sealed class IntegrationTestsDatabaseOptions
 {
-    public IntegrationTestsDatabaseDesicOptions? Application { get; set; }
+    public IntegrationTestsDatabaseApplicationOptions? Application { get; set; }
 }
 
-public sealed class IntegrationTestsDatabaseDesicOptions
+public sealed class IntegrationTestsDatabaseApplicationOptions
 {
-    public string? ApiUserPassword { get; set; }
+    public IntegrationTestsDatabaseApplicationSqlServerOptions? SqlServer { get; set; }
+}
+
+public sealed class IntegrationTestsDatabaseApplicationSqlServerOptions
+{
+    public Dictionary<string, IntegrationTestsDatabaseApplicationSqlServerUsersOptions>? Users { get; set; }
+}
+
+public sealed class IntegrationTestsDatabaseApplicationSqlServerUsersOptions
+{
+    public string? Password { get; set; }
 }

@@ -38,7 +38,7 @@ public sealed class DbFixture : IAsyncLifetime
         }
         else // sql server
         {
-            var apiUserPassword = TestConfiguration.Options?.Databases?.Application?.ApiUserPassword ?? throw new InvalidOperationException($"{nameof(IntegrationTestsDatabaseDesicOptions.ApiUserPassword)} is not configured");
+            var apiUserPassword = TestConfiguration.Options?.Databases?.Application?.SqlServer?.Users?["Api"]?.Password ?? throw new InvalidOperationException($"Api user {nameof(IntegrationTestsDatabaseApplicationSqlServerUsersOptions.Password)} is not configured");
             if (_useContainerSqlServer)
             {
                 var image = TestConfiguration.Options?.DbProviders?.SqlServer?.ContainerImage ?? throw new InvalidOperationException($"Container image for sql server is not configured");

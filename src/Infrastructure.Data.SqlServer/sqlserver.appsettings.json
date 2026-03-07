@@ -28,21 +28,21 @@
           }
         ],
         "NoInitIfDbExists": true,
-        "Users": [
-          {
+        "Users": {
+          // for security reasons the Password element should be specified using other configuration providers (command line, environment variables, user secrets, etc.)
+          // LoginName is ignored when Contained is true
+          "Api": {
             "Name": "api",
-            "PasswordConfigKey": "Databases:Application:ApiUserPassword",
             "LoginName": "api",
             "DefaultSchema": "app",
             "Roles": [ "rl_api" ]
           },
-          {
+          "Migrations": {
             "Name": "migrations",
-            "PasswordConfigKey": "Databases:Application:MigrationsUserPassword",
             "LoginName": "migrations",
             "Roles": [ "db_owner" ]
           }
-        ]
+        }
       }
     }
   }

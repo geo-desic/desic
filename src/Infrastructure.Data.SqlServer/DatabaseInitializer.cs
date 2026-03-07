@@ -1,6 +1,5 @@
 ﻿using Desic.Data;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -9,11 +8,10 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
-public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, ILogger<DatabaseInitializer> logger, IConfiguration config)
+public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, ILogger<DatabaseInitializer> logger)
 {
     private bool _contained;
     private string? _databaseName;
-    private readonly IConfiguration _config = config ?? throw new ArgumentNullException(nameof(config));
     private readonly ILogger<DatabaseInitializer> _logger = logger ?? NullLogger<DatabaseInitializer>.Instance;
     private readonly DatabaseInitializerOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
 
@@ -220,7 +218,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
 
     private void CreateUsers(Server server, Database database)
     {
-        foreach (var user in _options.Users ?? [])
+        foreach (var user in _options.Users?.Select(x => x.Value) ?? [])
         {
             CreateUser(server, database, user);
             foreach (var role in user.Roles ?? [])
@@ -233,15 +231,10 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
     private void CreateUser(Server server, Database database, DatabaseInitializerUserOptions userOptions)
     {
         if (string.IsNullOrWhiteSpace(userOptions.Name)) throw new InvalidOperationException("User name is not specified");
-        var userPassword = userOptions.Password;
-        if (string.IsNullOrWhiteSpace(userPassword))
-        {
-            userPassword = _config.GetValue<string>(userOptions.PasswordConfigKey ?? throw new InvalidArgumentException("Neither password nor password configuration key for user is specified"))
-                ?? throw new InvalidArgumentException($"Password could not be resolved using the specified configuration key: {userOptions.PasswordConfigKey}");
-        }
+        if (string.IsNullOrWhiteSpace(userOptions.Password)) throw new InvalidOperationException("User password is not specified");
         if (!_contained)
         {
-            CreateLogin(server: server, name: userOptions.Name, password: userPassword, defaultDatabase: _databaseName);
+            CreateLogin(server: server, name: userOptions.Name, password: userOptions.Password, defaultDatabase: _databaseName);
         }
         var user = database.Users[userOptions.Name];
         if (user != null)
@@ -254,7 +247,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
 
         if (_contained)
         {
-            user.Create(userPassword);
+            user.Create(userOptions.Password);
         }
         else
         {

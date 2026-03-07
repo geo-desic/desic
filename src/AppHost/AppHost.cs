@@ -16,10 +16,10 @@ var projectResourceDbUpdater = builder.AddProject<Projects.Infrastructure_Tools_
 
 if (dbProvider == "SqlServer")
 {
-    const string configKeyDbUserPasswordInitialization = "Databases:Application:InitializationUserPassword";
-    const string configKeyDbUserPasswordMigrations = "Databases:Application:MigrationsUserPassword";
-    const string configKeyDbUserPasswordApi = "Databases:Application:ApiUserPassword";
-    var dbUserPasswordInitialization = config.GetValue<string>(configKeyDbUserPasswordInitialization);
+    const string configKeyPasswordInitialization = "Databases:Application:SqlServer:InitializationPassword";
+    const string configKeyDbUserPasswordMigrations = "Databases:Application:SqlServer:Users:Migrations:Password";
+    const string configKeyDbUserPasswordApi = "Databases:Application:SqlServer:Users:Api:Password";
+    var dbUserPasswordInitialization = config.GetValue<string>(configKeyPasswordInitialization);
     var dbUserPasswordMigrations = config.GetValue<string>(configKeyDbUserPasswordMigrations);
     var dbUserPasswordApi = config.GetValue<string>(configKeyDbUserPasswordApi);
     if (builder.Environment.IsDevelopment())
@@ -29,7 +29,7 @@ if (dbProvider == "SqlServer")
         if (string.IsNullOrEmpty(dbUserPasswordInitialization))
         {
             dbUserPasswordInitialization ??= Guid.NewGuid().ToString();
-            if (!userSecretsManager.TrySetSecret(configKeyDbUserPasswordInitialization, dbUserPasswordInitialization)) throw new InvalidOperationException($"Could not set user secret key: {configKeyDbUserPasswordInitialization}");
+            if (!userSecretsManager.TrySetSecret(configKeyPasswordInitialization, dbUserPasswordInitialization)) throw new InvalidOperationException($"Could not set user secret key: {configKeyPasswordInitialization}");
         }
         if (string.IsNullOrEmpty(dbUserPasswordMigrations))
         {
@@ -45,7 +45,7 @@ if (dbProvider == "SqlServer")
     }
     else
     {
-        if (string.IsNullOrEmpty(dbUserPasswordInitialization)) throw new InvalidOperationException($"Required configuration value is null or empty: {configKeyDbUserPasswordInitialization}");
+        if (string.IsNullOrEmpty(dbUserPasswordInitialization)) throw new InvalidOperationException($"Required configuration value is null or empty: {configKeyPasswordInitialization}");
         if (string.IsNullOrEmpty(dbUserPasswordMigrations)) throw new InvalidOperationException($"Required configuration value is null or empty: {configKeyDbUserPasswordMigrations}");
         if (string.IsNullOrEmpty(dbUserPasswordApi)) throw new InvalidOperationException($"Required configuration value is null or empty: {configKeyDbUserPasswordApi}");
     }
