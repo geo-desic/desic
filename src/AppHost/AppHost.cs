@@ -57,9 +57,9 @@ if (dbProvider == "SqlServer")
     {
         var connectionStringInitialization = await database.Resource.GetConnectionStringAsync().ConfigureAwait(false) ?? throw new InvalidOperationException("Could not resolve database connection string");
         var connectionStringMigrations = new SqlConnectionStringBuilder(connectionStringInitialization) { InitialCatalog = "Desic", UserID = "migrations", Password = dbUserPasswordMigrations }.ConnectionString;
-        c.Args.Add("--ci");
+        c.Args.Add("-ci");
         c.Args.Add(connectionStringInitialization);
-        c.Args.Add("--c");
+        c.Args.Add("-c");
         c.Args.Add(connectionStringMigrations);
     };
 
@@ -79,7 +79,7 @@ else if (dbProvider == "Sqlite")
     callbackArgsDbUpdater = async (c) =>
     {
         var connectionStringMigrations = await database.Resource.GetConnectionStringAsync().ConfigureAwait(false) ?? throw new InvalidOperationException("Could not resolve database connection string");
-        c.Args.Add("--c");
+        c.Args.Add("-c");
         c.Args.Add(connectionStringMigrations);
     };
 

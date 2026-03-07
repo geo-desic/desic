@@ -1,8 +1,8 @@
-﻿using Desic.DatabaseUpdater;
-using Desic.Domain;
+﻿using Desic.Domain;
 using Desic.Infrastructure;
 using Desic.Infrastructure.Data.Sqlite;
 using Desic.Infrastructure.Data.SqlServer;
+using Desic.Infrastructure.Tools.DbUpdater;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,15 +12,24 @@ var builder = Host.CreateApplicationBuilder();
 var config = builder.Configuration;
 config.Sources.Insert(0, new JsonConfigurationSource() { Path = "sqlserver.appsettings.json", Optional = true });
 config.Sources.Insert(0, new JsonConfigurationSource() { Path = "sqlite.appsettings.json", Optional = true });
-config.AddCommandLine(args);
+var mappings = new Dictionary<string, string>
+{
+    { "-c", ConfigKeys.ConnectionStringMigrations },
+    { "-ci", ConfigKeys.ConnectionStringInitialization },
+    { "-p", ConfigKeys.DbProvider },
+    { "--provider", ConfigKeys.DbProvider },
+    { "-s", ConfigKeys.SeedingEnabled },
+    { "--seeding", ConfigKeys.SeedingEnabled },
+};
+config.AddCommandLine(args, mappings);
 
-var dbProvider = config.GetValue("provider", config.GetValue<string>("DbProvider") ?? throw new InvalidOperationException("Database provider could not be determined"));
+var dbProvider = config.GetValue<string>(ConfigKeys.DbProvider) ?? throw new InvalidOperationException("Database provider could not be determined");
 
 builder.Services.AddHostedService<WorkerService>();
 
-var connectionStringMigrations = config.GetValue<string>("c") ?? config.GetValue<string>("connection");
-var connectionStringInitialization = config.GetValue<string>("ci") ?? config.GetValue<string>("connection-init");
-var useSeeding = !(args.Contains("--ns") || args.Contains("--no-seeding"));
+var connectionStringMigrations = config.GetValue<string>(ConfigKeys.ConnectionStringMigrations);
+var connectionStringInitialization = config.GetValue<string>(ConfigKeys.ConnectionStringInitialization);
+var useSeeding = config.GetValue(ConfigKeys.SeedingEnabled, false);
 
 if (connectionStringMigrations != null) builder.Services.AddDomain().AddInfrastructure();
 

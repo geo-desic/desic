@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.DatabaseUpdater;
+namespace Desic.Infrastructure.Tools.DbUpdater;
 
 public class WorkerService(IServiceProvider serviceProvider, IConfiguration config, ILogger<WorkerService> logger, IHostApplicationLifetime hostApplicationLifetime) : BackgroundService
 {
@@ -21,7 +21,7 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
         var initilizationPerformed = false;
         var migrationsPerformed = false;
 
-        var dbProvider = _config.GetValue("provider", _config.GetValue<string>("DbProvider"));
+        var dbProvider = _config.GetValue<string>(ConfigKeys.DbProvider);
         if (dbProvider == null)
         {
             _logger.LogError("Database provider could not be determined");
@@ -30,7 +30,7 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
         }
 
         // initialization
-        var connectionStringInitialization = _config.GetValue<string>("ci") ?? _config.GetValue<string>("connection-init");
+        var connectionStringInitialization = _config.GetValue<string>(ConfigKeys.ConnectionStringInitialization);
         if (connectionStringInitialization != null)
         {
             initilizationPerformed = await PerformInitialization(dbProvider: dbProvider, connectionString: connectionStringInitialization, cancellationToken: stoppingToken);
@@ -79,7 +79,7 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
         {
             if (connectionString == "migrations")
             {
-                var connectionStringMigrations = _config.GetValue<string>("c") ?? _config.GetValue<string>("connection");
+                var connectionStringMigrations = _config.GetValue<string>(ConfigKeys.ConnectionStringMigrations);
                 if (connectionStringMigrations == null)
                 {
                     _logger.LogError("Connection string for initialization is 'migrations' but no connection string for migrations was provided");

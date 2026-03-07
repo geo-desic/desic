@@ -2,8 +2,8 @@
   "profiles": {
     "Infrastructure.Tools.DbUpdater": {
       "commandName": "Project",
-      //"commandLineArgs": "--provider Sqlite --c \"Data Source=%temp%\\desic-tests\\desic.db;\"",
-      "commandLineArgs": "--provider SqlServer --ci \"Server=(localdb)\\MSSQLLocalDB;Database=Desic;Integrated Security=true;\" --c \"Server=(localdb)\\MSSQLLocalDB;Database=Desic;UID=migrations;Password=6246a106-1ef4-4db7-9c6e-dd20e6e09d4f;\"",
+      //"commandLineArgs": "-p Sqlite -c \"Data Source=%temp%\\desic-tests\\desic.db;\"",
+      "commandLineArgs": "-p SqlServer -ci \"Server=(localdb)\\MSSQLLocalDB;Database=Desic;Integrated Security=true;\" -c \"Server=(localdb)\\MSSQLLocalDB;Database=Desic;UID=migrations;Password=6246a106-1ef4-4db7-9c6e-dd20e6e09d4f;\"",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }
