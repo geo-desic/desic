@@ -3,12 +3,13 @@ using Desic.Data;
 using Desic.Infrastructure.Data.SqlServer;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simpler IAsyncLifetime implementation
-public sealed class ApplicationDbContextLocalDb(string apiUserPassword) : IAsyncLifetime
+// see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
+public sealed class TestDatabaseLocalDb(string apiUserPassword) : ITestDatabase
 {
     private readonly string _apiUserPassword = apiUserPassword ?? throw new InvalidOperationException("Api user password could not be determined");
     private string? _connectionStringApp;
@@ -17,8 +18,6 @@ public sealed class ApplicationDbContextLocalDb(string apiUserPassword) : IAsync
     private string? _databaseFileName;
     private string? _databaseName;
     private const string DataSource = @"(localdb)\MSSQLLocalDB";
-
-    public string ConnectionString => _connectionStringApp ?? throw new InvalidOperationException($"{nameof(ConnectionString)} has not been initialized");
 
     public async ValueTask InitializeAsync()
     {
@@ -42,7 +41,7 @@ public sealed class ApplicationDbContextLocalDb(string apiUserPassword) : IAsync
 
         _connectionStringApp = $"Data Source={DataSource};Initial Catalog={_databaseName};User ID={Providers.DbApiUser};Password={_apiUserPassword};";
 
-        using var connection = new SqlConnection(_connectionStringApp);
+        using var connection = GetConnection();
         if (!await connection.CanConnectAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
     }
 
@@ -63,4 +62,10 @@ public sealed class ApplicationDbContextLocalDb(string apiUserPassword) : IAsync
             try { File.Delete(Path.ChangeExtension(_databaseFilePath, ".ldf")); } catch { /* nothing */ }
         }
     }
+
+    public DbConnection GetConnection() => new SqlConnection(_connectionStringApp ?? throw NewDatabaseNotInitializedException());
+
+    public string GetConnectionString() => _connectionStringApp ?? throw NewDatabaseNotInitializedException();
+
+    private static InvalidOperationException NewDatabaseNotInitializedException() => new("Database has not been initialized");
 }

@@ -1,15 +1,17 @@
-﻿using Desic.Infrastructure.Data.Sqlite;
+﻿using Desic.Data;
+using Desic.Infrastructure.Data.Sqlite;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Xunit;
+using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
-public sealed class ApplicationDbContextSqlite : IAsyncLifetime
+// class is sealed for simper IAsyncLifetime implementation
+// see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
+public sealed class TestDatabaseSqlite : ITestDatabase
 {
     private string? _connectionString;
     private string? _databaseFilePath;
-
-    public string ConnectionString => _connectionString ?? throw new InvalidOperationException($"{nameof(ConnectionString)} has not been initialized");
 
     public async ValueTask InitializeAsync()
     {
@@ -25,9 +27,12 @@ public sealed class ApplicationDbContextSqlite : IAsyncLifetime
 
         // create the database and apply migrations
         using var factory = new ApplicationDbContextFactory();
-        using var context = factory.CreateDbContext(["--connection", ConnectionString, "--environment", Constants.TestEnvironmentName]);
+        using var context = factory.CreateDbContext(["--connection", _connectionString, "--environment", Constants.TestEnvironmentName]);
 
         await context.Database.MigrateAsync();
+
+        using var connection = GetConnection();
+        if (!await connection.CanConnectAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
     }
 
     public ValueTask DisposeAsync()
@@ -45,4 +50,10 @@ public sealed class ApplicationDbContextSqlite : IAsyncLifetime
 
         return ValueTask.CompletedTask;
     }
+
+    public DbConnection GetConnection() => new SqliteConnection(_connectionString ?? throw NewDatabaseNotInitializedException());
+
+    public string GetConnectionString() => _connectionString ?? throw NewDatabaseNotInitializedException();
+
+    private static InvalidOperationException NewDatabaseNotInitializedException() => new("Database has not been initialized");
 }

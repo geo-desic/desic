@@ -11,15 +11,15 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class UsersControllerTests : IClassFixture<DbFixture>
+public class UsersControllerTests : IClassFixture<TestDatabase>
 {
     private readonly TestWebApplicationFactory<Program> _factory;
     private readonly HttpClient _httpClient;
     private readonly TimeSpan _acceptablePrecision = TimeSpan.FromSeconds(1);
 
-    public UsersControllerTests(DbFixture dbFixture)
+    public UsersControllerTests(TestDatabase testDatabase)
     {
-        _factory = new TestWebApplicationFactory<Program>(dbFixture.ConnectionStringApp);
+        _factory = new TestWebApplicationFactory<Program>(testDatabase.GetConnectionString());
         _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
     }
 
