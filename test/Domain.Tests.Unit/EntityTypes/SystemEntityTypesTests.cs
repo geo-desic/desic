@@ -21,7 +21,7 @@ public class SystemEntityTypesTests
         }
     }
 
-    public class SystemEntityTypesTests002: SystemEntityTypesTests
+    public class SystemEntityTypesTests002 : SystemEntityTypesTests
     {
         [Fact]
         public void SystemEntityTypes_All_PassValidation()
