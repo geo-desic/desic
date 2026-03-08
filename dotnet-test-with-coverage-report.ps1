@@ -1,0 +1,2 @@
+dotnet test -- --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml --coverage-settings code-coverage.runsettings
+ReportGenerator -targetdir:coverage-report -reports:"test/**/bin/Debug/net10.0/TestResults/coverage.cobertura.xml"

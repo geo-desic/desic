@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/solution-items/">
     <File Path=".editorconfig" />
+    <File Path="code-coverage.runsettings" />
     <File Path="README.md" />
   </Folder>
   <Folder Name="/src/">
