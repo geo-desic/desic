@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Desic.Api.Tests.Functional;
 
-public class HealthCheckTests : IClassFixture<TestDatabase>
+public class HealthCheckTests : IClassFixture<TestDatabaseBasedOnConfig>
 {
     private readonly TestWebApplicationFactory<Program> _factory;
     private readonly HttpClient _httpClient;
 
-    public HealthCheckTests(TestDatabase testDatabase)
+    public HealthCheckTests(TestDatabaseBasedOnConfig testDatabase)
     {
         _factory = new TestWebApplicationFactory<Program>(testDatabase.GetConnectionString());
         _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });

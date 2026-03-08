@@ -8,12 +8,12 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class EntityTypesControllerTests : IClassFixture<TestDatabase>
+public class EntityTypesControllerTests : IClassFixture<TestDatabaseBasedOnConfig>
 {
     private readonly TestWebApplicationFactory<Program> _factory;
     private readonly HttpClient _httpClient;
 
-    public EntityTypesControllerTests(TestDatabase testDatabase)
+    public EntityTypesControllerTests(TestDatabaseBasedOnConfig testDatabase)
     {
         _factory = new TestWebApplicationFactory<Program>(testDatabase.GetConnectionString());
         _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });

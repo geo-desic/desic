@@ -4,7 +4,7 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class TestDatabase : ITestDatabase
+public sealed class TestDatabaseBasedOnConfig : ITestDatabase
 {
     private ITestDatabase? _database;
     private readonly bool _useContainerSqlServer = TestConfiguration.Options?.DbProviders?.SqlServer?.UseContainer ?? false;
