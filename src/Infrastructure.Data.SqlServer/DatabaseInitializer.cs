@@ -63,14 +63,14 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
     {
         var builder = new SqlConnectionStringBuilder(connectionString) { ConnectTimeout = 5 };
         var connection = new SqlConnection(builder.ConnectionString);
-        if (!await connection.CanConnectAsync(cancellationToken))
+        if (!await connection.TryOpenAsync(cancellationToken))
         {
             await connection.DisposeAsync();
             // possible the database does not exist, so try to connect to master database
             builder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master", ConnectTimeout = 5 };
             var connectionMaster = new SqlConnection(builder.ConnectionString);
 
-            if (!await connectionMaster.CanConnectAsync(cancellationToken))
+            if (!await connectionMaster.TryOpenAsync(cancellationToken))
             {
                 _logger.LogError("Cannot connect to the database server with the provided connection string");
                 throw new InvalidOperationException("Cannot connect to the database server with the provided connection string");

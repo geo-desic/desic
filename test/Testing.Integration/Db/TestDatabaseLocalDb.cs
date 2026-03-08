@@ -42,7 +42,7 @@ public sealed class TestDatabaseLocalDb(string apiUserPassword) : ITestDatabase
         _connectionStringApp = $"Data Source={DataSource};Initial Catalog={_databaseName};User ID={Providers.DbApiUser};Password={_apiUserPassword};";
 
         using var connection = GetConnection();
-        if (!await connection.CanConnectAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
+        if (!await connection.TryOpenAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
     }
 
     public async ValueTask DisposeAsync()

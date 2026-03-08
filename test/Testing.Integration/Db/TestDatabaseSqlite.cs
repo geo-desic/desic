@@ -32,7 +32,7 @@ public sealed class TestDatabaseSqlite : ITestDatabase
         await context.Database.MigrateAsync();
 
         using var connection = GetConnection();
-        if (!await connection.CanConnectAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
+        if (!await connection.TryOpenAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
     }
 
     public ValueTask DisposeAsync()

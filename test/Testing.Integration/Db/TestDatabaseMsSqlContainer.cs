@@ -38,7 +38,7 @@ public sealed class TestDatabaseMsSqlContainer(string image, string apiUserPassw
         _connectionString = builder.ConnectionString;
 
         using var connection = GetConnection();
-        if (!await connection.CanConnectAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
+        if (!await connection.TryOpenAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
     }
 
     public ValueTask DisposeAsync() => _container.DisposeAsync();
