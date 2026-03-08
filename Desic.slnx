@@ -23,6 +23,7 @@
     </Project>
   </Folder>
   <Folder Name="/test/">
+    <File Path="test/README.md" />
     <Project Path="test/Api.Tests.Functional/Api.Tests.Functional.csproj" />
     <Project Path="test/Api.Tests.Unit/Api.Tests.Unit.csproj" />
     <Project Path="test/Application.Tests.Unit/Application.Tests.Unit.csproj" />
