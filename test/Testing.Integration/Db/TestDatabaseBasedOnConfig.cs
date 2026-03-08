@@ -7,27 +7,27 @@ namespace Desic.Testing.Integration.Db;
 public sealed class TestDatabaseBasedOnConfig : ITestDatabase
 {
     private ITestDatabase? _database;
-    private readonly bool _useContainerSqlServer = TestConfiguration.Options?.DbProviders?.SqlServer?.UseContainer ?? false;
+    private readonly IntegrationTestsOptions? _options = TestConfiguration.Options;
 
     public async ValueTask InitializeAsync()
     {
-        if (TestConfiguration.Options?.DbProvider == "Sqlite")
+        if (DbProvider == DbProvider.Sqlite)
         {
-            Console.WriteLine($"Using database: {TestConfiguration.Options.DbProvider}");
+            Console.WriteLine($"Using database: {DbProvider}");
             _database = new TestDatabaseSqlite();
         }
         else // sql server
         {
-            var apiUserPassword = TestConfiguration.Options?.Databases?.Application?.SqlServer?.Users?["Api"]?.Password ?? throw new InvalidOperationException($"Api user {nameof(IntegrationTestsDatabaseApplicationSqlServerUsersOptions.Password)} is not configured");
-            if (_useContainerSqlServer)
+            var apiUserPassword = _options?.Databases?.Application?.SqlServer?.Users?["Api"]?.Password ?? throw new InvalidOperationException($"Api user {nameof(IntegrationTestsDatabaseApplicationSqlServerUsersOptions.Password)} is not configured");
+            if (_options?.DbProviders?.SqlServer?.UseContainer ?? false)
             {
-                var image = TestConfiguration.Options?.DbProviders?.SqlServer?.ContainerImage ?? throw new InvalidOperationException($"Container image for sql server is not configured");
-                Console.WriteLine($"Using database: {TestConfiguration.Options.DbProvider} (container)");
+                var image = _options?.DbProviders?.SqlServer?.ContainerImage ?? throw new InvalidOperationException($"Container image for sql server is not configured");
+                Console.WriteLine($"Using database: {DbProvider} (container)");
                 _database = new TestDatabaseMsSqlContainer(image: image, apiUserPassword: apiUserPassword);
             }
             else // localdb
             {
-                Console.WriteLine($"Using database: {TestConfiguration.Options.DbProvider} (localdb)");
+                Console.WriteLine($"Using database: {DbProvider} (localdb)");
                 _database = new TestDatabaseLocalDb(apiUserPassword: apiUserPassword);
             }
         }
@@ -38,6 +38,8 @@ public sealed class TestDatabaseBasedOnConfig : ITestDatabase
     {
         _database?.DisposeAsync().AsTask().Wait();
     }
+
+    public DbProvider DbProvider => _options?.DbProvider == DbProvider.Sqlite ? DbProvider.Sqlite : DbProvider.SqlServer;
 
     public DbConnection GetConnection() => _database?.GetConnection() ?? throw NewDatabaseNotInitializedException();
 

@@ -4,7 +4,7 @@ public sealed class IntegrationTestsOptions
 {
     public IntegrationTestsDbProvidersOptions? DbProviders { get; init; }
     public IntegrationTestsDatabaseOptions? Databases { get; init; }
-    public string? DbProvider { get; init; }
+    public DbProvider DbProvider { get; init; } = DbProvider.SqlServer;
 }
 
 public sealed class IntegrationTestsDbProvidersOptions
@@ -36,4 +36,10 @@ public sealed class IntegrationTestsDatabaseApplicationSqlServerOptions
 public sealed class IntegrationTestsDatabaseApplicationSqlServerUsersOptions
 {
     public string? Password { get; init; }
+}
+
+public enum DbProvider
+{
+    Sqlite,
+    SqlServer,
 }

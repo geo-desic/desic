@@ -8,7 +8,7 @@ using System.Data.Common;
 
 namespace Desic.Testing.Integration.WebApplication;
 
-public class TestWebApplicationFactory<TProgram>(string connectionString) : WebApplicationFactory<TProgram> where TProgram : class
+public class TestWebApplicationFactory<TProgram>(string connectionString, DbProvider dbProvider) : WebApplicationFactory<TProgram> where TProgram : class
 {
     private readonly string _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
 
@@ -28,7 +28,7 @@ public class TestWebApplicationFactory<TProgram>(string connectionString) : WebA
                 services.Remove(dbConnectionDescriptor);
             }
 
-            if (TestConfiguration.Options?.DbProvider == "Sqlite")
+            if (dbProvider == DbProvider.Sqlite)
             {
                 services.ConfigureApplicationDbContextForSqlite(connectionString: _connectionString, setMigrationsAssembly: false, useSeeding: false);
             }

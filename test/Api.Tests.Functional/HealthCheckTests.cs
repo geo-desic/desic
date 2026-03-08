@@ -15,7 +15,7 @@ public class HealthCheckTests : IClassFixture<TestDatabaseBasedOnConfig>
 
     public HealthCheckTests(TestDatabaseBasedOnConfig testDatabase)
     {
-        _factory = new TestWebApplicationFactory<Program>(testDatabase.GetConnectionString());
+        _factory = new TestWebApplicationFactory<Program>(testDatabase.GetConnectionString(), testDatabase.DbProvider);
         _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
     }
 
