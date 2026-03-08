@@ -3,22 +3,11 @@ using Desic.Api.Dtos.HealthChecks;
 using Desic.Infrastructure.Data;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Http;
-using Desic.Testing.Integration.WebApplication;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Desic.Api.Tests.Functional;
 
-public class HealthCheckTests : IClassFixture<TestDatabaseBasedOnConfig>
+public class HealthCheckTests(TestDatabaseBasedOnConfig testDatabase) : FunctionalTests(testDatabase), IClassFixture<TestDatabaseBasedOnConfig>
 {
-    private readonly TestWebApplicationFactory<Program> _factory;
-    private readonly HttpClient _httpClient;
-
-    public HealthCheckTests(TestDatabaseBasedOnConfig testDatabase)
-    {
-        _factory = new TestWebApplicationFactory<Program>(testDatabase.GetConnectionString(), testDatabase.DbProvider);
-        _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-    }
-
     [Fact]
     public async Task Live_ValidRequest_Status200OkAndHealthy()
     {
@@ -26,7 +15,7 @@ public class HealthCheckTests : IClassFixture<TestDatabaseBasedOnConfig>
         var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/live");
 
         // act
-        var response = await _httpClient.SendAsyncAndReadResponseAsString(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsString(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -40,7 +29,7 @@ public class HealthCheckTests : IClassFixture<TestDatabaseBasedOnConfig>
         var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/ready");
 
         // act
-        var response = await _httpClient.SendAsyncAndReadResponseAsString(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsString(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -66,7 +55,7 @@ public class HealthCheckTests : IClassFixture<TestDatabaseBasedOnConfig>
         var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/report");
 
         // act
-        var response = await _httpClient.SendAsyncAndReadResponseAsJson<HealthReport>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<HealthReport>(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);

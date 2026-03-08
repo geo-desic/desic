@@ -5,33 +5,23 @@ using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Http;
-using Desic.Testing.Integration.WebApplication;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class UsersControllerTests : IClassFixture<TestDatabaseBasedOnConfig>
+public class UsersControllerTests(TestDatabaseBasedOnConfig testDatabase) : FunctionalTests(testDatabase), IClassFixture<TestDatabaseBasedOnConfig>
 {
-    private readonly TestWebApplicationFactory<Program> _factory;
-    private readonly HttpClient _httpClient;
     private readonly TimeSpan _acceptablePrecision = TimeSpan.FromSeconds(1);
-
-    public UsersControllerTests(TestDatabaseBasedOnConfig testDatabase)
-    {
-        _factory = new TestWebApplicationFactory<Program>(testDatabase.GetConnectionString(), testDatabase.DbProvider);
-        _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-    }
 
     [Fact]
     public async Task Get_UserExists_Status200OkAndUserReturned()
     {
         // arrange
-        var expected = NewUser(id: new Guid("00000004-0000-0000-0000-000000000001"), username: "user-1", by: SystemTags.System); // this should exist in the db by test user seeding
+        var expected = NewUser(id: new Guid("00000004-0000-0000-0000-000000000001"), username: "user-1", by: SystemTags.System); // exists in seeded data
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{expected.Id}");
 
         // act
-        var response = await _httpClient.SendAsyncAndReadResponseAsJson<User>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -46,7 +36,7 @@ public class UsersControllerTests : IClassFixture<TestDatabaseBasedOnConfig>
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{id}");
 
         // act
-        var response = await _httpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
@@ -60,12 +50,12 @@ public class UsersControllerTests : IClassFixture<TestDatabaseBasedOnConfig>
         // arrange
         var user = new UserCreate
         {
-            Username = "user-1", // exists, part of seeded data
+            Username = "user-1", // exists in seeded data
         };
         var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user);
 
         // act
-        var response = await _httpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
@@ -85,7 +75,7 @@ public class UsersControllerTests : IClassFixture<TestDatabaseBasedOnConfig>
         var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user);
 
         // act
-        var response = await _httpClient.SendAsyncAndReadResponseAsString(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsString(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
@@ -107,7 +97,7 @@ public class UsersControllerTests : IClassFixture<TestDatabaseBasedOnConfig>
         var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user).AddHeader("Prefer", "return=representation");
 
         // act
-        var response = await _httpClient.SendAsyncAndReadResponseAsJson<User>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);

@@ -3,22 +3,11 @@ using Desic.Api.Tests.Functional.Common;
 using Desic.Application.EntityTypes;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Http;
-using Desic.Testing.Integration.WebApplication;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class EntityTypesControllerTests : IClassFixture<TestDatabaseBasedOnConfig>
+public class EntityTypesControllerTests(TestDatabaseBasedOnConfig testDatabase) : FunctionalTests(testDatabase), IClassFixture<TestDatabaseBasedOnConfig>
 {
-    private readonly TestWebApplicationFactory<Program> _factory;
-    private readonly HttpClient _httpClient;
-
-    public EntityTypesControllerTests(TestDatabaseBasedOnConfig testDatabase)
-    {
-        _factory = new TestWebApplicationFactory<Program>(testDatabase.GetConnectionString(), testDatabase.DbProvider);
-        _httpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
-    }
-
     [Fact]
     public async Task List_All_Status200OkAndEntitiesReturned()
     {
@@ -27,7 +16,7 @@ public class EntityTypesControllerTests : IClassFixture<TestDatabaseBasedOnConfi
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/entitytypes");
 
         // act
-        var response = await _httpClient.SendAsyncAndReadResponseAsJson<DeserializablePaginatedList<EntityType>>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<DeserializablePaginatedList<EntityType>>(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
