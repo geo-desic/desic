@@ -1,20 +1,22 @@
-﻿using System.Data.Common;
+﻿namespace Desic.Testing.Integration.Db;
 
-namespace Desic.Testing.Integration.Db;
-
-// class is sealed for simper IAsyncLifetime implementation
-// see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class TestDatabaseBasedOnConfig : ITestDatabase
+public sealed class TemplateDatabaseBasedOnConfig : ITemplateDatabase
 {
-    private ITestDatabase? _database;
+    private ITemplateDatabase? _database;
     private readonly IntegrationTestsOptions? _options = TestConfiguration.Options;
+
+    public ITestDatabase NewTestDatabase() => _database?.NewTestDatabase() ?? throw new InvalidOperationException(Constants.DatabaseNotInitialized);
 
     public async ValueTask InitializeAsync()
     {
+        // make sure temporary directory for the database files exists
+        var databaseDirectoryPath = Path.Combine(Path.GetTempPath(), $"{Constants.DatabaseName.ToLowerInvariant()}-tests");
+        Directory.CreateDirectory(databaseDirectoryPath);
+
         if (DbProvider == DbProvider.Sqlite)
         {
             Console.WriteLine($"Using database: {DbProvider}");
-            _database = new TestDatabaseSqlite();
+            _database = new TemplateDatabaseSqlite(databaseDirectoryPath: databaseDirectoryPath);
         }
         else // sql server
         {
@@ -22,13 +24,13 @@ public sealed class TestDatabaseBasedOnConfig : ITestDatabase
             if (_options?.DbProviders?.SqlServer?.UseContainer ?? false)
             {
                 var image = _options?.DbProviders?.SqlServer?.ContainerImage ?? throw new InvalidOperationException($"Container image for sql server is not configured");
-                Console.WriteLine($"Using database: {DbProvider} (container)");
-                _database = new TestDatabaseMsSqlContainer(image: image, apiUserPassword: apiUserPassword);
+                Console.WriteLine($"Using database: {DbProvider} (container) {image}");
+                _database = new TemplateDatabaseSqlServerContainer(image: image, apiUserPassword: apiUserPassword);
             }
             else // localdb
             {
                 Console.WriteLine($"Using database: {DbProvider} (localdb)");
-                _database = new TestDatabaseLocalDb(apiUserPassword: apiUserPassword);
+                _database = new TemplateDatabaseLocalDb(databaseDirectoryPath: databaseDirectoryPath, apiUserPassword: apiUserPassword);
             }
         }
         await _database.InitializeAsync();
@@ -40,10 +42,4 @@ public sealed class TestDatabaseBasedOnConfig : ITestDatabase
     }
 
     public DbProvider DbProvider => _options?.DbProvider == DbProvider.Sqlite ? DbProvider.Sqlite : DbProvider.SqlServer;
-
-    public DbConnection GetConnection() => _database?.GetConnection() ?? throw NewDatabaseNotInitializedException();
-
-    public string GetConnectionString() => _database?.GetConnectionString() ?? throw NewDatabaseNotInitializedException();
-
-    private static InvalidOperationException NewDatabaseNotInitializedException() => new("Database has not been initialized");
 }

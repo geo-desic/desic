@@ -6,7 +6,7 @@ using Desic.Testing.Integration.Http;
 
 namespace Desic.Api.Tests.Functional;
 
-public class HealthCheckTests(TestDatabaseBasedOnConfig testDatabase) : FunctionalTests(testDatabase), IClassFixture<TestDatabaseBasedOnConfig>
+public class HealthCheckTests(TestDatabase testDatabase) : FunctionalTests(testDatabase), IClassFixture<TestDatabase>
 {
     [Fact]
     public async Task Live_ValidRequest_Status200OkAndHealthy()

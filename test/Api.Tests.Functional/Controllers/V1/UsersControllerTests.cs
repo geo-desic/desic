@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class UsersControllerTests(TestDatabaseBasedOnConfig testDatabase) : FunctionalTests(testDatabase), IClassFixture<TestDatabaseBasedOnConfig>
+public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(testDatabase), IClassFixture<TestDatabase>
 {
     private readonly TimeSpan _acceptablePrecision = TimeSpan.FromSeconds(1);
 

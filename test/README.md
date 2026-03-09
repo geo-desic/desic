@@ -8,3 +8,6 @@ Integration tests validate multiple units/modules work when combined as a group.
 
 ## Functional Tests
 Functional tests are a specific type of integration test that validate the module works from the end-user's perspective according to any applicable business requirements, e.g. testing an API endpoint end to end. These often require a fully running (or nearly complete) system and environment. Functional tests have the naming convention `*.Tests.Functional` where `*` is the name of the project containing the module being tested.
+
+## Test Database
+During unit tests the database is either mocked or in some cases the EF in memory provider is used. For integration tests (including functional) an actual database is used. See the Testing.Integration project [readme](Testing.Integration/README.md) for more information.

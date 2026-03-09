@@ -6,7 +6,7 @@ using Desic.Testing.Integration.Http;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class EntityTypesControllerTests(TestDatabaseBasedOnConfig testDatabase) : FunctionalTests(testDatabase), IClassFixture<TestDatabaseBasedOnConfig>
+public class EntityTypesControllerTests(TestDatabase testDatabase) : FunctionalTests(testDatabase), IClassFixture<TestDatabase>
 {
     [Fact]
     public async Task List_All_Status200OkAndEntitiesReturned()

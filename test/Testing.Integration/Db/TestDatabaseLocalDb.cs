@@ -1,55 +1,44 @@
 using Desic.Api.Db;
 using Desic.Data;
-using Desic.Infrastructure.Data.SqlServer;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simpler IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class TestDatabaseLocalDb(string apiUserPassword) : ITestDatabase
+public sealed class TestDatabaseLocalDb(string databaseDirectoryPath, string templateDatabaseName, string templateDatabaseBackupFilePath, string apiUserPassword) : ITestDatabase
 {
     private readonly string _apiUserPassword = apiUserPassword ?? throw new InvalidOperationException("Api user password could not be determined");
-    private string? _connectionStringApp;
-    private string? _connectionStringMigrations;
+    private string? _connectionString;
+    private readonly string _databaseDirectoryPath = databaseDirectoryPath ?? throw new ArgumentNullException(nameof(databaseDirectoryPath));
     private string? _databaseFilePath;
-    private string? _databaseFileName;
+    private string? _databaseLogFilePath;
     private string? _databaseName;
-    private const string DataSource = @"(localdb)\MSSQLLocalDB";
+    private readonly string _templateDatabaseBackupFilePath = templateDatabaseBackupFilePath ?? throw new ArgumentNullException(nameof(templateDatabaseBackupFilePath));
+    private readonly string _templateDatabaseName = templateDatabaseName ?? throw new ArgumentNullException( nameof(templateDatabaseName));
 
     public async ValueTask InitializeAsync()
     {
-        // make sure temporary directory for the database files exists
-        var tempDir = Path.Combine(Path.GetTempPath(), "desic-tests");
-        Directory.CreateDirectory(tempDir);
-
         // create a unique name for the database
-        _databaseName = $"desic_{Guid.CreateVersion7():N}"; // uuidv7 will be easier to sort in file explorer for debugging purposes
-        _databaseFileName = $"{_databaseName}.mdf";
-        _databaseFilePath = Path.Combine(tempDir, _databaseFileName);
+        _databaseName = $"{Constants.DatabaseName.ToLowerInvariant()}_{Guid.CreateVersion7():N}"; // uuidv7 will be easier to sort in file explorer for debugging purposes
+        _databaseFilePath = Path.Combine(_databaseDirectoryPath, $"{_databaseName}.mdf");
+        _databaseLogFilePath = Path.Combine(_databaseDirectoryPath, $"{_databaseName}.ldf");
 
-        _connectionStringMigrations = $"Data Source={DataSource};Initial Catalog={_databaseName};Integrated Security=True;";
+        await RestoreDatabase();
+        Console.Write($"Successfully restored database {_databaseName} using {_templateDatabaseBackupFilePath}");
 
-        // create the database and apply migrations
-        using var factory = new ApplicationDbContextFactory();
-        using var context = factory.CreateDbContext(["--connection", _connectionStringMigrations, "--environment", Constants.TestEnvironmentName]);
-
-        await context.InitializeAsync(targetDatabaseName: _databaseName);
-        await context.Database.MigrateAsync();
-
-        _connectionStringApp = $"Data Source={DataSource};Initial Catalog={_databaseName};User ID={Providers.DbApiUser};Password={_apiUserPassword};";
+        _connectionString = $"Data Source={TemplateDatabaseLocalDb.DataSource};Initial Catalog={_databaseName};User ID={Providers.DbApiUser};Password={_apiUserPassword};";
 
         using var connection = GetConnection();
-        if (!await connection.TryOpenAsync()) throw new Exception($"Failed to connect to the database using the app connection string");
+        if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database using the api connection string");
     }
 
     public async ValueTask DisposeAsync()
     {
         if (!string.IsNullOrEmpty(_databaseFilePath))
         {
-            using var connection = new SqlConnection($"Data Source={DataSource};Integrated Security=True;");
+            using var connection = new SqlConnection($"Data Source={TemplateDatabaseLocalDb.DataSource};Integrated Security=True;");
             await connection.OpenAsync();
             using (var command = connection.CreateCommand())
             {
@@ -59,13 +48,28 @@ public sealed class TestDatabaseLocalDb(string apiUserPassword) : ITestDatabase
             await connection.CloseAsync();
 
             try { File.Delete(_databaseFilePath); } catch { /* nothing */ }
-            try { File.Delete(Path.ChangeExtension(_databaseFilePath, ".ldf")); } catch { /* nothing */ }
+        }
+        if (!string.IsNullOrEmpty(_databaseLogFilePath))
+        {
+            try { File.Delete(_databaseLogFilePath); } catch { /* nothing */ }
         }
     }
 
-    public DbConnection GetConnection() => new SqlConnection(_connectionStringApp ?? throw NewDatabaseNotInitializedException());
+    public DbConnection GetConnection() => new SqlConnection(_connectionString ?? throw NewDatabaseNotInitializedException());
 
-    public string GetConnectionString() => _connectionStringApp ?? throw NewDatabaseNotInitializedException();
+    public string GetConnectionString() => _connectionString ?? throw NewDatabaseNotInitializedException();
 
-    private static InvalidOperationException NewDatabaseNotInitializedException() => new("Database has not been initialized");
+    private static InvalidOperationException NewDatabaseNotInitializedException() => new(Constants.DatabaseNotInitialized);
+
+    private async Task RestoreDatabase()
+    {
+        using var connection = new SqlConnection($"Data Source={TemplateDatabaseLocalDb.DataSource};Integrated Security=True;");
+        await connection.OpenAsync();
+        using (var command = connection.CreateCommand())
+        {
+            command.CommandText = $"RESTORE DATABASE [{_databaseName}] FROM DISK = N'{_templateDatabaseBackupFilePath}' WITH MOVE '{_templateDatabaseName}' TO '{_databaseFilePath}', MOVE '{_templateDatabaseName}_Log' TO '{_databaseLogFilePath}', RECOVERY, REPLACE;";
+            await command.ExecuteNonQueryAsync();
+        }
+        await connection.CloseAsync();
+    }
 }

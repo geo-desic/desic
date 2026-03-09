@@ -9,7 +9,7 @@ public class FunctionalTests
     private readonly TestWebApplicationFactory<Program> _factory;
     protected readonly HttpClient HttpClient;
 
-    public FunctionalTests(TestDatabaseBasedOnConfig testDatabase)
+    public FunctionalTests(TestDatabase testDatabase)
     {
         _factory = new TestWebApplicationFactory<Program>(testDatabase.GetConnectionString(), testDatabase.DbProvider);
         HttpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });

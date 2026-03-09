@@ -11,5 +11,9 @@ public static class Constants
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
 
+    public const string DatabaseName = "Desic";
+
+    public const string DatabaseNotInitialized = "Database has not been initialized";
+
     public const string TestEnvironmentName = "Test";
 }
