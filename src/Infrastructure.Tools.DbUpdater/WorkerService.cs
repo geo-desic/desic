@@ -44,7 +44,6 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
         using (var scope = _serviceProvider.CreateScope())
         {
             var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-
             if (context != null)
             {
                 await context.Database.MigrateAsync(stoppingToken);
@@ -90,12 +89,10 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
                 _logger.LogDebug("Using migrations connection string for initialization");
             }
 
-            using (var scope = _serviceProvider.CreateScope())
-            {
-                var databaseInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
-                await databaseInitializer.InitializeAsync(connectionString: connectionString, cancellationToken: cancellationToken);
-                return true;
-            }
+            using var scope = _serviceProvider.CreateScope();
+            var databaseInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+            await databaseInitializer.InitializeAsync(connectionString: connectionString, cancellationToken: cancellationToken);
+            return true;
         }
         else
         {

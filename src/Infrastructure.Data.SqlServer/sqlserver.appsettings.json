@@ -4,6 +4,7 @@
       "SqlServer": {
         "Contained": true,
         "Name": "Desic",
+        "NoInitIfDbExists": true,
         "Roles": [
           {
             "Name": "rl_api",
@@ -27,7 +28,6 @@
             "Name": "ref"
           }
         ],
-        "NoInitIfDbExists": true,
         "Users": {
           // for security reasons the Password element should be specified using other configuration providers (command line, environment variables, user secrets, etc.)
           // LoginName is ignored when Contained is true
