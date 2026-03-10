@@ -1,10 +1,18 @@
-﻿namespace Desic.Testing.Integration;
+﻿using Desic.Infrastructure.Data.SqlServer;
+
+namespace Desic.Testing.Integration;
 
 public sealed class IntegrationTestsOptions
 {
+    public IntegrationTestsConnectionStringsOptions? ConnectionStrings { get; init; }
     public IntegrationTestsDbProvidersOptions? DbProviders { get; init; }
     public IntegrationTestsDatabaseOptions? Databases { get; init; }
     public DbProvider DbProvider { get; init; } = DbProvider.SqlServer;
+}
+
+public sealed class IntegrationTestsConnectionStringsOptions
+{
+    public string? SqlServer { get; init; }
 }
 
 public sealed class IntegrationTestsDbProvidersOptions
@@ -25,17 +33,7 @@ public sealed class IntegrationTestsDatabaseOptions
 
 public sealed class IntegrationTestsDatabaseApplicationOptions
 {
-    public IntegrationTestsDatabaseApplicationSqlServerOptions? SqlServer { get; init; }
-}
-
-public sealed class IntegrationTestsDatabaseApplicationSqlServerOptions
-{
-    public Dictionary<string, IntegrationTestsDatabaseApplicationSqlServerUsersOptions>? Users { get; init; }
-}
-
-public sealed class IntegrationTestsDatabaseApplicationSqlServerUsersOptions
-{
-    public string? Password { get; init; }
+    public DatabaseInitializerOptions? SqlServer { get; init; }
 }
 
 public enum DbProvider

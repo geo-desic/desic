@@ -1,4 +1,6 @@
-﻿namespace Desic.Testing.Integration.Db;
+﻿using Desic.Infrastructure.Data.SqlServer;
+
+namespace Desic.Testing.Integration.Db;
 
 public sealed class TemplateDatabaseBasedOnConfig : ITemplateDatabase
 {
@@ -20,17 +22,19 @@ public sealed class TemplateDatabaseBasedOnConfig : ITemplateDatabase
         }
         else // sql server
         {
-            var apiUserPassword = _options?.Databases?.Application?.SqlServer?.Users?["Api"]?.Password ?? throw new InvalidOperationException($"Api user {nameof(IntegrationTestsDatabaseApplicationSqlServerUsersOptions.Password)} is not configured");
+            var databaseInitializerOptions = _options?.Databases?.Application?.SqlServer ?? throw new InvalidOperationException($"Database initializer options for {DbProvider} is not configured");
             if (_options?.DbProviders?.SqlServer?.UseContainer ?? false)
             {
-                var image = _options?.DbProviders?.SqlServer?.ContainerImage ?? throw new InvalidOperationException($"Container image for sql server is not configured");
+                var apiUserPassword = databaseInitializerOptions.Users?.Api?.Password ?? throw new InvalidOperationException($"{nameof(DatabaseInitializerUsersOptions.Api)} user {nameof(DatabaseInitializerUserOptions.Password)} is not configured");
+                var image = _options?.DbProviders?.SqlServer?.ContainerImage ?? throw new InvalidOperationException("Container image for sql server is not configured");
                 Console.WriteLine($"Using database: {DbProvider} (container) {image}");
                 _database = new TemplateDatabaseSqlServerContainer(image: image, apiUserPassword: apiUserPassword);
             }
             else // localdb
             {
+                var connectionStringInitialization = _options?.ConnectionStrings?.SqlServer ?? throw new InvalidOperationException($"Connection string {nameof(IntegrationTestsConnectionStringsOptions.SqlServer)} is not configured");
                 Console.WriteLine($"Using database: {DbProvider} (localdb)");
-                _database = new TemplateDatabaseLocalDb(databaseDirectoryPath: databaseDirectoryPath, apiUserPassword: apiUserPassword);
+                _database = new TemplateDatabaseSqlServerLocal(connectionStringInitialization: connectionStringInitialization, databaseDirectoryPath: databaseDirectoryPath, databaseInitializerOptions: databaseInitializerOptions);
             }
         }
         await _database.InitializeAsync();

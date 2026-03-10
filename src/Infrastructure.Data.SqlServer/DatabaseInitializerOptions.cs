@@ -15,7 +15,7 @@ public sealed class DatabaseInitializerOptions
     public List<DatabaseInitializerRoleOptions>? Roles { get; set; }
     [ValidateEnumeratedItems]
     public List<DatabaseInitializerSchemaOptions>? Schemas { get; set; }
-    public Dictionary<string, DatabaseInitializerUserOptions>? Users { get; set; }
+    public DatabaseInitializerUsersOptions? Users { get; set; }
 }
 
 public sealed class DatabaseInitializerRoleOptions
@@ -56,6 +56,26 @@ public sealed class DatabaseInitializerSchemaOptions
     [StringLength(128, MinimumLength = 1)]
     [RegularExpression("^[a-zA-Z_]{1}[a-zA-Z0-9_\\@\\#\\$]*$")] // start with alphabetic character or: '_'; remaining characters can be alphanumeric characters or: '_', '@', '#', '$'
     public string? OwnerName { get; set; }
+}
+
+public sealed class DatabaseInitializerUsersOptions : Dictionary<string, DatabaseInitializerUserOptions>
+{
+    public DatabaseInitializerUserOptions? Api
+    {
+        get
+        {
+            TryGetValue(nameof(Api), out DatabaseInitializerUserOptions? value);
+            return value;
+        }
+    }
+    public DatabaseInitializerUserOptions? Migrations
+    {
+        get
+        {
+            TryGetValue(nameof(Migrations), out DatabaseInitializerUserOptions? value);
+            return value;
+        }
+    }
 }
 
 public sealed class DatabaseInitializerUserOptions
