@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
@@ -10,7 +11,9 @@ public sealed class DatabaseInitializerOptions
     public string? Name { get; set; }
     public bool? Contained { get; set; }
     public bool? NoInitIfDbExists { get; set; }
+    [ValidateEnumeratedItems]
     public List<DatabaseInitializerRoleOptions>? Roles { get; set; }
+    [ValidateEnumeratedItems]
     public List<DatabaseInitializerSchemaOptions>? Schemas { get; set; }
     public Dictionary<string, DatabaseInitializerUserOptions>? Users { get; set; }
 }
@@ -24,6 +27,7 @@ public sealed class DatabaseInitializerRoleOptions
     [StringLength(128, MinimumLength = 1)]
     [RegularExpression("^[a-zA-Z_]{1}[a-zA-Z0-9_\\@\\#\\$]*$")] // start with alphabetic character or: '_'; remaining characters can be alphanumeric characters or: '_', '@', '#', '$'
     public string? OwnerName { get; set; }
+    [ValidateEnumeratedItems]
     public List<DatabaseInitializerRoleGrantOptions>? Grants { get; set; }
 }
 
