@@ -29,17 +29,7 @@ public sealed class TestDatabaseSqlite(string templateDatabaseFilePath) : ITestD
 
     public ValueTask DisposeAsync()
     {
-        // delete the primary database file
-        if (_databaseFilePath != null) File.Delete(_databaseFilePath);
-
-        // delete any associated files that sqlite automatically creates
-        string[] associatedExtensions = ["db-journal", "db-wal", "db-shm"];
-        foreach (var extension in associatedExtensions)
-        {
-            var filepath = Path.ChangeExtension(_databaseFilePath, extension);
-            if (File.Exists(filepath)) File.Delete(filepath);
-        }
-
+        if (!string.IsNullOrEmpty(_databaseFilePath)) TemplateDatabaseSqlite.DeleteDatabaseAndAssociatedFiles(_databaseFilePath);
         return ValueTask.CompletedTask;
     }
 
