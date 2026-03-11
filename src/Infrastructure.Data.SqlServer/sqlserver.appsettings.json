@@ -2,45 +2,47 @@
   "Databases": {
     "Application": {
       "SqlServer": {
-        "Contained": true,
-        "Name": "Desic",
-        "NoInitIfDbExists": true,
-        "Roles": [
-          {
-            "Name": "rl_api",
-            "Grants": [
-              {
-                "Schema": "app",
-                "Permissions": [ "SELECT", "INSERT", "UPDATE", "DELETE" ]
-              },
-              {
-                "Schema": "ref",
-                "Permissions": [ "SELECT" ]
-              }
-            ]
-          }
-        ],
-        "Schemas": [
-          {
-            "Name": "app"
-          },
-          {
-            "Name": "ref"
-          }
-        ],
-        "Users": {
-          // for security reasons the Password element should be specified using other configuration providers (command line, environment variables, user secrets, etc.)
-          // LoginName is ignored when Contained is true
-          "Api": {
-            "Name": "api",
-            "LoginName": "api",
-            "DefaultSchema": "app",
-            "Roles": [ "rl_api" ]
-          },
-          "Migrations": {
-            "Name": "migrations",
-            "LoginName": "migrations",
-            "Roles": [ "db_owner" ]
+        "Initialization": {
+          "Contained": true,
+          "Name": "Desic",
+          "SkipIfDbExists": true,
+          "Roles": [
+            {
+              "Name": "rl_api",
+              "Grants": [
+                {
+                  "Schema": "app",
+                  "Permissions": [ "SELECT", "INSERT", "UPDATE", "DELETE" ]
+                },
+                {
+                  "Schema": "ref",
+                  "Permissions": [ "SELECT" ]
+                }
+              ]
+            }
+          ],
+          "Schemas": [
+            {
+              "Name": "app"
+            },
+            {
+              "Name": "ref"
+            }
+          ],
+          "Users": {
+            // for security reasons the Password element should be specified using other configuration providers (command line, environment variables, user secrets, etc.)
+            // LoginName is ignored when Contained is true
+            "Api": {
+              "Name": "api",
+              "LoginName": "api",
+              "DefaultSchema": "app",
+              "Roles": [ "rl_api" ]
+            },
+            "Migrations": {
+              "Name": "migrations",
+              "LoginName": "migrations",
+              "Roles": [ "db_owner" ]
+            }
           }
         }
       }

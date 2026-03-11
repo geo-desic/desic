@@ -10,7 +10,7 @@ public sealed class DatabaseInitializerOptions
     [RegularExpression("^[a-zA-Z_]{1}[a-zA-Z0-9_\\@\\#\\$]*$")] // start with alphabetic character or '_'; remaining characters can be alphanumeric characters or: '_', '@', '#', '$'
     public string? Name { get; set; }
     public bool? Contained { get; set; }
-    public bool? NoInitIfDbExists { get; set; }
+    public bool? SkipIfDbExists { get; set; }
     [ValidateEnumeratedItems]
     public List<DatabaseInitializerRoleOptions>? Roles { get; set; }
     [ValidateEnumeratedItems]

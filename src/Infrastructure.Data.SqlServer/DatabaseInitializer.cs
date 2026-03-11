@@ -31,9 +31,9 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
         var database = server.Databases[_databaseName];
         if (database != null)
         {
-            if (_options.NoInitIfDbExists ?? false)
+            if (_options.SkipIfDbExists ?? false)
             {
-                _logger.LogInformation($"Stopping as the database already exists and '{nameof(_options.NoInitIfDbExists)}' is true");
+                _logger.LogInformation($"Stopping as the database already exists and '{nameof(_options.SkipIfDbExists)}' is true");
                 return;
             }
             // if containment is not specified in config, reset default containment based on whether the pre-existing database is contained (overriding default server logic above)

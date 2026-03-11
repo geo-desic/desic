@@ -17,8 +17,8 @@ var projectResourceDbUpdater = builder.AddProject<Projects.Infrastructure_Tools_
 if (dbProvider == "SqlServer")
 {
     const string configKeyPasswordInitialization = "Databases:Application:SqlServer:InitializationPassword";
-    const string configKeyDbUserPasswordMigrations = "Databases:Application:SqlServer:Users:Migrations:Password";
-    const string configKeyDbUserPasswordApi = "Databases:Application:SqlServer:Users:Api:Password";
+    const string configKeyDbUserPasswordMigrations = "Databases:Application:SqlServer:Initialization:Users:Migrations:Password";
+    const string configKeyDbUserPasswordApi = "Databases:Application:SqlServer:Initialization:Users:Api:Password";
     var dbUserPasswordInitialization = config.GetValue<string>(configKeyPasswordInitialization);
     var dbUserPasswordMigrations = config.GetValue<string>(configKeyDbUserPasswordMigrations);
     var dbUserPasswordApi = config.GetValue<string>(configKeyDbUserPasswordApi);

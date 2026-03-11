@@ -33,7 +33,12 @@ public sealed class IntegrationTestsDatabaseOptions
 
 public sealed class IntegrationTestsDatabaseApplicationOptions
 {
-    public DatabaseInitializerOptions? SqlServer { get; init; }
+    public IntegrationTestsDatabaseApplicationSqlServerOptions? SqlServer { get; init; }
+}
+
+public sealed class IntegrationTestsDatabaseApplicationSqlServerOptions
+{
+    public DatabaseInitializerOptions? Initialization { get; init; }
 }
 
 public enum DbProvider

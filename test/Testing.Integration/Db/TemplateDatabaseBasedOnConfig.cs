@@ -22,7 +22,7 @@ public sealed class TemplateDatabaseBasedOnConfig : ITemplateDatabase
         }
         else // sql server
         {
-            var databaseInitializerOptions = _options?.Databases?.Application?.SqlServer ?? throw new InvalidOperationException($"Database initializer options for {DbProvider} is not configured");
+            var databaseInitializerOptions = _options?.Databases?.Application?.SqlServer?.Initialization ?? throw new InvalidOperationException($"Database initializer options for {DbProvider} is not configured");
             if (_options?.DbProviders?.SqlServer?.UseContainer ?? false) // container
             {
                 var apiUserPassword = databaseInitializerOptions.Users?.Api?.Password ?? throw new InvalidOperationException($"{nameof(DatabaseInitializerUsersOptions.Api)} user {nameof(DatabaseInitializerUserOptions.Password)} is not configured");
