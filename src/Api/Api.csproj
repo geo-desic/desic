@@ -33,6 +33,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Desic\Desic.csproj" />
+    <ProjectReference Include="..\Infrastructure.Data.Providers\Infrastructure.Data.Providers.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     <ProjectReference Include="..\MediatR\MediatR.csproj" />
     <ProjectReference Include="..\ServiceDefaults\ServiceDefaults.csproj" />

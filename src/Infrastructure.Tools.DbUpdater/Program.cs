@@ -14,33 +14,38 @@ config.Sources.Insert(0, new JsonConfigurationSource() { Path = "sqlserver.appse
 config.Sources.Insert(0, new JsonConfigurationSource() { Path = "sqlite.appsettings.json", Optional = true });
 var mappings = new Dictionary<string, string>
 {
-    { "-c", ConfigKeys.ConnectionStringMigrations },
-    { "-ci", ConfigKeys.ConnectionStringInitialization },
-    { "-p", ConfigKeys.DbProvider },
-    { "--provider", ConfigKeys.DbProvider },
-    { "-s", ConfigKeys.SeedingEnabled },
-    { "--seeding", ConfigKeys.SeedingEnabled },
+    { "-c", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.ConnectionStringMigrations },
+    { "-ci", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.ConnectionStringInitialization },
+    { "-ie", Desic.Infrastructure.Data.SqlServer.ConfigKeys.InitializationEnabled },
+    { "--initialization-enabled", Desic.Infrastructure.Data.SqlServer.ConfigKeys.InitializationEnabled },
+    { "-me", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.MigrationsEnabled },
+    { "--migrations-enabled", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.MigrationsEnabled },
+    { "-p", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.DbProvider },
+    { "--provider", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.DbProvider },
+    { "-s", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.SeedingEnabled },
+    { "--seeding", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.SeedingEnabled },
 };
 config.AddCommandLine(args, mappings);
 
-var dbProvider = config.GetValue<string>(ConfigKeys.DbProvider) ?? throw new InvalidOperationException("Database provider could not be determined");
+var dbProvider = config.GetValue<string>(Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.DbProvider) ?? throw new InvalidOperationException("Database provider could not be determined");
 
 builder.Services.AddHostedService<WorkerService>();
 
-var connectionStringMigrations = config.GetValue<string>(ConfigKeys.ConnectionStringMigrations);
-var connectionStringInitialization = config.GetValue<string>(ConfigKeys.ConnectionStringInitialization);
-var useSeeding = config.GetValue(ConfigKeys.SeedingEnabled, false);
+var connectionStringMigrations = config.GetConnectionStringMigrations();
+var initializationEnabled = config.GetValue(Desic.Infrastructure.Data.SqlServer.ConfigKeys.InitializationEnabled, false);
+var migrationsEnabled = config.GetValue(Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.MigrationsEnabled, false);
+var useSeeding = config.GetValue(Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.SeedingEnabled, false);
 
 if (connectionStringMigrations != null) builder.Services.AddDomain().AddInfrastructure();
 
 switch (dbProvider)
 {
     case "Sqlite":
-        if (connectionStringMigrations != null) builder.Services.ConfigureApplicationDbContextForSqlite(connectionString: connectionStringMigrations, setMigrationsAssembly: true, useSeeding: useSeeding);
+        if (migrationsEnabled) builder.Services.ConfigureApplicationDbContextForSqlite(connectionString: connectionStringMigrations, setMigrationsAssembly: true, useSeeding: useSeeding);
         break;
     case "SqlServer":
-        if (connectionStringInitialization != null) builder.Services.UseDatabaseInitializer(config);
-        if (connectionStringMigrations != null) builder.Services.ConfigureApplicationDbContextForSqlServer(connectionString: connectionStringMigrations, setMigrationsAssembly: true, useSeeding: useSeeding);
+        if (initializationEnabled) builder.Services.UseDatabaseInitializer(config);
+        if (migrationsEnabled) builder.Services.ConfigureApplicationDbContextForSqlServer(connectionString: connectionStringMigrations, setMigrationsAssembly: true, useSeeding: useSeeding);
         break;
     default:
         throw new NotSupportedException($"Unsupported database provider: {dbProvider}");

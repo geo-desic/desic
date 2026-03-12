@@ -5,16 +5,17 @@ namespace Desic.Infrastructure.Data.SqlServer;
 
 public sealed class DatabaseInitializerOptions
 {
+    public bool? Contained { get; set; }
+    public bool? Enabled { get; set; }
     [Required]
     [StringLength(123, MinimumLength = 1)]
     [RegularExpression("^[a-zA-Z_]{1}[a-zA-Z0-9_\\@\\#\\$]*$")] // start with alphabetic character or '_'; remaining characters can be alphanumeric characters or: '_', '@', '#', '$'
     public string? Name { get; set; }
-    public bool? Contained { get; set; }
-    public bool? SkipIfDbExists { get; set; }
     [ValidateEnumeratedItems]
     public List<DatabaseInitializerRoleOptions>? Roles { get; set; }
     [ValidateEnumeratedItems]
     public List<DatabaseInitializerSchemaOptions>? Schemas { get; set; }
+    public bool? SkipIfDbExists { get; set; }
     public DatabaseInitializerUsersOptions? Users { get; set; }
 }
 
@@ -84,10 +85,10 @@ public sealed class DatabaseInitializerUserOptions
     [StringLength(128, MinimumLength = 1)]
     [RegularExpression("^[a-zA-Z_\\@\\#]{1}[a-zA-Z0-9_\\@\\#\\$]*$")] // start with alphabetic character or: '_', '@', '#'; remaining characters can be alphanumeric characters or: '_', '@', '#', '$'
     public string? Name { get; set; }
-    [Required]
     [StringLength(128, MinimumLength = 8)]
     [RegularExpression("^(?=(.*\\d){1,})(?=(.*[a-z]){1,})(?=(.*[A-Z]){1,})(?=(.*[^\\w\\d\\s]){1,})", ErrorMessage = "{0} does not satisfy complexity rules")] // contains at least 3 of the following: (1) a digit (2) a lowercase letter (3) an uppercase letter (4) special character (i.e. non-alphanumeric)
     public string? Password { get; set; }
+    public string? PasswordConfigKey { get; set; }
     [StringLength(128, MinimumLength = 1)]
     [RegularExpression("^[a-zA-Z_\\@\\#]{1}[a-zA-Z0-9_\\@\\#\\$]*$")] // start with alphabetic character or: '_', '@', '#'; remaining characters can be alphanumeric characters or: '_', '@', '#', '$'
     public string? LoginName { get; set; }

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Infrastructure.Data.Providers\Infrastructure.Data.Providers.csproj" />
     <ProjectReference Include="..\Infrastructure.Data.Sqlite\Infrastructure.Data.Sqlite.csproj" />
     <ProjectReference Include="..\Infrastructure.Data.SqlServer\Infrastructure.Data.SqlServer.csproj" />
   </ItemGroup>

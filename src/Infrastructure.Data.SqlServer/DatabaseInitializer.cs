@@ -1,5 +1,6 @@
 ﻿using Desic.Data;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -8,8 +9,9 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
-public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, ILogger<DatabaseInitializer> logger)
+public class DatabaseInitializer(IConfiguration config, IOptions<DatabaseInitializerOptions> options, ILogger<DatabaseInitializer> logger)
 {
+    private readonly IConfiguration _config = config ?? throw new ArgumentNullException(nameof(config));
     private bool _contained;
     private string? _databaseName;
     private readonly ILogger<DatabaseInitializer> _logger = logger ?? NullLogger<DatabaseInitializer>.Instance;
@@ -17,6 +19,12 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
 
     public async Task InitializeAsync(string connectionString, string? targetDatabaseName = null, CancellationToken cancellationToken = default)
     {
+        if (!_options.Enabled ?? false)
+        {
+            _logger.LogInformation("Stopping as database initialization is not enabled");
+            return;
+        }
+
         _databaseName = targetDatabaseName ?? _options.Name ?? throw new InvalidOperationException("Database name is not specified in options or method parameters");
 
         using var connection = await GetConnection(connectionString, cancellationToken);
@@ -231,10 +239,23 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
     private void CreateUser(Server server, Database database, DatabaseInitializerUserOptions userOptions)
     {
         if (string.IsNullOrWhiteSpace(userOptions.Name)) throw new InvalidOperationException("User name is not specified");
-        if (string.IsNullOrWhiteSpace(userOptions.Password)) throw new InvalidOperationException("User password is not specified");
+        string password;
+        if (!string.IsNullOrWhiteSpace(userOptions.Password))
+        {
+            password = userOptions.Password;
+        }
+        else if (!string.IsNullOrWhiteSpace(userOptions.PasswordConfigKey))
+        {
+            password = _config.GetValue<string>(userOptions.PasswordConfigKey) ?? throw new InvalidOperationException($"Password could not be determined from {nameof(userOptions.PasswordConfigKey)}: {userOptions.PasswordConfigKey}");
+        }
+        else
+        {
+            throw new InvalidOperationException($"Neither {nameof(userOptions.Password)} nor {nameof(userOptions.PasswordConfigKey)} is specified");
+        }
+
         if (!_contained)
         {
-            CreateLogin(server: server, name: userOptions.Name, password: userOptions.Password, defaultDatabase: _databaseName);
+            CreateLogin(server: server, name: userOptions.Name, password: password, defaultDatabase: _databaseName);
         }
         var user = database.Users[userOptions.Name];
         if (user != null)
@@ -247,7 +268,7 @@ public class DatabaseInitializer(IOptions<DatabaseInitializerOptions> options, I
 
         if (_contained)
         {
-            user.Create(userOptions.Password);
+            user.Create(password);
         }
         else
         {

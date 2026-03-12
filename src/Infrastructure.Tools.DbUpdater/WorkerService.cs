@@ -30,30 +30,34 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
         }
 
         // initialization
-        var connectionStringInitialization = _config.GetValue<string>(ConfigKeys.ConnectionStringInitialization);
-        if (connectionStringInitialization != null)
+        var initializationEnabled = config.GetValue(Data.SqlServer.ConfigKeys.InitializationEnabled, false);
+        if (initializationEnabled)
         {
+            var connectionStringInitialization = _config.GetConnectionStringInitialization();
             initilizationPerformed = await PerformInitialization(dbProvider: dbProvider, connectionString: connectionStringInitialization, cancellationToken: stoppingToken);
         }
         else
         {
-            _logger.LogInformation("Skipping initialization as no connection string for it was provided");
+            _logger.LogInformation("Skipping initialization because it is not enabled");
         }
 
         // migrations
-        using (var scope = _serviceProvider.CreateScope())
+        var migrationsEnabled = config.GetValue(ConfigKeys.MigrationsEnabled, false);
+        if (migrationsEnabled)
         {
-            var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-            if (context != null)
-            {
-                await context.Database.MigrateAsync(stoppingToken);
-                migrationsPerformed = true;
-            }
+            using var scope = _serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            await context.Database.MigrateAsync(stoppingToken);
+            migrationsPerformed = true;
+        }
+        else
+        {
+            _logger.LogInformation("Skipping migrations because it is not enabled");
         }
 
         if (!initilizationPerformed && !migrationsPerformed)
         {
-            _logger.LogError("No initialization or migrations were performed because no connection strings were provided for them");
+            _logger.LogError("No initialization or migrations occured because they are not enabled");
             StopApplication(exitCode: 1);
             return;
         }
@@ -78,14 +82,13 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
         {
             if (connectionString == "migrations")
             {
-                var connectionStringMigrations = _config.GetValue<string>(ConfigKeys.ConnectionStringMigrations);
-                if (connectionStringMigrations == null)
+                connectionString = _config.GetConnectionStringMigrations();
+                if (connectionString == null)
                 {
-                    _logger.LogError("Connection string for initialization is 'migrations' but no connection string for migrations was provided");
+                    _logger.LogError("Connection string for initialization is 'migrations' but no connection string for migrations could be determined");
                     StopApplication(exitCode: 1);
                     return false;
                 }
-                connectionString = connectionStringMigrations;
                 _logger.LogDebug("Using migrations connection string for initialization");
             }
 
@@ -96,7 +99,7 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
         }
         else
         {
-            _logger.LogWarning("Initialization will be skipped as the pecified database provider does not currently support it");
+            _logger.LogWarning("Initialization will be skipped as the specified database provider does not currently support it");
         }
         return false;
     }

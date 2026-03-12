@@ -20,8 +20,8 @@ The following is an example (not to be used as is) of what your `secrets.json` f
 ```json
 {
   \\ potentially other secrets may already be present, but append the following to the file replacing the values with your own
-  "Databases:Application:SqlServer:InitializationPassword": "00000000-0000-0000-0000-000000000001",
-  "Databases:Application:SqlServer:Users:Api:Password": "00000000-0000-0000-0000-000000000002",
-  "Databases:Application:SqlServer:Users:Migrations:Password": "00000000-0000-0000-0000-000000000003"
+  "Databases:Application:SqlServer:Api:ConnectionBehavior:Password": "00000000-0000-0000-0000-000000000001",
+  "Databases:Application:SqlServer:Initialization:ConnectionBehavior:Password": "00000000-0000-0000-0000-000000000002",
+  "Databases:Application:SqlServer:Migrations:ConnectionBehavior:Password": "00000000-0000-0000-0000-000000000003"
 }
 ```

@@ -1,12 +1,13 @@
 using Desic.Api.BackgroundServices;
-using Desic.Api.Db;
 using Desic.Api.HealthChecks;
 using Desic.Application;
 using Desic.Domain;
 using Desic.Infrastructure;
 using Desic.Infrastructure.Data;
+using Desic.Infrastructure.Data.Providers;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 using var loggerFactory = LoggerFactory.Create(loggingBuilder =>
@@ -41,7 +42,12 @@ builder.Services
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    options.UseProvider(dbProvider, config);
+    _ = dbProvider switch
+    {
+        Providers.Sqlite => options.UseSqlite(config.GetConnectionString(Providers.Sqlite)),
+        Providers.SqlServer => options.UseSqlServer(config.GetConnectionString(ConfigurationHelpers.ConnectionStringType.Api)),
+        _ => throw new NotSupportedException($"Unsupported db provider: {dbProvider}"),
+    };
     if (config.GetValue("Databases:Application:EnableSensitiveDataLogging", false))
     {
         options.EnableSensitiveDataLogging();

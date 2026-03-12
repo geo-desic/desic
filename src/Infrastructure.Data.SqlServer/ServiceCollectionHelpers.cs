@@ -19,7 +19,7 @@ public static class ServiceCollectionHelpers
         return services;
     }
 
-    public static IServiceCollection UseDatabaseInitializer(this IServiceCollection services, IConfiguration config, string configSectionKey = "Databases:Application:SqlServer:Initialization")
+    public static IServiceCollection UseDatabaseInitializer(this IServiceCollection services, IConfiguration config, string configSectionKey = ConfigKeys.SectionInitialization)
     {
         services.AddOptions<DatabaseInitializerOptions>().BindConfiguration(configSectionKey).ValidateDataAnnotations().ValidateOnStart();
         services.AddTransient<DatabaseInitializer>();

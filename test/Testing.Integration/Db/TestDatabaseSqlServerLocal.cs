@@ -1,6 +1,4 @@
-using Desic.Api.Db;
 using Desic.Data;
-using Desic.Infrastructure.Data.SqlServer;
 using Microsoft.Data.SqlClient;
 using System.Data.Common;
 
@@ -10,7 +8,6 @@ namespace Desic.Testing.Integration.Db;
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
 public sealed class TestDatabaseSqlServerLocal(TemplateDatabaseSqlServerLocal templateDatabase) : ITestDatabase
 {
-    private readonly string _apiUserPassword = templateDatabase.UsersOptions.Api?.Password ?? throw new InvalidOperationException($"{nameof(DatabaseInitializerUsersOptions.Api)} user {nameof(DatabaseInitializerUserOptions.Password)} is not configured");
     private string? _connectionString;
     private string? _databaseFilePath;
     private string? _databaseLogFilePath;
@@ -29,7 +26,7 @@ public sealed class TestDatabaseSqlServerLocal(TemplateDatabaseSqlServerLocal te
 
         await SetUserLogins();
 
-        _connectionString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringInitialization) { InitialCatalog = _databaseName, UserID = Providers.DbApiUser, Password = _apiUserPassword }.ConnectionString;
+        _connectionString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringApi) { InitialCatalog = _databaseName }.ConnectionString;
 
         using var connection = GetConnection();
         if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database using the api connection string");

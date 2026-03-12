@@ -22,29 +22,21 @@ public sealed class ApplicationDbContextFactory : IDisposable, IDesignTimeDbCont
         return result;
     }
 
-    private static IHostBuilder CreateHostBuilder(string[] args)
+    public static HostApplicationBuilder CreateHostBuilder(string[] args)
     {
-        var result = Host.CreateDefaultBuilder(args);
-        result.ConfigureAppConfiguration((hostContext, config) =>
+        var result = Host.CreateApplicationBuilder(args);
+        result.Configuration.Sources.Insert(0, new JsonConfigurationSource() { Path = "sqlserver.appsettings.json", Optional = true });
+        if ((new string[] { "Test", "Local" }).Contains(result.Environment.EnvironmentName)) // Development already covered by Host.CreateDefaultBuilder above
         {
-            var initialConfig = new JsonConfigurationSource() { Path = "sqlserver.appsettings.json", Optional = true };
-            config.Sources.Insert(0, initialConfig);
-            // for adding user secrets in a couple more environments
-            if ((new string[] { "Test", "Local" }).Contains(hostContext.HostingEnvironment.EnvironmentName)) // Development already covered by Host.CreateDefaultBuilder above
-            {
-                config.AddUserSecrets<IMarker>();
-                // re-apply these so they will potentially override the user secrets (see the exact order in Host.CreateDefaultBuilder above)
-                config.AddEnvironmentVariables();
-                config.AddCommandLine(args);
-            }
-        });
-        result.ConfigureServices((hostContext, services) =>
-        {
-            services
-                .AddDomain()
-                .AddInfrastructure()
-                .AddSqlServerInfrastructure(hostContext.Configuration);
-        });
+            result.Configuration.AddUserSecrets<IMarker>();
+            // re-apply these so they will potentially override the user secrets (see the exact order in Host.CreateDefaultBuilder above)
+            result.Configuration.AddEnvironmentVariables();
+            result.Configuration.AddCommandLine(args);
+        }
+        result.Services
+            .AddDomain()
+            .AddInfrastructure()
+            .AddSqlServerInfrastructure(result.Configuration);
         return result;
     }
 

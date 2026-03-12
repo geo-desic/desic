@@ -2,10 +2,27 @@
   "Databases": {
     "Application": {
       "SqlServer": {
+        "Api": {
+          "ConnectionBehavior": {
+            // for security reasons the Password element should be specified using other configuration providers (command line, environment variables, user secrets, etc.)
+            "ConnectionStringName": "SqlServer",
+            "ReplacePassword": true,
+            "ReplaceUserId": true,
+            "UserId": "api"
+          }
+        },
         "Initialization": {
+          "ConnectionBehavior": {
+            // for security reasons the Password element should be specified using other configuration providers (command line, environment variables, user secrets, etc.)
+            "ConnectionStringName": "SqlServer",
+            "RemoveInitialCatalog": true,
+            "ReplacePassword": true,
+            "ReplaceUserId": true,
+            "UserId": "sa"
+          },
           "Contained": true,
+          "Enabled": true,
           "Name": "Desic",
-          "SkipIfDbExists": true,
           "Roles": [
             {
               "Name": "rl_api",
@@ -29,20 +46,32 @@
               "Name": "ref"
             }
           ],
+          "SkipIfDbExists": true,
           "Users": {
             // for security reasons the Password element should be specified using other configuration providers (command line, environment variables, user secrets, etc.)
             // LoginName is ignored when Contained is true
             "Api": {
-              "Name": "api",
-              "LoginName": "api",
               "DefaultSchema": "app",
+              "LoginName": "api",
+              "Name": "api",
+              "PasswordConfigKey": "Databases:Application:SqlServer:Api:ConnectionBehavior:Password",
               "Roles": [ "rl_api" ]
             },
             "Migrations": {
-              "Name": "migrations",
               "LoginName": "migrations",
+              "Name": "migrations",
+              "PasswordConfigKey": "Databases:Application:SqlServer:Migrations:ConnectionBehavior:Password",
               "Roles": [ "db_owner" ]
             }
+          }
+        },
+        "Migrations": {
+          "ConnectionBehavior": {
+            // for security reasons the Password element should be specified using other configuration providers (command line, environment variables, user secrets, etc.)
+            "ConnectionStringName": "SqlServer",
+            "ReplacePassword": true,
+            "ReplaceUserId": true,
+            "UserId": "migrations"
           }
         }
       }
