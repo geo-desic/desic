@@ -39,14 +39,14 @@ public static class TestUsers
     }
 
     #region Non Random Users
-    private const int NonRandomUserCount = 5; // keep this consistent with users in this region so the Generate method will work correctly
+    internal const int NonRandomUserCount = 5; // keep this consistent with users in this region so the Generate method will work correctly
     public static User User01Active => NewUser(sequentialId: 1, createdOn: DefaultOn.AddDays(0), modifiedOn: DefaultOn.AddDays(0).AddMonths(1), isActive: true);
     public static User User02Inactive => NewUser(sequentialId: 2, createdOn: DefaultOn.AddDays(1), modifiedOn: DefaultOn.AddDays(1).AddMonths(1), isActive: false);
     public static User User03DeletedInactive => NewUser(sequentialId: 3, createdOn: DefaultOn.AddDays(2), modifiedOn: DefaultOn.AddDays(2).AddMonths(1), isDeleted: true, isActive: false);
     public static User User04Active => NewUser(sequentialId: 4, createdOn: DefaultOn.AddDays(3), modifiedOn: DefaultOn.AddDays(3).AddMonths(1), isActive: true);
     public static User User05Active => NewUser(sequentialId: 5, createdOn: DefaultOn.AddDays(4), modifiedOn: DefaultOn.AddDays(4).AddMonths(1), isActive: true);
 
-    private static User NonRandomUser(int sequentialId)
+    internal static User NonRandomUser(int sequentialId)
     {
         return sequentialId switch
         {
