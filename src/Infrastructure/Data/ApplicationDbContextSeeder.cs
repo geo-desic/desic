@@ -224,7 +224,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
         }
 
         var result = new EntitySetSeedingResult();
-        var items = Users.Generate(options?.Count ?? 10);
+        var items = await TestUsers.Generate(options?.Count ?? 10).ToListAsync();
         result.ReferenceCount = items.Count;
         if (!any) // fast method
         {

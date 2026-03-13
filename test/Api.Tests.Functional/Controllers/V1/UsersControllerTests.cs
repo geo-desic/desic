@@ -3,6 +3,7 @@ using Desic.Application.Users;
 using Desic.Application.Users.Create;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
+using Desic.Domain.Users.Test;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,7 @@ public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(t
     public async Task Get_UserExists_Status200OkAndUserReturned()
     {
         // arrange
-        var expected = NewUser(id: new Guid("00000004-0000-0000-0000-000000000001"), username: "user-1", by: SystemTags.System); // exists in seeded data
+        var expected = TestUsers.User01Active.ToDto(); // exists in seeded data
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{expected.Id}");
 
         // act
@@ -25,14 +26,14 @@ public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(t
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        response.Content.Should().BeEquivalentTo(expected, x => x.Excluding(x => x.Created.On).Excluding(x => x.Modified.On).Excluding(x => x.Deleted.On));
+        response.Content.Should().BeEquivalentTo(expected);
     }
 
     [Fact]
     public async Task Get_UserDoesNotExist_Status404NotFound()
     {
         // arrange
-        var id = new Guid("A0000000-0000-0000-0000-000000000001");
+        var id = new Guid("A0000000-0000-0000-0000-000000000001"); // does not exist in seeded data
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{id}");
 
         // act
@@ -50,7 +51,7 @@ public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(t
         // arrange
         var user = new UserCreate
         {
-            Username = "user-1", // exists in seeded data
+            Username = TestUsers.User01Active.Username, // exists in seeded data
         };
         var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user);
 
