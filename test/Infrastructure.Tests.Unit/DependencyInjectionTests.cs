@@ -9,7 +9,7 @@ public class DependencyInjectionTests
     public class DependencyInjectionTests001 : DependencyInjectionTests
     {
         [Fact]
-        public void AddInfrastructure_SpecifiedServiceCollection_RegistersExpectedServices()
+        public void AddInfrastructure_ToServiceCollection_RegistersExpectedServices()
         {
             // arrange
             var serviceCollection = NewServiceCollection();
