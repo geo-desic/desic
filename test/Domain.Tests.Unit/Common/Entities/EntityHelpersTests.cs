@@ -9,6 +9,7 @@ namespace Desic.Domain.Tests.Unit.Common.Entities;
 public class EntityHelpersTests
 {
     private readonly TimeSpan _acceptablePrecision = TimeSpan.FromMilliseconds(500);
+    private const string Unchanged = nameof(Unchanged);
 
     public class EntityHelpersTests001 : EntityHelpersTests
     {
@@ -18,10 +19,9 @@ public class EntityHelpersTests
         public void SetCreatedBy_SpecifiedOnDate_UpdatesAllExpectedValues(string? onString)
         {
             // arrange
-            var unchanged = "Unchanged";
             var item = new Creatable()
             {
-                ExtraProperty = unchanged
+                ExtraProperty = Unchanged
             };
             var by = new MinimalEntity();
             DateTime? on = onString != null ? DateTime.Parse(onString, CultureInfo.InvariantCulture) : null;
@@ -33,7 +33,7 @@ public class EntityHelpersTests
 
             // assert
             // unchanged
-            item.ExtraProperty.Should().Be(unchanged);
+            item.ExtraProperty.Should().Be(Unchanged);
             // updates
             item.CreatedById.Should().Be(by.Id);
             item.CreatedByTypeId.Should().Be(by.SystemEntityType.Id);
@@ -51,7 +51,7 @@ public class EntityHelpersTests
             // arrange
             var unchanged = new Creatable()
             {
-                ExtraProperty = "Unchanged",
+                ExtraProperty = Unchanged,
                 CreatedById = 1.ToGuid(),
                 CreatedByTypeId = 1.ToGuid(),
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -92,10 +92,9 @@ public class EntityHelpersTests
         public void SetCreatedAndModifiedBy_SpecifiedOnDate_UpdatesAllExpectedValues(string? onString)
         {
             // arrange
-            var unchanged = "Unchanged";
             var item = new Modifiable()
             {
-                ExtraProperty = unchanged
+                ExtraProperty = Unchanged
             };
             var by = new MinimalEntity();
             DateTime? on = onString != null ? DateTime.Parse(onString, CultureInfo.InvariantCulture) : null;
@@ -107,7 +106,7 @@ public class EntityHelpersTests
 
             // assert
             // unchanged
-            item.ExtraProperty.Should().Be(unchanged);
+            item.ExtraProperty.Should().Be(Unchanged);
             // updates
             item.CreatedById.Should().Be(by.Id);
             item.CreatedByTypeId.Should().Be(by.SystemEntityType.Id);
@@ -128,7 +127,7 @@ public class EntityHelpersTests
             // arrange
             var unchanged = new Modifiable()
             {
-                ExtraProperty = "Unchanged",
+                ExtraProperty = Unchanged,
                 CreatedById = 1.ToGuid(),
                 CreatedByTypeId = 1.ToGuid(),
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -181,7 +180,7 @@ public class EntityHelpersTests
             // arrange
             var unchanged = new Modifiable()
             {
-                ExtraProperty = "Unchanged",
+                ExtraProperty = Unchanged,
                 CreatedById = 1.ToGuid(),
                 CreatedByTypeId = 1.ToGuid(),
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -226,7 +225,7 @@ public class EntityHelpersTests
             // arrange
             var unchanged = new Modifiable()
             {
-                ExtraProperty = "Unchanged",
+                ExtraProperty = Unchanged,
                 CreatedById = 1.ToGuid(),
                 CreatedByTypeId = 1.ToGuid(),
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -275,7 +274,7 @@ public class EntityHelpersTests
             // arrange
             var unchanged = new Modifiable()
             {
-                ExtraProperty = "Unchanged",
+                ExtraProperty = Unchanged,
                 CreatedById = 1.ToGuid(),
                 CreatedByTypeId = 1.ToGuid(),
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -317,7 +316,7 @@ public class EntityHelpersTests
         public Guid CreatedById { get; set; }
         public Guid CreatedByTypeId { get; set; }
         public DateTime CreatedOn { get; set; }
-        public string ExtraProperty { get; set; } = "Unchanged";
+        public string ExtraProperty { get; set; } = Unchanged;
     }
 
     private class Modifiable : IModifiable, ICreatable
@@ -328,7 +327,7 @@ public class EntityHelpersTests
         public Guid ModifiedById { get; set; }
         public Guid ModifiedByTypeId { get; set; }
         public DateTime ModifiedOn { get; set; }
-        public string ExtraProperty { get; set; } = "Unchanged";
+        public string ExtraProperty { get; set; } = Unchanged;
     }
 
     private class SoftDeletable : ISoftDeletable, IModifiable, ICreatable
@@ -343,7 +342,7 @@ public class EntityHelpersTests
         public Guid? DeletedById { get; set; }
         public Guid? DeletedByTypeId { get; set; }
         public DateTime? DeletedOn { get; set; }
-        public string ExtraProperty { get; set; } = "Unchanged";
+        public string ExtraProperty { get; set; } = Unchanged;
     }
 
     private class MinimalEntity : IReadOnlyMinimalEntity
