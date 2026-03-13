@@ -20,6 +20,7 @@
     <ProjectReference Include="..\Api\Api.csproj" />
     <ProjectReference Include="..\Infrastructure.Data.Providers\Infrastructure.Data.Providers.csproj" IsAspireProjectResource="false" />
     <ProjectReference Include="..\Infrastructure.Tools.DbUpdater\Infrastructure.Tools.DbUpdater.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
 
 </Project>

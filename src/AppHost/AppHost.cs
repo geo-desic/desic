@@ -1,4 +1,5 @@
 using Desic.AppHost;
+using Desic.Infrastructure.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
@@ -14,7 +15,7 @@ var projectResourceDbUpdater = builder.AddProject<Projects.Infrastructure_Tools_
     .WithEnvironment("DOTNET_ENVIRONMENT", builder.Environment.EnvironmentName)
     .WithEnvironment("DbProvider", dbProvider);
 
-if (dbProvider == "SqlServer")
+if (dbProvider == DbProviders.SqlServer)
 {
     builder.VerifySecrets();
     var dbUserPasswordInitialization = config.GetValue<string>(ConfigKeys.PasswordInitialization)!;
@@ -38,9 +39,9 @@ if (dbProvider == "SqlServer")
 
     projectResourceDbUpdater.WaitFor(database);
 }
-else if (dbProvider == "Sqlite")
+else if (dbProvider == DbProviders.Sqlite)
 {
-    database = builder.AddSqlite("Sqlite", databaseFileName: "desic.db");
+    database = builder.AddSqlite(DbProviders.Sqlite, databaseFileName: "desic.db");
 
     callbackArgsDbUpdater = async (c) =>
     {

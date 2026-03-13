@@ -22,7 +22,7 @@ ILogger logger = loggerFactory.CreateLogger("BeforeAppBuilt");
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
-var dbProvider = config.GetValue("DbProvider", Providers.SqlServer)!;
+var dbProvider = config.GetValue("DbProvider", DbProviders.SqlServer)!;
 logger.LogInformation("Database provider determined from configuration: {DbProvider}", dbProvider);
 
 var httpLoggingEnabled = config.GetValue("HttpLogging:Enabled", false);
@@ -44,8 +44,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     _ = dbProvider switch
     {
-        Providers.Sqlite => options.UseSqlite(config.GetConnectionString(Providers.Sqlite)),
-        Providers.SqlServer => options.UseSqlServer(config.GetConnectionString(ConfigurationHelpers.ConnectionStringType.Api)),
+        DbProviders.Sqlite => options.UseSqlite(config.GetConnectionString(DbProviders.Sqlite)),
+        DbProviders.SqlServer => options.UseSqlServer(config.GetConnectionString(ConfigurationHelpers.ConnectionStringType.Api)),
         _ => throw new NotSupportedException($"Unsupported db provider: {dbProvider}"),
     };
     if (config.GetValue("Databases:Application:EnableSensitiveDataLogging", false))

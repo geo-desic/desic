@@ -78,7 +78,7 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
 
     private async Task<bool> PerformInitialization(string dbProvider, string connectionString, CancellationToken cancellationToken)
     {
-        if (dbProvider == "SqlServer")
+        if (dbProvider == DbProviders.SqlServer)
         {
             if (connectionString == "migrations")
             {

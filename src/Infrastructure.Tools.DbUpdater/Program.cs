@@ -1,5 +1,6 @@
 ﻿using Desic.Domain;
 using Desic.Infrastructure;
+using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.Sqlite;
 using Desic.Infrastructure.Data.SqlServer;
 using Desic.Infrastructure.Tools.DbUpdater;
@@ -40,10 +41,10 @@ if (connectionStringMigrations != null) builder.Services.AddDomain().AddInfrastr
 
 switch (dbProvider)
 {
-    case "Sqlite":
+    case DbProviders.Sqlite:
         if (migrationsEnabled) builder.Services.ConfigureApplicationDbContextForSqlite(connectionString: connectionStringMigrations, setMigrationsAssembly: true, useSeeding: useSeeding);
         break;
-    case "SqlServer":
+    case DbProviders.SqlServer:
         if (initializationEnabled) builder.Services.UseDatabaseInitializer(config);
         if (migrationsEnabled) builder.Services.ConfigureApplicationDbContextForSqlServer(connectionString: connectionStringMigrations, setMigrationsAssembly: true, useSeeding: useSeeding);
         break;
