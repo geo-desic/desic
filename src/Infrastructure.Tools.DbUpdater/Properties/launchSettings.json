@@ -3,6 +3,7 @@
     "Infrastructure.Tools.DbUpdater": {
       "commandName": "Project",
       //"commandLineArgs": "-p Sqlite -c \"Data Source=%temp%\\desic-tests\\desic.db;\"",
+      "commandLineArgs": "-p SqlServer --ConnectionStrings:SqlServer \"Server=(localdb)\\MSSQLLocalDB;Database=Desic;Integrated Security=true;\" --Databases:Application:SqlServer:Initialization:ConnectionBehavior:RemoveInitialCatalog true --Databases:Application:SqlServer:Initialization:ConnectionBehavior:ReplacePassword false --Databases:Application:SqlServer:Initialization:ConnectionBehavior:ReplaceUserId false",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       }

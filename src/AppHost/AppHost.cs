@@ -1,5 +1,4 @@
 using Desic.AppHost;
-using Desic.Infrastructure.Data.Providers;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
@@ -28,9 +27,6 @@ if (dbProvider == "SqlServer")
         var connectionString = await database.Resource.GetConnectionStringAsync().ConfigureAwait(false) ?? throw new InvalidOperationException("Could not resolve database connection string");
         var connectionStringDatabase = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "Desic", UserID = string.Empty, Password = string.Empty }.ConnectionString;
         c.Args.Add($"--ConnectionStrings:SqlServer={connectionStringDatabase}");
-        c.Args.Add($"--{ApplicationDatabaseConfigKeys.SqlServer.SectionInitializationConnectionBehavior}:ReplacePassword=True");
-        c.Args.Add($"--{ApplicationDatabaseConfigKeys.SqlServer.SectionInitializationConnectionBehavior}:ReplaceUserId=True");
-        c.Args.Add($"--{ApplicationDatabaseConfigKeys.SqlServer.SectionInitializationConnectionBehavior}:UserId=sa");
     };
 
     callbackEnvironmentApi = async (c) =>
