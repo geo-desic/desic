@@ -6,7 +6,7 @@ namespace Desic.Application.Common.Helpers;
 
 internal static class ByHelpers
 {
-    public static void MapCreated(this ICreated item, ICreatable entity)
+    public static void MapCreated(this ICreatableDto item, ICreatable entity)
     {
         var entityType = SystemEntityTypes.GetById(entity.CreatedByTypeId);
         item.Created.By.Id = entity.CreatedById;
@@ -15,7 +15,7 @@ internal static class ByHelpers
         item.Created.On = entity.CreatedOn;
     }
 
-    public static void MapModified(this IModified item, IModifiable entity)
+    public static void MapModified(this IModifiableDto item, IModifiable entity)
     {
         var entityType = SystemEntityTypes.GetById(entity.ModifiedByTypeId);
         item.Modified.By.Id = entity.ModifiedById;
@@ -24,7 +24,7 @@ internal static class ByHelpers
         item.Modified.On = entity.ModifiedOn;
     }
 
-    public static void MapDeleted(this ISoftDeleted item, ISoftDeletable entity)
+    public static void MapDeleted(this ISoftDeletableDto item, ISoftDeletable entity)
     {
         var entityType = entity.DeletedByTypeId.HasValue ? SystemEntityTypes.GetById(entity.DeletedByTypeId.Value) : null;
         item.Deleted.By.Id = entity.DeletedById;
@@ -33,13 +33,13 @@ internal static class ByHelpers
         item.Deleted.On = entity.DeletedOn;
     }
 
-    public static void MapCreatedModified<T, U>(this T item, U entity) where T : ICreated, IModified where U : ICreatable, IModifiable
+    public static void MapCreatedModified<T, U>(this T item, U entity) where T : ICreatableDto, IModifiableDto where U : ICreatable, IModifiable
     {
         item.MapCreated(entity);
         item.MapModified(entity);
     }
 
-    public static void MapCreatedModifiedDeleted<T, U>(this T item, U entity) where T : ICreated, IModified, ISoftDeleted where U : ICreatable, IModifiable, ISoftDeletable
+    public static void MapCreatedModifiedDeleted<T, U>(this T item, U entity) where T : ICreatableDto, IModifiableDto, ISoftDeletableDto where U : ICreatable, IModifiable, ISoftDeletable
     {
         item.MapCreated(entity);
         item.MapModified(entity);

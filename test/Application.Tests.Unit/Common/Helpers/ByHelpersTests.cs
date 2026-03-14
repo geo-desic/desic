@@ -172,20 +172,20 @@ public class ByHelpersTests
         }
     }
 
-    private class TestCreated : ICreated
+    private class TestCreated : ICreatableDto
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
     }
 
-    private class TestModified : IModified, ICreated
+    private class TestModified : IModifiableDto, ICreatableDto
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
         public RequiredOnByType Modified { get; set; } = new();
     }
 
-    private class TestSoftDeleted : ISoftDeleted, IModified, ICreated
+    private class TestSoftDeleted : ISoftDeletableDto, IModifiableDto, ICreatableDto
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();

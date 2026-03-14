@@ -2,7 +2,7 @@
 
 namespace Desic.Application.Common.Interfaces;
 
-internal interface IModified
+internal interface IModifiableDto
 {
     RequiredOnByType Modified { get; set; }
 }
