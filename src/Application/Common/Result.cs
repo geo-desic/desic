@@ -3,6 +3,7 @@
 namespace Desic.Application.Common;
 
 // source: https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/
+// modified replacing exception with error model
 public readonly struct Result<T>
 {
     private enum ResultState
@@ -41,9 +42,11 @@ public readonly struct Result<T>
         if (IsSuccess) return onSuccess(Value);
         if (IsFailure) return onFailure(Error);
         if (onNull is not null) return onNull();
-        throw new InvalidOperationException("Result is null, but no onNull function was provided.");
+        throw new InvalidOperationException(ExceptionMessageNullResultWithoutOnNullFunction);
     }
 
     public static implicit operator Result<T>(T? value) => value is not null ? new Result<T>(value) : new Result<T>();
     public static implicit operator Result<T>(Error error) => new(error);
+
+    internal const string ExceptionMessageNullResultWithoutOnNullFunction = "Result is null, but no onNull function was provided.";
 }
