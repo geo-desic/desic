@@ -47,9 +47,9 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
         var value = resultCreate.Value;
         _logger.LogDebug(LogEvents.UserCreate, "Adding 'Entity-Id' response header with value {EntityId}", value.Id);
         HttpContext.AddResponseHeaderEntityId(value.Id);
-        if (value.Entity != null)
+        if (value.Model != null)
         {
-            return CreatedAtAction(nameof(Get), new { id = value.Id }, value.Entity);
+            return CreatedAtAction(nameof(Get), new { id = value.Id }, value.Model);
         }
         return NoContent();
     }

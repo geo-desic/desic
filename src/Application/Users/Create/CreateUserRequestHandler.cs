@@ -1,6 +1,7 @@
 ﻿using Desic.Application.Common;
 using Desic.Application.Common.Helpers;
 using Desic.Application.Common.Interfaces;
+using Desic.Application.Common.Models;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
 using FluentValidation;
@@ -45,7 +46,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
         if (!request.ReturnRepresentation) return result;
 
-        result.Entity = user.ToDto();
+        result.Model = user.ToDto();
 
         return result;
     }

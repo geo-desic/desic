@@ -42,8 +42,8 @@ public class CreateUserRequestHandlerTests
             result.Value.Id.Should().NotBeEmpty();
             if (returnResult)
             {
-                result.Value.Entity.Should().NotBeNull();
-                result.Value.Entity.Username.Should().Be(request.User.Username);
+                result.Value.Model.Should().NotBeNull();
+                result.Value.Model.Username.Should().Be(request.User.Username);
             }
         }
     }
