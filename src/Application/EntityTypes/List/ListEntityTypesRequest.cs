@@ -4,8 +4,6 @@ using MediatR;
 
 namespace Desic.Application.EntityTypes.List;
 
-public class ListEntityTypesRequest : IRequest<Result<PaginatedList<EntityType>>>
+public class ListEntityTypesRequest : ListRequest, IRequest<Result<PaginatedList<EntityType>>>
 {
-    public int? Count { get; set; }
-    public int StartIndex { get; set; }
 }
