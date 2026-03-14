@@ -2,8 +2,9 @@
 using Desic.Application.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Desic.Application.Tests.Unit.Common.Models;
+namespace Desic.Application.Tests.Integration.Common.Models;
 
+// note: using ef core in memory provider as it is significantly faster and do not actually need a realistic test database for these tests
 public class PaginatedListTests : IDisposable, IAsyncDisposable
 {
     private readonly TestDbContext _context;

@@ -27,6 +27,7 @@
     <File Path="test/README.md" />
     <Project Path="test/Api.Tests.Functional/Api.Tests.Functional.csproj" />
     <Project Path="test/Api.Tests.Unit/Api.Tests.Unit.csproj" />
+    <Project Path="test/Application.Tests.Integration/Application.Tests.Integration.csproj" />
     <Project Path="test/Application.Tests.Unit/Application.Tests.Unit.csproj" />
     <Project Path="test/Desic.Tests.Unit/Desic.Tests.Unit.csproj" />
     <Project Path="test/Domain.Tests.Unit/Domain.Tests.Unit.csproj" Id="c346b4c4-4fd3-45dd-934b-16acbe117e6f" />
