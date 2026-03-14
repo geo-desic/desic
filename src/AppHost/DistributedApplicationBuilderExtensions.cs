@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Desic.AppHost;
 
-public static class SecretHelpers
+public static class DistributedApplicationBuilderExtensions
 {
     public static void VerifySecrets(this IDistributedApplicationBuilder builder)
     {

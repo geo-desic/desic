@@ -36,16 +36,16 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<User>> Create([FromBody] CreateUser user, [FromHeader(Name = "Prefer")] string? preferHeaderValue)
+    public async Task<ActionResult<User>> Create([FromBody] CreateUser user, [FromHeader(Name = Headers.Keys.Prefer)] string? preferHeaderValue)
     {
         using var loggerScope = _logger.BeginScope("Username:{username}", user.Username);
         _logger.LogInformation(LogEvents.UserCreate, $"{nameof(UsersController)}.{nameof(Create)}(user, {{{nameof(preferHeaderValue)}}})", preferHeaderValue);
 
-        var request = new CreateUserRequest { Model = user, ReturnRepresentation = Headers.PreferRepresentation(preferHeaderValue) };
+        var request = new CreateUserRequest { Model = user, ReturnRepresentation = Headers.Values.IsPreferRepresentation(preferHeaderValue) };
         var resultCreate = await _mediator.Send(request);
         if (resultCreate.IsFailure) return Problem(resultCreate.Error);
         var value = resultCreate.Value;
-        _logger.LogDebug(LogEvents.UserCreate, "Adding 'Entity-Id' response header with value {EntityId}", value.Id);
+        _logger.LogDebug(LogEvents.UserCreate, $"Adding '{Headers.Keys.EntityId}' response header with value {{{nameof(Headers.Keys.EntityId)}}}", value.Id);
         HttpContext.AddResponseHeaderEntityId(value.Id);
         if (value.Model != null)
         {

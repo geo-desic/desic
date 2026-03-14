@@ -1,4 +1,5 @@
 ﻿using AwesomeAssertions;
+using Desic.Api.Common;
 using Desic.Application.Users;
 using Desic.Application.Users.Create;
 using Desic.Domain.Common.Entities;
@@ -60,7 +61,7 @@ public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(t
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
-        response.Message.Headers.TryGetValues("Entity-Id", out _).Should().BeFalse();
+        response.Message.Headers.TryGetValues(Headers.Keys.EntityId, out _).Should().BeFalse();
         response.Content.Should().NotBeNull();
         response.Content.Status.Should().Be(400);
     }
@@ -80,7 +81,7 @@ public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(t
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
-        response.Message.Headers.TryGetValues("Entity-Id", out var values).Should().BeTrue();
+        response.Message.Headers.TryGetValues(Headers.Keys.EntityId, out var values).Should().BeTrue();
         values.Should().HaveCount(1);
         Guid.TryParse(values.First(), out _).Should().BeTrue();
         response.Content.Should().BeNullOrEmpty();
@@ -95,14 +96,14 @@ public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(t
             Username = "username-does-not-exist-2",
         };
         var expected = NewUser(username: "username-does-not-exist-2");
-        var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user).AddHeader("Prefer", "return=representation");
+        var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user).AddHeader(Headers.Keys.Prefer, Headers.Values.PreferRepresentation);
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
-        response.Message.Headers.TryGetValues("Entity-Id", out var values).Should().BeTrue();
+        response.Message.Headers.TryGetValues(Headers.Keys.EntityId, out var values).Should().BeTrue();
         values.Should().HaveCount(1);
         Guid.TryParse(values.First(), out _).Should().BeTrue();
         response.Content.Should().BeEquivalentTo(expected, x => x
