@@ -2,7 +2,7 @@
 
 namespace Desic.Tests.Unit.Mediator;
 
-public class TestRequestHandler : IRequestHandler<TestRequest,  TestResponse>
+public class TestRequestHandler : IRequestHandler<TestRequest, TestResponse>
 {
     public Task<TestResponse> Handle(TestRequest request, CancellationToken cancellationToken)
     {
