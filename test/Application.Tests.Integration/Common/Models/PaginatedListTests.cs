@@ -37,8 +37,7 @@ public class PaginatedListTests : IDisposable, IAsyncDisposable
         public async Task CreateAsync_SpecifiedArguments_ResultContainsExpectedItems(int expectedMinId, int expectedMaxId, int startIndex, int takeCount)
         {
             // arrange
-            var expextedItems = GetTestEntities(minId: expectedMinId, maxId: expectedMaxId);
-            var expected = new PaginatedList<TestEntity>(items: expextedItems, startIndex: startIndex);
+            var expected = new PaginatedList<TestEntity>(items: GetTestEntities(minId: expectedMinId, maxId: expectedMaxId), startIndex: startIndex);
             var source = _context.TestEntities.AsQueryable();
 
             // act
@@ -64,6 +63,25 @@ public class PaginatedListTests : IDisposable, IAsyncDisposable
 
             // assert
             result.TotalCount.Should().Be(includeTotalCount ? TotalEntityCount : null);
+        }
+    }
+
+    public class PaginatedListTests003 : PaginatedListTests
+    {
+        [Fact]
+        public async Task CreateAsync_Take2WithOrderByDescending_Last2ItemsInReverseOrderReturned()
+        {
+            // arrange
+            var items = GetTestEntities(minId: TotalEntityCount - 1, maxId: TotalEntityCount);
+            items.Reverse();
+            var expected = new PaginatedList<TestEntity>(items: items, startIndex: 0);
+            var source = _context.TestEntities.AsQueryable().OrderByDescending(x => x.Id);
+
+            // act
+            var result = await PaginatedList<TestEntity>.CreateAsync(source: source, startIndex: 0, takeCount: 2, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
+
+            // assert
+            result.Should().BeEquivalentTo(expected, o => o.WithStrictOrderingFor(x => x.Items));
         }
     }
 
