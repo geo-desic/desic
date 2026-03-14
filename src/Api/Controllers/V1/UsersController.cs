@@ -41,7 +41,7 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
         using var loggerScope = _logger.BeginScope("Username:{username}", user.Username);
         _logger.LogInformation(LogEvents.UserCreate, $"{nameof(UsersController)}.{nameof(Create)}(user, {{{nameof(preferHeaderValue)}}})", preferHeaderValue);
 
-        var request = new CreateUserRequest { User = user, ReturnRepresentation = Headers.PreferRepresentation(preferHeaderValue) };
+        var request = new CreateUserRequest { Model = user, ReturnRepresentation = Headers.PreferRepresentation(preferHeaderValue) };
         var resultCreate = await _mediator.Send(request);
         if (resultCreate.IsFailure) return Problem(resultCreate.Error);
         var value = resultCreate.Value;

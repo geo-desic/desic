@@ -27,7 +27,7 @@ public class CreateUserRequestHandlerTests
             var handler = new CreateUserRequestHandler(logger: _logger, dbContext: _dbContext.Object, validator: _validator);
             var request = new CreateUserRequest
             {
-                User = new UserCreate { Username = "username" },
+                Model = new UserCreate { Username = "username" },
                 ReturnRepresentation = returnResult,
             };
 
@@ -43,7 +43,7 @@ public class CreateUserRequestHandlerTests
             if (returnResult)
             {
                 result.Value.Model.Should().NotBeNull();
-                result.Value.Model.Username.Should().Be(request.User.Username);
+                result.Value.Model.Username.Should().Be(request.Model.Username);
             }
         }
     }
@@ -58,7 +58,7 @@ public class CreateUserRequestHandlerTests
             var handler = new CreateUserRequestHandler(logger: _logger, dbContext: _dbContext.Object, validator: _validator);
             var request = new CreateUserRequest
             {
-                User = new UserCreate { Username = "invalid username" }, // contains space character
+                Model = new UserCreate { Username = "invalid username" }, // contains space character
             };
 
             // act
@@ -82,7 +82,7 @@ public class CreateUserRequestHandlerTests
             var handler = new CreateUserRequestHandler(logger: _logger, dbContext: _dbContext.Object, validator: _validator);
             var request = new CreateUserRequest
             {
-                User = new UserCreate { Username = username },
+                Model = new UserCreate { Username = username },
             };
 
             // act

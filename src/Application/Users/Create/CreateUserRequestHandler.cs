@@ -19,19 +19,19 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
     public async Task<Result<CreateResult<User>>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
-        if (!_validator.InstanceIsValid(request.User, out var error)) return error!;
+        if (!_validator.InstanceIsValid(request.Model, out var error)) return error!;
 
-        if (await _dbContext.Users.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
+        if (await _dbContext.Users.AnyAsync(x => x.Username == request.Model.Username, cancellationToken))
         {
-            _logger.LogDebug(LogEvents.UserCreate, "A user with username '{Username}' already exists", request.User.Username);
-            return new Error($"A user with username '{request.User.Username}' already exists");
+            _logger.LogDebug(LogEvents.UserCreate, "A user with username '{Username}' already exists", request.Model.Username);
+            return new Error($"A user with username '{request.Model.Username}' already exists");
         }
 
         var user = new Domain.Users.User
         {
             Id = Guid.CreateVersion7(),
             IsActive = true,
-            Username = request.User.Username!
+            Username = request.Model.Username!
         };
 
         user.SetCreatedAndModifiedBy(by: SystemTags.System, on: DateTime.UtcNow);
