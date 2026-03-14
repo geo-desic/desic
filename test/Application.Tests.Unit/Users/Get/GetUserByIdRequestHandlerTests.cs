@@ -28,7 +28,7 @@ public class GetUserByIdRequestHandlerTests
             var handler = new GetUserByIdRequestHandler(logger: _logger, dbContext: _dbContext.Object);
             var request = new GetUserByIdRequest
             {
-                UserId = IdThatExists,
+                Id = IdThatExists,
             };
 
             // act
@@ -52,7 +52,7 @@ public class GetUserByIdRequestHandlerTests
             var handler = new GetUserByIdRequestHandler(logger: _logger, dbContext: _dbContext.Object);
             var request = new GetUserByIdRequest
             {
-                UserId = IdThatDoesNotExist,
+                Id = IdThatDoesNotExist,
             };
 
             // act
