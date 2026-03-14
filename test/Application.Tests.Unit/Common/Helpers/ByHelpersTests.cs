@@ -20,8 +20,8 @@ public class ByHelpersTests
         {
             // arrange
             var createdBy = SystemTags.System;
-            var item = new TestCreated();
-            var entity = new Creatable()
+            var item = new TestCreatableDto();
+            var entity = new TestCreatableEntity()
             {
                 CreatedById = createdBy.Id,
                 CreatedByTypeId = createdBy.SystemEntityType.Id,
@@ -47,8 +47,8 @@ public class ByHelpersTests
         {
             // arrange
             var modifiedBy = SystemTags.System;
-            var item = new TestModified();
-            var entity = new Modifiable()
+            var item = new TestModifiableDto();
+            var entity = new TestModifiableEntity()
             {
                 ModifiedById = modifiedBy.Id,
                 ModifiedByTypeId = modifiedBy.SystemEntityType.Id,
@@ -74,8 +74,8 @@ public class ByHelpersTests
         {
             // arrange
             var deletedBy = SystemTags.System;
-            var item = new TestSoftDeleted();
-            var entity = new SoftDeletable()
+            var item = new TestSoftDeletableDto();
+            var entity = new TestSoftDeletableEntity()
             {
                 DeletedById = deletedBy.Id,
                 DeletedByTypeId = deletedBy.SystemEntityType.Id,
@@ -102,8 +102,8 @@ public class ByHelpersTests
             // arrange
             var createdBy = SystemTags.System;
             var modifiedBy = new User { Username = "user-1" };
-            var item = new TestModified();
-            var entity = new Modifiable()
+            var item = new TestModifiableDto();
+            var entity = new TestModifiableEntity()
             {
                 CreatedById = createdBy.Id,
                 CreatedByTypeId = createdBy.SystemEntityType.Id,
@@ -138,8 +138,8 @@ public class ByHelpersTests
             var createdBy = SystemTags.System;
             var modifiedBy = new User { Id = 1.ToGuid(), Username = "user-1" };
             var deletedBy = new User { Id = 2.ToGuid(), Username = "user-2" };
-            var item = new TestSoftDeleted();
-            var entity = new SoftDeletable()
+            var item = new TestSoftDeletableDto();
+            var entity = new TestSoftDeletableEntity()
             {
                 CreatedById = createdBy.Id,
                 CreatedByTypeId = createdBy.SystemEntityType.Id,
@@ -172,20 +172,20 @@ public class ByHelpersTests
         }
     }
 
-    private class TestCreated : ICreatableDto
+    private class TestCreatableDto : ICreatableDto
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
     }
 
-    private class TestModified : IModifiableDto, ICreatableDto
+    private class TestModifiableDto : IModifiableDto, ICreatableDto
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
         public RequiredOnByType Modified { get; set; } = new();
     }
 
-    private class TestSoftDeleted : ISoftDeletableDto, IModifiableDto, ICreatableDto
+    private class TestSoftDeletableDto : ISoftDeletableDto, IModifiableDto, ICreatableDto
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
@@ -193,14 +193,14 @@ public class ByHelpersTests
         public OptionalOnByType Deleted { get; set; } = new();
     }
 
-    private class Creatable : ICreatable
+    private class TestCreatableEntity : ICreatable
     {
         public Guid CreatedById { get; set; }
         public Guid CreatedByTypeId { get; set; }
         public DateTime CreatedOn { get; set; }
     }
 
-    private class Modifiable : IModifiable, ICreatable
+    private class TestModifiableEntity : IModifiable, ICreatable
     {
         public Guid CreatedById { get; set; }
         public Guid CreatedByTypeId { get; set; }
@@ -210,7 +210,7 @@ public class ByHelpersTests
         public DateTime ModifiedOn { get; set; }
     }
 
-    private class SoftDeletable : ISoftDeletable, IModifiable, ICreatable
+    private class TestSoftDeletableEntity : ISoftDeletable, IModifiable, ICreatable
     {
         public Guid CreatedById { get; set; }
         public Guid CreatedByTypeId { get; set; }
