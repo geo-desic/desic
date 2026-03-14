@@ -1,7 +1,6 @@
 ﻿using Desic.Application.Common;
 using Desic.Application.Common.Helpers;
 using Desic.Application.Common.Interfaces;
-using Desic.Application.Common.Models;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
 using FluentValidation;
@@ -11,13 +10,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Users.Create;
 
-public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IApplicationDbContext dbContext, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<CreateResult<User>>>
+public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IApplicationDbContext dbContext, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<CreateUserResult>>
 {
     private readonly ILogger<CreateUserRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     private readonly IValidator<UserCreate> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
-    public async Task<Result<CreateResult<User>>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
+    public async Task<Result<CreateUserResult>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
         if (!_validator.InstanceIsValid(request.Model, out var error)) return error!;
 
@@ -42,7 +41,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
         _logger.LogDebug(LogEvents.UserCreate, "User was successfully persisted with id = {UserId}", user.Id);
 
-        var result = new CreateResult<User> { Id = user.Id };
+        var result = new CreateUserResult { Id = user.Id };
 
         if (!request.ReturnRepresentation) return result;
 

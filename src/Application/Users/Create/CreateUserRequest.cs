@@ -4,6 +4,6 @@ using MediatR;
 
 namespace Desic.Application.Users.Create;
 
-public class CreateUserRequest : CreateRequest<UserCreate>, IRequest<Result<CreateResult<User>>>
+public class CreateUserRequest : CreateRequest<UserCreate>, IRequest<Result<CreateUserResult>>
 {
 }
