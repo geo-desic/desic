@@ -6,6 +6,7 @@
 While it is recommended to install both of the following, at least one will be needed to set up the database for development and testing:
 - [Docker desktop](https://www.docker.com/products/docker-desktop/)
   - required to utilize the aspire functionality
+  - currently configured as a default dependency for integration/functional test projects
 - Locally running sql server such as [LocalDB](https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb) or [Sql Server Express](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
   - LocalDB (with default service name `MSSQLLocalDB`) is currently configured as default when individual projects (e.g. [Api](src/Api), [Infrastructure.Tools.DbUpdater](src/Infrastructure.Tools.DbUpdater)) are launched
 
