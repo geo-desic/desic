@@ -2,9 +2,9 @@
 
 namespace Desic.Application.Common.Models;
 
-public class PaginatedList<T>(IReadOnlyCollection<T> items, int offset, int? totalCount = null)
+public class PaginatedList<T>(IReadOnlyCollection<T> items, int startIndex, int? totalCount = null)
 {
-    public int StartIndex { get; } = offset;
+    public int StartIndex { get; } = startIndex;
     public int? TotalCount { get; } = totalCount;
     public IReadOnlyCollection<T> Items { get; } = items;
     public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int startIndex, int takeCount, bool includeTotalCount = false, CancellationToken cancellationToken = default)

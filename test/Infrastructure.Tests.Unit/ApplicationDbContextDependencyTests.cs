@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Infrastructure.Tests.Unit;
 
-public class ApplicationDbContextDependencyTests
+public class ApplicationDbContextDependencyTests : IDisposable, IAsyncDisposable
 {
     protected readonly ApplicationDbContext _context;
     private bool _disposed = false;
