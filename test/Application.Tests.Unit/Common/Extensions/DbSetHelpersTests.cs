@@ -2,7 +2,7 @@
 using Desic.Application.Common.Extensions;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.EntityTypes;
-using Desic.Helpers;
+using Desic.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Application.Tests.Unit.Common.Extensions;

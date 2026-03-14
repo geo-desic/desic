@@ -3,9 +3,9 @@ using Desic.Domain.Iso3166Countries;
 
 namespace Desic.Domain.Tests.Unit.Iso3166Countries;
 
-public class Iso3166CountryHelpersTests
+public class Iso3166CountryExtensionsTests
 {
-    public class Iso3166CountryHelpersTests001 : Iso3166CountryHelpersTests
+    public class Iso3166CountryExtensionsTests001 : Iso3166CountryExtensionsTests
     {
         public static IEnumerable<TheoryDataRow<bool, IIso3166CountryReferenceData?, IIso3166CountryReferenceData?>> IsEquivalentToTheoryData()
         {
@@ -60,11 +60,11 @@ public class Iso3166CountryHelpersTests
         [MemberData(nameof(IsEquivalentToTheoryData))]
         public void IsEquivalentTo_SpecifiedTheoryData_ExpectedResult(bool expected, IIso3166CountryReferenceData? item1, IIso3166CountryReferenceData? item2)
         {
-            Iso3166CountryHelpers.IsEquivalentTo(item1, item2).Should().Be(expected);
+            Iso3166CountryExtensions.IsEquivalentTo(item1, item2).Should().Be(expected);
         }
     }
 
-    public class Iso3166CountryHelpersTests002 : Iso3166CountryHelpersTests
+    public class Iso3166CountryExtensionsTests002 : Iso3166CountryExtensionsTests
     {
         [Fact]
         public void UpdateFrom_ItemWithDifferentValues_UpdatesAllProperties()
@@ -74,7 +74,7 @@ public class Iso3166CountryHelpersTests
             var expected = new TestCountryReferenceData { IsoId = 2, Alpha2 = "alpha2-updated", Alpha3 = "alpha3-updated", Name = "name-updated" }; // all values different from item
 
             // act
-            Iso3166CountryHelpers.UpdateFrom(item, expected);
+            Iso3166CountryExtensions.UpdateFrom(item, expected);
 
             // assert
             item.IsoId.Should().Be(expected.IsoId);

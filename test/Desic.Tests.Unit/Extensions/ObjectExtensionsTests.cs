@@ -1,11 +1,11 @@
 ﻿using AwesomeAssertions;
-using Desic.Helpers;
+using Desic.Extensions;
 
-namespace Desic.Tests.Unit.Helpers;
+namespace Desic.Tests.Unit.Extensions;
 
-public class NullableHelpersTests
+public class ObjectExtensionsTests
 {
-    public class NullableHelpersTests001 : NullableHelpersTests
+    public class NullableHelpersTests001 : ObjectExtensionsTests
     {
         [Theory]
         [InlineData(true, null, null)]

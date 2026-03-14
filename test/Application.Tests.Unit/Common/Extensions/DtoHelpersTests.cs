@@ -5,7 +5,7 @@ using Desic.Application.Common.Models;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
 using Desic.Domain.Users;
-using Desic.Helpers;
+using Desic.Extensions;
 
 namespace Desic.Application.Tests.Unit.Common.Extensions;
 

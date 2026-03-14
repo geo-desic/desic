@@ -1,8 +1,13 @@
 ﻿// source: https://github.com/bitfoundation/bitplatform/blob/develop/src/Templates/Boilerplate/Bit.Boilerplate/src/Shared/Infrastructure/Extensions/GuidExtensions.cs
-namespace Desic.Helpers;
+namespace Desic.Extensions;
 
 public static class GuidExtensions
 {
+    public static Guid ToIntBasedGuid(this Guid guid, int value)
+    {
+        return guid.ToString().ToIntBasedGuid(value);
+    }
+
     extension(Guid source)
     {
         public static Guid CreateSequentialGuid(bool compatibleWithSqlServer)

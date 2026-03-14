@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
-public static class DbContextHelpers
+public static class DbContextExtensions
 {
     public static async Task InitializeAsync(this DbContext context, string? targetDatabaseName = null, CancellationToken cancellationToken = default)
     {

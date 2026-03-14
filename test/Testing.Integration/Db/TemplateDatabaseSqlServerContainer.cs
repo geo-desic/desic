@@ -41,7 +41,7 @@ public sealed class TemplateDatabaseSqlServerContainer(string image) : ITemplate
         var connectionStringDatabase = new SqlConnectionStringBuilder(_connectionStringInitialization) { InitialCatalog = Constants.DatabaseName, UserID = string.Empty, Password = string.Empty }.ConnectionString;
 
         var hostBuilder = ApplicationDbContextFactory.CreateHostBuilder(["--ConnectionStrings:SqlServer", connectionStringDatabase, "--environment", Constants.TestEnvironmentName]);
-        _connectionStringMigrations = hostBuilder.Configuration.GetConnectionString(ConfigurationHelpers.ConnectionStringType.Migrations);
+        _connectionStringMigrations = hostBuilder.Configuration.GetSqlServerConnectionString(ConnectionStringType.Migrations);
         hostBuilder.Services.AddSqlServerInfrastructure(hostBuilder.Configuration, _connectionStringMigrations); // re-add with migrations connection string
         using var host = hostBuilder.Build();
         using var scope = host.Services.CreateScope();
@@ -58,7 +58,7 @@ public sealed class TemplateDatabaseSqlServerContainer(string image) : ITemplate
 
         // ensure can connect to the database as the api user
         var hostConfiguration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-        _connectionStringApi = hostConfiguration.GetConnectionString(ConfigurationHelpers.ConnectionStringType.Api);
+        _connectionStringApi = hostConfiguration.GetSqlServerConnectionString(ConnectionStringType.Api);
         using var connection = new SqlConnection(_connectionStringApi);
         if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database using the api connection string");
         await connection.CloseAsync();

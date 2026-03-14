@@ -1,6 +1,6 @@
 ﻿using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
-using Desic.Helpers;
+using Desic.Extensions;
 using System.Runtime.CompilerServices;
 
 namespace Desic.Domain.Users.Test;

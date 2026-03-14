@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Desic.Infrastructure.Data.Sqlite;
 
-public static class ServiceCollectionHelpers
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection ConfigureApplicationDbContextForSqlite(this IServiceCollection services, string? connectionString, bool setMigrationsAssembly = false, bool useSeeding = false)
     {

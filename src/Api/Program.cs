@@ -40,19 +40,19 @@ builder.Services
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>((Action<DbContextOptionsBuilder>?)(options =>
 {
     _ = dbProvider switch
     {
         DbProviders.Sqlite => options.UseSqlite(config.GetConnectionString(DbProviders.Sqlite)),
-        DbProviders.SqlServer => options.UseSqlServer(config.GetConnectionString(ConfigurationHelpers.ConnectionStringType.Api)),
+        DbProviders.SqlServer => options.UseSqlServer(config.GetSqlServerConnectionString(ConnectionStringType.Api)),
         _ => throw new NotSupportedException($"Unsupported db provider: {dbProvider}"),
     };
     if (config.GetValue("Databases:Application:EnableSensitiveDataLogging", false))
     {
         options.EnableSensitiveDataLogging();
     }
-});
+}));
 
 builder.Services.AddHostedService<StartupBackgroundService>();
 builder.Services.AddSingleton<StartupHealthCheck>();

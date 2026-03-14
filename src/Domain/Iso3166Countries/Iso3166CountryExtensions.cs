@@ -1,8 +1,8 @@
-﻿using Desic.Helpers;
+﻿using Desic.Extensions;
 
 namespace Desic.Domain.Iso3166Countries;
 
-public static class Iso3166CountryHelpers
+public static class Iso3166CountryExtensions
 {
     public static bool IsEquivalentTo(this IIso3166CountryReferenceData? item1, IIso3166CountryReferenceData? item2)
     {

@@ -1,6 +1,6 @@
 ﻿namespace Desic.Application.Users;
 
-public static class UserHelpers
+public static class UserExtensions
 {
     public static User ToDto(this Domain.Users.User user)
     {

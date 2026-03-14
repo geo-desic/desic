@@ -1,12 +1,11 @@
-using Desic.Infrastructure.Data.Providers;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
 namespace Desic.Infrastructure.Data.Providers;
 
-public static class ConfigurationHelpers
+public static class ConfigurationExtensions
 {
-    public static string GetConnectionString(this IConfiguration config, ConnectionStringType type)
+    public static string GetSqlServerConnectionString(this IConfiguration config, ConnectionStringType type)
     {
         var options = new ConnectionBehaviorOptions();
         var key = $"{ApplicationDatabaseConfigKeys.SqlServer.Section}:{type}:ConnectionBehavior";
@@ -27,12 +26,5 @@ public static class ConfigurationHelpers
         if (replacePassword) builder.Password = options.Password;
         if (replaceUserId) builder.UserID = options.UserId;
         return builder.ConnectionString;
-    }
-
-    public enum ConnectionStringType
-    {
-        Api,
-        Initialization,
-        Migrations,
     }
 }

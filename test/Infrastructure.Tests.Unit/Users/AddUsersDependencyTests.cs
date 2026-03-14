@@ -1,6 +1,6 @@
 ﻿using Desic.Domain.Tags;
 using Desic.Domain.Users;
-using Desic.Helpers;
+using Desic.Extensions;
 using Desic.Infrastructure.Data;
 
 namespace Desic.Infrastructure.Tests.Unit.Users;

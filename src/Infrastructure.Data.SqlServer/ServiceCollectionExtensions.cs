@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
-public static class ServiceCollectionHelpers
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection ConfigureApplicationDbContextForSqlServer(this IServiceCollection services, string? connectionString, bool setMigrationsAssembly = false, bool useSeeding = false)
     {

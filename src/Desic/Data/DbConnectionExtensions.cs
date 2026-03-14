@@ -2,7 +2,7 @@
 
 namespace Desic.Data;
 
-public static class DbConnectionHelpers
+public static class DbConnectionExtensions
 {
     public async static Task<bool> TryOpenAsync(this DbConnection connection, CancellationToken? cancellationToken = null)
     {

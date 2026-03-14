@@ -1,6 +1,6 @@
-﻿namespace Desic.Helpers;
+﻿namespace Desic.Extensions;
 
-public static class NullableHelpers
+public static class ObjectExtensions
 {
     public static bool NullablyEquivalentTo(this object? source, object? target)
     {
