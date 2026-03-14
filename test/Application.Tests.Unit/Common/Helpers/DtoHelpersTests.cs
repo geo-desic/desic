@@ -9,11 +9,11 @@ using Desic.Helpers;
 
 namespace Desic.Application.Tests.Unit.Common.Helpers;
 
-public class ByHelpersTests
+public class DtoHelpersTests
 {
     private const string Unchanged = nameof(Unchanged);
 
-    public class ByHelpersTests001 : ByHelpersTests
+    public class ByHelpersTests001 : DtoHelpersTests
     {
         [Fact]
         public void MapCreated_SpecifiedModels_PerformsExpectedMapping()
@@ -29,7 +29,7 @@ public class ByHelpersTests
             };
 
             // act
-            ByHelpers.MapCreated(item, entity);
+            DtoHelpers.MapCreated(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -40,7 +40,7 @@ public class ByHelpersTests
         }
     }
 
-    public class ByHelpersTests002 : ByHelpersTests
+    public class ByHelpersTests002 : DtoHelpersTests
     {
         [Fact]
         public void MapModified_SpecifiedModels_PerformsExpectedMapping()
@@ -56,7 +56,7 @@ public class ByHelpersTests
             };
 
             // act
-            ByHelpers.MapModified(item, entity);
+            DtoHelpers.MapModified(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -67,7 +67,7 @@ public class ByHelpersTests
         }
     }
 
-    public class ByHelpersTests003 : ByHelpersTests
+    public class ByHelpersTests003 : DtoHelpersTests
     {
         [Fact]
         public void MapDeleted_SpecifiedModels_PerformsExpectedMapping()
@@ -83,7 +83,7 @@ public class ByHelpersTests
             };
 
             // act
-            ByHelpers.MapDeleted(item, entity);
+            DtoHelpers.MapDeleted(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -94,7 +94,7 @@ public class ByHelpersTests
         }
     }
 
-    public class ByHelpersTests004 : ByHelpersTests
+    public class ByHelpersTests004 : DtoHelpersTests
     {
         [Fact]
         public void MapCreatedModified_SpecifiedModels_PerformsExpectedMapping()
@@ -114,7 +114,7 @@ public class ByHelpersTests
             };
 
             // act
-            ByHelpers.MapCreatedModified(item, entity);
+            DtoHelpers.MapCreatedModified(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -129,7 +129,7 @@ public class ByHelpersTests
         }
     }
 
-    public class ByHelpersTests005 : ByHelpersTests
+    public class ByHelpersTests005 : DtoHelpersTests
     {
         [Fact]
         public void MapCreatedModifiedDeleted_SpecifiedModels_PerformsExpectedMapping()
@@ -153,7 +153,7 @@ public class ByHelpersTests
             };
 
             // act
-            ByHelpers.MapCreatedModifiedDeleted(item, entity);
+            DtoHelpers.MapCreatedModifiedDeleted(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
