@@ -1,6 +1,6 @@
 ﻿namespace Desic.Domain.Common.Entities;
 
-public static class EntityHelpers
+public static class EntityExtensions
 {
     public static void SetCreatedBy(this ICreatable entity, IReadOnlyMinimalEntity by, DateTime? on = null)
     {

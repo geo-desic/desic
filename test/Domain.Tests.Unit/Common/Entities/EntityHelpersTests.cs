@@ -6,12 +6,12 @@ using System.Globalization;
 
 namespace Desic.Domain.Tests.Unit.Common.Entities;
 
-public class EntityHelpersTests
+public class EntityExtensionsTests
 {
     private readonly TimeSpan _acceptablePrecision = TimeSpan.FromMilliseconds(500);
     private const string Unchanged = nameof(Unchanged);
 
-    public class EntityHelpersTests001 : EntityHelpersTests
+    public class EntityExtensionsTests001 : EntityExtensionsTests
     {
         [Theory]
         [InlineData(null)]
@@ -29,7 +29,7 @@ public class EntityHelpersTests
             var expectedOn = on ?? DateTime.UtcNow;
 
             // act
-            EntityHelpers.SetCreatedBy(item, by: by, on: on);
+            EntityExtensions.SetCreatedBy(item, by: by, on: on);
 
             // assert
             // unchanged
@@ -41,7 +41,7 @@ public class EntityHelpersTests
         }
     }
 
-    public class EntityHelpersTests002 : EntityHelpersTests
+    public class EntityExtensionsTests002 : EntityExtensionsTests
     {
         [Theory]
         [InlineData(null)]
@@ -69,7 +69,7 @@ public class EntityHelpersTests
             var expectedOn = on ?? DateTime.UtcNow;
 
             // act
-            EntityHelpers.SetModifiedBy(item, by: by, on: on);
+            EntityExtensions.SetModifiedBy(item, by: by, on: on);
 
             // assert
             // unchanged
@@ -84,7 +84,7 @@ public class EntityHelpersTests
         }
     }
 
-    public class EntityHelpersTests003 : EntityHelpersTests
+    public class EntityExtensionsTests003 : EntityExtensionsTests
     {
         [Theory]
         [InlineData(null)]
@@ -102,7 +102,7 @@ public class EntityHelpersTests
             var expectedOn = on ?? DateTime.UtcNow;
 
             // act
-            EntityHelpers.SetCreatedAndModifiedBy(item, by: by, on: on);
+            EntityExtensions.SetCreatedAndModifiedBy(item, by: by, on: on);
 
             // assert
             // unchanged
@@ -117,7 +117,7 @@ public class EntityHelpersTests
         }
     }
 
-    public class EntityHelpersTests004 : EntityHelpersTests
+    public class EntityExtensionsTests004 : EntityExtensionsTests
     {
         [Theory]
         [InlineData(null)]
@@ -151,7 +151,7 @@ public class EntityHelpersTests
             var expectedOn = on ?? DateTime.UtcNow;
 
             // act
-            EntityHelpers.SetDeletedBy(item, by: by, on: on);
+            EntityExtensions.SetDeletedBy(item, by: by, on: on);
 
             // assert
             // unchanged
@@ -170,7 +170,7 @@ public class EntityHelpersTests
         }
     }
 
-    public class EntityHelpersTests005 : EntityHelpersTests
+    public class EntityExtensionsTests005 : EntityExtensionsTests
     {
         [Theory]
         [InlineData(null)]
@@ -198,7 +198,7 @@ public class EntityHelpersTests
             var expectedOn = on ?? DateTime.UtcNow;
 
             // act
-            EntityHelpers.SetDeletedAndModifiedBy(item, by: by, on: on);
+            EntityExtensions.SetDeletedAndModifiedBy(item, by: by, on: on);
 
             // assert
             // unchanged
@@ -217,7 +217,7 @@ public class EntityHelpersTests
         }
     }
 
-    public class EntityHelpersTests006 : EntityHelpersTests
+    public class EntityExtensionsTests006 : EntityExtensionsTests
     {
         [Fact]
         public void SetNotDeleted_SpecifiedOnDate_UpdatesAllExpectedValues()
@@ -245,7 +245,7 @@ public class EntityHelpersTests
             };
 
             // act
-            EntityHelpers.SetNotDeleted(item);
+            EntityExtensions.SetNotDeleted(item);
 
             // assert
             // unchanged
@@ -264,7 +264,7 @@ public class EntityHelpersTests
         }
     }
 
-    public class EntityHelpersTests007 : EntityHelpersTests
+    public class EntityExtensionsTests007 : EntityExtensionsTests
     {
         [Theory]
         [InlineData(null)]
@@ -292,7 +292,7 @@ public class EntityHelpersTests
             var expectedOn = on ?? DateTime.UtcNow;
 
             // act
-            EntityHelpers.SetNotDeletedAndModifiedBy(item, by: by, on: on);
+            EntityExtensions.SetNotDeletedAndModifiedBy(item, by: by, on: on);
 
             // assert
             // unchanged
