@@ -35,4 +35,4 @@ The following is an example (not to be used as is) of what your `secrets.json` f
 - (Recommended) Run the [AppHost](src/AppHost) startup project using the `https` launch profile
   -  this project has support for starting up all necessary dependencies in the correct order and waiting for each one to be ready
 - Individual projects (e.g. [Api](src/Api), [Infrastructure.Tools.DbUpdater](src/Infrastructure.Tools.DbUpdater)) can also be launched, but this requires that their dependencies are started and ready
-  - for example the Api depends on the database service being available and the application database on that server existing, initialized, migrated, and seeded properly
+  - for example the Api depends on the database service being available and the application database on that server existing, online, initialized, migrated, and seeded properly
