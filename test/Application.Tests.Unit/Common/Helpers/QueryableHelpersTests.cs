@@ -36,14 +36,14 @@ public class QueryableHelpersTests : IDisposable, IAsyncDisposable
         [InlineData(TotalEntityCount + 1, TotalEntityCount, TotalEntityCount, TotalEntityCount)] // startIndex is the total number of items => no items returned
         [InlineData(2, 2, 1, 1)] // startIndex is 1 and takeCount is 1 => only the second item returned
         [InlineData(3, 3, 2, 1)] // startIndex is 2 and takeCount is 1 => only the third item returned
-        public async Task CreateAsync_SpecifiedArguments_ResultContainsExpectedItems(int expectedMinId, int expectedMaxId, int startIndex, int takeCount)
+        public async Task ToListResultAsync_SpecifiedArguments_ResultContainsExpectedItems(int expectedMinId, int expectedMaxId, int startIndex, int takeCount)
         {
             // arrange
-            var expected = new PaginatedList<TestEntity>(items: GetTestEntities(minId: expectedMinId, maxId: expectedMaxId), startIndex: startIndex);
+            var expected = new ListResult<TestEntity>(items: GetTestEntities(minId: expectedMinId, maxId: expectedMaxId), startIndex: startIndex);
             var source = _context.TestEntities.AsQueryable();
 
             // act
-            var result = await QueryableHelpers.ToPaginatedList(source: source, startIndex: startIndex, takeCount: takeCount, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
+            var result = await QueryableHelpers.ToListResultAsync(source: source, startIndex: startIndex, takeCount: takeCount, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
             result.Should().BeEquivalentTo(expected, o => o.WithStrictOrderingFor(x => x.Items));
@@ -55,13 +55,13 @@ public class QueryableHelpersTests : IDisposable, IAsyncDisposable
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async Task CreateAsync_SpecifiedIncludeTotalCount_TotalCountOnlyIncludedIfSpecified(bool includeTotalCount)
+        public async Task ToListResultAsync_SpecifiedIncludeTotalCount_TotalCountOnlyIncludedIfSpecified(bool includeTotalCount)
         {
             // arrange
             var source = _context.TestEntities.AsQueryable();
 
             // act
-            var result = await QueryableHelpers.ToPaginatedList(source: source, startIndex: 0, takeCount: 1, includeTotalCount: includeTotalCount, cancellationToken: TestContext.Current.CancellationToken);
+            var result = await QueryableHelpers.ToListResultAsync(source: source, startIndex: 0, takeCount: 1, includeTotalCount: includeTotalCount, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
             result.TotalCount.Should().Be(includeTotalCount ? TotalEntityCount : null);
@@ -71,16 +71,16 @@ public class QueryableHelpersTests : IDisposable, IAsyncDisposable
     public class PaginatedListTests003 : QueryableHelpersTests
     {
         [Fact]
-        public async Task CreateAsync_Take2WithOrderByDescending_Last2ItemsInReverseOrderReturned()
+        public async Task ToListResultAsync_Take2WithOrderByDescending_Last2ItemsInReverseOrderReturned()
         {
             // arrange
             var items = GetTestEntities(minId: TotalEntityCount - 1, maxId: TotalEntityCount);
             items.Reverse();
-            var expected = new PaginatedList<TestEntity>(items: items, startIndex: 0);
+            var expected = new ListResult<TestEntity>(items: items, startIndex: 0);
             var source = _context.TestEntities.AsQueryable().OrderByDescending(x => x.Id);
 
             // act
-            var result = await QueryableHelpers.ToPaginatedList(source: source, startIndex: 0, takeCount: 2, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
+            var result = await QueryableHelpers.ToListResultAsync(source: source, startIndex: 0, takeCount: 2, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
             result.Should().BeEquivalentTo(expected, o => o.WithStrictOrderingFor(x => x.Items));

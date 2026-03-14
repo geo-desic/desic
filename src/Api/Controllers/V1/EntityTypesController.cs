@@ -15,10 +15,10 @@ public class EntityTypesController(ILogger<EntityTypesController> logger, IMedia
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
     [HttpGet]
-    [ProducesResponseType(typeof(PaginatedList<EntityType>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ListResult<EntityType>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<PaginatedList<EntityType>>> List(int startIndex = 0, int? count = null)
+    public async Task<ActionResult<ListResult<EntityType>>> List(int startIndex = 0, int? count = null)
     {
         _logger.LogInformation(LogEvents.EntityTypeList, $"{nameof(EntityTypesController)}.{nameof(List)}({{{nameof(startIndex)}}}, {{{nameof(count)}}})", startIndex, count);
 
