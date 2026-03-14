@@ -2,7 +2,7 @@
 using Desic.Domain.Common.Entities;
 using Desic.Domain.EntityTypes;
 
-namespace Desic.Application.Common.Helpers;
+namespace Desic.Application.Common.Extensions;
 
 internal static class DtoHelpers
 {

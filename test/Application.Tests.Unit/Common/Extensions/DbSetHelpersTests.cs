@@ -1,11 +1,11 @@
 ﻿using AwesomeAssertions;
-using Desic.Application.Common.Helpers;
+using Desic.Application.Common.Extensions;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.EntityTypes;
 using Desic.Helpers;
 using Microsoft.EntityFrameworkCore;
 
-namespace Desic.Application.Tests.Unit.Common.Helpers;
+namespace Desic.Application.Tests.Unit.Common.Extensions;
 
 public class DbSetHelpersTests : IDisposable, IAsyncDisposable
 {

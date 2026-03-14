@@ -1,5 +1,5 @@
 ﻿using AwesomeAssertions;
-using Desic.Application.Common.Helpers;
+using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Interfaces;
 using Desic.Application.Common.Models;
 using Desic.Domain.Common.Entities;
@@ -7,7 +7,7 @@ using Desic.Domain.Tags;
 using Desic.Domain.Users;
 using Desic.Helpers;
 
-namespace Desic.Application.Tests.Unit.Common.Helpers;
+namespace Desic.Application.Tests.Unit.Common.Extensions;
 
 public class DtoHelpersTests
 {

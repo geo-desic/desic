@@ -1,7 +1,7 @@
 ﻿using Desic.Domain.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Desic.Application.Common.Helpers;
+namespace Desic.Application.Common.Extensions;
 
 public static class DbSetHelpers
 {

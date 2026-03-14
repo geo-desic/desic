@@ -1,5 +1,5 @@
 ﻿using Desic.Application.Common;
-using Desic.Application.Common.Helpers;
+using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;

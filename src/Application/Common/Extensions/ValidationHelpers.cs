@@ -1,4 +1,4 @@
-﻿namespace Desic.Application.Common.Helpers;
+﻿namespace Desic.Application.Common.Extensions;
 
 internal static class ValidationHelpers
 {

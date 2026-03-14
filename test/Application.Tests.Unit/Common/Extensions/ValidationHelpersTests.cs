@@ -1,8 +1,8 @@
 ﻿using AwesomeAssertions;
-using Desic.Application.Common.Helpers;
+using Desic.Application.Common.Extensions;
 using FluentValidation;
 
-namespace Desic.Application.Tests.Unit.Common.Helpers;
+namespace Desic.Application.Tests.Unit.Common.Extensions;
 
 public class ValidationHelpersTests
 {

@@ -1,9 +1,9 @@
 ﻿using AwesomeAssertions;
-using Desic.Application.Common.Helpers;
+using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Desic.Application.Tests.Unit.Common.Helpers;
+namespace Desic.Application.Tests.Unit.Common.Extensions;
 
 // note: using ef core in memory provider as it is significantly faster and do not actually need a realistic test database for these tests
 // the application use cases that depend on these helpers should be covered under integration tests which use a real database
