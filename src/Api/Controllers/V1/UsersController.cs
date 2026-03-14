@@ -36,7 +36,7 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<User>> Create([FromBody] UserCreate user, [FromHeader(Name = "Prefer")] string? preferHeaderValue)
+    public async Task<ActionResult<User>> Create([FromBody] CreateUser user, [FromHeader(Name = "Prefer")] string? preferHeaderValue)
     {
         using var loggerScope = _logger.BeginScope("Username:{username}", user.Username);
         _logger.LogInformation(LogEvents.UserCreate, $"{nameof(UsersController)}.{nameof(Create)}(user, {{{nameof(preferHeaderValue)}}})", preferHeaderValue);

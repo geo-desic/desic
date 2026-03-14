@@ -4,11 +4,11 @@ using System.Text;
 
 namespace Desic.Application.Tests.Unit.Users.Create;
 
-public class UserCreateValidatorTests
+public class CreateUserValidatorTests
 {
-    private readonly UserCreateValidator _validator = new();
+    private readonly CreateUserValidator _validator = new();
 
-    public class UserCreateValidatorTests001 : UserCreateValidatorTests
+    public class UserCreateValidatorTests001 : CreateUserValidatorTests
     {
         [Theory]
         [InlineData("username.01_is-valid")]
@@ -16,7 +16,7 @@ public class UserCreateValidatorTests
         public void ValidateUsername_ValidData_NoValidationError(string username)
         {
             // arrange
-            var model = new UserCreate { Username = username };
+            var model = new CreateUser { Username = username };
 
             // act
             var result = _validator.TestValidate(model, o => o.IncludeProperties(m => m.Username));
@@ -26,7 +26,7 @@ public class UserCreateValidatorTests
         }
     }
 
-    public class UserCreateValidatorTests002 : UserCreateValidatorTests
+    public class UserCreateValidatorTests002 : CreateUserValidatorTests
     {
         [Theory]
         [InlineData("aaaa")] // too short (4 characters)
@@ -40,7 +40,7 @@ public class UserCreateValidatorTests
         public void ValidateUsername_InvalidData_ValidationError(string username)
         {
             // arrange
-            var model = new UserCreate { Username = username };
+            var model = new CreateUser { Username = username };
 
             // act
             var result = _validator.TestValidate(model, o => o.IncludeProperties(m => m.Username));
@@ -50,7 +50,7 @@ public class UserCreateValidatorTests
         }
     }
 
-    public class UserCreateValidatorTests003 : UserCreateValidatorTests
+    public class UserCreateValidatorTests003 : CreateUserValidatorTests
     {
         [Fact]
         public void ValidateUsername_InvalidData_ValidationError()
@@ -70,7 +70,7 @@ public class UserCreateValidatorTests
 
             foreach (var c in invalidCharacters)
             {
-                var model = new UserCreate { Username = $"user{c}name" };
+                var model = new CreateUser { Username = $"user{c}name" };
 
                 // act
                 var result = _validator.TestValidate(model, o => o.IncludeProperties(m => m.Username));

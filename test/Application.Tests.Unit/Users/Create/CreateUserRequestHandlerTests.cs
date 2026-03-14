@@ -13,7 +13,7 @@ public class CreateUserRequestHandlerTests
 {
     private readonly ILogger<CreateUserRequestHandler> _logger = NullLogger<CreateUserRequestHandler>.Instance;
     private readonly Mock<IApplicationDbContext> _dbContext = new();
-    private readonly IValidator<UserCreate> _validator = new UserCreateValidator();
+    private readonly IValidator<CreateUser> _validator = new CreateUserValidator();
 
     public class CreateUserRequestHandlerTests001 : CreateUserRequestHandlerTests
     {
@@ -27,7 +27,7 @@ public class CreateUserRequestHandlerTests
             var handler = new CreateUserRequestHandler(logger: _logger, dbContext: _dbContext.Object, validator: _validator);
             var request = new CreateUserRequest
             {
-                Model = new UserCreate { Username = "username" },
+                Model = new CreateUser { Username = "username" },
                 ReturnRepresentation = returnResult,
             };
 
@@ -58,7 +58,7 @@ public class CreateUserRequestHandlerTests
             var handler = new CreateUserRequestHandler(logger: _logger, dbContext: _dbContext.Object, validator: _validator);
             var request = new CreateUserRequest
             {
-                Model = new UserCreate { Username = "invalid username" }, // contains space character
+                Model = new CreateUser { Username = "invalid username" }, // contains space character
             };
 
             // act
@@ -82,7 +82,7 @@ public class CreateUserRequestHandlerTests
             var handler = new CreateUserRequestHandler(logger: _logger, dbContext: _dbContext.Object, validator: _validator);
             var request = new CreateUserRequest
             {
-                Model = new UserCreate { Username = username },
+                Model = new CreateUser { Username = username },
             };
 
             // act

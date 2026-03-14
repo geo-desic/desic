@@ -49,7 +49,7 @@ public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(t
     public async Task Create_InvalidRequestUsernameExists_Status400()
     {
         // arrange
-        var user = new UserCreate
+        var user = new CreateUser
         {
             Username = TestUsers.User01Active.Username, // exists in seeded data
         };
@@ -69,7 +69,7 @@ public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(t
     public async Task Create_ValidRequestNoPreferHeader_Status204WithEntityIdHeader()
     {
         // arrange
-        var user = new UserCreate
+        var user = new CreateUser
         {
             Username = "username-does-not-exist-1",
         };
@@ -90,7 +90,7 @@ public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(t
     public async Task Create_ValidRequestWithPreferRepresentationHeader_Status201AndUserReturned()
     {
         // arrange
-        var user = new UserCreate
+        var user = new CreateUser
         {
             Username = "username-does-not-exist-2",
         };

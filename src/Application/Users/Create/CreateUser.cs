@@ -2,7 +2,7 @@
 
 namespace Desic.Application.Users.Create;
 
-public class UserCreate
+public class CreateUser
 {
     [Required]
     public required string Username { get; set; }

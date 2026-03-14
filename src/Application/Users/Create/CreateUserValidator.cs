@@ -2,9 +2,9 @@
 
 namespace Desic.Application.Users.Create;
 
-public class UserCreateValidator : AbstractValidator<UserCreate>
+public class CreateUserValidator : AbstractValidator<CreateUser>
 {
-    public UserCreateValidator()
+    public CreateUserValidator()
     {
         RuleFor(u => u.Username)
             .NotEmpty()

@@ -10,11 +10,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Users.Create;
 
-public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IApplicationDbContext dbContext, IValidator<UserCreate> validator) : IRequestHandler<CreateUserRequest, Result<CreateUserResult>>
+public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IApplicationDbContext dbContext, IValidator<CreateUser> validator) : IRequestHandler<CreateUserRequest, Result<CreateUserResult>>
 {
     private readonly ILogger<CreateUserRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-    private readonly IValidator<UserCreate> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
+    private readonly IValidator<CreateUser> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
     public async Task<Result<CreateUserResult>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
