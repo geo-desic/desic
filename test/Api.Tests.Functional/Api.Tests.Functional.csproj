@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Desic.Api.Tests.Functional</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>c121f405-33f5-48cb-b6f5-f4287fc75de8</UserSecretsId>
+    <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
-    <IsPackable>false</IsPackable>
     <RootNamespace>Desic.Api.Tests.Functional</RootNamespace>
-    <AssemblyName>Desic.Api.Tests.Functional</AssemblyName>
+    <TargetFramework>net10.0</TargetFramework>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <UserSecretsId>c121f405-33f5-48cb-b6f5-f4287fc75de8</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

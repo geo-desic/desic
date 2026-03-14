@@ -1,15 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <AssemblyName>Desic.Infrastructure.Tools.DbUpdater</AssemblyName>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
-    <UserSecretsId>c121f405-33f5-48cb-b6f5-f4287fc75de8</UserSecretsId>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType>
     <RootNamespace>Desic.Infrastructure.Tools.DbUpdater</RootNamespace>
-    <AssemblyName>Desic.Infrastructure.Tools.DbUpdater</AssemblyName>
+    <TargetFramework>net10.0</TargetFramework>
+    <UserSecretsId>c121f405-33f5-48cb-b6f5-f4287fc75de8</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

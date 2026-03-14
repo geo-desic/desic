@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Desic.Domain.Tests.Unit</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
-    <IsPackable>false</IsPackable>
     <RootNamespace>Desic.Domain.Tests.Unit</RootNamespace>
-    <AssemblyName>Desic.Domain.Tests.Unit</AssemblyName>
+    <TargetFramework>net10.0</TargetFramework>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
 
