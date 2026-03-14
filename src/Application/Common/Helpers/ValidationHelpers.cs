@@ -1,0 +1,16 @@
+﻿namespace Desic.Application.Common.Helpers;
+
+internal static class ValidationHelpers
+{
+    internal static bool InstanceIsValid<T>(this FluentValidation.IValidator<T> validator, T instance, out ValidationError? error)
+    {
+        error = null;
+        var validationResult = validator.Validate(instance);
+        var result = validationResult.IsValid;
+        if (!result)
+        {
+            error = new ValidationError(validationResult.Errors);
+        }
+        return result;
+    }
+}

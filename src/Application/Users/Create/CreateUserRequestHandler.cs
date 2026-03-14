@@ -1,4 +1,5 @@
 ﻿using Desic.Application.Common;
+using Desic.Application.Common.Helpers;
 using Desic.Application.Common.Interfaces;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.Tags;
@@ -17,7 +18,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
     public async Task<Result<CreateResult<User>>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
-        if (_validator.ValidationError(request.User) is ValidationError error) return error;
+        if (!_validator.InstanceIsValid(request.User, out var error)) return error!;
 
         if (await _dbContext.Users.AnyAsync(x => x.Username == request.User.Username, cancellationToken))
         {
