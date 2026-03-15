@@ -1,29 +1,24 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Extensions;
-using Desic.Domain.Common.Entities;
-using Desic.Domain.EntityTypes;
 using Desic.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using Moq.EntityFrameworkCore;
 
 namespace Desic.Application.Tests.Unit.Common.Extensions;
 
-public class DbSetHelpersTests : IDisposable, IAsyncDisposable
+public class DbSetHelpersTests
 {
-    private readonly TestDbContext _context;
-    private bool _disposed = false;
-    private readonly DbContextOptions<TestDbContext> _options = new DbContextOptionsBuilder<TestDbContext>()
-        .UseInMemoryDatabase(databaseName: Guid.CreateVersion7().ToString()) // unique name ensures isolation between tests
-        .Options;
-    private const int TotalEntityCount = 3;
-    private readonly Guid IdThatExists = 2.ToGuid(); // purposely using the id in the middle of the seeded data to make sure implementation actually finds the entity with the id versus simply returning the first or last one
+    private readonly Mock<ITestDbContext> _mockDbContext = new();
+    private readonly ITestDbContext _context;
     private readonly Guid IdThatDoesNotExist = Guid.AllBitsSet;
+    private readonly Guid IdThatExists = 2.ToGuid(); // purposely using the id in the middle of the seeded data to make sure implementation actually finds the entity with the id versus simply returning the first or last one
+    private const int TotalEntityCount = 3;
 
     public DbSetHelpersTests()
     {
-        _context = new(_options);
-        _context.Database.EnsureCreated();
-        _context.TestEntities.AddRange(GetTestEntities(minIndex: 1, maxIndex: TotalEntityCount));
-        _context.SaveChanges();
+        _mockDbContext.Setup(x => x.TestEntities).ReturnsDbSet(GetTestEntities(minIndex: 1, maxIndex: TotalEntityCount));
+        _context = _mockDbContext.Object;
     }
 
     public class DbSetHelpersTests001 : DbSetHelpersTests
@@ -95,49 +90,4 @@ public class DbSetHelpersTests : IDisposable, IAsyncDisposable
         }
         return result;
     }
-
-    private class TestDbContext(DbContextOptions<TestDbContext> options) : DbContext(options)
-    {
-        public DbSet<TestEntity> TestEntities { get; set; }
-    }
-
-    private class TestEntity : BaseEntity
-    {
-        public override SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
-    }
-
-    #region disposable
-    public async ValueTask DisposeAsync()
-    {
-        await DisposeAsyncCore().ConfigureAwait(false);
-        Dispose(false);
-        GC.SuppressFinalize(this);
-        _disposed = true;
-    }
-
-    protected virtual async ValueTask DisposeAsyncCore()
-    {
-        if (_disposed) return;
-        if (_context is IAsyncDisposable asyncDisposableResource)
-        {
-            await asyncDisposableResource.DisposeAsync().ConfigureAwait(false);
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (_disposed) return;
-        if (disposing)
-        {
-            _context?.Dispose();
-        }
-        _disposed = true;
-    }
-    #endregion
 }
