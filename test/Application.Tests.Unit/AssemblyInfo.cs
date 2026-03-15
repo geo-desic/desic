@@ -1,4 +1,1 @@
-﻿using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
-[assembly: Trait("Type", "Unit")]
+﻿[assembly: Trait("Type", "Unit")]

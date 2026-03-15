@@ -5,18 +5,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Application.Tests.Unit;
 
-internal interface ITestDbContext : IBaseDbContext
+public interface ITestDbContext : IBaseDbContext
 {
     DbSet<TestEntity> TestEntities { get; }
+    DbSet<IntIdEntity> IntIdEntities { get; }
 }
 
-internal class TestDbContext(DbContextOptions<TestDbContext> options) : DbContext(options), ITestDbContext
+public class TestDbContext(DbContextOptions<TestDbContext> options) : DbContext(options), ITestDbContext
 {
     public DbSet<TestEntity> TestEntities { get; set; }
+    public DbSet<IntIdEntity> IntIdEntities { get; set; }
 }
 
-internal class TestEntity : BaseEntity
+public class TestEntity : BaseEntity
 {
     public override SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
-    public int SequentialId { get; set; }
+}
+
+public class IntIdEntity // for tests that don't need an entity that inherits from BaseEntity
+{
+    public int Id { get; set; }
 }

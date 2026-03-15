@@ -1,8 +1,21 @@
-﻿namespace Desic.Application.Common.Models;
+﻿using Desic.Application.Common.Interfaces;
 
-public class ListResult<T>(IReadOnlyCollection<T> items, int startIndex, int? totalCount = null)
+namespace Desic.Application.Common.Models;
+
+public class ListResult<T> : IListResult<T>
 {
-    public int StartIndex { get; } = startIndex;
-    public int? TotalCount { get; } = totalCount;
-    public IReadOnlyCollection<T> Items { get; } = items;
+    public ListResult() { }
+    public ListResult(IReadOnlyCollection<T> items)
+    {
+        Items = items;
+    }
+    public ListResult(IListResult<T> listResult) : base()
+    {
+        Items = listResult.Items;
+        StartIndex = listResult.StartIndex;
+        TotalCount = listResult.TotalCount;
+    }
+    public int StartIndex { get; init; }
+    public int? TotalCount { get; init; }
+    public IReadOnlyCollection<T> Items { get; init; } = [];
 }
