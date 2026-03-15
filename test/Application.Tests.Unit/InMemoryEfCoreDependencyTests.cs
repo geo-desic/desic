@@ -4,16 +4,16 @@ namespace Desic.Application.Tests.Unit;
 
 public class InMemoryEfCoreDependencyTests<T> : IDisposable, IAsyncDisposable where T : DbContext
 {
-    protected readonly T _context;
+    protected readonly T DbContext;
     private bool _disposed = false;
-    protected readonly DbContextOptions<T> _options = new DbContextOptionsBuilder<T>()
+    private readonly DbContextOptions<T> _options = new DbContextOptionsBuilder<T>()
         .UseInMemoryDatabase(databaseName: Guid.CreateVersion7().ToString()) // unique name ensures isolation between tests
         .Options;
 
     public InMemoryEfCoreDependencyTests(Func<DbContextOptions<T>, T> dbContextCreator)
     {
-        _context = dbContextCreator(_options);
-        _context.Database.EnsureCreated();
+        DbContext = dbContextCreator(_options);
+        DbContext.Database.EnsureCreated();
     }
 
     #region disposable
@@ -28,7 +28,7 @@ public class InMemoryEfCoreDependencyTests<T> : IDisposable, IAsyncDisposable wh
     protected virtual async ValueTask DisposeAsyncCore()
     {
         if (_disposed) return;
-        if (_context is IAsyncDisposable asyncDisposableResource)
+        if (DbContext is IAsyncDisposable asyncDisposableResource)
         {
             await asyncDisposableResource.DisposeAsync().ConfigureAwait(false);
         }
@@ -45,7 +45,7 @@ public class InMemoryEfCoreDependencyTests<T> : IDisposable, IAsyncDisposable wh
         if (_disposed) return;
         if (disposing)
         {
-            _context?.Dispose();
+            DbContext?.Dispose();
         }
         _disposed = true;
     }

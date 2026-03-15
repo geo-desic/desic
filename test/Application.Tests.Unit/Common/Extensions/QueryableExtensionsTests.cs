@@ -12,8 +12,8 @@ public class QueryableExtensionsTests : InMemoryEfCoreDependencyTests<TestDbCont
 
     public QueryableExtensionsTests() : base(o => new(o))
     {
-        _context.IntIdEntities.AddRange(GetTestEntities(minId: 1, maxId: TotalEntityCount));
-        _context.SaveChanges();
+        DbContext.IntIdEntities.AddRange(GetTestEntities(minId: 1, maxId: TotalEntityCount));
+        DbContext.SaveChanges();
     }
 
     // at quick glance tests may look like they are duplicated twice, but each set are acting on different extension methods
@@ -33,7 +33,7 @@ public class QueryableExtensionsTests : InMemoryEfCoreDependencyTests<TestDbCont
         {
             // arrange
             var expected = new ListResult<IntIdEntity> { Items = GetTestEntities(minId: expectedMinId, maxId: expectedMaxId), StartIndex = startIndex };
-            var source = _context.IntIdEntities.AsQueryable();
+            var source = DbContext.IntIdEntities.AsQueryable();
 
             // act
             var result = await QueryableExtensions.ToListResultAsync(source: source, startIndex: startIndex, takeCount: takeCount, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
@@ -59,7 +59,7 @@ public class QueryableExtensionsTests : InMemoryEfCoreDependencyTests<TestDbCont
         {
             // arrange
             var expected = new ListIntIdEntitiesResult { Items = GetTestEntities(minId: expectedMinId, maxId: expectedMaxId), StartIndex = startIndex };
-            var source = _context.IntIdEntities.AsQueryable();
+            var source = DbContext.IntIdEntities.AsQueryable();
 
             // act
             var result = await QueryableExtensions.ToListResultAsync<IntIdEntity, ListIntIdEntitiesResult>(source: source, startIndex: startIndex, takeCount: takeCount, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
@@ -78,7 +78,7 @@ public class QueryableExtensionsTests : InMemoryEfCoreDependencyTests<TestDbCont
         public async Task ToListResultAsync_SpecifiedIncludeTotalCount_TotalCountOnlyIncludedIfSpecified(bool includeTotalCount)
         {
             // arrange
-            var source = _context.IntIdEntities.AsQueryable();
+            var source = DbContext.IntIdEntities.AsQueryable();
 
             // act
             var result = await QueryableExtensions.ToListResultAsync(source: source, startIndex: 0, takeCount: 1, includeTotalCount: includeTotalCount, cancellationToken: TestContext.Current.CancellationToken);
@@ -96,7 +96,7 @@ public class QueryableExtensionsTests : InMemoryEfCoreDependencyTests<TestDbCont
         public async Task ToListResultAsyncTR_SpecifiedIncludeTotalCount_TotalCountOnlyIncludedIfSpecified(bool includeTotalCount)
         {
             // arrange
-            var source = _context.IntIdEntities.AsQueryable();
+            var source = DbContext.IntIdEntities.AsQueryable();
 
             // act
             var result = await QueryableExtensions.ToListResultAsync<IntIdEntity, ListIntIdEntitiesResult>(source: source, startIndex: 0, takeCount: 1, includeTotalCount: includeTotalCount, cancellationToken: TestContext.Current.CancellationToken);
@@ -115,7 +115,7 @@ public class QueryableExtensionsTests : InMemoryEfCoreDependencyTests<TestDbCont
             var items = GetTestEntities(minId: TotalEntityCount - 1, maxId: TotalEntityCount);
             items.Reverse();
             var expected = new ListResult<IntIdEntity> { Items = items, StartIndex = 0 };
-            var source = _context.IntIdEntities.AsQueryable().OrderByDescending(x => x.Id);
+            var source = DbContext.IntIdEntities.AsQueryable().OrderByDescending(x => x.Id);
 
             // act
             var result = await QueryableExtensions.ToListResultAsync(source: source, startIndex: 0, takeCount: 2, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
@@ -134,7 +134,7 @@ public class QueryableExtensionsTests : InMemoryEfCoreDependencyTests<TestDbCont
             var items = GetTestEntities(minId: TotalEntityCount - 1, maxId: TotalEntityCount);
             items.Reverse();
             var expected = new ListIntIdEntitiesResult { Items = items, StartIndex = 0 };
-            var source = _context.IntIdEntities.AsQueryable().OrderByDescending(x => x.Id);
+            var source = DbContext.IntIdEntities.AsQueryable().OrderByDescending(x => x.Id);
 
             // act
             var result = await QueryableExtensions.ToListResultAsync<IntIdEntity, ListIntIdEntitiesResult>(source: source, startIndex: 0, takeCount: 2, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
