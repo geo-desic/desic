@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Application.Common.Extensions;
 
-public static class DbSetHelpers
+public static class DbSetExtensions
 {
     public static async Task<T?> GetEntityByIdAsync<T>(this DbSet<T> dbSet, Guid id, CancellationToken cancellationToken) where T : BaseEntity
     {

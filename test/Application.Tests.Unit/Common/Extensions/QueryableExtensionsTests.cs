@@ -7,7 +7,7 @@ namespace Desic.Application.Tests.Unit.Common.Extensions;
 
 // note: using ef core in memory provider as it is significantly faster and do not actually need a realistic test database for these tests
 // the application use cases that depend on these helpers should be covered under integration tests which use a real database
-public class QueryableHelpersTests : IDisposable, IAsyncDisposable
+public class QueryableExtensionsTests : IDisposable, IAsyncDisposable
 {
     private readonly TestDbContext _context;
     private bool _disposed = false;
@@ -16,7 +16,7 @@ public class QueryableHelpersTests : IDisposable, IAsyncDisposable
         .Options;
     private const int TotalEntityCount = 10;
 
-    public QueryableHelpersTests()
+    public QueryableExtensionsTests()
     {
         _context = new(_options);
         _context.Database.EnsureCreated();
@@ -24,7 +24,7 @@ public class QueryableHelpersTests : IDisposable, IAsyncDisposable
         _context.SaveChanges();
     }
 
-    public class PaginatedListTests001 : QueryableHelpersTests
+    public class QueryableExtensionsTests001 : QueryableExtensionsTests
     {
         [Theory]
         [InlineData(1, 1, 0, 1)] // takeCount is 1 => only the first item returned
@@ -43,14 +43,14 @@ public class QueryableHelpersTests : IDisposable, IAsyncDisposable
             var source = _context.TestEntities.AsQueryable();
 
             // act
-            var result = await QueryableHelpers.ToListResultAsync(source: source, startIndex: startIndex, takeCount: takeCount, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
+            var result = await QueryableExtensions.ToListResultAsync(source: source, startIndex: startIndex, takeCount: takeCount, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
             result.Should().BeEquivalentTo(expected, o => o.WithStrictOrderingFor(x => x.Items));
         }
     }
 
-    public class PaginatedListTests002 : QueryableHelpersTests
+    public class QueryableExtensionsTests002 : QueryableExtensionsTests
     {
         [Theory]
         [InlineData(true)]
@@ -61,14 +61,14 @@ public class QueryableHelpersTests : IDisposable, IAsyncDisposable
             var source = _context.TestEntities.AsQueryable();
 
             // act
-            var result = await QueryableHelpers.ToListResultAsync(source: source, startIndex: 0, takeCount: 1, includeTotalCount: includeTotalCount, cancellationToken: TestContext.Current.CancellationToken);
+            var result = await QueryableExtensions.ToListResultAsync(source: source, startIndex: 0, takeCount: 1, includeTotalCount: includeTotalCount, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
             result.TotalCount.Should().Be(includeTotalCount ? TotalEntityCount : null);
         }
     }
 
-    public class PaginatedListTests003 : QueryableHelpersTests
+    public class QueryableExtensionsTests003 : QueryableExtensionsTests
     {
         [Fact]
         public async Task ToListResultAsync_Take2WithOrderByDescending_Last2ItemsInReverseOrderReturned()
@@ -80,7 +80,7 @@ public class QueryableHelpersTests : IDisposable, IAsyncDisposable
             var source = _context.TestEntities.AsQueryable().OrderByDescending(x => x.Id);
 
             // act
-            var result = await QueryableHelpers.ToListResultAsync(source: source, startIndex: 0, takeCount: 2, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
+            var result = await QueryableExtensions.ToListResultAsync(source: source, startIndex: 0, takeCount: 2, includeTotalCount: false, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
             result.Should().BeEquivalentTo(expected, o => o.WithStrictOrderingFor(x => x.Items));

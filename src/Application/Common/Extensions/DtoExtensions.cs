@@ -4,7 +4,7 @@ using Desic.Domain.EntityTypes;
 
 namespace Desic.Application.Common.Extensions;
 
-internal static class DtoHelpers
+internal static class DtoExtensions
 {
     public static void MapCreated(this ICreatableDto item, ICreatable entity)
     {

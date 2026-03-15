@@ -9,11 +9,11 @@ using Desic.Extensions;
 
 namespace Desic.Application.Tests.Unit.Common.Extensions;
 
-public class DtoHelpersTests
+public class DtoExtensionsTests
 {
     private const string Unchanged = nameof(Unchanged);
 
-    public class ByHelpersTests001 : DtoHelpersTests
+    public class DtoExtensionsTests001 : DtoExtensionsTests
     {
         [Fact]
         public void MapCreated_SpecifiedModels_PerformsExpectedMapping()
@@ -29,7 +29,7 @@ public class DtoHelpersTests
             };
 
             // act
-            DtoHelpers.MapCreated(item, entity);
+            DtoExtensions.MapCreated(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -40,7 +40,7 @@ public class DtoHelpersTests
         }
     }
 
-    public class ByHelpersTests002 : DtoHelpersTests
+    public class DtoExtensionsTests002 : DtoExtensionsTests
     {
         [Fact]
         public void MapModified_SpecifiedModels_PerformsExpectedMapping()
@@ -56,7 +56,7 @@ public class DtoHelpersTests
             };
 
             // act
-            DtoHelpers.MapModified(item, entity);
+            DtoExtensions.MapModified(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -67,7 +67,7 @@ public class DtoHelpersTests
         }
     }
 
-    public class ByHelpersTests003 : DtoHelpersTests
+    public class DtoExtensionsTests003 : DtoExtensionsTests
     {
         [Fact]
         public void MapDeleted_SpecifiedModels_PerformsExpectedMapping()
@@ -83,7 +83,7 @@ public class DtoHelpersTests
             };
 
             // act
-            DtoHelpers.MapDeleted(item, entity);
+            DtoExtensions.MapDeleted(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -94,7 +94,7 @@ public class DtoHelpersTests
         }
     }
 
-    public class ByHelpersTests004 : DtoHelpersTests
+    public class DtoExtensionsTests004 : DtoExtensionsTests
     {
         [Fact]
         public void MapCreatedModified_SpecifiedModels_PerformsExpectedMapping()
@@ -114,7 +114,7 @@ public class DtoHelpersTests
             };
 
             // act
-            DtoHelpers.MapCreatedModified(item, entity);
+            DtoExtensions.MapCreatedModified(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -129,7 +129,7 @@ public class DtoHelpersTests
         }
     }
 
-    public class ByHelpersTests005 : DtoHelpersTests
+    public class DtoExtensionsTests005 : DtoExtensionsTests
     {
         [Fact]
         public void MapCreatedModifiedDeleted_SpecifiedModels_PerformsExpectedMapping()
@@ -153,7 +153,7 @@ public class DtoHelpersTests
             };
 
             // act
-            DtoHelpers.MapCreatedModifiedDeleted(item, entity);
+            DtoExtensions.MapCreatedModifiedDeleted(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);

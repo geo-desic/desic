@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Desic.Application.Tests.Unit.Common.Extensions;
 
-public class ValidationHelpersTests
+public class ValidationExtensionsTests
 {
-    public class ValidationHelpersTests001 : ValidationHelpersTests
+    public class ValidationExtensionsTests001 : ValidationExtensionsTests
     {
         [Fact]
         public void InstanceIsValid_ValidModel_ReturnsTrueAndNullError()
@@ -16,7 +16,7 @@ public class ValidationHelpersTests
             var validator = new TestModelValidator();
 
             // act
-            var result = ValidationHelpers.InstanceIsValid(validator: validator, instance: instance, out var error);
+            var result = ValidationExtensions.InstanceIsValid(validator: validator, instance: instance, out var error);
 
             // assert
             result.Should().BeTrue();
@@ -24,7 +24,7 @@ public class ValidationHelpersTests
         }
     }
 
-    public class ValidationHelpersTests002 : ValidationHelpersTests
+    public class ValidationExtensionsTests002 : ValidationExtensionsTests
     {
         [Fact]
         public void InstanceIsValid_InvalidModel_ReturnsFalseAndNonNullError()
@@ -34,7 +34,7 @@ public class ValidationHelpersTests
             var validator = new TestModelValidator();
 
             // act
-            var result = ValidationHelpers.InstanceIsValid(validator: validator, instance: instance, out var error);
+            var result = ValidationExtensions.InstanceIsValid(validator: validator, instance: instance, out var error);
 
             // assert
             result.Should().BeFalse();

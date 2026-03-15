@@ -1,6 +1,6 @@
 ﻿namespace Desic.Application.Common.Extensions;
 
-internal static class ValidationHelpers
+internal static class ValidationExtensions
 {
     internal static bool InstanceIsValid<T>(this FluentValidation.IValidator<T> validator, T instance, out ValidationError? error)
     {

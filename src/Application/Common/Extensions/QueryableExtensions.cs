@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Application.Common.Extensions;
 
-internal static class QueryableHelpers
+internal static class QueryableExtensions
 {
     internal const int DefaultTakeCount = 100;
     public static async Task<ListResult<T>> ToListResultAsync<T>(this IQueryable<T> source, int? startIndex = 0, int? takeCount = DefaultTakeCount, bool includeTotalCount = false, CancellationToken cancellationToken = default)
