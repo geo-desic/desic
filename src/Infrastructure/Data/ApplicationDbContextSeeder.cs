@@ -3,7 +3,7 @@ using Desic.Domain.EntityTypes;
 using Desic.Domain.Tags;
 using Desic.Domain.Users;
 using Desic.Domain.Users.Test;
-using Desic.Infrastructure.Data.Common;
+using Desic.Infrastructure.Data.Common.Models;
 using Desic.Infrastructure.Data.Iso3166Countries;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -72,7 +72,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
             return;
         }
 
-        var result = new EntitySetSeedingResult();
+        var result = new SeedResult();
         var items = SystemEntityTypes.AllAsEntities().ToList();
         result.ReferenceCount = items.Count;
         if (!any) // fast method
@@ -132,7 +132,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
             return;
         }
 
-        var result = new EntitySetSeedingResult();
+        var result = new SeedResult();
         var items = SystemTags.AllAsEntities().ToList();
         result.ReferenceCount = items.Count;
         if (!any) // fast method
@@ -223,7 +223,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
             return;
         }
 
-        var result = new EntitySetSeedingResult();
+        var result = new SeedResult();
         var items = await TestUsers.Generate(options?.Count ?? 10).ToListAsync();
         result.ReferenceCount = items.Count;
         if (!any) // fast method

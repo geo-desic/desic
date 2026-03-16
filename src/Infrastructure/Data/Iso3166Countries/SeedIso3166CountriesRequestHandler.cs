@@ -1,14 +1,14 @@
 ﻿using Desic.Domain.Common.Entities;
 using Desic.Domain.Iso3166Countries;
 using Desic.Domain.Tags;
-using Desic.Infrastructure.Data.Common;
+using Desic.Infrastructure.Data.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Infrastructure.Data.Iso3166Countries;
 
-internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, EntitySetSeedingResult>
+internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, SeedResult>
 {
     private int _batchNumber = 0;
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -16,9 +16,9 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
     private readonly ILogger<SeedIso3166CountriesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
-    public async Task<EntitySetSeedingResult> Handle(SeedIso3166CountriesRequest request, CancellationToken cancellationToken)
+    public async Task<SeedResult> Handle(SeedIso3166CountriesRequest request, CancellationToken cancellationToken)
     {
-        var result = new EntitySetSeedingResult();
+        var result = new SeedResult();
         _batchNumber = 0;
         request.BatchSize ??= _defaultBatchSize;
 

@@ -1,6 +1,6 @@
-﻿namespace Desic.Infrastructure.Data.Common;
+﻿namespace Desic.Infrastructure.Data.Common.Models;
 
-public class EntitySetSeedingResult
+public class SeedResult
 {
     public long Deletes { get; set; } = 0;
     public long Inserts { get; set; } = 0L;

@@ -1,9 +1,8 @@
-﻿using Desic.Infrastructure.Data.Common;
+﻿using Desic.Infrastructure.Data.Common.Models;
 using MediatR;
 
 namespace Desic.Infrastructure.Data.Iso3166Countries;
 
-public class SeedIso3166CountriesRequest : IRequest<EntitySetSeedingResult>
+public class SeedIso3166CountriesRequest : SeedRequest, IRequest<SeedResult>
 {
-    public int? BatchSize { get; set; }
 }
