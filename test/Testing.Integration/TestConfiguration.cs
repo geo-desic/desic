@@ -10,7 +10,7 @@ public static class TestConfiguration
         .AddJsonFile("sqlserver.appsettings.json", optional: true)
         .AddJsonFile("appsettings.json", optional: true)
         .AddJsonFile($"appsettings.{Constants.TestEnvironmentName}.json", optional: true)
-        .AddUserSecrets<IMarker>(optional: true)
+        .AddUserSecrets<IAssemblyReference>(optional: true)
         .AddEnvironmentVariables()
         .Build();
 

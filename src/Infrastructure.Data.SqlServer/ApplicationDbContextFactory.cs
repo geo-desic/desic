@@ -28,7 +28,7 @@ public sealed class ApplicationDbContextFactory : IDisposable, IDesignTimeDbCont
         result.Configuration.Sources.Insert(0, new JsonConfigurationSource() { Path = "sqlserver.appsettings.json", Optional = true });
         if ((new string[] { "Test", "Local" }).Contains(result.Environment.EnvironmentName)) // Development already covered by Host.CreateDefaultBuilder above
         {
-            result.Configuration.AddUserSecrets<IMarker>();
+            result.Configuration.AddUserSecrets<IAssemblyReference>();
             // re-apply these so they will potentially override the user secrets (see the exact order in Host.CreateDefaultBuilder above)
             result.Configuration.AddEnvironmentVariables();
             result.Configuration.AddCommandLine(args);

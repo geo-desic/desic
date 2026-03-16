@@ -9,6 +9,6 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
         => services
-            .AddMediatR(cfg => { cfg.RegisterServicesFromAssemblyContaining<IMarker>(); cfg.AddOpenBehavior(typeof(LoggingBehavior<,>)); })
-            .AddValidatorsFromAssemblyContaining<IMarker>();
+            .AddMediatR(cfg => { cfg.RegisterServicesFromAssemblyContaining<IAssemblyReference>(); cfg.AddOpenBehavior(typeof(LoggingBehavior<,>)); })
+            .AddValidatorsFromAssemblyContaining<IAssemblyReference>();
 }

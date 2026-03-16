@@ -11,7 +11,7 @@ public class EntityTests
     public void Entity_InheritsFromBaseEntity_EntityTypeSpecifiedAndUnique()
     {
         List<SystemEntityType> entityTypes = [];
-        IEnumerable<Type> types = typeof(Domain.IMarker).Assembly.GetTypes();
+        IEnumerable<Type> types = typeof(Domain.IAssemblyReference).Assembly.GetTypes();
         var derivedTypes = from type in types where type.IsSubclassOf(typeof(BaseEntity)) && type.IsClass && !type.IsAbstract select type;
         foreach (var derivedType in derivedTypes)
         {

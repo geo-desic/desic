@@ -11,7 +11,7 @@ public static class ServiceCollectionExtensions
         {
             options.UseSqlite(connectionString, x =>
             {
-                if (setMigrationsAssembly) x.MigrationsAssembly(typeof(IMarker).Assembly.GetName().Name);
+                if (setMigrationsAssembly) x.MigrationsAssembly(typeof(IAssemblyReference).Assembly.GetName().Name);
             });
             if (useSeeding) options.UseApplicationDbContextSeeding(serviceProvider);
         });

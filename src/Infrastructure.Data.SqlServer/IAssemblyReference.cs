@@ -1,3 +1,3 @@
 ﻿namespace Desic.Infrastructure.Data.SqlServer;
 
-public interface IMarker { }
+public interface IAssemblyReference { }
