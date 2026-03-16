@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Desic.Infrastructure.Data.Configurations.Extensions;
 
-internal static class ConfigurationExtensions
+internal static class EntityTypeBuilderExtensions
 {
     internal static int ConfigureModifiableEntity<T>(this EntityTypeBuilder<T> builder, DatabaseFacade databaseFacade) where T : ModifiableEntity
     {
