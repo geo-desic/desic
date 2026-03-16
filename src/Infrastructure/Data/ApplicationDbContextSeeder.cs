@@ -12,16 +12,15 @@ using Microsoft.Extensions.Options;
 
 namespace Desic.Infrastructure.Data;
 
-// the bool seed argument indicates whether any store management operation was performed
 // see DbContextOptionsBuilder.UseSeeding at https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontextoptionsbuilder.useseeding?view=efcore-10.0
-internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool seed, IOptions<ApplicationDbContextSeedingOptions> seedingOptions, ILogger<ApplicationDbContextSeeder> logger, IMediator mediator)
+internal class ApplicationDbContextSeeder(ApplicationDbContext context, IOptions<ApplicationDbContextSeedingOptions> seedingOptions, ILogger<ApplicationDbContextSeeder> logger, IMediator mediator)
 {
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
     private readonly ILogger<ApplicationDbContextSeeder> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
     private readonly ApplicationDbContextSeedingOptions? _options = seedingOptions?.Value;
-    private readonly bool _seed = seed;
-    private readonly ApplicationDbContextSeedingMethod _defaultSeedingMethod = seed ? ApplicationDbContextSeedingMethod.Full : ApplicationDbContextSeedingMethod.Fast; // full when store management operations were performed, otherwise fast
+
+    private const ApplicationDbContextSeedingMethod DefaultSeedingMethod = ApplicationDbContextSeedingMethod.Fast;
 
     // this is needed because EF tooling does not (yet?) support async
     // see https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.dbcontextoptionsbuilder.useasyncseeding?view=efcore-10.0#microsoft-entityframeworkcore-dbcontextoptionsbuilder-useasyncseeding(system-func((microsoft-entityframeworkcore-dbcontext-system-boolean-system-threading-cancellationtoken-system-threading-tasks-task))):~:text=It%20is%20recomended%20to%20also%20call%20UseSeeding(Action%3CDbContext%2CBoolean%3E)%20with%20the%20same%20logic.
@@ -44,8 +43,6 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
             return;
         }
 
-        _logger.LogInformation("Store management operations were performed: {StoreManagementOperationsPerformed}", _seed);
-
         // ordering is important due to potential entity dependencies
         await SeedEntityTypes(cancellationToken: cancellationToken, options: options.EntityTypes);
         await SeedTags(cancellationToken: cancellationToken, options: options.Tags);
@@ -66,7 +63,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
         }
 
         var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && (options?.Method ?? _defaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
+        if (any && (options?.Method ?? DefaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
         {
             _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
             return;
@@ -126,7 +123,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
         }
 
         var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && (options?.Method ?? _defaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
+        if (any && (options?.Method ?? DefaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
         {
             _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
             return;
@@ -182,7 +179,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
         }
 
         var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && (options?.Method ?? _defaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
+        if (any && (options?.Method ?? DefaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
         {
             _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
             return;
@@ -217,7 +214,7 @@ internal class ApplicationDbContextSeeder(ApplicationDbContext context, bool see
         }
 
         var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && (options?.Method ?? _defaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
+        if (any && (options?.Method ?? DefaultSeedingMethod) != ApplicationDbContextSeedingMethod.Full)
         {
             _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
             return;

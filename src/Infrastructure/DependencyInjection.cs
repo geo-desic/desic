@@ -8,7 +8,12 @@ namespace Desic.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
-        => services
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IMarker>())
-            .AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+    {
+        services.AddOptions<ApplicationDbContextSeedingOptions>().BindConfiguration(ApplicationDbContextSeedingOptions.SectionName);
+        services
+            .AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>())
+            .AddTransient<ApplicationDbContextSeeder>()
+            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IMarker>());
+        return services;
+    }
 }
