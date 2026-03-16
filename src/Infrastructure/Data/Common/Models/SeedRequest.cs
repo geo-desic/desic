@@ -1,6 +1,8 @@
-﻿namespace Desic.Infrastructure.Data.Common.Models;
+﻿using Desic.Application.Common.Models;
 
-public class SeedRequest
+namespace Desic.Infrastructure.Data.Common.Models;
+
+public class SeedRequest : ByRequest
 {
-    public int? BatchSize { get; set; }
+    public ApplicationDatabaseSeedingMethod Method { get; set; } = SeedApplicationDatabaseRequestHandler.DefaultSeedingMethod;
 }

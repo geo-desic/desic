@@ -12,28 +12,16 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
 {
     private int _batchNumber = 0;
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
-    private const int _defaultBatchSize = 50;
     private readonly ILogger<SeedIso3166CountriesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+
+    private const int DefaultBatchSize = 50;
 
     public async Task<SeedResult> Handle(SeedIso3166CountriesRequest request, CancellationToken cancellationToken)
     {
         var result = new SeedResult();
         _batchNumber = 0;
-        request.BatchSize ??= _defaultBatchSize;
-
-        var nowTagOn = DateTime.UtcNow;
-        var tag = new Tag
-        {
-            Id = Guid.CreateVersion7(),
-            Name = $"Process-SeedIso3166Countries-{nowTagOn:yyyyMMddHHmmss}",
-        };
-        tag.SetCreatedAndModifiedBy(SystemTags.System, on: nowTagOn);
-
-        _logger.LogDebug("Creating tag {TagName}", tag.Name);
-        await _context.AddAsync(tag, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
-        _context.Entry(tag).State = EntityState.Detached;
+        request.BatchSize ??= DefaultBatchSize;
 
         _logger.LogDebug("Updating all records with IsBeingSeeded = true");
         await _context.Iso3166Countries.ExecuteUpdateAsync(c => c.SetProperty(p => p.IsBeingSeeded, p => true), cancellationToken);
@@ -55,7 +43,7 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
             {
                 item.Id = Guid.CreateVersion7();
                 item.IsBeingSeeded = false;
-                item.SetCreatedAndModifiedBy(tag);
+                item.SetCreatedAndModifiedBy(request.By);
                 batchInserts.Add(item);
                 ++result.Inserts;
                 // will be persisted on next PerformBatchChanges
@@ -66,7 +54,7 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
                 if (!countryExisting.IsEquivalentTo(item))
                 {
                     countryExisting.UpdateFrom(item);
-                    countryExisting.SetNotDeletedAndModifiedBy(tag);
+                    countryExisting.SetNotDeletedAndModifiedBy(request.By);
                     ++result.Updates;
                     // will be persisted on next PerformBatchChanges
                 }
@@ -84,17 +72,17 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
 
         // soft deletes (any records with IsBeingSeeded == true since this was set to false for all inserts/updates above)
         _logger.LogDebug("Determining if any records need to be (soft) deleted");
-        nowTagOn = DateTime.UtcNow;
+        var now = DateTime.UtcNow;
         result.Deletes = await _context.Iso3166Countries
             .Where(c => c.IsBeingSeeded)
             .ExecuteUpdateAsync(c => c
                 .SetProperty(p => p.IsDeleted, p => true)
-                .SetProperty(p => p.DeletedById, p => tag.Id)
+                .SetProperty(p => p.DeletedById, p => request.By.Id)
                 .SetProperty(p => p.DeletedByTypeId, p => Tag.ClassEntityType.Id)
-                .SetProperty(p => p.DeletedOn, p => nowTagOn)
-                .SetProperty(p => p.ModifiedById, p => tag.Id)
+                .SetProperty(p => p.DeletedOn, p => now)
+                .SetProperty(p => p.ModifiedById, p => request.By.Id)
                 .SetProperty(p => p.ModifiedByTypeId, p => Tag.ClassEntityType.Id)
-                .SetProperty(p => p.ModifiedOn, p => nowTagOn), cancellationToken);
+                .SetProperty(p => p.ModifiedOn, p => now), cancellationToken);
 
         return result;
     }

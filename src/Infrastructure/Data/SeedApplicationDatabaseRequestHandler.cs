@@ -1,0 +1,153 @@
+﻿using Desic.Domain.Common.Entities;
+using Desic.Domain.Tags;
+using Desic.Infrastructure.Data.EntityTypes;
+using Desic.Infrastructure.Data.Iso3166Countries;
+using Desic.Infrastructure.Data.Tags;
+using Desic.Infrastructure.Data.Test.Users;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
+namespace Desic.Infrastructure.Data;
+
+public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context, ILogger<SeedApplicationDatabaseRequestHandler> logger, IMediator mediator, IOptions<ApplicationDatabaseSeedingOptions> seedingOptions) : IRequestHandler<SeedApplicationDatabaseRequest>
+{
+    private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
+    private readonly ILogger<SeedApplicationDatabaseRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+    private readonly ApplicationDatabaseSeedingOptions? _options = seedingOptions?.Value;
+
+    internal const ApplicationDatabaseSeedingMethod DefaultSeedingMethod = ApplicationDatabaseSeedingMethod.Fast;
+
+    public async Task Handle(SeedApplicationDatabaseRequest request, CancellationToken cancellationToken)
+    {
+        if (_options == null)
+        {
+            _logger.LogInformation("No options were provided, using default options");
+        }
+        var options = _options ?? new();
+
+        if (!options.Enabled ?? false)
+        {
+            _logger.LogInformation("Seeding is not enabled");
+            return;
+        }
+
+        // ordering is important due to potential entity dependencies
+        await SeedEntityTypes(options: options.EntityTypes, cancellationToken: cancellationToken);
+        await SeedTags(options: options.Tags, cancellationToken: cancellationToken);
+
+        // entity types and tags must be seeded before this by object can be created due to foriegn key and dependency requirements
+        var by = await CreateBy(cancellationToken: cancellationToken);
+
+        await SeedIso3166Countries(options: options.Iso3166Countries, by: by, cancellationToken: cancellationToken);
+
+        // test data
+        await SeedTestData(options: options.Test, by: by, cancellationToken: cancellationToken);
+    }
+
+    private async Task<IReadOnlyMinimalEntity> CreateBy(CancellationToken cancellationToken)
+    {
+        var nowTagOn = DateTime.UtcNow;
+        var by = new Tag
+        {
+            Id = Guid.CreateVersion7(),
+            Name = $"Process-SeedApplicationDatabase-{nowTagOn:yyyyMMddHHmmss}",
+        };
+        by.SetCreatedAndModifiedBy(by: SystemTags.System, on: nowTagOn);
+
+        _logger.LogDebug("Creating tag {TagName}", by.Name);
+        _context.Tags.Add(by);
+        await _context.SaveChangesAsync(cancellationToken);
+        return by;
+    }
+
+    private async Task SeedEntityTypes(ApplicationDatabaseSeedingEntityTypesOptions? options, CancellationToken cancellationToken)
+    {
+        if (!(options?.Enabled ?? true))
+        {
+            _logger.LogDebug("Seeding {TableName} is not enabled", nameof(_context.EntityTypes));
+            return;
+        }
+
+        var request = new SeedEntityTypesRequest
+        {
+            By = SystemTags.System, // unused
+            Method = options?.Method ?? DefaultSeedingMethod,
+        };
+        await _mediator.Send(request, cancellationToken);
+    }
+
+    private async Task SeedTags(ApplicationDatabaseSeedingTagsOptions? options, CancellationToken cancellationToken)
+    {
+        if (!(options?.Enabled ?? true))
+        {
+            _logger.LogDebug("Seeding {TableName} is not enabled", nameof(_context.Tags));
+            return;
+        }
+
+        var request = new SeedTagsRequest
+        {
+            By = SystemTags.System,
+            Method = options?.Method ?? DefaultSeedingMethod,
+        };
+        await _mediator.Send(request, cancellationToken);
+    }
+
+    private async Task SeedIso3166Countries(ApplicationDatabaseSeedingIso3166CountriesOptions? options, IReadOnlyMinimalEntity by, CancellationToken cancellationToken)
+    {
+        var dbSet = _context.Iso3166Countries;
+        var tableName = nameof(_context.Iso3166Countries);
+        if (!(options?.Enabled ?? true))
+        {
+            _logger.LogDebug("Seeding {TableName} is not enabled", tableName);
+            return;
+        }
+
+        var any = await dbSet.AnyAsync(cancellationToken);
+        if (any && (options?.Method ?? DefaultSeedingMethod) != ApplicationDatabaseSeedingMethod.Full)
+        {
+            _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
+            return;
+        }
+
+        var request = new SeedIso3166CountriesRequest
+        {
+            By = by,
+            Method = options?.Method ?? DefaultSeedingMethod,
+        };
+        var result = await _mediator.Send(request, cancellationToken);
+        _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
+    }
+
+    private async Task SeedTestData(ApplicationDatabaseSeedingTestOptions? options, IReadOnlyMinimalEntity by, CancellationToken cancellationToken)
+    {
+        if (!(options?.Enabled ?? false)) // unlike others if not explicitly configured seeding of test data defaults to false
+        {
+            _logger.LogDebug("Seeding test data is not enabled");
+            return;
+        }
+
+        _logger.LogDebug("Starting seeding of test data");
+        await SeedTestUsers(options: options?.Users, by: by, cancellationToken: cancellationToken);
+        _logger.LogDebug("Completed seeding of test data");
+    }
+
+    private async Task SeedTestUsers(ApplicationDatabaseSeedingTestUsersOptions? options, IReadOnlyMinimalEntity by, CancellationToken cancellationToken)
+    {
+        if (!(options?.Enabled ?? true))
+        {
+            _logger.LogDebug("Seeding test {TableName} is not enabled", nameof(_context.Users));
+            return;
+        }
+
+        var request = new SeedTestUsersRequest
+        {
+            By = by,
+            Count = options?.Count,
+            Method = options?.Method ?? DefaultSeedingMethod,
+        };
+        await _mediator.Send(request, cancellationToken);
+    }
+}
