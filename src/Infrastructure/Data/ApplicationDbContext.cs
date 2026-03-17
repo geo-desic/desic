@@ -3,9 +3,9 @@ using Desic.Domain.EntityTypes;
 using Desic.Domain.Iso3166Countries;
 using Desic.Domain.Tags;
 using Desic.Domain.Users;
+using Desic.Infrastructure.Data.Common.Extensions;
 using Desic.Infrastructure.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Desic.Infrastructure.Data;
 
@@ -34,21 +34,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         modelBuilder.ApplyConfiguration(new Iso3166CountryConfiguration(Database));
         modelBuilder.ApplyConfiguration(new TagConfiguration(Database));
         modelBuilder.ApplyConfiguration(new UserConfiguration(Database));
-
-        var utcConverter = new ValueConverter<DateTime, DateTime>(
-            v => v, // when saving: no change
-            v => DateTime.SpecifyKind(v, DateTimeKind.Utc) // when loading: specify date as utc
-        );
-
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
-            foreach (var property in entityType.GetProperties())
-            {
-                if (property.ClrType == typeof(DateTime) || property.ClrType == typeof(DateTime?))
-                {
-                    property.SetValueConverter(utcConverter);
-                }
-            }
-        }
+        modelBuilder.SetUtcValueConverterForAllDateTimeProperties();
     }
 }
