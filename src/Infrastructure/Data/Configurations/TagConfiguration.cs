@@ -13,7 +13,7 @@ internal class TagConfiguration(DatabaseFacade databaseFacade) : IEntityTypeConf
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
         var columnOrder = builder.ConfigureSoftDeletableEntity(_databaseFacade);
-        builder.Property(x => x.Name).IsRequired().HasColumnOrder(columnOrder++);
+        builder.Property(x => x.Name).IsRequired().HasColumnOrder(++columnOrder);
         builder.HasIndex(x => x.Name).IsUnique(false);
     }
 }
