@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 
 namespace Desic.Infrastructure.Tests.Unit.Data.EntityTypes;
 
+// note: the in memory sqlite provider used because the efcore one does not support DbSet<T>.ExecuteDelete which is used by the handler
 public class SeedEntityTypesRequestHandlerTests : ApplicationDbContextImSqliteDependencyTests
 {
     private readonly FakeLogger<SeedEntityTypesRequestHandler> _logger = new();

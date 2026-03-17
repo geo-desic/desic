@@ -1,7 +1,7 @@
 # Tests
 
 ## Unit Tests
-Unit tests validate an individual unit (e.g. function, method, class) works in isolation. Any external dependencies should be mocked or stubbed. Unit test projects have the naming convention `*.Tests.Unit` where `*` is the name of the project containing the unit being tested.
+Unit tests validate an individual unit (e.g. function, method, class) works in isolation. Any external dependencies should be mocked or stubbed. In some cases in-memory database providers (entity framework core / sqlite) are used since mocking DbSets / DbContexts do not support all types of operations. Such tests may technically be closer to integration tests, but since they execute significantly faster, grouping them with unit for performance reasons makes sense. Unit test projects have the naming convention `*.Tests.Unit` where `*` is the name of the project containing the unit being tested.
 
 ## Integration Tests
 Integration tests validate multiple units/modules work when combined as a group. These often use real (or production-like) depdendencies. For example many of these might use a fully functional database as opposed to an in memory database that does not accurately reflect production behavior. Integration test projects (that are not functional tests) have the naming convention `*.Tests.Integration` where `*` is the name of the project containing the module being tested.
