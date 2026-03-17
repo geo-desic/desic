@@ -3,7 +3,7 @@ using Desic.Domain.Users;
 using Desic.Infrastructure.Data;
 using Desic.Shared.Extensions;
 
-namespace Desic.Infrastructure.Tests.Unit.Data.Users;
+namespace Desic.Infrastructure.Tests.Unit.Data;
 
 public class AddUsersDependencyTests : ApplicationDbContextDependencyTests
 {
