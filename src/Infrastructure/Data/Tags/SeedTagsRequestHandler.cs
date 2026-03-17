@@ -6,10 +6,10 @@ using Microsoft.Extensions.Logging;
 
 namespace Desic.Infrastructure.Data.Tags;
 
-public class SeedTagsRequestHandlers(ApplicationDbContext context, ILogger<SeedTagsRequestHandlers> logger) : IRequestHandler<SeedTagsRequest, SeedTagsResult>
+public class SeedTagsRequestHandler(ApplicationDbContext context, ILogger<SeedTagsRequestHandler> logger) : IRequestHandler<SeedTagsRequest, SeedTagsResult>
 {
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
-    private readonly ILogger<SeedTagsRequestHandlers> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly ILogger<SeedTagsRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
     public async Task<SeedTagsResult> Handle(SeedTagsRequest request, CancellationToken cancellationToken)
     {

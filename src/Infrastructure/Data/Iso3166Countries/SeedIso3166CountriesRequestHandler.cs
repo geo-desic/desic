@@ -1,14 +1,13 @@
 ﻿using Desic.Domain.Common.Entities;
 using Desic.Domain.Iso3166Countries;
 using Desic.Domain.Tags;
-using Desic.Infrastructure.Data.Common.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Infrastructure.Data.Iso3166Countries;
 
-internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, SeedResult>
+public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, SeedIso3166CountriesResult>
 {
     private int _batchNumber = 0;
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -17,14 +16,23 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
 
     private const int DefaultBatchSize = 50;
 
-    public async Task<SeedResult> Handle(SeedIso3166CountriesRequest request, CancellationToken cancellationToken)
+    public async Task<SeedIso3166CountriesResult> Handle(SeedIso3166CountriesRequest request, CancellationToken cancellationToken)
     {
-        var result = new SeedResult();
+        var result = new SeedIso3166CountriesResult();
         _batchNumber = 0;
         request.BatchSize ??= DefaultBatchSize;
 
+        var dbSet = _context.Iso3166Countries;
+        var tableName = nameof(_context.Iso3166Countries);
+        var any = await dbSet.AnyAsync(cancellationToken);
+        if (any && request.Method != ApplicationDatabaseSeedingMethod.Full)
+        {
+            _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
+            return result;
+        }
+
         _logger.LogDebug("Updating all records with IsBeingSeeded = true");
-        await _context.Iso3166Countries.ExecuteUpdateAsync(c => c.SetProperty(p => p.IsBeingSeeded, p => true), cancellationToken);
+        await dbSet.ExecuteUpdateAsync(c => c.SetProperty(p => p.IsBeingSeeded, p => true), cancellationToken);
 
         var requestStream = new Iso3166CountriesResourceStreamRequest
         {
@@ -38,7 +46,7 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
         await foreach (var item in _mediator.CreateStream(requestStream, cancellationToken))
         {
             ++result.ReferenceCount;
-            var countryExisting = await _context.Iso3166Countries.AsTracking().FirstOrDefaultAsync(x => x.IsoId == item.IsoId, cancellationToken);
+            var countryExisting = await dbSet.AsTracking().FirstOrDefaultAsync(x => x.IsoId == item.IsoId, cancellationToken);
             if (countryExisting == null)
             {
                 item.Id = Guid.CreateVersion7();
@@ -73,7 +81,7 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
         // soft deletes (any records with IsBeingSeeded == true since this was set to false for all inserts/updates above)
         _logger.LogDebug("Determining if any records need to be (soft) deleted");
         var now = DateTime.UtcNow;
-        result.Deletes = await _context.Iso3166Countries
+        result.Deletes = await dbSet
             .Where(c => c.IsBeingSeeded)
             .ExecuteUpdateAsync(c => c
                 .SetProperty(p => p.IsDeleted, p => true)
@@ -84,6 +92,7 @@ internal class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, 
                 .SetProperty(p => p.ModifiedByTypeId, p => Tag.ClassEntityType.Id)
                 .SetProperty(p => p.ModifiedOn, p => now), cancellationToken);
 
+        _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
         return result;
     }
 

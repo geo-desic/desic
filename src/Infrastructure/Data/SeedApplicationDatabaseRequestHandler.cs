@@ -5,7 +5,6 @@ using Desic.Infrastructure.Data.Iso3166Countries;
 using Desic.Infrastructure.Data.Tags;
 using Desic.Infrastructure.Data.Test.Users;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -97,18 +96,9 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
 
     private async Task SeedIso3166Countries(ApplicationDatabaseSeedingIso3166CountriesOptions? options, IReadOnlyMinimalEntity by, CancellationToken cancellationToken)
     {
-        var dbSet = _context.Iso3166Countries;
-        var tableName = nameof(_context.Iso3166Countries);
         if (!(options?.Enabled ?? true))
         {
-            _logger.LogDebug("Seeding {TableName} is not enabled", tableName);
-            return;
-        }
-
-        var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && (options?.Method ?? DefaultSeedingMethod) != ApplicationDatabaseSeedingMethod.Full)
-        {
-            _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
+            _logger.LogDebug("Seeding {TableName} is not enabled", nameof(_context.Iso3166Countries));
             return;
         }
 
@@ -117,8 +107,7 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
             By = by,
             Method = options?.Method ?? DefaultSeedingMethod,
         };
-        var result = await _mediator.Send(request, cancellationToken);
-        _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
+        await _mediator.Send(request, cancellationToken);
     }
 
     private async Task SeedTestData(ApplicationDatabaseSeedingTestOptions? options, IReadOnlyMinimalEntity by, CancellationToken cancellationToken)
