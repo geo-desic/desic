@@ -12,12 +12,10 @@ using Moq;
 
 namespace Desic.Infrastructure.Tests.Unit.Data;
 
-public class SeedApplicationDatabaseRequestHandlerTests : InMemoryEfCoreDependencyTests<ApplicationDbContext>
+public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextDependencyTests
 {
     private readonly ILogger<SeedApplicationDatabaseRequestHandler> _logger = NullLogger<SeedApplicationDatabaseRequestHandler>.Instance;
     private readonly Mock<IMediator> _mediator = new();
-
-    public SeedApplicationDatabaseRequestHandlerTests() : base(o => new(o)) { }
 
     public class SeedApplicationDatabaseRequestHandlerTests001 : SeedApplicationDatabaseRequestHandlerTests
     {

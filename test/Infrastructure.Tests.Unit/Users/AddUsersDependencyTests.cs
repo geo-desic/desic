@@ -38,7 +38,7 @@ public class AddUsersDependencyTests : ApplicationDbContextDependencyTests
 
     protected List<User> AddUsers(int count)
     {
-        return AddUsers(_context, count);
+        return AddUsers(DbContext, count);
     }
 
     public static List<User> AddUsers(ApplicationDbContext context, int count)
