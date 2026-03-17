@@ -14,4 +14,4 @@ This project is the [domain](https://github.com/jasontaylordev/CleanArchitecture
 
 This library is not for **handling** requests to get or persist data. Those handlers should be in the [Application](../Application) or [Infrastructure](../Infrastructure) projects.
 
-This library should **not** depend on any outer layers: [Application](../Application), [Infrastructure](../Infrastructure), [Api](../Api), or [Web](../Web).
+This library should **not** depend on any outer layers: [Application](../Application), [Infrastructure](../Infrastructure), [Api](../Api), or [web](../web).

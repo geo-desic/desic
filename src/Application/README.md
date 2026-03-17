@@ -10,4 +10,4 @@ This project is the [application](https://github.com/jasontaylordev/CleanArchite
 
 This library is not for defining any persistence formats which are in [Infrastructure.Data.Configurations](../Infrastructure/Data/Configurations).
 
-This library depends on [Domain](../Domain) but should **not** depend on any outer layers: [Infrastructure](../Infrastructure), [Api](../Api), or [Web](../Web).
+This library depends on [Domain](../Domain) but should **not** depend on any outer layers: [Infrastructure](../Infrastructure), [Api](../Api), or [web](../web).
