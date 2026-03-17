@@ -7,4 +7,6 @@ This project is the [infrastructure](https://github.com/jasontaylordev/CleanArch
   - Messaging systems
   - Eamil services
 
+This library should not have provider specific database initialization or migration code. Those should be in a provider specific library such as [Infrastructure.Data.Sqlite](../Infrastructure.Data.Sqlite) or [Infrastructure.Data.SqlServer](../Infrastructure.Data.SqlServer).
+
 This is depends on both [Domain](../Domain) and [Application](../Application) but it should not depend on [Api](../Api) or [web](../web).
