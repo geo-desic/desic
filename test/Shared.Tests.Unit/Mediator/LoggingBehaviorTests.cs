@@ -1,10 +1,10 @@
 ﻿using AwesomeAssertions;
-using Desic.Mediator;
+using Desic.Shared.Mediator;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;
 using System.Text.RegularExpressions;
 
-namespace Desic.Tests.Unit.Mediator;
+namespace Desic.Shared.Tests.Unit.Mediator;
 
 public class LoggingBehaviorTests
 {

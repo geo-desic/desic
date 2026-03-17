@@ -1,5 +1,5 @@
-﻿using Desic.Data;
-using Desic.Infrastructure.Data.Sqlite;
+﻿using Desic.Infrastructure.Data.Sqlite;
+using Desic.Shared.Data;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 

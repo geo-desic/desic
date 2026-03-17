@@ -1,4 +1,4 @@
-﻿using Desic.Data;
+﻿using Desic.Shared.Data;
 using Microsoft.Data.Sqlite;
 using System.Data.Common;
 

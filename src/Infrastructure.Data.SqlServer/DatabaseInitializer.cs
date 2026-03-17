@@ -1,4 +1,4 @@
-﻿using Desic.Data;
+﻿using Desic.Shared.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;

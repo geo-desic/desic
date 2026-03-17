@@ -1,11 +1,11 @@
 ﻿using AwesomeAssertions;
-using Desic.Extensions;
+using Desic.Shared.Extensions;
 
-namespace Desic.Tests.Unit.Extensions;
+namespace Desic.Shared.Tests.Unit.Extensions;
 
-public class GuidExtensionsTests
+public class StringExtensionsTests
 {
-    public class GuidExtensionsTests001 : GuidExtensionsTests
+    public class StringExtensionsTests001 : StringExtensionsTests
     {
         [Theory]
         [InlineData("00000000-0000-0000-0000-ABCDEABCDEA1", "00000000-0000-0000-0000-ABCDEABCDEAB", -1)]
@@ -19,7 +19,7 @@ public class GuidExtensionsTests
         [InlineData("00000000-0000-0000-0000-ABCD10000000", "00000000-0000-0000-0000-ABCDEABCDEAB", 10000000)]
         [InlineData("00000000-0000-0000-0000-ABC100000000", "00000000-0000-0000-0000-ABCDEABCDEAB", 100000000)]
         [InlineData("00000000-0000-0000-0000-AB1000000000", "00000000-0000-0000-0000-ABCDEABCDEAB", 1000000000)]
-        public void ToIntBasedGuid_SourceGuidAsGuid_ExpectedResult(Guid expectedResult, Guid guid, int value)
+        public void ToIntBasedGuid_SourceGuidAsString_ExpectedResult(Guid expectedResult, string guid, int value)
         {
             // act
             var result = guid.ToIntBasedGuid(value);

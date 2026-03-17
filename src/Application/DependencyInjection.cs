@@ -1,4 +1,4 @@
-﻿using Desic.Mediator;
+﻿using Desic.Shared.Mediator;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 

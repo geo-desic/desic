@@ -3,7 +3,7 @@ using AwesomeAssertions;
 using Desic.Application.Common;
 using Desic.Application.EntityTypes;
 using Desic.Application.EntityTypes.List;
-using Desic.Extensions;
+using Desic.Shared.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

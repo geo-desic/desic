@@ -1,4 +1,4 @@
-﻿namespace Desic.Extensions;
+﻿namespace Desic.Shared.Extensions;
 
 public static class IntExtensions
 {

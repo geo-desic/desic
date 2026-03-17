@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Desic.Tests.Unit.Mediator;
+namespace Desic.Shared.Tests.Unit.Mediator;
 
 public class TestRequest : IRequest<TestResponse>
 {

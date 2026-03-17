@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
 
-namespace Desic.Data;
+namespace Desic.Shared.Data;
 
 public static class DbConnectionExtensions
 {

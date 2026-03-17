@@ -1,6 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Domain.EntityTypes;
-using Desic.Extensions;
+using Desic.Shared.Extensions;
 using FluentValidation;
 
 namespace Desic.Domain.Tests.Unit.EntityTypes;

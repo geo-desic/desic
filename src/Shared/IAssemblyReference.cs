@@ -1,3 +1,3 @@
-﻿namespace Desic;
+﻿namespace Desic.Shared;
 
 internal interface IAssemblyReference { }

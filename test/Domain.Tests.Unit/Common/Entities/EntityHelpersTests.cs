@@ -1,7 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.EntityTypes;
-using Desic.Extensions;
+using Desic.Shared.Extensions;
 using System.Globalization;
 
 namespace Desic.Domain.Tests.Unit.Common.Entities;

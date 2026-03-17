@@ -1,4 +1,4 @@
-﻿using Desic.Extensions;
+﻿using Desic.Shared.Extensions;
 
 namespace Desic.Domain.Iso3166Countries;
 

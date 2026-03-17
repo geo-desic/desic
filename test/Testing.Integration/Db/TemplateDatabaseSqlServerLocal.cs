@@ -1,7 +1,7 @@
-﻿using Desic.Data;
-using Desic.Infrastructure.Data;
+﻿using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.Providers;
 using Desic.Infrastructure.Data.SqlServer;
+using Desic.Shared.Data;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

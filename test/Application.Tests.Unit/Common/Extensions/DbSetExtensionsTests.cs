@@ -1,6 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Extensions;
-using Desic.Extensions;
+using Desic.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Moq.EntityFrameworkCore;

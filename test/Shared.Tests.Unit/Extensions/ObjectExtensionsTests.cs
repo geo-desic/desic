@@ -1,7 +1,7 @@
 ﻿using AwesomeAssertions;
-using Desic.Extensions;
+using Desic.Shared.Extensions;
 
-namespace Desic.Tests.Unit.Extensions;
+namespace Desic.Shared.Tests.Unit.Extensions;
 
 public class ObjectExtensionsTests
 {

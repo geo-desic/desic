@@ -2,7 +2,7 @@
 using Desic.Application.Common.Interfaces;
 using Desic.Application.Users;
 using Desic.Application.Users.Get;
-using Desic.Extensions;
+using Desic.Shared.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;

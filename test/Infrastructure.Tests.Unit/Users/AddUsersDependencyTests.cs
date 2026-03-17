@@ -1,7 +1,7 @@
 ﻿using Desic.Domain.Tags;
 using Desic.Domain.Users;
-using Desic.Extensions;
 using Desic.Infrastructure.Data;
+using Desic.Shared.Extensions;
 
 namespace Desic.Infrastructure.Tests.Unit.Users;
 
