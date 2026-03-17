@@ -1,6 +1,5 @@
 ﻿using Desic.Domain.Common.Entities;
 using Desic.Domain.Iso3166Countries;
-using Desic.Domain.Tags;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,6 +21,7 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
         _batchNumber = 0;
         request.BatchSize ??= DefaultBatchSize;
 
+        _context.ChangeTracker.Clear(); // the ChangeTracker does not work properly with the dbSet.ExecuteUpdateAsync calls below, so clear to make sure updates/deletes work properly
         var dbSet = _context.Iso3166Countries;
         var tableName = nameof(_context.Iso3166Countries);
         var any = await dbSet.AnyAsync(cancellationToken);
@@ -86,10 +86,10 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
             .ExecuteUpdateAsync(c => c
                 .SetProperty(p => p.IsDeleted, p => true)
                 .SetProperty(p => p.DeletedById, p => request.By.Id)
-                .SetProperty(p => p.DeletedByTypeId, p => Tag.ClassEntityType.Id)
+                .SetProperty(p => p.DeletedByTypeId, p => request.By.SystemEntityType.Id)
                 .SetProperty(p => p.DeletedOn, p => now)
                 .SetProperty(p => p.ModifiedById, p => request.By.Id)
-                .SetProperty(p => p.ModifiedByTypeId, p => Tag.ClassEntityType.Id)
+                .SetProperty(p => p.ModifiedByTypeId, p => request.By.SystemEntityType.Id)
                 .SetProperty(p => p.ModifiedOn, p => now), cancellationToken);
 
         _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);

@@ -2,7 +2,6 @@
 using Desic.Shared.Mediator;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Testing;
-using System.Text.RegularExpressions;
 
 namespace Desic.Shared.Tests.Unit.Mediator;
 
@@ -26,15 +25,9 @@ public class LoggingBehaviorTests
 
             // assert
             _logger.Collector.Count.Should().Be(4);
-            LogMessageExists(_logger, $"^Handling {nameof(TestRequest)}$", LogLevel.Debug).Should().BeTrue();
-            LogMessageExists(_logger, $"^Handled {nameof(TestRequest)} returning {nameof(TestResponse)} in \\d+\\.?\\d*ms$", LogLevel.Debug).Should().BeTrue();
+            _logger.LogMessageExists($"^Handling {nameof(TestRequest)}$", LogLevel.Debug).Should().BeTrue();
+            _logger.LogMessageExists($"^Handled {nameof(TestRequest)} returning {nameof(TestResponse)} in \\d+\\.?\\d*ms$", LogLevel.Debug).Should().BeTrue();
             response.Should().BeEquivalentTo(expectedResponse);
         }
-    }
-
-    private static bool LogMessageExists<T>(FakeLogger<T> logger, string messagePattern, LogLevel? level = null)
-    {
-        Func<FakeLogRecord, bool> predicate = level.HasValue ? x => Regex.IsMatch(x.Message, messagePattern) && x.Level == level : x => Regex.IsMatch(x.Message, messagePattern);
-        return logger.Collector.GetSnapshot().Any(predicate);
     }
 }

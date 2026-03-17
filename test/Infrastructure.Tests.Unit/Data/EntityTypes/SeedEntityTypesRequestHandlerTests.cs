@@ -1,12 +1,10 @@
 ﻿using AwesomeAssertions;
-using Desic.Domain.Common.Entities;
 using Desic.Domain.EntityTypes;
 using Desic.Domain.Tags;
 using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.EntityTypes;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Testing;
-using System.Text.RegularExpressions;
 
 namespace Desic.Infrastructure.Tests.Unit.Data.EntityTypes;
 
@@ -14,18 +12,26 @@ namespace Desic.Infrastructure.Tests.Unit.Data.EntityTypes;
 public class SeedEntityTypesRequestHandlerTests : ApplicationDbContextImSqliteDependencyTests
 {
     private readonly FakeLogger<SeedEntityTypesRequestHandler> _logger = new();
-    private readonly IReadOnlyMinimalEntity _by = SystemTags.System;
-    private readonly EntityType _seededEntityType = SystemEntityTypes.Unspecified.ToEntity();
+    private readonly Tag _by = SystemTags.System.ToEntity();
+    private readonly DbSet<EntityType> _dbSet;
+    private readonly EntityType _seededEntity = SystemEntityTypes.Unspecified.ToEntity();
+
+    private const string TableName = nameof(ApplicationDbContext.EntityTypes);
+
+    public SeedEntityTypesRequestHandlerTests()
+    {
+        _dbSet = DbContext.EntityTypes;
+    }
 
     public class SeedEntityTypesRequestHandlerTests001 : SeedEntityTypesRequestHandlerTests
     {
         [Theory]
         [InlineData(ApplicationDatabaseSeedingMethod.Fast)]
         [InlineData(ApplicationDatabaseSeedingMethod.Full)]
-        public async Task Handle_SpecifiedSeedingMethodWithNoExistingEntityTypes_AllReferencedEntityTypesSeeded(ApplicationDatabaseSeedingMethod method)
+        public async Task Handle_SpecifiedSeedingMethodWithNoExistingEntities_AllReferencedEntitiesSeeded(ApplicationDatabaseSeedingMethod method)
         {
             // arrange
-            var expected = ExpectedEntityTypes();
+            var expected = ExpectedEntities();
             var handler = new SeedEntityTypesRequestHandler(context: DbContext, logger: _logger);
             var request = new SeedEntityTypesRequest { By = _by, Method = method };
 
@@ -33,23 +39,23 @@ public class SeedEntityTypesRequestHandlerTests : ApplicationDbContextImSqliteDe
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            LogMessageExists(_logger, $"^Seeded {nameof(ApplicationDbContext.EntityTypes)}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(expected.Count);
             result.ReferenceCount.Should().Be(expected.Count);
             result.Updates.Should().Be(0);
-            DbContext.EntityTypes.AsEnumerable().Should().BeEquivalentTo(expected);
+            _dbSet.AsEnumerable().Should().BeEquivalentTo(expected);
         }
     }
 
     public class SeedEntityTypesRequestHandlerTests002 : SeedEntityTypesRequestHandlerTests
     {
         [Fact]
-        public async Task Handle_SeedingMethodFastWithExistingEntityType_SkipsSeeding()
+        public async Task Handle_SeedingMethodFastWithExistingEntity_SkipsSeeding()
         {
             // arrange
             // seed one so fast method should skip seeding altogether
-            await Setup(seededEntityType: _seededEntityType);
+            await Setup(seededEntity: _seededEntity);
             var handler = new SeedEntityTypesRequestHandler(context: DbContext, logger: _logger);
             var request = new SeedEntityTypesRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Fast };
 
@@ -57,7 +63,7 @@ public class SeedEntityTypesRequestHandlerTests : ApplicationDbContextImSqliteDe
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            LogMessageExists(_logger, $"^Skipping {nameof(ApplicationDbContext.EntityTypes)} as it already has records$").Should().BeTrue();
+            _logger.LogMessageExists($"^Skipping {TableName} as it already has records$").Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(0);
             result.ReferenceCount.Should().Be(0);
@@ -68,12 +74,12 @@ public class SeedEntityTypesRequestHandlerTests : ApplicationDbContextImSqliteDe
     public class SeedEntityTypesRequestHandlerTests003 : SeedEntityTypesRequestHandlerTests
     {
         [Fact]
-        public async Task Handle_SeedingMethodFullWithExistingEntityTypeThatIsCorrect_AllOtherReferencedRecordsSeeded()
+        public async Task Handle_SeedingMethodFullWithExistingEntityThatIsCorrect_AllOtherReferencedEntitiesSeeded()
         {
             // arrange
             // seed one that is already correct (i.e. does not need to be updated or deleted)
-            await Setup(seededEntityType: _seededEntityType);
-            var expected = ExpectedEntityTypes();
+            await Setup(seededEntity: _seededEntity);
+            var expected = ExpectedEntities();
             var handler = new SeedEntityTypesRequestHandler(context: DbContext, logger: _logger);
             var request = new SeedEntityTypesRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
 
@@ -81,25 +87,25 @@ public class SeedEntityTypesRequestHandlerTests : ApplicationDbContextImSqliteDe
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            LogMessageExists(_logger, $"^Seeded {nameof(ApplicationDbContext.EntityTypes)}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(expected.Count - 1);
             result.ReferenceCount.Should().Be(expected.Count);
             result.Updates.Should().Be(0);
-            DbContext.EntityTypes.AsEnumerable().Should().BeEquivalentTo(expected);
+            _dbSet.AsEnumerable().Should().BeEquivalentTo(expected);
         }
     }
 
     public class SeedEntityTypesRequestHandlerTests004 : SeedEntityTypesRequestHandlerTests
     {
         [Fact]
-        public async Task Handle_SeedingMethodFullWithExistingEntityTypeThatNeedsToBeUpdated_PerformsUpdateAndAllOtherReferencedEntityTypesSeeded()
+        public async Task Handle_SeedingMethodFullWithExistingEntityThatNeedsToBeUpdated_PerformsUpdateAndAllOtherReferencedEntitiesSeeded()
         {
             // arrange
             // seed one that needs to be updated
-            _seededEntityType.Name = "NeedsToBeUpdated";
-            await Setup(seededEntityType: _seededEntityType);
-            var expected = ExpectedEntityTypes();
+            _seededEntity.Name = "NeedsToBeUpdated";
+            await Setup(seededEntity: _seededEntity);
+            var expected = ExpectedEntities();
             var handler = new SeedEntityTypesRequestHandler(context: DbContext, logger: _logger);
             var request = new SeedEntityTypesRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
 
@@ -107,25 +113,25 @@ public class SeedEntityTypesRequestHandlerTests : ApplicationDbContextImSqliteDe
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            LogMessageExists(_logger, $"^Seeded {nameof(ApplicationDbContext.EntityTypes)}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(expected.Count - 1);
             result.ReferenceCount.Should().Be(expected.Count);
             result.Updates.Should().Be(1);
-            DbContext.EntityTypes.AsEnumerable().Should().BeEquivalentTo(expected);
+            _dbSet.AsEnumerable().Should().BeEquivalentTo(expected);
         }
     }
 
     public class SeedEntityTypesRequestHandlerTests005 : SeedEntityTypesRequestHandlerTests
     {
         [Fact]
-        public async Task Handle_SeedingMethodFullWithExistingEntityTypeThatNeedsToBeDeleted_PerformsDeleteAndAllOtherReferencedEntityTypesSeeded()
+        public async Task Handle_SeedingMethodFullWithExistingEntityThatNeedsToBeDeleted_PerformsDeleteAndAllOtherReferencedEntitiesSeeded()
         {
             // arrange
             // seed one that needs to be deleted
-            var seededEntityType = new EntityType { Id = Guid.AllBitsSet, Key = "zzzz", Name = "NeedsToBeDeleted" };
-            await Setup(seededEntityType: seededEntityType);
-            var expected = ExpectedEntityTypes();
+            var seededEntity = new EntityType { Id = Guid.AllBitsSet, Key = "zzzz", Name = "NeedsToBeDeleted" };
+            await Setup(seededEntity: seededEntity);
+            var expected = ExpectedEntities();
             var handler = new SeedEntityTypesRequestHandler(context: DbContext, logger: _logger);
             var request = new SeedEntityTypesRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
 
@@ -133,32 +139,26 @@ public class SeedEntityTypesRequestHandlerTests : ApplicationDbContextImSqliteDe
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            LogMessageExists(_logger, $"^Seeded {nameof(ApplicationDbContext.EntityTypes)}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
             result.Deletes.Should().Be(1);
             result.Inserts.Should().Be(expected.Count);
             result.ReferenceCount.Should().Be(expected.Count);
             result.Updates.Should().Be(0);
-            DbContext.EntityTypes.AsEnumerable().Should().BeEquivalentTo(expected);
+            _dbSet.AsEnumerable().Should().BeEquivalentTo(expected);
         }
     }
 
-    public static List<EntityType> ExpectedEntityTypes()
+    public static List<EntityType> ExpectedEntities()
     {
         return [.. SystemEntityTypes.AllAsEntities()];
     }
 
-    public async Task Setup(EntityType? seededEntityType = null)
+    public async Task Setup(EntityType? seededEntity = null)
     {
-        if (seededEntityType != null)
+        if (seededEntity != null)
         {
-            DbContext.EntityTypes.Add(seededEntityType);
+            _dbSet.Add(seededEntity);
             await DbContext.SaveChangesAsync(cancellationToken: TestContext.Current.CancellationToken);
         }
-    }
-
-    private static bool LogMessageExists<T>(FakeLogger<T> logger, string messagePattern, LogLevel? level = null)
-    {
-        Func<FakeLogRecord, bool> predicate = level.HasValue ? x => Regex.IsMatch(x.Message, messagePattern) && x.Level == level : x => Regex.IsMatch(x.Message, messagePattern);
-        return logger.Collector.GetSnapshot().Any(predicate);
     }
 }
