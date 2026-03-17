@@ -5,7 +5,7 @@ using Desic.Shared.Extensions;
 
 namespace Desic.Infrastructure.Tests.Unit.Data;
 
-public class AddUsersDependencyTests : ApplicationDbContextDependencyTests
+public class AddUsersDependencyTests : ApplicationDbContextImEfCoreDependencyTests
 {
     #region helpers
     public static User NewUser(Guid? id = null, string? username = null)

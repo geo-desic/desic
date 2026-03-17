@@ -2,7 +2,7 @@
 
 namespace Desic.Infrastructure.Tests.Unit;
 
-public class InMemoryEfCoreDependencyTests<T> : IDisposable, IAsyncDisposable where T : DbContext
+public class DbContextImEfCoreDependencyTests<T> : IDisposable, IAsyncDisposable where T : DbContext
 {
     protected readonly T DbContext;
     private bool _disposed = false;
@@ -10,7 +10,7 @@ public class InMemoryEfCoreDependencyTests<T> : IDisposable, IAsyncDisposable wh
         .UseInMemoryDatabase(databaseName: Guid.CreateVersion7().ToString()) // unique name ensures isolation between tests
         .Options;
 
-    public InMemoryEfCoreDependencyTests(Func<DbContextOptions<T>, T> dbContextCreator)
+    public DbContextImEfCoreDependencyTests(Func<DbContextOptions<T>, T> dbContextCreator)
     {
         DbContext = dbContextCreator(_options);
         DbContext.Database.EnsureCreated();
