@@ -21,7 +21,7 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
         _batchNumber = 0;
         request.BatchSize ??= DefaultBatchSize;
 
-        _context.ChangeTracker.Clear(); // the ChangeTracker does not work properly with the dbSet.ExecuteUpdateAsync calls below, so clear to make sure updates/deletes work properly
+        _context.ChangeTracker.Clear(); // the ChangeTracker does not work properly with the dbSet.ExecuteUpdateAsync calls below, so clear to make sure no existing tracked entities cause issues
         var dbSet = _context.Iso3166Countries;
         var tableName = nameof(_context.Iso3166Countries);
         var any = await dbSet.AnyAsync(cancellationToken);

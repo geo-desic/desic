@@ -19,7 +19,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
     private readonly DbSet<Iso3166Country> _dbSet;
     private readonly FakeLogger<SeedIso3166CountriesRequestHandler> _logger = new();
     private readonly Mock<IMediator> _mediator = new();
-    private readonly Iso3166Country _seededEntity = new() { Id = 1.ToGuid(), IsoId = 1, Alpha2 = $"a{1}", Alpha3 = $"aa{1}", Name = $"Country{1}" };
+    private readonly Iso3166Country _seededEntity = EntityFromIndex(index: 1);
 
     private const string TableName = nameof(ApplicationDbContext.Iso3166Countries);
     private const int TotalReferencedEntities = 5;
@@ -165,18 +165,20 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
     {
         for (var i = 1; i <= count; ++i)
         {
-            var item = new Iso3166Country { Id = i.ToGuid(), IsoId = i, Alpha2 = $"a{i}", Alpha3 = $"aa{i}", Name = $"Country{i}" };
+            var item = EntityFromIndex(index: i);
             item.SetCreatedAndModifiedBy(_by);
             yield return item;
         }
     }
+
+    private static Iso3166Country EntityFromIndex(int index) => new() { Id = index.ToGuid(), IsoId = index, Alpha2 = $"a{index}", Alpha3 = $"aa{index}", Name = $"Country{index}" };
 
     private async Task Setup(Iso3166Country? seededEntity = null)
     {
         _mediator.Setup(x => x.CreateStream(It.IsAny<Iso3166CountriesResourceStreamRequest>(), It.IsAny<CancellationToken>())).Returns(ExpectedEntities(count: TotalReferencedEntities));
         if (seededEntity != null)
         {
-            DbContext.Iso3166Countries.Add(seededEntity);
+            _dbSet.Add(seededEntity);
             await DbContext.SaveChangesAsync(cancellationToken: TestContext.Current.CancellationToken);
         }
     }

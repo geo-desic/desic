@@ -16,6 +16,7 @@ public class SeedEntityTypesRequestHandler(ApplicationDbContext context, ILogger
         var dbSet = _context.EntityTypes;
         var tableName = nameof(_context.EntityTypes);
 
+        _context.ChangeTracker.Clear(); // the ChangeTracker does not work properly with the dbSet.ExecuteDeleteAsync below, so clear to make sure no existing tracked entities cause issues
         var any = await dbSet.AnyAsync(cancellationToken);
         if (any && request.Method != ApplicationDatabaseSeedingMethod.Full)
         {
