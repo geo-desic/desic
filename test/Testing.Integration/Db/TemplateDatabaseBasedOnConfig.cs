@@ -31,7 +31,7 @@ public sealed class TemplateDatabaseBasedOnConfig : ITemplateDatabase
                 var connectionStringInitialization = _options?.ConnectionStrings?.SqlServer ?? throw new InvalidOperationException("Connection string for database initialization could not be determined");
                 var databaseInitializerOptions = _options?.Databases?.Application?.SqlServer?.Initialization ?? throw new InvalidOperationException($"Database initializer options for {DbProvider} is not configured");
                 Console.WriteLine($"Using database: {DbProvider} (local)");
-                _database = new TemplateDatabaseSqlServerLocal(connectionStringInitialization: connectionStringInitialization, databaseDirectoryPath: databaseDirectoryPath, databaseInitializerOptions: databaseInitializerOptions);
+                _database = new TemplateDatabaseSqlServerLocal(connectionStringInitialization: connectionStringInitialization, databaseDirectoryPath: databaseDirectoryPath, options: databaseInitializerOptions);
             }
         }
         await _database.InitializeAsync();

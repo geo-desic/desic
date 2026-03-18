@@ -12,14 +12,14 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class TemplateDatabaseSqlServerLocal(string connectionStringInitialization, string databaseDirectoryPath, InitializeApplicationDatabaseOptions databaseInitializerOptions) : ITemplateDatabase
+public sealed class TemplateDatabaseSqlServerLocal(string connectionStringInitialization, string databaseDirectoryPath, InitializeApplicationDatabaseOptions options) : ITemplateDatabase
 {
     private string? _connectionStringApi;
     private readonly string _connectionStringInitialization = connectionStringInitialization ?? throw new ArgumentNullException(nameof(connectionStringInitialization));
     private string? _connectionStringMigrations;
     private readonly string _databaseDirectoryPath = databaseDirectoryPath ?? throw new ArgumentNullException(nameof(databaseDirectoryPath));
     private string? _databaseBackupFilePath;
-    private readonly InitializeApplicationDatabaseOptions _databaseInitializerOptions = databaseInitializerOptions ?? throw new ArgumentException(nameof(databaseInitializerOptions));
+    private readonly InitializeApplicationDatabaseOptions _options = options ?? throw new ArgumentException(nameof(options));
     private string? _databaseName;
 
     public string BackupFilePath => _databaseBackupFilePath ?? throw NewInvalidOperationException();
@@ -28,7 +28,7 @@ public sealed class TemplateDatabaseSqlServerLocal(string connectionStringInitia
     public string ConnectionStringMigrations => _connectionStringMigrations ?? throw NewInvalidOperationException();
     public string DirectoryPath => _databaseDirectoryPath;
     public string Name => _databaseName ?? throw NewInvalidOperationException();
-    public InitializeApplicationDatabaseUsersOptions UsersOptions => _databaseInitializerOptions.Users ?? throw NewInvalidOperationException();
+    public InitializeApplicationDatabaseUsersOptions UsersOptions => _options.Users ?? throw NewInvalidOperationException();
 
     public ITestDatabase NewTestDatabase()
     {
