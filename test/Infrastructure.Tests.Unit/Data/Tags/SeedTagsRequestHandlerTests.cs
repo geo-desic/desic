@@ -7,7 +7,7 @@ using Desic.Infrastructure.Data.Tags;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Testing;
 
-namespace Desic.Infrastructure.Tests.Unit.Data;
+namespace Desic.Infrastructure.Tests.Unit.Data.Tags;
 
 public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependencyTests
 {
@@ -32,7 +32,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
         [Theory]
         [InlineData(ApplicationDatabaseSeedingMethod.Fast)]
         [InlineData(ApplicationDatabaseSeedingMethod.Full)]
-        public async Task Handle_SpecifiedSeedingMethodWithNoExistingIso3166Countries_AllReferencedEntitiesSeeded(ApplicationDatabaseSeedingMethod method)
+        public async Task Handle_SpecifiedSeedingMethodWithNoExistingEntities_AllReferencedEntitiesSeeded(ApplicationDatabaseSeedingMethod method)
         {
             // arrange
             await Setup();
@@ -51,7 +51,6 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
             result.Updates.Should().Be(0);
             _dbSet.AsEnumerable().Should().BeEquivalentTo(expected, o => o.Excluding(x => x.Id).Excluding(x => x.CreatedOn).Excluding(x => x.ModifiedOn));
         }
-
     }
 
     public class SeedTagsRequestHandlerTests002 : SeedTagsRequestHandlerTests
@@ -132,11 +131,11 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
     public class SeedTagsRequestHandlerTests005 : SeedTagsRequestHandlerTests
     {
         [Fact]
-        public async Task Handle_SeedingMethodFullWithExistingNonSystemEntity_DoesNotDeleteAndAllOtherReferencedEntitiesSeeded()
+        public async Task Handle_SeedingMethodFullWithExistingNonSeededEntity_DoesNotDeleteAndAllOtherReferencedEntitiesSeeded()
         {
             // arrange
-            // seed one additional non-system entity that should not be deleted
-            var seededEntity = new Tag { Id = Guid.AllBitsSet, Name = "ShouldNotBeDeleted" }; // should not match any system entities due to Id value
+            // seed one additional non-seeded entity that should not be deleted
+            var seededEntity = new Tag { Id = Guid.AllBitsSet, Name = "ShouldNotBeDeleted" }; // should not match any seeded entities due to Id value
             seededEntity.SetCreatedAndModifiedBy(_by);
             await Setup(seededEntity: seededEntity);
             var expected = ExpectedEntities().ToList();

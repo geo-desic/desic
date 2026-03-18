@@ -39,7 +39,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
         [Theory]
         [InlineData(ApplicationDatabaseSeedingMethod.Fast)]
         [InlineData(ApplicationDatabaseSeedingMethod.Full)]
-        public async Task Handle_SpecifiedSeedingMethodWithNoExistingIso3166Countries_AllReferencedEntitiesSeeded(ApplicationDatabaseSeedingMethod method)
+        public async Task Handle_SpecifiedSeedingMethodWithNoExistingEntities_AllReferencedEntitiesSeeded(ApplicationDatabaseSeedingMethod method)
         {
             // arrange
             await Setup();
