@@ -20,13 +20,13 @@ public class DependencyInjectionTests
 
             // act
             serviceCollection.AddInfrastructure();
-            var serviceProvider = serviceCollection.BuildServiceProvider(); // can't validate IOptions<T> until service provider is built
 
             // assert
             serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IApplicationDbContext)).Should().NotBeNull();
             // at least one request handler is registered (MediatR)
             serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IRequestHandler<SeedApplicationDatabaseRequest>)).Should().NotBeNull();
             // at least one IOptions is registered
+            var serviceProvider = serviceCollection.BuildServiceProvider(); // can't validate IOptions<T> until service provider is built
             serviceProvider.GetService<IOptions<ApplicationDatabaseSeedingOptions>>().Should().NotBeNull();
         }
     }
@@ -40,6 +40,6 @@ public class DependencyInjectionTests
 
     private static IConfigurationRoot NewConfiguration()
     {
-        return new ConfigurationBuilder().AddInMemoryCollection(new Dictionary<string, string?>()).Build();
+        return new ConfigurationBuilder().AddInMemoryCollection([]).Build();
     }
 }

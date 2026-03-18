@@ -9,5 +9,5 @@ public static class DependencyInjection
     public static IServiceCollection AddSqliteInfrastructure(this IServiceCollection services, IConfiguration config, string? connectionString = null)
         => services
             .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IAssemblyReference>())
-            .ConfigureApplicationDbContextForSqlite(connectionString: connectionString ?? config.GetValue("connection", config.GetConnectionString(DbProviders.Sqlite)), setMigrationsAssembly: config.GetValue("Databases:Application:Migrations:Enabled", true), useSeeding: config.GetValue("Databases:Application:Seeding:Enabled", false));
+            .ConfigureApplicationDbContextForSqlite(connectionString: connectionString ?? config.GetValue("connection", config.GetConnectionString(DbProviders.Sqlite)), setMigrationsAssembly: config.GetValue(ApplicationDatabaseConfigKeys.MigrationsEnabled, true), useSeeding: config.GetValue(ApplicationDatabaseConfigKeys.SeedingEnabled, false));
 }
