@@ -22,7 +22,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection UseDatabaseInitializer(this IServiceCollection services, IConfiguration config, string configSectionKey = ConfigKeys.SectionInitialization)
     {
         services.AddOptions<InitializeApplicationDatabaseOptions>().BindConfiguration(configSectionKey).ValidateDataAnnotations().ValidateOnStart();
-        services.AddTransient<InitializeApplicationDatabaseRequest>();
+        services.AddTransient<InitializeApplicationDatabaseRequestHandler>();
         return services;
     }
 }

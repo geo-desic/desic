@@ -4,6 +4,7 @@ using Desic.Infrastructure.Data.SqlServer;
 using Desic.Shared.Data;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
+using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,8 +48,13 @@ public sealed class TemplateDatabaseSqlServerContainer(string image) : ITemplate
         using var scope = host.Services.CreateScope();
 
         // create/initialize the database
-        var databaseInitializer = scope.ServiceProvider.GetRequiredService<InitializeApplicationDatabaseRequest>();
-        await databaseInitializer.InitializeAsync(connectionString: _connectionStringInitialization, targetDatabaseName: Constants.DatabaseName);
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var request = new InitializeApplicationDatabaseRequest
+        {
+            ConnectionString = _connectionStringInitialization,
+            DatabaseName = Constants.DatabaseName,
+        };
+        await mediator.Send(request: request, cancellationToken: default);
         Console.Write($"Successfully initialized database: {Constants.DatabaseName}");
 
         // apply migrations

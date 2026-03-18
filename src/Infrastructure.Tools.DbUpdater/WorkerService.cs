@@ -1,5 +1,6 @@
 ﻿using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.SqlServer;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Desic.Infrastructure.Tools.DbUpdater;
 
-public class WorkerService(IServiceProvider serviceProvider, IConfiguration config, ILogger<WorkerService> logger, IHostApplicationLifetime hostApplicationLifetime) : BackgroundService
+public class WorkerService(IConfiguration config, IHostApplicationLifetime hostApplicationLifetime, ILogger<WorkerService> logger, IServiceProvider serviceProvider) : BackgroundService
 {
     private readonly IConfiguration _config = config ?? throw new ArgumentNullException(nameof(config));
     private int? _exitCode;
@@ -93,8 +94,12 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
             }
 
             using var scope = _serviceProvider.CreateScope();
-            var databaseInitializer = scope.ServiceProvider.GetRequiredService<InitializeApplicationDatabaseRequest>();
-            await databaseInitializer.InitializeAsync(connectionString: connectionString, cancellationToken: cancellationToken);
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            var request = new InitializeApplicationDatabaseRequest
+            {
+                ConnectionString = connectionString
+            };
+            await mediator.Send(request: request, cancellationToken: cancellationToken);
             return true;
         }
         else
