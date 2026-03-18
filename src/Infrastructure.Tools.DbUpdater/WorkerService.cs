@@ -93,7 +93,7 @@ public class WorkerService(IServiceProvider serviceProvider, IConfiguration conf
             }
 
             using var scope = _serviceProvider.CreateScope();
-            var databaseInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+            var databaseInitializer = scope.ServiceProvider.GetRequiredService<InitializeApplicationDatabaseRequest>();
             await databaseInitializer.InitializeAsync(connectionString: connectionString, cancellationToken: cancellationToken);
             return true;
         }

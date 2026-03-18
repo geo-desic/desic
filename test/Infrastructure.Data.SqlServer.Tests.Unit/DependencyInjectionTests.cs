@@ -29,7 +29,7 @@ public class DependencyInjectionTests
 
             // assert
             // currently no use of mediatR in the assembly
-            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(DatabaseInitializer)).Should().NotBeNull();
+            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(InitializeApplicationDatabaseRequest)).Should().NotBeNull();
             // service provider items
             var serviceProvider = serviceCollection.BuildServiceProvider();
             serviceProvider.GetService<IOptions<DatabaseInitializerOptions>>().Should().NotBeNull();

@@ -47,7 +47,7 @@ public sealed class TemplateDatabaseSqlServerContainer(string image) : ITemplate
         using var scope = host.Services.CreateScope();
 
         // create/initialize the database
-        var databaseInitializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+        var databaseInitializer = scope.ServiceProvider.GetRequiredService<InitializeApplicationDatabaseRequest>();
         await databaseInitializer.InitializeAsync(connectionString: _connectionStringInitialization, targetDatabaseName: Constants.DatabaseName);
         Console.Write($"Successfully initialized database: {Constants.DatabaseName}");
 

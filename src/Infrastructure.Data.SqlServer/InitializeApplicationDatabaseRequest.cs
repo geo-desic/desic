@@ -9,12 +9,12 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
-public class DatabaseInitializer(IConfiguration config, IOptions<DatabaseInitializerOptions> options, ILogger<DatabaseInitializer> logger)
+public class InitializeApplicationDatabaseRequest(IConfiguration config, IOptions<DatabaseInitializerOptions> options, ILogger<InitializeApplicationDatabaseRequest> logger)
 {
     private readonly IConfiguration _config = config ?? throw new ArgumentNullException(nameof(config));
     private bool _contained;
     private string? _databaseName;
-    private readonly ILogger<DatabaseInitializer> _logger = logger ?? NullLogger<DatabaseInitializer>.Instance;
+    private readonly ILogger<InitializeApplicationDatabaseRequest> _logger = logger ?? NullLogger<InitializeApplicationDatabaseRequest>.Instance;
     private readonly DatabaseInitializerOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
 
     public async Task InitializeAsync(string connectionString, string? targetDatabaseName = null, CancellationToken cancellationToken = default)
