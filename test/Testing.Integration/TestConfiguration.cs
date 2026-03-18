@@ -6,8 +6,8 @@ public static class TestConfiguration
 {
     private static readonly IConfigurationRoot _configuration = new ConfigurationBuilder()
         .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("sqlite.appsettings.json", optional: true)
-        .AddJsonFile("sqlserver.appsettings.json", optional: true)
+        .AddJsonFile(Infrastructure.Data.Sqlite.JsonConfigurationSources.AppSettingsFileNameSqlite, optional: true)
+        .AddJsonFile(Infrastructure.Data.SqlServer.JsonConfigurationSources.AppSettingsFileNameSqlServer, optional: true)
         .AddJsonFile("appsettings.json", optional: true)
         .AddJsonFile($"appsettings.{Constants.TestEnvironmentName}.json", optional: true)
         .AddUserSecrets<IAssemblyReference>(optional: true)

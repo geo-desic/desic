@@ -26,7 +26,7 @@ public sealed class ApplicationDbContextFactory : IDisposable, IDesignTimeDbCont
         var result = Host.CreateDefaultBuilder(args);
         result.ConfigureAppConfiguration(config =>
         {
-            var initialConfig = new JsonConfigurationSource() { Path = "sqlite.appsettings.json", Optional = true };
+            var initialConfig = new JsonConfigurationSource() { Path = JsonConfigurationSources.AppSettingsFileNameSqlite, Optional = true };
             config.Sources.Insert(0, initialConfig);
         });
         result.ConfigureServices((hostContext, services) =>
