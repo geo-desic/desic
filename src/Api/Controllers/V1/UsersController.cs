@@ -22,7 +22,7 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
     public async Task<ActionResult<User>> Get([FromRoute] Guid id)
     {
         using var loggerScope = _logger.BeginScope("UserId:{userId}", id);
-        _logger.LogInformation(LogEvents.UserGet, $"{nameof(UsersController)}.{nameof(Get)}({{{nameof(id)}}})", id);
+        _logger.LogInformation(LogEvents.GetUser, $"{nameof(UsersController)}.{nameof(Get)}({{{nameof(id)}}})", id);
 
         var request = new GetUserByIdRequest { Id = id };
         var result = await _mediator.Send(request);
@@ -39,13 +39,13 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
     public async Task<ActionResult<User>> Create([FromBody] CreateUser user, [FromHeader(Name = Headers.Keys.Prefer)] string? preferHeaderValue)
     {
         using var loggerScope = _logger.BeginScope("Username:{username}", user.Username);
-        _logger.LogInformation(LogEvents.UserCreate, $"{nameof(UsersController)}.{nameof(Create)}(user, {{{nameof(preferHeaderValue)}}})", preferHeaderValue);
+        _logger.LogInformation(LogEvents.CreateUser, $"{nameof(UsersController)}.{nameof(Create)}(user, {{{nameof(preferHeaderValue)}}})", preferHeaderValue);
 
         var request = new CreateUserRequest { Model = user, ReturnRepresentation = Headers.Values.IsPreferRepresentation(preferHeaderValue) };
         var resultCreate = await _mediator.Send(request);
         if (resultCreate.IsFailure) return Problem(resultCreate.Error);
         var value = resultCreate.Value;
-        _logger.LogDebug(LogEvents.UserCreate, $"Adding '{Headers.Keys.EntityId}' response header with value {{{nameof(Headers.Keys.EntityId)}}}", value.Id);
+        _logger.LogDebug(LogEvents.CreateUser, $"Adding '{Headers.Keys.EntityId}' response header with value {{{nameof(Headers.Keys.EntityId)}}}", value.Id);
         HttpContext.AddResponseHeaderEntityId(value.Id);
         if (value.Model != null)
         {

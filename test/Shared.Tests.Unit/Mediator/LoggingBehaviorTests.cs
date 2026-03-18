@@ -25,8 +25,8 @@ public class LoggingBehaviorTests
 
             // assert
             _logger.Collector.Count.Should().Be(4);
-            _logger.LogMessageExists($"^Handling {nameof(TestRequest)}$", LogLevel.Debug).Should().BeTrue();
-            _logger.LogMessageExists($"^Handled {nameof(TestRequest)} returning {nameof(TestResponse)} in \\d+\\.?\\d*ms$", LogLevel.Debug).Should().BeTrue();
+            _logger.LogMessageExists($"^Handling {nameof(TestRequest)}$", level: LogLevel.Debug).Should().BeTrue();
+            _logger.LogMessageExists($"^Handled {nameof(TestRequest)} returning {nameof(TestResponse)} in \\d+\\.?\\d*ms$", level: LogLevel.Debug).Should().BeTrue();
             response.Should().BeEquivalentTo(expectedResponse);
         }
     }

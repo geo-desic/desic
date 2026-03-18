@@ -11,18 +11,19 @@ public class ListEntityTypesRequestHandler(ILogger<ListEntityTypesRequestHandler
     private readonly ILogger<ListEntityTypesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     internal const bool IncludeTotalCount = true;
+    private const int LogEventId = LogEvents.ListEntityTypes;
     internal const int MaximumAllowedCount = 100;
 
     public async Task<Result<ListEntityTypesResult>> Handle(ListEntityTypesRequest request, CancellationToken cancellationToken)
     {
         if (request.StartIndex < 0)
         {
-            _logger.LogWarning(LogEvents.EntityTypeList, "Negative offset is not supported, defaulting offset to 0");
+            _logger.LogWarning(LogEventId, "Negative offset is not supported, defaulting offset to 0");
             request.StartIndex = 0;
         }
         if (request.Count > MaximumAllowedCount)
         {
-            _logger.LogInformation(LogEvents.EntityTypeList, "Requested count is greater than maximum allowed, capping at the maximum: {RequestCount} > {MaximumAllowedCount}", request.Count, MaximumAllowedCount);
+            _logger.LogInformation(LogEventId, "Requested count is greater than maximum allowed, capping at the maximum: {RequestCount} > {MaximumAllowedCount}", request.Count, MaximumAllowedCount);
             request.Count = MaximumAllowedCount;
         }
 

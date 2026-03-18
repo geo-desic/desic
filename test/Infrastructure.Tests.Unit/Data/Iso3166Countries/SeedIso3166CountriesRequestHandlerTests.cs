@@ -1,4 +1,5 @@
 ﻿using AwesomeAssertions;
+using Desic.Application.Common;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.EntityTypes;
 using Desic.Domain.Iso3166Countries;
@@ -22,6 +23,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
     private readonly Iso3166Country _seededEntity = EntityFromIndex(index: 1);
 
     private const int BatchSize = 5;
+    private const int LogEventId = LogEvents.SeedIso3166Countries;
     private const string TableName = nameof(ApplicationDbContext.Iso3166Countries);
     private const int TotalReferencedEntities = BatchSize + 1; // one full batch and one partial
 
@@ -52,7 +54,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}", eventId: LogEventId).Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(expected.Count);
             result.ReferenceCount.Should().Be(expected.Count);
@@ -76,7 +78,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            _logger.LogMessageExists($"^Skipping {TableName} as it already has records$").Should().BeTrue();
+            _logger.LogMessageExists($"^Skipping {TableName} as it already has records$", eventId: LogEventId).Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(0);
             result.ReferenceCount.Should().Be(0);
@@ -100,7 +102,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}", eventId: LogEventId).Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(expected.Count - 1);
             result.ReferenceCount.Should().Be(expected.Count);
@@ -126,7 +128,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}", eventId: LogEventId).Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(expected.Count - 1);
             result.ReferenceCount.Should().Be(expected.Count);
@@ -153,7 +155,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}", eventId: LogEventId).Should().BeTrue();
             result.Deletes.Should().Be(1);
             result.Inserts.Should().Be(expected.Count);
             result.ReferenceCount.Should().Be(expected.Count);

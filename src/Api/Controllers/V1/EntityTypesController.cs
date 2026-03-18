@@ -20,7 +20,7 @@ public class EntityTypesController(ILogger<EntityTypesController> logger, IMedia
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<ListResult<EntityType>>> List(int? startIndex = null, int? count = null)
     {
-        _logger.LogInformation(LogEvents.EntityTypeList, $"{nameof(EntityTypesController)}.{nameof(List)}({{{nameof(startIndex)}}}, {{{nameof(count)}}})", startIndex, count);
+        _logger.LogInformation(LogEvents.ListEntityTypes, $"{nameof(EntityTypesController)}.{nameof(List)}({{{nameof(startIndex)}}}, {{{nameof(count)}}})", startIndex, count);
 
         var request = new ListEntityTypesRequest { Count = count, StartIndex = startIndex };
         var result = await _mediator.Send(request);

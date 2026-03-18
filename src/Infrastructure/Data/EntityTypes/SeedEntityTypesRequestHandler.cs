@@ -1,4 +1,5 @@
-﻿using Desic.Domain.EntityTypes;
+﻿using Desic.Application.Common;
+using Desic.Domain.EntityTypes;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,8 @@ public class SeedEntityTypesRequestHandler(ApplicationDbContext context, ILogger
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
     private readonly ILogger<SeedEntityTypesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
+    private const int LogEventId = LogEvents.SeedEntityTypes;
+
     public async Task<SeedEntityTypesResult> Handle(SeedEntityTypesRequest request, CancellationToken cancellationToken)
     {
         var result = new SeedEntityTypesResult();
@@ -20,7 +23,7 @@ public class SeedEntityTypesRequestHandler(ApplicationDbContext context, ILogger
         var any = await dbSet.AnyAsync(cancellationToken);
         if (any && request.Method != SeedApplicationDatabaseMethod.Full)
         {
-            _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
+            _logger.LogDebug(LogEventId, "Skipping {TableName} as it already has records", tableName);
             return result;
         }
 
@@ -63,7 +66,7 @@ public class SeedEntityTypesRequestHandler(ApplicationDbContext context, ILogger
         }
         _context.ChangeTracker.Clear(); // no reason to track entities after the changes have been saved
 
-        _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
+        _logger.LogInformation(LogEventId, "Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
         return result;
     }
 }

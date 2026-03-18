@@ -1,4 +1,5 @@
-﻿using Desic.Domain.Common.Entities;
+﻿using Desic.Application.Common;
+using Desic.Domain.Common.Entities;
 using Desic.Domain.Iso3166Countries;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
 
     private const int DefaultBatchSize = 50;
+    private const int LogEventId = LogEvents.SeedIso3166Countries;
 
     public async Task<SeedIso3166CountriesResult> Handle(SeedIso3166CountriesRequest request, CancellationToken cancellationToken)
     {
@@ -27,11 +29,11 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
         var any = await dbSet.AnyAsync(cancellationToken);
         if (any && request.Method != SeedApplicationDatabaseMethod.Full)
         {
-            _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
+            _logger.LogDebug(LogEventId, "Skipping {TableName} as it already has records", tableName);
             return result;
         }
 
-        _logger.LogDebug("Updating all records with IsBeingSeeded = true");
+        _logger.LogDebug(LogEventId, "Updating all records with IsBeingSeeded = true");
         await dbSet.ExecuteUpdateAsync(c => c.SetProperty(p => p.IsBeingSeeded, p => true), cancellationToken);
 
         var requestStream = new Iso3166CountriesResourceStreamRequest
@@ -42,8 +44,8 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
         };
 
         var batchInserts = new List<Iso3166Country>();
-        _logger.LogDebug("Starting comparison of data to determine if any records need to be inserted or updated");
-        _logger.LogDebug("Creating stream for csv resource = {ResourceName} using class map type = {ClassMapType}", requestStream.ResourceName, requestStream.ClassMapType);
+        _logger.LogDebug(LogEventId, "Starting comparison of data to determine if any records need to be inserted or updated");
+        _logger.LogDebug(LogEventId, "Creating stream for csv resource = {ResourceName} using class map type = {ClassMapType}", requestStream.ResourceName, requestStream.ClassMapType);
         await foreach (var item in _mediator.CreateStream(requestStream, cancellationToken))
         {
             ++result.ReferenceCount;
@@ -80,7 +82,7 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
         }
 
         // soft deletes (any records with IsBeingSeeded == true since this was set to false for all inserts/updates above)
-        _logger.LogDebug("Determining if any records need to be (soft) deleted");
+        _logger.LogDebug(LogEventId, "Determining if any records need to be (soft) deleted");
         var now = DateTime.UtcNow;
         result.Deletes = await dbSet
             .Where(c => c.IsBeingSeeded)
@@ -93,7 +95,7 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
                 .SetProperty(p => p.ModifiedByTypeId, p => request.By.SystemEntityType.Id)
                 .SetProperty(p => p.ModifiedOn, p => now), cancellationToken);
 
-        _logger.LogInformation("Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
+        _logger.LogInformation(LogEventId, "Seeded {TableName}: reference count = {CountReference}, inserts = {CountInserts}, updates = {CountUpdates}, deletes = {CountDeletes}", tableName, result.ReferenceCount, result.Inserts, result.Updates, result.Deletes);
         return result;
     }
 
@@ -104,7 +106,7 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
         {
             await _context.Iso3166Countries.AddRangeAsync(batchInserts, cancellationToken);
         }
-        _logger.LogDebug("Saving changes for batch {BatchNumber}", _batchNumber);
+        _logger.LogDebug(LogEventId, "Saving changes for batch {BatchNumber}", _batchNumber);
         await _context.SaveChangesAsync(cancellationToken);
         batchInserts?.Clear();
         if (clearChangeTracker)

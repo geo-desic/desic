@@ -16,13 +16,15 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     private readonly IValidator<CreateUser> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
+    private const int LogEventId = LogEvents.CreateUser;
+
     public async Task<Result<CreateUserResult>> Handle(CreateUserRequest request, CancellationToken cancellationToken)
     {
         if (!_validator.InstanceIsValid(request.Model, out var error)) return error!;
 
         if (await _dbContext.Users.AnyAsync(x => x.Username == request.Model.Username, cancellationToken))
         {
-            _logger.LogDebug(LogEvents.UserCreate, "A user with username '{Username}' already exists", request.Model.Username);
+            _logger.LogDebug(LogEventId, "A user with username '{Username}' already exists", request.Model.Username);
             return new Error($"A user with username '{request.Model.Username}' already exists");
         }
 
@@ -39,7 +41,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        _logger.LogDebug(LogEvents.UserCreate, "User was successfully persisted with id = {UserId}", user.Id);
+        _logger.LogDebug(LogEventId, "User was successfully persisted with id = {UserId}", user.Id);
 
         var result = new CreateUserResult { Id = user.Id };
 

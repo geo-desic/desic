@@ -11,13 +11,15 @@ public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger
     private readonly ILogger<GetUserByIdRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
+    private const int LogEventId = LogEvents.GetUser;
+
     public async Task<Result<User>> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
     {
         var user = await _dbContext.Users.GetEntityByIdAsync(request.Id, cancellationToken);
 
         if (user == null)
         {
-            _logger.LogDebug(LogEvents.UserGet, "User with id {UserId} not found", request.Id);
+            _logger.LogDebug(LogEventId, "User with id {UserId} not found", request.Id);
             return (User?)null;
         }
         return user.ToDto();

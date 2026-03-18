@@ -6,9 +6,9 @@ namespace Desic.Shared.Tests.Unit;
 
 internal static class FakeLoggerExtensions
 {
-    public static bool LogMessageExists<T>(this FakeLogger<T> logger, string messagePattern, LogLevel? level = null)
+    public static bool LogMessageExists<T>(this FakeLogger<T> logger, string messagePattern, int? eventId = null, LogLevel? level = null)
     {
-        Func<FakeLogRecord, bool> predicate = level.HasValue ? x => Regex.IsMatch(x.Message, messagePattern) && x.Level == level : x => Regex.IsMatch(x.Message, messagePattern);
+        bool predicate(FakeLogRecord x) => Regex.IsMatch(x.Message, messagePattern) && (eventId == null || x.Id == eventId) && (level == null || x.Level == level);
         return logger.Collector.GetSnapshot().Any(predicate);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AwesomeAssertions;
+using Desic.Application.Common;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.EntityTypes;
 using Desic.Domain.Tags;
@@ -16,6 +17,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
     private readonly FakeLogger<SeedTagsRequestHandler> _logger = new();
     private readonly Tag _seededEntity = SystemTags.System.ToEntity();
 
+    private const int LogEventId = LogEvents.SeedTags;
     private const string TableName = nameof(ApplicationDbContext.Tags);
 
     public SeedTagsRequestHandlerTests()
@@ -44,7 +46,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}", eventId: LogEventId).Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(expected.Count);
             result.ReferenceCount.Should().Be(expected.Count);
@@ -68,7 +70,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            _logger.LogMessageExists($"^Skipping {TableName} as it already has records$").Should().BeTrue();
+            _logger.LogMessageExists($"^Skipping {TableName} as it already has records$", eventId: LogEventId).Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(0);
             result.ReferenceCount.Should().Be(0);
@@ -92,7 +94,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}", eventId: LogEventId).Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(expected.Count - 1);
             result.ReferenceCount.Should().Be(expected.Count);
@@ -118,7 +120,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}", eventId: LogEventId).Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(expected.Count - 1);
             result.ReferenceCount.Should().Be(expected.Count);
@@ -147,7 +149,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            _logger.LogMessageExists($"^Seeded {TableName}").Should().BeTrue();
+            _logger.LogMessageExists($"^Seeded {TableName}", eventId: LogEventId).Should().BeTrue();
             result.Deletes.Should().Be(0);
             result.Inserts.Should().Be(expected.Count - 1); // since we added one extra to expected
             result.ReferenceCount.Should().Be(expected.Count - 1); // since we added one extra to expected
