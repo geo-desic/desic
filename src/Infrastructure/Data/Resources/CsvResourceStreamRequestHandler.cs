@@ -14,9 +14,8 @@ public class CsvResourceStreamRequestHandler<T>(ILogger<CsvResourceStreamRequest
     {
         request.Encoding ??= System.Text.Encoding.UTF8;
         var culture = CultureInfo.InvariantCulture;
-        var assembly = typeof(CsvResourceStreamRequestHandler<T>).Assembly;
-        _logger.LogDebug("Creating stream for resource {ResourceName} in {AssemblyName}", request.ResourceName, assembly.FullName);
-        using var stream = assembly.GetManifestResourceStream(request.ResourceName);
+        _logger.LogDebug("Creating stream for resource {ResourceName} in {AssemblyName}", request.ResourceName, request.Assembly.FullName);
+        using var stream = request.Assembly.GetManifestResourceStream(request.ResourceName);
         if (stream == null)
         {
             _logger.LogError("Stream for resource {ResourceName} is null", request.ResourceName);

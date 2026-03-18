@@ -12,7 +12,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\Resources\TestResourceUtf16Le.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Resources\TestResourceUtf16Le.csv" />
+    <EmbeddedResource Include="Data\Resources\TestResourceUtf8.csv">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

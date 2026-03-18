@@ -36,6 +36,7 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
 
         var requestStream = new Iso3166CountriesResourceStreamRequest
         {
+            Assembly = typeof(IAssemblyReference).Assembly,
             ClassMapType = typeof(Iso3166CountryClassMap),
             ResourceName = $"{typeof(Iso3166CountryClassMap).Namespace}.iso-3166-countries.csv",
         };
