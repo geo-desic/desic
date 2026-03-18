@@ -4,12 +4,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
-namespace Desic.Infrastructure.Data.Sqlite.Tests.Unit;
+namespace Desic.Infrastructure.Data.SqlServer.Tests.Unit;
 
 public class DependencyInjectionTests
 {
-    public const string ConnectionString = "Filename=:memory:";
+    public const string ConnectionString = "Data Source=none;Integrated Security=True;";
 
     public class DependencyInjectionTests001 : DependencyInjectionTests
     {
@@ -17,22 +18,25 @@ public class DependencyInjectionTests
         [InlineData(ConnectionString, null, null)]
         [InlineData(null, ConnectionString, null)]
         [InlineData(null, null, ConnectionString)]
-        public void AddSqliteInfrastructure_ToServiceCollectionWihtSpecifiedConnectionString_RegistersExpectedServices(string? explicitConnectionString, string? configConnection, string? configConnectionStringsSqlite)
+        public void AddSqlServerInfrastructure_ToServiceCollectionWihtSpecifiedConnectionString_RegistersExpectedServices(string? explicitConnectionString, string? configConnection, string? configConnectionStringsSqlite)
         {
             // arrange
             var configuration = NewConfiguration(connection: configConnection, connectionStringsSqlite: configConnectionStringsSqlite);
             var serviceCollection = NewServiceCollection(configuration: configuration);
 
             // act
-            serviceCollection.AddSqliteInfrastructure(config: configuration, connectionString: explicitConnectionString);
+            serviceCollection.AddSqlServerInfrastructure(config: configuration, connectionString: explicitConnectionString);
 
             // assert
             // currently no use of mediatR in the assembly
-            // assert ApplicationDbContext is registered correctly
+            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(DatabaseInitializer)).Should().NotBeNull();
+            // service provider items
             var serviceProvider = serviceCollection.BuildServiceProvider();
+            serviceProvider.GetService<IOptions<DatabaseInitializerOptions>>().Should().NotBeNull();
+            // assert ApplicationDbContext is registered correctly
             using var scope = serviceProvider.CreateScope();
             using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            context.Database.GetConnectionString().Should().Be(ConnectionString);
+            context.Database.GetConnectionString().Should().StartWith(ConnectionString); // ef core adds some things to the connection string
         }
     }
 
@@ -42,7 +46,7 @@ public class DependencyInjectionTests
         [InlineData(true)]
         [InlineData(false)]
         [InlineData(null)]
-        public void AddSqliteInfrastructure_ToServiceCollectionWihtSpecifiedConnectionString_RegistersExpectedServices(bool? migrationsEnabled)
+        public void AddSqlServerInfrastructure_ToServiceCollectionWihtSpecifiedConnectionString_RegistersExpectedServices(bool? migrationsEnabled)
         {
             // arrange
             var expectedMigrationsEnabled = migrationsEnabled ?? true;
@@ -52,7 +56,7 @@ public class DependencyInjectionTests
             var serviceCollection = NewServiceCollection(configuration: configuration);
 
             // act
-            serviceCollection.AddSqliteInfrastructure(config: configuration, connectionString: ConnectionString);
+            serviceCollection.AddSqlServerInfrastructure(config: configuration, connectionString: ConnectionString);
 
             // assert
             var serviceProvider = serviceCollection.BuildServiceProvider();
@@ -73,7 +77,7 @@ public class DependencyInjectionTests
     {
         var dictionary = new Dictionary<string, string?>();
         if (connection != null) dictionary.Add("connection", connection);
-        if (connectionStringsSqlite != null) dictionary.Add("ConnectionStrings:Sqlite", connectionStringsSqlite);
+        if (connectionStringsSqlite != null) dictionary.Add("ConnectionStrings:SqlServer", connectionStringsSqlite);
         if (migrationsEnabled.HasValue) dictionary.Add(ApplicationDatabaseConfigKeys.MigrationsEnabled, $"{migrationsEnabled}");
         if (seedingEnabled.HasValue) dictionary.Add(ApplicationDatabaseConfigKeys.SeedingEnabled, $"{seedingEnabled}");
         return new ConfigurationBuilder().AddInMemoryCollection(dictionary).Build();
