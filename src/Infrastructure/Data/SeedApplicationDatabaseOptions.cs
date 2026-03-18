@@ -2,8 +2,6 @@
 
 public sealed class SeedApplicationDatabaseOptions
 {
-    public const string SectionName = "Databases:Application:Seeding";
-
     public bool? Enabled { get; set; }
     public SeedApplicationDatabaseEntityTypesOptions? EntityTypes { get; set; }
     public SeedApplicationDatabaseIso3166CountriesOptions? Iso3166Countries { get; set; }
