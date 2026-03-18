@@ -21,8 +21,9 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
     private readonly Mock<IMediator> _mediator = new();
     private readonly Iso3166Country _seededEntity = EntityFromIndex(index: 1);
 
+    private const int BatchSize = 5;
     private const string TableName = nameof(ApplicationDbContext.Iso3166Countries);
-    private const int TotalReferencedEntities = 5;
+    private const int TotalReferencedEntities = BatchSize + 1; // one full batch and one partial
 
     public SeedIso3166CountriesRequestHandlerTests()
     {
@@ -45,7 +46,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             await Setup();
             var expected = await ExpectedEntities(count: TotalReferencedEntities).ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
             var handler = new SeedIso3166CountriesRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object);
-            var request = new SeedIso3166CountriesRequest { By = _by, Method = method };
+            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = method };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -69,7 +70,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             // seed one so fast method should skip seeding altogether
             await Setup(seededEntity: _seededEntity);
             var handler = new SeedIso3166CountriesRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object);
-            var request = new SeedIso3166CountriesRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Fast };
+            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = ApplicationDatabaseSeedingMethod.Fast };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -93,7 +94,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             await Setup(seededEntity: _seededEntity);
             var expected = await ExpectedEntities(count: TotalReferencedEntities).ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
             var handler = new SeedIso3166CountriesRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object);
-            var request = new SeedIso3166CountriesRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
+            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -119,7 +120,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             await Setup(seededEntity: _seededEntity);
             var expected = await ExpectedEntities(count: TotalReferencedEntities).ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
             var handler = new SeedIso3166CountriesRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object);
-            var request = new SeedIso3166CountriesRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
+            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -146,7 +147,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             await Setup(seededEntity: seededEntity);
             var expected = await ExpectedEntities(count: TotalReferencedEntities).ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
             var handler = new SeedIso3166CountriesRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object);
-            var request = new SeedIso3166CountriesRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
+            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
