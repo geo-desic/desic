@@ -1,4 +1,5 @@
 using AwesomeAssertions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -10,6 +11,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Tests.Unit;
 
 public class DependencyInjectionTests
 {
+    public const string ConfigKeyInitializationSection = $"{ApplicationDatabaseConfigKeys.Section}:SqlServer:Initialization";
     public const string ConnectionString = "Data Source=none;Integrated Security=True;";
 
     public class DependencyInjectionTests001 : DependencyInjectionTests
@@ -28,11 +30,11 @@ public class DependencyInjectionTests
             serviceCollection.AddSqlServerInfrastructure(config: configuration, connectionString: explicitConnectionString);
 
             // assert
-            // currently no use of mediatR in the assembly
-            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(InitializeApplicationDatabaseRequestHandler)).Should().NotBeNull();
+            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IRequestHandler<InitializeApplicationDatabaseRequest>)).Should().NotBeNull();
             // service provider items
             var serviceProvider = serviceCollection.BuildServiceProvider();
             serviceProvider.GetService<IOptions<InitializeApplicationDatabaseOptions>>().Should().NotBeNull();
+            serviceProvider.GetService<IRequestHandler<InitializeApplicationDatabaseRequest>>().Should().BeOfType<InitializeApplicationDatabaseRequestHandler>();
             // assert ApplicationDbContext is registered correctly
             using var scope = serviceProvider.CreateScope();
             using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -69,13 +71,17 @@ public class DependencyInjectionTests
     private static IServiceCollection NewServiceCollection(IConfiguration? configuration = null)
     {
         var result = new ServiceCollection();
+        result.AddLogging();
         if (configuration != null) result.AddSingleton(configuration);
         return result;
     }
 
     private static IConfigurationRoot NewConfiguration(string? connection = null, string? connectionStringsSqlite = null, bool? migrationsEnabled = null, bool? seedingEnabled = null)
     {
-        var dictionary = new Dictionary<string, string?>();
+        var dictionary = new Dictionary<string, string?>
+        {
+            { $"{ConfigKeyInitializationSection}:Name", "Desic" } // required for options validation
+        };
         if (connection != null) dictionary.Add("connection", connection);
         if (connectionStringsSqlite != null) dictionary.Add("ConnectionStrings:SqlServer", connectionStringsSqlite);
         if (migrationsEnabled.HasValue) dictionary.Add(ApplicationDatabaseConfigKeys.MigrationsEnabled, $"{migrationsEnabled}");

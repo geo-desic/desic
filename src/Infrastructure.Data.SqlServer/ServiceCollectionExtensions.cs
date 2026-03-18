@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Desic.Infrastructure.Data.SqlServer;
@@ -16,13 +15,6 @@ public static class ServiceCollectionExtensions
             });
             if (useSeeding) options.UseApplicationDbContextSeeding(serviceProvider);
         });
-        return services;
-    }
-
-    public static IServiceCollection UseDatabaseInitializer(this IServiceCollection services, IConfiguration config, string configSectionKey = ConfigKeys.SectionInitialization)
-    {
-        services.AddOptions<InitializeApplicationDatabaseOptions>().BindConfiguration(configSectionKey).ValidateDataAnnotations().ValidateOnStart();
-        services.AddTransient<InitializeApplicationDatabaseRequestHandler>();
         return services;
     }
 }

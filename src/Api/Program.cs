@@ -32,6 +32,7 @@ logger.LogInformation("Starting configuration of the web application builder");
 
 builder.AddServiceDefaults();
 
+// source: https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/
 builder.Services
     .AddDomain()
     .AddApplication()

@@ -43,7 +43,7 @@ public class WorkerService(IConfiguration config, IHostApplicationLifetime hostA
         }
 
         // migrations
-        var migrationsEnabled = config.GetValue(ConfigKeys.MigrationsEnabled, false);
+        var migrationsEnabled = config.GetValue(ApplicationDatabaseConfigKeys.MigrationsEnabled, false);
         if (migrationsEnabled)
         {
             using var scope = _serviceProvider.CreateScope();
