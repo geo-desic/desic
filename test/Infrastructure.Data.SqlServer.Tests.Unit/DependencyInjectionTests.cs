@@ -32,7 +32,7 @@ public class DependencyInjectionTests
             serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(InitializeApplicationDatabaseRequest)).Should().NotBeNull();
             // service provider items
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            serviceProvider.GetService<IOptions<DatabaseInitializerOptions>>().Should().NotBeNull();
+            serviceProvider.GetService<IOptions<InitializeApplicationDatabaseOptions>>().Should().NotBeNull();
             // assert ApplicationDbContext is registered correctly
             using var scope = serviceProvider.CreateScope();
             using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

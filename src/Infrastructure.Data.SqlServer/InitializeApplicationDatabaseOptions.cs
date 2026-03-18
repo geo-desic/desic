@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
-public sealed class DatabaseInitializerOptions
+public sealed class InitializeApplicationDatabaseOptions
 {
     public bool? Contained { get; set; }
     public bool? Enabled { get; set; }
@@ -12,14 +12,14 @@ public sealed class DatabaseInitializerOptions
     [RegularExpression("^[a-zA-Z_]{1}[a-zA-Z0-9_\\@\\#\\$]*$")] // start with alphabetic character or '_'; remaining characters can be alphanumeric characters or: '_', '@', '#', '$'
     public string? Name { get; set; }
     [ValidateEnumeratedItems]
-    public List<DatabaseInitializerRoleOptions>? Roles { get; set; }
+    public List<InitializeApplicationDatabaseRoleOptions>? Roles { get; set; }
     [ValidateEnumeratedItems]
-    public List<DatabaseInitializerSchemaOptions>? Schemas { get; set; }
+    public List<InitializeApplicationDatabaseSchemaOptions>? Schemas { get; set; }
     public bool? SkipIfDbExists { get; set; }
-    public DatabaseInitializerUsersOptions? Users { get; set; }
+    public InitializeApplicationDatabaseUsersOptions? Users { get; set; }
 }
 
-public sealed class DatabaseInitializerRoleOptions
+public sealed class InitializeApplicationDatabaseRoleOptions
 {
     [Required]
     [StringLength(128, MinimumLength = 1)]
@@ -29,10 +29,10 @@ public sealed class DatabaseInitializerRoleOptions
     [RegularExpression("^[a-zA-Z_]{1}[a-zA-Z0-9_\\@\\#\\$]*$")] // start with alphabetic character or: '_'; remaining characters can be alphanumeric characters or: '_', '@', '#', '$'
     public string? OwnerName { get; set; }
     [ValidateEnumeratedItems]
-    public List<DatabaseInitializerRoleGrantOptions>? Grants { get; set; }
+    public List<InitializeApplicationDatabaseRoleGrantOptions>? Grants { get; set; }
 }
 
-public sealed class DatabaseInitializerRoleGrantOptions
+public sealed class InitializeApplicationDatabaseRoleGrantOptions
 {
     public List<string?>? Permissions { get; set; }
     [Required]
@@ -41,14 +41,14 @@ public sealed class DatabaseInitializerRoleGrantOptions
     public string? Schema { get; set; }
 }
 
-public sealed class DatabaseInitializerRoleSchemaGrantPermissionOptions
+public sealed class InitializeApplicationDatabaseRoleSchemaGrantPermissionOptions
 {
     [Required]
     [RegularExpression("^ALTER|CONTROL|CREATE SEQUENCE|DELETE|EXECUTE|INSERT|REFERENCES|SELECT|TAKE OWNERSHIP|UPDATE|VIEW DEFINITION$")]
     public string? Name { get; set; }
 }
 
-public sealed class DatabaseInitializerSchemaOptions
+public sealed class InitializeApplicationDatabaseSchemaOptions
 {
     [Required]
     [StringLength(128, MinimumLength = 1)]
@@ -59,27 +59,27 @@ public sealed class DatabaseInitializerSchemaOptions
     public string? OwnerName { get; set; }
 }
 
-public sealed class DatabaseInitializerUsersOptions : Dictionary<string, DatabaseInitializerUserOptions>
+public sealed class InitializeApplicationDatabaseUsersOptions : Dictionary<string, InitializeApplicationDatabaseUserOptions>
 {
-    public DatabaseInitializerUserOptions? Api
+    public InitializeApplicationDatabaseUserOptions? Api
     {
         get
         {
-            TryGetValue(nameof(Api), out DatabaseInitializerUserOptions? value);
+            TryGetValue(nameof(Api), out InitializeApplicationDatabaseUserOptions? value);
             return value;
         }
     }
-    public DatabaseInitializerUserOptions? Migrations
+    public InitializeApplicationDatabaseUserOptions? Migrations
     {
         get
         {
-            TryGetValue(nameof(Migrations), out DatabaseInitializerUserOptions? value);
+            TryGetValue(nameof(Migrations), out InitializeApplicationDatabaseUserOptions? value);
             return value;
         }
     }
 }
 
-public sealed class DatabaseInitializerUserOptions
+public sealed class InitializeApplicationDatabaseUserOptions
 {
     [Required]
     [StringLength(128, MinimumLength = 1)]

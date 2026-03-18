@@ -9,13 +9,13 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
-public class InitializeApplicationDatabaseRequest(IConfiguration config, IOptions<DatabaseInitializerOptions> options, ILogger<InitializeApplicationDatabaseRequest> logger)
+public class InitializeApplicationDatabaseRequest(IConfiguration config, IOptions<InitializeApplicationDatabaseOptions> options, ILogger<InitializeApplicationDatabaseRequest> logger)
 {
     private readonly IConfiguration _config = config ?? throw new ArgumentNullException(nameof(config));
     private bool _contained;
     private string? _databaseName;
     private readonly ILogger<InitializeApplicationDatabaseRequest> _logger = logger ?? NullLogger<InitializeApplicationDatabaseRequest>.Instance;
-    private readonly DatabaseInitializerOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+    private readonly InitializeApplicationDatabaseOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
 
     public async Task InitializeAsync(string connectionString, string? targetDatabaseName = null, CancellationToken cancellationToken = default)
     {
@@ -144,7 +144,7 @@ public class InitializeApplicationDatabaseRequest(IConfiguration config, IOption
     #endregion
 
     #region Schemas
-    private void CreateSchema(Database database, DatabaseInitializerSchemaOptions schemaOptions)
+    private void CreateSchema(Database database, InitializeApplicationDatabaseSchemaOptions schemaOptions)
     {
         if (string.IsNullOrWhiteSpace(schemaOptions.Name)) throw new InvalidOperationException("Schema name is not specified");
 
@@ -183,7 +183,7 @@ public class InitializeApplicationDatabaseRequest(IConfiguration config, IOption
         }
     }
 
-    private DatabaseRole CreateRole(Database database, DatabaseInitializerRoleOptions roleOptions)
+    private DatabaseRole CreateRole(Database database, InitializeApplicationDatabaseRoleOptions roleOptions)
     {
         if (string.IsNullOrWhiteSpace(roleOptions.Name)) throw new InvalidOperationException("Role name is not specified");
         var existingRole = database.Roles[roleOptions.Name];
@@ -199,7 +199,7 @@ public class InitializeApplicationDatabaseRequest(IConfiguration config, IOption
         return role;
     }
 
-    private void CreateRoleGrants(Database database, DatabaseInitializerRoleGrantOptions grant, DatabaseRole role)
+    private void CreateRoleGrants(Database database, InitializeApplicationDatabaseRoleGrantOptions grant, DatabaseRole role)
     {
         if (string.IsNullOrWhiteSpace(grant.Schema)) throw new InvalidOperationException("Grant schema name is not specified");
         var permissions = grant.Permissions ?? [];
@@ -236,7 +236,7 @@ public class InitializeApplicationDatabaseRequest(IConfiguration config, IOption
         }
     }
 
-    private void CreateUser(Server server, Database database, DatabaseInitializerUserOptions userOptions)
+    private void CreateUser(Server server, Database database, InitializeApplicationDatabaseUserOptions userOptions)
     {
         if (string.IsNullOrWhiteSpace(userOptions.Name)) throw new InvalidOperationException("User name is not specified");
         string password;

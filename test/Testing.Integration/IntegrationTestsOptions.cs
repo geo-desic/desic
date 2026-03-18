@@ -38,7 +38,7 @@ public sealed class IntegrationTestsDatabaseApplicationOptions
 
 public sealed class IntegrationTestsDatabaseApplicationSqlServerOptions
 {
-    public DatabaseInitializerOptions? Initialization { get; init; }
+    public InitializeApplicationDatabaseOptions? Initialization { get; init; }
 }
 
 public enum DbProvider
