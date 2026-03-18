@@ -20,7 +20,7 @@ public class SeedTestUsersRequestHandler(ApplicationDbContext context, ILogger<S
         var tableName = nameof(_context.Users);
 
         var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && request.Method != ApplicationDatabaseSeedingMethod.Full)
+        if (any && request.Method != SeedApplicationDatabaseMethod.Full)
         {
             _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
             return result;

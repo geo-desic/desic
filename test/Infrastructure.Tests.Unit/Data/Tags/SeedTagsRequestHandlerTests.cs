@@ -30,9 +30,9 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
     public class SeedTagsRequestHandlerTests001 : SeedTagsRequestHandlerTests
     {
         [Theory]
-        [InlineData(ApplicationDatabaseSeedingMethod.Fast)]
-        [InlineData(ApplicationDatabaseSeedingMethod.Full)]
-        public async Task Handle_SpecifiedSeedingMethodWithNoExistingEntities_AllReferencedEntitiesSeeded(ApplicationDatabaseSeedingMethod method)
+        [InlineData(SeedApplicationDatabaseMethod.Fast)]
+        [InlineData(SeedApplicationDatabaseMethod.Full)]
+        public async Task Handle_SpecifiedSeedingMethodWithNoExistingEntities_AllReferencedEntitiesSeeded(SeedApplicationDatabaseMethod method)
         {
             // arrange
             await Setup();
@@ -62,7 +62,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
             // seed one so fast method should skip seeding altogether
             await Setup(seededEntity: _seededEntity);
             var handler = new SeedTagsRequestHandler(context: DbContext, logger: _logger);
-            var request = new SeedTagsRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Fast };
+            var request = new SeedTagsRequest { By = _by, Method = SeedApplicationDatabaseMethod.Fast };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -86,7 +86,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
             await Setup(seededEntity: _seededEntity);
             var expected = ExpectedEntities().ToList();
             var handler = new SeedTagsRequestHandler(context: DbContext, logger: _logger);
-            var request = new SeedTagsRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
+            var request = new SeedTagsRequest { By = _by, Method = SeedApplicationDatabaseMethod.Full };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -112,7 +112,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
             await Setup(seededEntity: _seededEntity);
             var expected = ExpectedEntities().ToList();
             var handler = new SeedTagsRequestHandler(context: DbContext, logger: _logger);
-            var request = new SeedTagsRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
+            var request = new SeedTagsRequest { By = _by, Method = SeedApplicationDatabaseMethod.Full };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -141,7 +141,7 @@ public class SeedTagsRequestHandlerTests : ApplicationDbContextImSqliteDependenc
             var expected = ExpectedEntities().ToList();
             expected.Add(seededEntity);
             var handler = new SeedTagsRequestHandler(context: DbContext, logger: _logger);
-            var request = new SeedTagsRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
+            var request = new SeedTagsRequest { By = _by, Method = SeedApplicationDatabaseMethod.Full };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);

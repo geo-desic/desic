@@ -10,14 +10,14 @@ using Microsoft.Extensions.Options;
 
 namespace Desic.Infrastructure.Data;
 
-public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context, ILogger<SeedApplicationDatabaseRequestHandler> logger, IMediator mediator, IOptions<ApplicationDatabaseSeedingOptions> seedingOptions) : IRequestHandler<SeedApplicationDatabaseRequest>
+public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context, ILogger<SeedApplicationDatabaseRequestHandler> logger, IMediator mediator, IOptions<SeedApplicationDatabaseOptions> seedingOptions) : IRequestHandler<SeedApplicationDatabaseRequest>
 {
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
     private readonly ILogger<SeedApplicationDatabaseRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
-    private readonly ApplicationDatabaseSeedingOptions? _options = seedingOptions?.Value;
+    private readonly SeedApplicationDatabaseOptions? _options = seedingOptions?.Value;
 
-    internal const ApplicationDatabaseSeedingMethod DefaultSeedingMethod = ApplicationDatabaseSeedingMethod.Fast;
+    internal const SeedApplicationDatabaseMethod DefaultSeedingMethod = SeedApplicationDatabaseMethod.Fast;
 
     public async Task Handle(SeedApplicationDatabaseRequest request, CancellationToken cancellationToken)
     {
@@ -62,7 +62,7 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
         return by;
     }
 
-    private async Task SeedEntityTypes(ApplicationDatabaseSeedingEntityTypesOptions? options, CancellationToken cancellationToken)
+    private async Task SeedEntityTypes(SeedApplicationDatabaseEntityTypesOptions? options, CancellationToken cancellationToken)
     {
         if (!(options?.Enabled ?? true))
         {
@@ -78,7 +78,7 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
         await _mediator.Send(request, cancellationToken);
     }
 
-    private async Task SeedTags(ApplicationDatabaseSeedingTagsOptions? options, CancellationToken cancellationToken)
+    private async Task SeedTags(SeedApplicationDatabaseTagsOptions? options, CancellationToken cancellationToken)
     {
         if (!(options?.Enabled ?? true))
         {
@@ -94,7 +94,7 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
         await _mediator.Send(request, cancellationToken);
     }
 
-    private async Task SeedIso3166Countries(ApplicationDatabaseSeedingIso3166CountriesOptions? options, IReadOnlyMinimalEntity by, CancellationToken cancellationToken)
+    private async Task SeedIso3166Countries(SeedApplicationDatabaseIso3166CountriesOptions? options, IReadOnlyMinimalEntity by, CancellationToken cancellationToken)
     {
         if (!(options?.Enabled ?? true))
         {
@@ -110,7 +110,7 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
         await _mediator.Send(request, cancellationToken);
     }
 
-    private async Task SeedTestData(ApplicationDatabaseSeedingTestOptions? options, IReadOnlyMinimalEntity by, CancellationToken cancellationToken)
+    private async Task SeedTestData(SeedApplicationDatabaseTestOptions? options, IReadOnlyMinimalEntity by, CancellationToken cancellationToken)
     {
         if (!(options?.Enabled ?? false)) // unlike others if not explicitly configured seeding of test data defaults to false
         {

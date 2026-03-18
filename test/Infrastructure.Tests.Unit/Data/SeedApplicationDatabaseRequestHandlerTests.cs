@@ -39,9 +39,9 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
     public class SeedApplicationDatabaseRequestHandlerTests002 : SeedApplicationDatabaseRequestHandlerTests
     {
         [Theory]
-        [InlineData(ApplicationDatabaseSeedingMethod.Fast)]
-        [InlineData(ApplicationDatabaseSeedingMethod.Full)]
-        public async Task Handle_SeedingOnlyEntityTypesEnabled_OnlyExpectedSeedingOccurs(ApplicationDatabaseSeedingMethod expectedMethod)
+        [InlineData(SeedApplicationDatabaseMethod.Fast)]
+        [InlineData(SeedApplicationDatabaseMethod.Full)]
+        public async Task Handle_SeedingOnlyEntityTypesEnabled_OnlyExpectedSeedingOccurs(SeedApplicationDatabaseMethod expectedMethod)
         {
             // arrange
             Setup();
@@ -64,9 +64,9 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
     public class SeedApplicationDatabaseRequestHandlerTests003 : SeedApplicationDatabaseRequestHandlerTests
     {
         [Theory]
-        [InlineData(ApplicationDatabaseSeedingMethod.Fast)]
-        [InlineData(ApplicationDatabaseSeedingMethod.Full)]
-        public async Task Handle_SeedingOnlyTagsEnabled_OnlyExpectedSeedingOccurs(ApplicationDatabaseSeedingMethod expectedMethod)
+        [InlineData(SeedApplicationDatabaseMethod.Fast)]
+        [InlineData(SeedApplicationDatabaseMethod.Full)]
+        public async Task Handle_SeedingOnlyTagsEnabled_OnlyExpectedSeedingOccurs(SeedApplicationDatabaseMethod expectedMethod)
         {
             // arrange
             Setup();
@@ -89,9 +89,9 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
     public class SeedApplicationDatabaseRequestHandlerTests004 : SeedApplicationDatabaseRequestHandlerTests
     {
         [Theory]
-        [InlineData(ApplicationDatabaseSeedingMethod.Fast)]
-        [InlineData(ApplicationDatabaseSeedingMethod.Full)]
-        public async Task Handle_SeedingOnlyIso3166CountriesEnabled_OnlyExpectedSeedingOccurs(ApplicationDatabaseSeedingMethod expectedMethod)
+        [InlineData(SeedApplicationDatabaseMethod.Fast)]
+        [InlineData(SeedApplicationDatabaseMethod.Full)]
+        public async Task Handle_SeedingOnlyIso3166CountriesEnabled_OnlyExpectedSeedingOccurs(SeedApplicationDatabaseMethod expectedMethod)
         {
             // arrange
             Setup();
@@ -114,10 +114,10 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
     public class SeedApplicationDatabaseRequestHandlerTests005 : SeedApplicationDatabaseRequestHandlerTests
     {
         [Theory]
-        [InlineData(ApplicationDatabaseSeedingMethod.Fast, false)]
-        [InlineData(ApplicationDatabaseSeedingMethod.Fast, true)]
-        [InlineData(ApplicationDatabaseSeedingMethod.Full, true)]
-        public async Task Handle_SeedingOnlyTestUsersEnabled_OnlyExpectedSeedingOccurs(ApplicationDatabaseSeedingMethod expectedMethod, bool testEnabled)
+        [InlineData(SeedApplicationDatabaseMethod.Fast, false)]
+        [InlineData(SeedApplicationDatabaseMethod.Fast, true)]
+        [InlineData(SeedApplicationDatabaseMethod.Full, true)]
+        public async Task Handle_SeedingOnlyTestUsersEnabled_OnlyExpectedSeedingOccurs(SeedApplicationDatabaseMethod expectedMethod, bool testEnabled)
         {
             // arrange
             Setup();
@@ -138,15 +138,15 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
         }
     }
 
-    private static IOptions<ApplicationDatabaseSeedingOptions> NewOptions(bool enabled = true, bool testEnabled = true, bool individualEntitiesEnabled = false)
+    private static IOptions<SeedApplicationDatabaseOptions> NewOptions(bool enabled = true, bool testEnabled = true, bool individualEntitiesEnabled = false)
     {
-        var options = new ApplicationDatabaseSeedingOptions
+        var options = new SeedApplicationDatabaseOptions
         {
             Enabled = enabled,
-            EntityTypes = new ApplicationDatabaseSeedingEntityTypesOptions { Enabled = individualEntitiesEnabled },
-            Iso3166Countries = new ApplicationDatabaseSeedingIso3166CountriesOptions { Enabled = individualEntitiesEnabled },
-            Tags = new ApplicationDatabaseSeedingTagsOptions { Enabled = individualEntitiesEnabled },
-            Test = new ApplicationDatabaseSeedingTestOptions
+            EntityTypes = new SeedApplicationDatabaseEntityTypesOptions { Enabled = individualEntitiesEnabled },
+            Iso3166Countries = new SeedApplicationDatabaseIso3166CountriesOptions { Enabled = individualEntitiesEnabled },
+            Tags = new SeedApplicationDatabaseTagsOptions { Enabled = individualEntitiesEnabled },
+            Test = new SeedApplicationDatabaseTestOptions
             {
                 Enabled = testEnabled,
                 Users = new ApplicationDatabaseSeedingTestUsersOptions { Enabled = individualEntitiesEnabled },

@@ -36,9 +36,9 @@ public class SeedTestUsersRequestHandlerTests : ApplicationDbContextImSqliteDepe
     public class SeedTestUsersRequestHandlerTests001 : SeedTestUsersRequestHandlerTests
     {
         [Theory]
-        [InlineData(ApplicationDatabaseSeedingMethod.Fast)]
-        [InlineData(ApplicationDatabaseSeedingMethod.Full)]
-        public async Task Handle_SpecifiedSeedingMethodWithNoExistingEntities_AllReferencedEntitiesSeeded(ApplicationDatabaseSeedingMethod method)
+        [InlineData(SeedApplicationDatabaseMethod.Fast)]
+        [InlineData(SeedApplicationDatabaseMethod.Full)]
+        public async Task Handle_SpecifiedSeedingMethodWithNoExistingEntities_AllReferencedEntitiesSeeded(SeedApplicationDatabaseMethod method)
         {
             // arrange
             await Setup();
@@ -67,7 +67,7 @@ public class SeedTestUsersRequestHandlerTests : ApplicationDbContextImSqliteDepe
             // seed one so fast method should skip seeding altogether
             await Setup(seededEntity: _seededEntity);
             var handler = new SeedTestUsersRequestHandler(context: DbContext, logger: _logger);
-            var request = new SeedTestUsersRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Fast, Count = TotalReferencedEntities };
+            var request = new SeedTestUsersRequest { By = _by, Method = SeedApplicationDatabaseMethod.Fast, Count = TotalReferencedEntities };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -90,7 +90,7 @@ public class SeedTestUsersRequestHandlerTests : ApplicationDbContextImSqliteDepe
             // seed one that is already correct (i.e. does not need to be updated or deleted)
             await Setup(seededEntity: _seededEntity);
             var handler = new SeedTestUsersRequestHandler(context: DbContext, logger: _logger);
-            var request = new SeedTestUsersRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full, Count = TotalReferencedEntities };
+            var request = new SeedTestUsersRequest { By = _by, Method = SeedApplicationDatabaseMethod.Full, Count = TotalReferencedEntities };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -115,7 +115,7 @@ public class SeedTestUsersRequestHandlerTests : ApplicationDbContextImSqliteDepe
             _seededEntity.Username = "username-updated";
             await Setup(seededEntity: _seededEntity);
             var handler = new SeedTestUsersRequestHandler(context: DbContext, logger: _logger);
-            var request = new SeedTestUsersRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full, Count = TotalReferencedEntities };
+            var request = new SeedTestUsersRequest { By = _by, Method = SeedApplicationDatabaseMethod.Full, Count = TotalReferencedEntities };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -142,7 +142,7 @@ public class SeedTestUsersRequestHandlerTests : ApplicationDbContextImSqliteDepe
             await Setup(seededEntity: seededEntity);
             _expectedEntities.Add(seededEntity);
             var handler = new SeedTestUsersRequestHandler(context: DbContext, logger: _logger);
-            var request = new SeedTestUsersRequest { By = _by, Method = ApplicationDatabaseSeedingMethod.Full, Count = TotalReferencedEntities };
+            var request = new SeedTestUsersRequest { By = _by, Method = SeedApplicationDatabaseMethod.Full, Count = TotalReferencedEntities };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);

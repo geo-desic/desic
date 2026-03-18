@@ -9,7 +9,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        services.AddOptions<ApplicationDatabaseSeedingOptions>().BindConfiguration(ApplicationDatabaseSeedingOptions.SectionName);
+        services.AddOptions<SeedApplicationDatabaseOptions>().BindConfiguration(SeedApplicationDatabaseOptions.SectionName);
         services
             .AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>())
             .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IAssemblyReference>());

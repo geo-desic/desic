@@ -38,9 +38,9 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
     public class SeedIso3166CountriesRequestHandlerTests001 : SeedIso3166CountriesRequestHandlerTests
     {
         [Theory]
-        [InlineData(ApplicationDatabaseSeedingMethod.Fast)]
-        [InlineData(ApplicationDatabaseSeedingMethod.Full)]
-        public async Task Handle_SpecifiedSeedingMethodWithNoExistingEntities_AllReferencedEntitiesSeeded(ApplicationDatabaseSeedingMethod method)
+        [InlineData(SeedApplicationDatabaseMethod.Fast)]
+        [InlineData(SeedApplicationDatabaseMethod.Full)]
+        public async Task Handle_SpecifiedSeedingMethodWithNoExistingEntities_AllReferencedEntitiesSeeded(SeedApplicationDatabaseMethod method)
         {
             // arrange
             await Setup();
@@ -70,7 +70,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             // seed one so fast method should skip seeding altogether
             await Setup(seededEntity: _seededEntity);
             var handler = new SeedIso3166CountriesRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object);
-            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = ApplicationDatabaseSeedingMethod.Fast };
+            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = SeedApplicationDatabaseMethod.Fast };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -94,7 +94,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             await Setup(seededEntity: _seededEntity);
             var expected = await ExpectedEntities(count: TotalReferencedEntities).ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
             var handler = new SeedIso3166CountriesRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object);
-            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
+            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = SeedApplicationDatabaseMethod.Full };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -120,7 +120,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             await Setup(seededEntity: _seededEntity);
             var expected = await ExpectedEntities(count: TotalReferencedEntities).ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
             var handler = new SeedIso3166CountriesRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object);
-            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
+            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = SeedApplicationDatabaseMethod.Full };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -147,7 +147,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             await Setup(seededEntity: seededEntity);
             var expected = await ExpectedEntities(count: TotalReferencedEntities).ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
             var handler = new SeedIso3166CountriesRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object);
-            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = ApplicationDatabaseSeedingMethod.Full };
+            var request = new SeedIso3166CountriesRequest { BatchSize = BatchSize, By = _by, Method = SeedApplicationDatabaseMethod.Full };
 
             // act
             var result = await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);

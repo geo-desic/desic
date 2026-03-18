@@ -18,7 +18,7 @@ public class SeedEntityTypesRequestHandler(ApplicationDbContext context, ILogger
 
         _context.ChangeTracker.Clear(); // the ChangeTracker does not work properly with the dbSet.ExecuteDeleteAsync below, so clear to make sure no existing tracked entities cause issues
         var any = await dbSet.AnyAsync(cancellationToken);
-        if (any && request.Method != ApplicationDatabaseSeedingMethod.Full)
+        if (any && request.Method != SeedApplicationDatabaseMethod.Full)
         {
             _logger.LogDebug("Skipping {TableName} as it already has records", tableName);
             return result;

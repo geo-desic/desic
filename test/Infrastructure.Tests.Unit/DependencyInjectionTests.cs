@@ -27,7 +27,7 @@ public class DependencyInjectionTests
             serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IRequestHandler<SeedApplicationDatabaseRequest>)).Should().NotBeNull();
             // at least one IOptions is registered
             var serviceProvider = serviceCollection.BuildServiceProvider(); // can't validate IOptions<T> until service provider is built
-            serviceProvider.GetService<IOptions<ApplicationDatabaseSeedingOptions>>().Should().NotBeNull();
+            serviceProvider.GetService<IOptions<SeedApplicationDatabaseOptions>>().Should().NotBeNull();
         }
     }
 

@@ -4,5 +4,5 @@ namespace Desic.Infrastructure.Data.Common.Models;
 
 public class SeedRequest : ByRequest
 {
-    public ApplicationDatabaseSeedingMethod Method { get; set; } = SeedApplicationDatabaseRequestHandler.DefaultSeedingMethod;
+    public SeedApplicationDatabaseMethod Method { get; set; } = SeedApplicationDatabaseRequestHandler.DefaultSeedingMethod;
 }
