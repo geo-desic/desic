@@ -31,8 +31,7 @@ public class WorkerService(IConfiguration config, IHostApplicationLifetime hostA
         }
 
         // initialization
-        var initializationEnabled = config.GetValue(Data.SqlServer.ConfigKeys.InitializationEnabled, false);
-        if (initializationEnabled)
+        if (config.InitializationEnabled())
         {
             var connectionStringInitialization = _config.GetConnectionStringInitialization();
             initilizationPerformed = await PerformInitialization(dbProvider: dbProvider, connectionString: connectionStringInitialization, cancellationToken: stoppingToken);
@@ -43,8 +42,7 @@ public class WorkerService(IConfiguration config, IHostApplicationLifetime hostA
         }
 
         // migrations
-        var migrationsEnabled = config.GetValue(ApplicationDatabaseConfigKeys.MigrationsEnabled, false);
-        if (migrationsEnabled)
+        if (config.MigrationsEnabled())
         {
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

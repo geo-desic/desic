@@ -17,14 +17,8 @@ var mappings = new Dictionary<string, string>
 {
     { "-c", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.ConnectionStringMigrations },
     { "-ci", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.ConnectionStringInitialization },
-    { "-ie", Desic.Infrastructure.Data.SqlServer.ConfigKeys.InitializationEnabled },
-    { "--initialization-enabled", Desic.Infrastructure.Data.SqlServer.ConfigKeys.InitializationEnabled },
-    { "-me", ApplicationDatabaseConfigKeys.MigrationsEnabled },
-    { "--migrations-enabled", ApplicationDatabaseConfigKeys.MigrationsEnabled },
     { "-p", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.DbProvider },
     { "--provider", Desic.Infrastructure.Tools.DbUpdater.ConfigKeys.DbProvider },
-    { "-s", ApplicationDatabaseConfigKeys.SeedingEnabled },
-    { "--seeding", ApplicationDatabaseConfigKeys.SeedingEnabled },
 };
 config.AddCommandLine(args, mappings);
 

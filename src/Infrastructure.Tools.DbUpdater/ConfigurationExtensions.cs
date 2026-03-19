@@ -18,4 +18,14 @@ public static class ConfigurationExtensions
         if (result != null) return result;
         return config.GetSqlServerConnectionString(ConnectionStringType.Migrations);
     }
+
+    public static bool InitializationEnabled(this IConfiguration config)
+    {
+        return config.GetValue(Data.SqlServer.ConfigKeys.InitializationEnabled, false);
+    }
+
+    public static bool MigrationsEnabled(this IConfiguration config)
+    {
+        return config.GetValue(Data.ApplicationDatabaseConfigKeys.MigrationsEnabled, false);
+    }
 }
