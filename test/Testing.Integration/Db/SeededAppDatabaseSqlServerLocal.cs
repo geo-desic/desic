@@ -9,9 +9,9 @@ namespace Desic.Testing.Integration.Db;
 public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSqlServerLocal templateDatabase) : ITestDatabase
 {
     private string? _connectionString;
-    private string? _databaseFilePath;
-    private string? _databaseLogFilePath;
-    private string? _databaseName;
+    private readonly EmptyDatabaseSqlServerLocal _database = new(connectionString: templateDatabase.ConnectionStringInitialization, contained: templateDatabase.IsContained,
+        databaseCreator: async (connectionString, databaseName, contained) => await SqlServerOperations.RestoreDatabase(connectionString: connectionString, databaseName: databaseName, backupFilePath: templateDatabase.BackupFilePath,
+            backupDatabaseName: templateDatabase.DatabaseName, backupFileList: templateDatabase.GetBackupFileList()));
     private readonly SeededAppTemplateDatabaseSqlServerLocal _templateDatabase = templateDatabase ?? throw new ArgumentNullException(nameof(templateDatabase));
 
     public DbConnection GetConnection() => new SqlConnection(_connectionString ?? throw Exceptions.DatabaseNotInitialized());
@@ -19,18 +19,12 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSql
 
     public async ValueTask InitializeAsync()
     {
-        // create a unique name for the database
-        _databaseName = $"{Constants.DatabaseName.ToLowerInvariant()}_{Guid.CreateVersion7():N}"; // uuidv7 will be easier to sort in file explorer for debugging purposes
-        _databaseFilePath = Path.Combine(_templateDatabase.DirectoryPath, $"{_databaseName}.mdf");
-        _databaseLogFilePath = Path.Combine(_templateDatabase.DirectoryPath, $"{_databaseName}.ldf");
-
-        await SqlServerOperations.RestoreDatabase(connectionString: _templateDatabase.ConnectionStringInitialization, databaseName: _databaseName, backupFilePath: _templateDatabase.BackupFilePath,
-            backupLogicalNameData: _templateDatabase.Name, backupLogicalNameLog: $"{_templateDatabase.Name}_Log", databaseFilePath: _databaseFilePath, databaseLogFilePath: _databaseLogFilePath);
-        Console.Write($"Successfully restored database [{_databaseName}] using '{_templateDatabase.BackupFilePath}'");
+        // this restores the database backup to the new database name using the databaseCreator logic above
+        await _database.InitializeAsync();
 
         await SetUserLogins();
 
-        _connectionString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringApi) { InitialCatalog = _databaseName }.ConnectionString;
+        _connectionString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringApi) { InitialCatalog = _database.DatabaseName }.ConnectionString;
 
         using var connection = GetConnection();
         if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database using the api connection string");
@@ -39,7 +33,7 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSql
     private async Task SetUserLogins()
     {
         if (_templateDatabase.IsContained) return;
-        var connectionsString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringInitialization) { InitialCatalog = _databaseName }.ConnectionString;
+        var connectionsString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringInitialization) { InitialCatalog = _database.DatabaseName }.ConnectionString;
         using var connection = new SqlConnection(connectionsString);
         await connection.OpenAsync();
         foreach (var user in _templateDatabase.UsersOptions.Values)
@@ -54,8 +48,6 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSql
 
     public async ValueTask DisposeAsync()
     {
-        if (!string.IsNullOrEmpty(_databaseName)) await SqlServerOperations.DropDatabase(connectionString: _templateDatabase.ConnectionStringInitialization, databaseName: _databaseName);
-        if (!string.IsNullOrEmpty(_databaseFilePath)) try { File.Delete(_databaseFilePath); } catch { /* nothing */ }
-        if (!string.IsNullOrEmpty(_databaseLogFilePath)) try { File.Delete(_databaseLogFilePath); } catch { /* nothing */ }
+        await _database.DisposeAsync();
     }
 }

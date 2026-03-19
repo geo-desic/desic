@@ -12,37 +12,35 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStringInitialization, string databaseDirectoryPath, InitializeApplicationDatabaseOptions options) : ITemplateDatabase
+public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStringInitialization, string backupDirectoryPath, InitializeApplicationDatabaseOptions options) : ITemplateDatabase
 {
+    private List<SqlServerDatabaseFile>? _backupFileList;
     private string? _connectionStringApi;
-    private bool? _contained;
     private readonly string _connectionStringInitialization = connectionStringInitialization ?? throw new ArgumentNullException(nameof(connectionStringInitialization));
     private string? _connectionStringMigrations;
-    private readonly string _databaseDirectoryPath = databaseDirectoryPath ?? throw new ArgumentNullException(nameof(databaseDirectoryPath));
+    private bool? _contained;
+    private readonly string _backupDirectoryPath = backupDirectoryPath ?? throw new ArgumentNullException(nameof(backupDirectoryPath));
     private string? _databaseBackupFilePath;
-    private readonly InitializeApplicationDatabaseOptions _options = options ?? throw new ArgumentException(nameof(options));
-    private string? _databaseName;
+    private readonly InitializeApplicationDatabaseOptions _options = options ?? throw new ArgumentNullException(nameof(options));
+    private readonly string _databaseName = $"{Constants.DatabaseName.ToLowerInvariant()}_template_{Guid.CreateVersion7():N}";
 
+    public IReadOnlyList<SqlServerDatabaseFile> GetBackupFileList() => _backupFileList?.AsReadOnly() ?? throw Exceptions.DatabaseNotInitialized();
     public string BackupFilePath => _databaseBackupFilePath ?? throw Exceptions.DatabaseNotInitialized();
     public string ConnectionStringApi => _connectionStringApi ?? throw Exceptions.DatabaseNotInitialized();
     public string ConnectionStringInitialization => _connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized();
     public string ConnectionStringMigrations => _connectionStringMigrations ?? throw Exceptions.DatabaseNotInitialized();
-    public string DirectoryPath => _databaseDirectoryPath;
+    public string DatabaseName => _databaseName;
     public bool IsContained => _contained ?? throw Exceptions.DatabaseNotInitialized();
-    public string Name => _databaseName ?? throw Exceptions.DatabaseNotInitialized();
     public InitializeApplicationDatabaseUsersOptions UsersOptions => _options.Users ?? throw Exceptions.DatabaseNotInitialized();
 
     public ITestDatabase NewTestDatabase()
     {
-        if (string.IsNullOrEmpty(_databaseName) || string.IsNullOrEmpty(_databaseBackupFilePath)) throw new InvalidOperationException(Constants.DatabaseNotInitialized);
+        if (string.IsNullOrEmpty(_databaseBackupFilePath)) throw new InvalidOperationException(Constants.DatabaseNotInitialized);
         return new SeededAppDatabaseSqlServerLocal(templateDatabase: this);
     }
 
     public async ValueTask InitializeAsync()
     {
-        // create a unique name for the database
-        _databaseName = $"{Constants.DatabaseName.ToLowerInvariant()}_template_{Guid.CreateVersion7():N}"; // uuidv7 will be easier to sort in file explorer for debugging purposes
-
         var connectionStringDatabase = new SqlConnectionStringBuilder(_connectionStringInitialization) { InitialCatalog = _databaseName, IntegratedSecurity = false }.ConnectionString;
 
         var hostBuilder = ApplicationDbContextFactory.CreateHostBuilder(["--ConnectionStrings:SqlServer", connectionStringDatabase, "--environment", Constants.TestEnvironmentName]);
@@ -76,8 +74,8 @@ public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStr
         await connection.CloseAsync();
         Console.Write($"Successfully connected to database [{_databaseName}] as api user");
 
-        var databaseBackupFilePath = Path.Combine(_databaseDirectoryPath, $"{_databaseName}.bak");
-        await SqlServerOperations.BackupDatabase(connectionString: _connectionStringInitialization, databaseBackupFilePath: databaseBackupFilePath, databaseName: _databaseName);
+        var databaseBackupFilePath = Path.Combine(_backupDirectoryPath, $"{_databaseName}.bak");
+        _backupFileList = await SqlServerOperations.BackupDatabaseReturningFileList(connectionString: _connectionStringInitialization, databaseBackupFilePath: databaseBackupFilePath, databaseName: _databaseName);
         _databaseBackupFilePath = databaseBackupFilePath;
         Console.Write($"Successfully backed up database: {_databaseBackupFilePath}");
     }
@@ -85,6 +83,6 @@ public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStr
     public async ValueTask DisposeAsync()
     {
         if (!string.IsNullOrEmpty(_databaseBackupFilePath)) try { File.Delete(_databaseBackupFilePath); } catch { /* nothing */ }
-        if (!string.IsNullOrEmpty(_databaseName)) await SqlServerOperations.DropDatabase(connectionString: _connectionStringInitialization, databaseName: _databaseName);
+        await SqlServerOperations.DropDatabase(connectionString: _connectionStringInitialization, databaseName: _databaseName);
     }
 }
