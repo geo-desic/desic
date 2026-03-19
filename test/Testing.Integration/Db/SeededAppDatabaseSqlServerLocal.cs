@@ -41,10 +41,7 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSql
         var connectionsString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringInitialization) { InitialCatalog = _databaseName }.ConnectionString;
         using var connection = new SqlConnection(connectionsString);
         await connection.OpenAsync();
-        using var commandContainment = connection.CreateCommand();
-        commandContainment.CommandText = $"SELECT containment FROM sys.databases WHERE name = '{_databaseName}';";
-        var result = await commandContainment.ExecuteScalarAsync();
-        if (result != null && result != DBNull.Value && Convert.ToInt64(result) == 0) // non-contained database
+        if (!await connection.IsContained(databaseName: _databaseName!))
         {
             foreach (var user in _templateDatabase.UsersOptions.Values)
             {
