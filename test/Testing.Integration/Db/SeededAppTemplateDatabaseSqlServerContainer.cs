@@ -25,10 +25,10 @@ public sealed class SeededAppTemplateDatabaseSqlServerContainer(string image) : 
     private const string TemplateImageTag = "temporary";
     private string? _templateImage;
 
-    public string ConnectionStringApi => _connectionStringApi ?? throw NewInvalidOperationException();
-    public string ConnectionStringInitialization => _connectionStringInitialization ?? throw NewInvalidOperationException();
-    public string ConnectionStringMigrations => _connectionStringMigrations ?? throw NewInvalidOperationException();
-    public string TemplateImage => _templateImage ?? throw NewInvalidOperationException();
+    public string ConnectionStringApi => _connectionStringApi ?? throw Exceptions.DatabaseNotInitialized();
+    public string ConnectionStringInitialization => _connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized();
+    public string ConnectionStringMigrations => _connectionStringMigrations ?? throw Exceptions.DatabaseNotInitialized();
+    public string TemplateImage => _templateImage ?? throw Exceptions.DatabaseNotInitialized();
 
     public ITestDatabase NewTestDatabase() => new SeededAppDatabaseSqlServerContainer(this);
 
@@ -96,6 +96,4 @@ public sealed class SeededAppTemplateDatabaseSqlServerContainer(string image) : 
     {
         await _container.DisposeAsync();
     }
-
-    private static InvalidOperationException NewInvalidOperationException() => new(Constants.DatabaseNotInitialized);
 }

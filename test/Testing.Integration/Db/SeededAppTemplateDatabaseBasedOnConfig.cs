@@ -5,7 +5,8 @@ public sealed class SeededAppTemplateDatabaseBasedOnConfig : ITemplateDatabase
     private ITemplateDatabase? _database;
     private readonly IntegrationTestsOptions? _options = TestConfiguration.Options;
 
-    public ITestDatabase NewTestDatabase() => _database?.NewTestDatabase() ?? throw new InvalidOperationException(Constants.DatabaseNotInitialized);
+    public DbProvider DbProvider => _options?.DbProvider == DbProvider.Sqlite ? DbProvider.Sqlite : DbProvider.SqlServer;
+    public ITestDatabase NewTestDatabase() => _database?.NewTestDatabase() ?? throw Exceptions.DatabaseNotInitialized();
 
     public async ValueTask InitializeAsync()
     {
@@ -41,6 +42,4 @@ public sealed class SeededAppTemplateDatabaseBasedOnConfig : ITemplateDatabase
     {
         _database?.DisposeAsync().AsTask().Wait();
     }
-
-    public DbProvider DbProvider => _options?.DbProvider == DbProvider.Sqlite ? DbProvider.Sqlite : DbProvider.SqlServer;
 }

@@ -22,13 +22,13 @@ public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStr
     private readonly InitializeApplicationDatabaseOptions _options = options ?? throw new ArgumentException(nameof(options));
     private string? _databaseName;
 
-    public string BackupFilePath => _databaseBackupFilePath ?? throw NewInvalidOperationException();
-    public string ConnectionStringApi => _connectionStringApi ?? throw NewInvalidOperationException();
-    public string ConnectionStringInitialization => _connectionStringInitialization ?? throw NewInvalidOperationException();
-    public string ConnectionStringMigrations => _connectionStringMigrations ?? throw NewInvalidOperationException();
+    public string BackupFilePath => _databaseBackupFilePath ?? throw Exceptions.DatabaseNotInitialized();
+    public string ConnectionStringApi => _connectionStringApi ?? throw Exceptions.DatabaseNotInitialized();
+    public string ConnectionStringInitialization => _connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized();
+    public string ConnectionStringMigrations => _connectionStringMigrations ?? throw Exceptions.DatabaseNotInitialized();
     public string DirectoryPath => _databaseDirectoryPath;
-    public string Name => _databaseName ?? throw NewInvalidOperationException();
-    public InitializeApplicationDatabaseUsersOptions UsersOptions => _options.Users ?? throw NewInvalidOperationException();
+    public string Name => _databaseName ?? throw Exceptions.DatabaseNotInitialized();
+    public InitializeApplicationDatabaseUsersOptions UsersOptions => _options.Users ?? throw Exceptions.DatabaseNotInitialized();
 
     public ITestDatabase NewTestDatabase()
     {
@@ -70,43 +70,17 @@ public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStr
         using var connection = new SqlConnection(_connectionStringApi);
         if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database using the api connection string");
         await connection.CloseAsync();
-        Console.Write($"Successfully connected to database {_databaseName} as api user");
+        Console.Write($"Successfully connected to database [{_databaseName}] as api user");
 
-        await BackupDatabase();
+        var databaseBackupFilePath = Path.Combine(_databaseDirectoryPath, $"{_databaseName}.bak");
+        await SqlServerOperations.BackupDatabase(connectionString: _connectionStringInitialization, databaseBackupFilePath: databaseBackupFilePath, databaseName: _databaseName);
+        _databaseBackupFilePath = databaseBackupFilePath;
         Console.Write($"Successfully backed up database: {_databaseBackupFilePath}");
     }
 
     public async ValueTask DisposeAsync()
     {
         if (!string.IsNullOrEmpty(_databaseBackupFilePath)) try { File.Delete(_databaseBackupFilePath); } catch { /* nothing */ }
-        if (!string.IsNullOrEmpty(_databaseName)) await DropDatabase(connectionString: _connectionStringInitialization, databaseName: _databaseName);
+        if (!string.IsNullOrEmpty(_databaseName)) await SqlServerOperations.DropDatabase(connectionString: _connectionStringInitialization, databaseName: _databaseName);
     }
-
-    internal static async Task DropDatabase(string connectionString, string databaseName)
-    {
-        using var connection = new SqlConnection(connectionString);
-        await connection.OpenAsync();
-        using (var command = connection.CreateCommand())
-        {
-            command.CommandText = $"IF DB_ID('{databaseName}') IS NOT NULL BEGIN ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{databaseName}]; END";
-            await command.ExecuteNonQueryAsync();
-        }
-        await connection.CloseAsync();
-    }
-
-    private async Task BackupDatabase()
-    {
-        var databaseBackupFilePath = Path.Combine(_databaseDirectoryPath, $"{_databaseName}.bak");
-        using var connection = new SqlConnection(_connectionStringInitialization);
-        await connection.OpenAsync();
-        using (var command = connection.CreateCommand())
-        {
-            command.CommandText = $"BACKUP DATABASE [{_databaseName}] TO DISK = N'{databaseBackupFilePath}' WITH FORMAT, NAME = N'Full Backup of [{_databaseName}]';";
-            await command.ExecuteNonQueryAsync();
-        }
-        await connection.CloseAsync();
-        _databaseBackupFilePath = databaseBackupFilePath;
-    }
-
-    private static InvalidOperationException NewInvalidOperationException() => new(Constants.DatabaseNotInitialized);
 }

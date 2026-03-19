@@ -22,6 +22,9 @@ public sealed class SeededAppDatabaseSqlServerContainer(SeededAppTemplateDatabas
     private const string ServerReadyForConnectionsMessage = "SQL Server is now ready for client connections";
     private readonly SeededAppTemplateDatabaseSqlServerContainer _templateDatabase = templateDatabase ?? throw new ArgumentNullException(nameof(templateDatabase));
 
+    public DbConnection GetConnection() => new SqlConnection(_connectionString ?? throw Exceptions.DatabaseNotInitialized());
+    public string GetConnectionString() => _connectionString ?? throw Exceptions.DatabaseNotInitialized();
+
     public async ValueTask InitializeAsync()
     {
         await _container.StartAsync();
@@ -34,10 +37,4 @@ public sealed class SeededAppDatabaseSqlServerContainer(SeededAppTemplateDatabas
     }
 
     public ValueTask DisposeAsync() => _container.DisposeAsync();
-
-    public DbConnection GetConnection() => new SqlConnection(_connectionString ?? throw NewDatabaseNotInitializedException());
-
-    public string GetConnectionString() => _connectionString ?? throw NewDatabaseNotInitializedException();
-
-    private static InvalidOperationException NewDatabaseNotInitializedException() => new(Constants.DatabaseNotInitialized);
 }

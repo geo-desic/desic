@@ -12,6 +12,9 @@ public sealed class SeededAppDatabaseSqlite(string templateDatabaseFilePath) : I
     private string? _databaseFilePath;
     private readonly string _templateDatabaseFilePath = templateDatabaseFilePath ?? throw new ArgumentNullException(nameof(templateDatabaseFilePath));
 
+    public DbConnection GetConnection() => new SqliteConnection(_connectionString ?? throw Exceptions.DatabaseNotInitialized());
+    public string GetConnectionString() => _connectionString ?? throw Exceptions.DatabaseNotInitialized();
+
     public async ValueTask InitializeAsync()
     {
         var databaseDirectoryPath = Path.GetDirectoryName(_templateDatabaseFilePath)!;
@@ -29,13 +32,7 @@ public sealed class SeededAppDatabaseSqlite(string templateDatabaseFilePath) : I
 
     public ValueTask DisposeAsync()
     {
-        if (!string.IsNullOrEmpty(_databaseFilePath)) SeededAppTemplateDatabaseSqlite.DeleteDatabaseAndAssociatedFiles(_databaseFilePath);
+        if (!string.IsNullOrEmpty(_databaseFilePath)) SqliteOperations.DeleteDatabaseAndAssociatedFiles(_databaseFilePath);
         return ValueTask.CompletedTask;
     }
-
-    public DbConnection GetConnection() => new SqliteConnection(_connectionString ?? throw NewDatabaseNotInitializedException());
-
-    public string GetConnectionString() => _connectionString ?? throw NewDatabaseNotInitializedException();
-
-    private static InvalidOperationException NewDatabaseNotInitializedException() => new(Constants.DatabaseNotInitialized);
 }

@@ -12,7 +12,7 @@ public sealed class SeededAppTemplateDatabaseSqlite(string databaseDirectoryPath
     private string? _databaseFilePath;
     private readonly string _databaseDirectoryPath = databaseDirectoryPath ?? throw new ArgumentNullException(nameof(databaseDirectoryPath));
 
-    public ITestDatabase NewTestDatabase() => new SeededAppDatabaseSqlite(_databaseFilePath ?? throw new InvalidOperationException(Constants.DatabaseNotInitialized));
+    public ITestDatabase NewTestDatabase() => new SeededAppDatabaseSqlite(_databaseFilePath ?? throw Exceptions.DatabaseNotInitialized());
 
     public async ValueTask InitializeAsync()
     {
@@ -35,21 +35,7 @@ public sealed class SeededAppTemplateDatabaseSqlite(string databaseDirectoryPath
 
     public ValueTask DisposeAsync()
     {
-        if (!string.IsNullOrEmpty(_databaseFilePath)) DeleteDatabaseAndAssociatedFiles(_databaseFilePath);
+        if (!string.IsNullOrEmpty(_databaseFilePath)) SqliteOperations.DeleteDatabaseAndAssociatedFiles(_databaseFilePath);
         return ValueTask.CompletedTask;
-    }
-
-    internal static void DeleteDatabaseAndAssociatedFiles(string databaseFilePath)
-    {
-        // delete the primary database file
-        if (databaseFilePath != null) File.Delete(databaseFilePath);
-
-        // delete any associated files that sqlite automatically creates
-        string[] associatedExtensions = ["db-journal", "db-wal", "db-shm"];
-        foreach (var extension in associatedExtensions)
-        {
-            var filepath = Path.ChangeExtension(databaseFilePath, extension);
-            if (File.Exists(filepath)) File.Delete(filepath);
-        }
     }
 }
