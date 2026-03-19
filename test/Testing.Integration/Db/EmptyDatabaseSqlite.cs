@@ -31,7 +31,7 @@ public sealed class EmptyDatabaseSqlite : ITestDatabase
     {
         _connectionString = $"Data Source={_databaseFilePath};Pooling=False;"; // pooling is disabled to avoid issues with file locks when deleting the database file(s) after tests are done
 
-        using var connection = new SqliteConnection(_connectionString);
+        using var connection = GetConnection();
         if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database"); // opening this connection should create the database file
     }
 
