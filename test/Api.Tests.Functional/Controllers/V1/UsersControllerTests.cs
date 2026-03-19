@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class UsersControllerTests(TestDatabase testDatabase) : FunctionalTests(testDatabase), IClassFixture<TestDatabase>
+public class UsersControllerTests(SeededAppDatabase testDatabase) : FunctionalTests(testDatabase), IClassFixture<SeededAppDatabase>
 {
     private readonly TimeSpan _acceptablePrecision = TimeSpan.FromSeconds(1);
 

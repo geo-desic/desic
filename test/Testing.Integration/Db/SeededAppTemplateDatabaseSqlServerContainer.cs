@@ -15,7 +15,7 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class TemplateDatabaseSqlServerContainer(string image) : ITemplateDatabase
+public sealed class SeededAppTemplateDatabaseSqlServerContainer(string image) : ITemplateDatabase
 {
     private string? _connectionStringApi;
     private string? _connectionStringInitialization;
@@ -30,7 +30,7 @@ public sealed class TemplateDatabaseSqlServerContainer(string image) : ITemplate
     public string ConnectionStringMigrations => _connectionStringMigrations ?? throw NewInvalidOperationException();
     public string TemplateImage => _templateImage ?? throw NewInvalidOperationException();
 
-    public ITestDatabase NewTestDatabase() => new TestDatabaseSqlServerContainer(this);
+    public ITestDatabase NewTestDatabase() => new SeededAppDatabaseSqlServerContainer(this);
 
     public async ValueTask InitializeAsync()
     {

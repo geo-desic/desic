@@ -6,7 +6,7 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class TestDatabaseSqlite(string templateDatabaseFilePath) : ITestDatabase
+public sealed class SeededAppDatabaseSqlite(string templateDatabaseFilePath) : ITestDatabase
 {
     private string? _connectionString;
     private string? _databaseFilePath;
@@ -29,7 +29,7 @@ public sealed class TestDatabaseSqlite(string templateDatabaseFilePath) : ITestD
 
     public ValueTask DisposeAsync()
     {
-        if (!string.IsNullOrEmpty(_databaseFilePath)) TemplateDatabaseSqlite.DeleteDatabaseAndAssociatedFiles(_databaseFilePath);
+        if (!string.IsNullOrEmpty(_databaseFilePath)) SeededAppTemplateDatabaseSqlite.DeleteDatabaseAndAssociatedFiles(_databaseFilePath);
         return ValueTask.CompletedTask;
     }
 

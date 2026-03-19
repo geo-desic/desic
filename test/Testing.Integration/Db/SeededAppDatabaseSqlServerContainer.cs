@@ -8,7 +8,7 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class TestDatabaseSqlServerContainer(TemplateDatabaseSqlServerContainer templateDatabase) : ITestDatabase
+public sealed class SeededAppDatabaseSqlServerContainer(SeededAppTemplateDatabaseSqlServerContainer templateDatabase) : ITestDatabase
 {
     private string? _connectionString;
     // waiting for both log messages seems to be important to ensure not only that the server is online and accepting requests, but the desired database is ready
@@ -20,7 +20,7 @@ public sealed class TestDatabaseSqlServerContainer(TemplateDatabaseSqlServerCont
     private static readonly TimeSpan DatabaseReadyTimeout = TimeSpan.FromSeconds(10);
     private const string DatabaseStartedLogMessage = $"Starting up database '{Constants.DatabaseName}'";
     private const string ServerReadyForConnectionsMessage = "SQL Server is now ready for client connections";
-    private readonly TemplateDatabaseSqlServerContainer _templateDatabase = templateDatabase ?? throw new ArgumentNullException(nameof(templateDatabase));
+    private readonly SeededAppTemplateDatabaseSqlServerContainer _templateDatabase = templateDatabase ?? throw new ArgumentNullException(nameof(templateDatabase));
 
     public async ValueTask InitializeAsync()
     {

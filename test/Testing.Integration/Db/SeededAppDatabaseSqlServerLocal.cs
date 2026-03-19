@@ -6,13 +6,13 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simpler IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class TestDatabaseSqlServerLocal(TemplateDatabaseSqlServerLocal templateDatabase) : ITestDatabase
+public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSqlServerLocal templateDatabase) : ITestDatabase
 {
     private string? _connectionString;
     private string? _databaseFilePath;
     private string? _databaseLogFilePath;
     private string? _databaseName;
-    private readonly TemplateDatabaseSqlServerLocal _templateDatabase = templateDatabase ?? throw new ArgumentNullException(nameof(templateDatabase));
+    private readonly SeededAppTemplateDatabaseSqlServerLocal _templateDatabase = templateDatabase ?? throw new ArgumentNullException(nameof(templateDatabase));
 
     public async ValueTask InitializeAsync()
     {
@@ -34,7 +34,7 @@ public sealed class TestDatabaseSqlServerLocal(TemplateDatabaseSqlServerLocal te
 
     public async ValueTask DisposeAsync()
     {
-        if (!string.IsNullOrEmpty(_databaseName)) await TemplateDatabaseSqlServerLocal.DropDatabase(connectionString: _templateDatabase.ConnectionStringInitialization, databaseName: _databaseName);
+        if (!string.IsNullOrEmpty(_databaseName)) await SeededAppTemplateDatabaseSqlServerLocal.DropDatabase(connectionString: _templateDatabase.ConnectionStringInitialization, databaseName: _databaseName);
         if (!string.IsNullOrEmpty(_databaseFilePath)) try { File.Delete(_databaseFilePath); } catch { /* nothing */ }
         if (!string.IsNullOrEmpty(_databaseLogFilePath)) try { File.Delete(_databaseLogFilePath); } catch { /* nothing */ }
     }

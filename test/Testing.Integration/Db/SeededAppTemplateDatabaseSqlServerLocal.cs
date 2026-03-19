@@ -12,7 +12,7 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class TemplateDatabaseSqlServerLocal(string connectionStringInitialization, string databaseDirectoryPath, InitializeApplicationDatabaseOptions options) : ITemplateDatabase
+public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStringInitialization, string databaseDirectoryPath, InitializeApplicationDatabaseOptions options) : ITemplateDatabase
 {
     private string? _connectionStringApi;
     private readonly string _connectionStringInitialization = connectionStringInitialization ?? throw new ArgumentNullException(nameof(connectionStringInitialization));
@@ -33,7 +33,7 @@ public sealed class TemplateDatabaseSqlServerLocal(string connectionStringInitia
     public ITestDatabase NewTestDatabase()
     {
         if (string.IsNullOrEmpty(_databaseName) || string.IsNullOrEmpty(_databaseBackupFilePath)) throw new InvalidOperationException(Constants.DatabaseNotInitialized);
-        return new TestDatabaseSqlServerLocal(templateDatabase: this);
+        return new SeededAppDatabaseSqlServerLocal(templateDatabase: this);
     }
 
     public async ValueTask InitializeAsync()
