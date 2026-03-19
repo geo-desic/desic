@@ -1,6 +1,4 @@
-﻿using Desic.Shared.Data;
-using Microsoft.Data.Sqlite;
-using System.Data.Common;
+﻿using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
@@ -8,31 +6,22 @@ namespace Desic.Testing.Integration.Db;
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
 public sealed class SeededAppDatabaseSqlite(string templateDatabaseFilePath) : ITestDatabase
 {
-    private string? _connectionString;
-    private string? _databaseFilePath;
+    private readonly EmptyDatabaseSqlite _database = new(databaseDirectoryPath: Path.GetDirectoryName(templateDatabaseFilePath) ?? throw new Exception($"Could not get directory from template database file path: {templateDatabaseFilePath}"));
     private readonly string _templateDatabaseFilePath = templateDatabaseFilePath ?? throw new ArgumentNullException(nameof(templateDatabaseFilePath));
 
-    public DbConnection GetConnection() => new SqliteConnection(_connectionString ?? throw Exceptions.DatabaseNotInitialized());
-    public string GetConnectionString() => _connectionString ?? throw Exceptions.DatabaseNotInitialized();
+    public DbConnection GetConnection() => _database.GetConnection();
+    public string GetConnectionString() => _database.GetConnectionString();
 
     public async ValueTask InitializeAsync()
     {
-        var databaseDirectoryPath = Path.GetDirectoryName(_templateDatabaseFilePath)!;
-        // create a unique name for the database
-        var databaseFileName = $"{Constants.DatabaseName.ToLowerInvariant()}_{Guid.CreateVersion7():N}.db"; // uuidv7 will be easier to sort in file explorer for debugging purposes
-        _databaseFilePath = Path.Combine(databaseDirectoryPath, databaseFileName);
+        // copy the template database file to the new database file path before calling _database.InitializeAsync() which should use it
+        File.Copy(_templateDatabaseFilePath, _database.DatabaseFilePath);
 
-        File.Copy(_templateDatabaseFilePath, _databaseFilePath);
-
-        _connectionString = $"Data Source={_databaseFilePath};Pooling=False;"; // pooling is disabled to avoid issues with file locks when deleting the database file after tests are done
-
-        using var connection = GetConnection();
-        if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database");
+        await _database.InitializeAsync();
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        if (!string.IsNullOrEmpty(_databaseFilePath)) SqliteOperations.DeleteDatabaseAndAssociatedFiles(_databaseFilePath);
-        return ValueTask.CompletedTask;
+        await _database.DisposeAsync();
     }
 }
