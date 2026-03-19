@@ -15,6 +15,7 @@ namespace Desic.Testing.Integration.Db;
 public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStringInitialization, string databaseDirectoryPath, InitializeApplicationDatabaseOptions options) : ITemplateDatabase
 {
     private string? _connectionStringApi;
+    private bool? _contained;
     private readonly string _connectionStringInitialization = connectionStringInitialization ?? throw new ArgumentNullException(nameof(connectionStringInitialization));
     private string? _connectionStringMigrations;
     private readonly string _databaseDirectoryPath = databaseDirectoryPath ?? throw new ArgumentNullException(nameof(databaseDirectoryPath));
@@ -27,6 +28,7 @@ public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStr
     public string ConnectionStringInitialization => _connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized();
     public string ConnectionStringMigrations => _connectionStringMigrations ?? throw Exceptions.DatabaseNotInitialized();
     public string DirectoryPath => _databaseDirectoryPath;
+    public bool IsContained => _contained ?? throw Exceptions.DatabaseNotInitialized();
     public string Name => _databaseName ?? throw Exceptions.DatabaseNotInitialized();
     public InitializeApplicationDatabaseUsersOptions UsersOptions => _options.Users ?? throw Exceptions.DatabaseNotInitialized();
 
@@ -58,6 +60,8 @@ public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStr
         };
         await mediator.Send(request: request, cancellationToken: default);
         Console.Write($"Successfully initialized database: {_databaseName}");
+
+        _contained = await SqlServerOperations.IsContained(_connectionStringInitialization, _databaseName);
 
         // apply migrations
         using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

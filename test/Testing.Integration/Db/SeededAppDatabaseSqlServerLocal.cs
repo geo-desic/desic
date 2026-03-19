@@ -38,19 +38,17 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSql
 
     private async Task SetUserLogins()
     {
+        if (_templateDatabase.IsContained) return;
         var connectionsString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringInitialization) { InitialCatalog = _databaseName }.ConnectionString;
         using var connection = new SqlConnection(connectionsString);
         await connection.OpenAsync();
-        if (!await connection.IsContained(databaseName: _databaseName!))
+        foreach (var user in _templateDatabase.UsersOptions.Values)
         {
-            foreach (var user in _templateDatabase.UsersOptions.Values)
-            {
-                using var command = connection.CreateCommand();
-                command.CommandText = $"ALTER USER [{user.Name}] WITH LOGIN = [{user.LoginName}];";
-                await command.ExecuteNonQueryAsync();
-            }
-            Console.Write($"Successfully set logins for database users");
+            using var command = connection.CreateCommand();
+            command.CommandText = $"ALTER USER [{user.Name}] WITH LOGIN = [{user.LoginName}];";
+            await command.ExecuteNonQueryAsync();
         }
+        Console.Write($"Successfully set logins for database users");
         await connection.CloseAsync();
     }
 
