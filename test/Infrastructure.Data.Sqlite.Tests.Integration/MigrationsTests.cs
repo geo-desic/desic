@@ -1,5 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Testing.Integration;
+using Desic.Testing.Integration.Db;
 using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Infrastructure.Data.Sqlite.Tests.Integration;
@@ -11,7 +12,7 @@ public class MigrationsTests
     {
         // arrange
         using var factory = new ApplicationDbContextFactory();
-        await using var database = new EmptyDatabase();
+        await using var database = new EmptyDatabaseSqlite();
         await database.InitializeAsync();
         var context = factory.CreateDbContext(["--connection", database.GetConnectionString(), "--environment", Constants.TestEnvironmentName]);
 
@@ -30,7 +31,7 @@ public class MigrationsTests
     {
         // arrange
         using var factory = new ApplicationDbContextFactory();
-        await using var database = new EmptyDatabase();
+        await using var database = new EmptyDatabaseSqlite();
         await database.InitializeAsync();
         var context = factory.CreateDbContext(["--connection", database.GetConnectionString(), "--environment", Constants.TestEnvironmentName, $"--{ApplicationDatabaseConfigKeys.SeedingEnabled}", $"{false}"]);
 

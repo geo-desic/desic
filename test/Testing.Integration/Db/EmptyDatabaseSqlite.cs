@@ -11,9 +11,9 @@ public sealed class EmptyDatabaseSqlite : ITestDatabaseSqlite
     private readonly string _databaseDirectoryPath;
     private readonly string _databaseName;
 
-    public EmptyDatabaseSqlite(string databaseDirectoryPath, string? databaseNamePrefix = null)
+    public EmptyDatabaseSqlite(string? databaseDirectoryPath = null, string? databaseNamePrefix = null)
     {
-        _databaseDirectoryPath = databaseDirectoryPath ?? throw new ArgumentNullException(nameof(databaseDirectoryPath));
+        _databaseDirectoryPath = databaseDirectoryPath ?? Path.Combine(Path.GetTempPath(), Constants.TestsTempDirectoryName);
         _databaseName = $"{databaseNamePrefix ?? Constants.DatabaseName.ToLowerInvariant()}_{Guid.CreateVersion7():N}"; // uuidv7 will be easier to sort in file explorer for debugging purposes
         _databaseFileName = $"{_databaseName}.db";
         _databaseFilePath = Path.Combine(_databaseDirectoryPath, _databaseFileName);
