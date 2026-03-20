@@ -17,13 +17,11 @@ public sealed class SqlServerDatabaseOnlineWaitStrategy(string databaseName) : I
             using var connection = new SqlConnection(msSqlContainer.GetConnectionString());
             await connection.OpenAsync().ConfigureAwait(false);
             using var command = connection.CreateCommand();
-            {
-                command.CommandText = $"SELECT 1 FROM [sys].[databases] WHERE [state] = 0 AND [name] = '{_databaseName}'"; // [state] = 0 means ONLINE
-                var result = await command.ExecuteScalarAsync();
-                if (result != null && result != DBNull.Value && Convert.ToInt32(result) == 1) return true;
-            }
+            command.CommandText = $"SELECT 1 FROM [sys].[databases] WHERE [state] = 0 AND [name] = '{_databaseName}'"; // [state] = 0 means ONLINE
+            var result = await command.ExecuteScalarAsync();
+            if (result != null && result != DBNull.Value && Convert.ToInt32(result) == 1) return true;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return false;
         }
