@@ -11,13 +11,13 @@ public sealed class SeededAppTemplateDatabaseBasedOnConfig : ITemplateDatabase
     public async ValueTask InitializeAsync()
     {
         // make sure temporary directory for the database files exists
-        var databaseDirectoryPath = Path.Combine(Path.GetTempPath(), $"{Constants.DatabaseName.ToLowerInvariant()}-tests");
-        Directory.CreateDirectory(databaseDirectoryPath);
+        var tempDirectoryPath = Path.Combine(Path.GetTempPath(), Constants.TestsTempDirectoryName);
+        Directory.CreateDirectory(tempDirectoryPath);
 
         if (DbProvider == DbProvider.Sqlite)
         {
             Console.WriteLine($"Using database: {DbProvider}");
-            _database = new SeededAppTemplateDatabaseSqlite(databaseDirectoryPath: databaseDirectoryPath);
+            _database = new SeededAppTemplateDatabaseSqlite(databaseDirectoryPath: tempDirectoryPath);
         }
         else // sql server
         {
@@ -32,7 +32,7 @@ public sealed class SeededAppTemplateDatabaseBasedOnConfig : ITemplateDatabase
                 var connectionStringInitialization = _options?.ConnectionStrings?.SqlServer ?? throw new InvalidOperationException("Connection string for database initialization could not be determined");
                 var databaseInitializerOptions = _options?.Databases?.Application?.SqlServer?.Initialization ?? throw new InvalidOperationException($"Database initializer options for {DbProvider} is not configured");
                 Console.WriteLine($"Using database: {DbProvider} (local)");
-                _database = new SeededAppTemplateDatabaseSqlServerLocal(connectionStringInitialization: connectionStringInitialization, backupDirectoryPath: databaseDirectoryPath, options: databaseInitializerOptions);
+                _database = new SeededAppTemplateDatabaseSqlServerLocal(connectionStringInitialization: connectionStringInitialization, backupDirectoryPath: tempDirectoryPath, options: databaseInitializerOptions);
             }
         }
         await _database.InitializeAsync();
@@ -40,6 +40,6 @@ public sealed class SeededAppTemplateDatabaseBasedOnConfig : ITemplateDatabase
 
     public async ValueTask DisposeAsync()
     {
-        _database?.DisposeAsync().AsTask().Wait();
+        if (_database != null) await _database.DisposeAsync();
     }
 }

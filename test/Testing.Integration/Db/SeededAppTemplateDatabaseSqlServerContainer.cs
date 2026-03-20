@@ -1,7 +1,6 @@
 ﻿using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.Providers;
 using Desic.Infrastructure.Data.SqlServer;
-using Desic.Shared.Data;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using MediatR;
@@ -21,6 +20,7 @@ public sealed class SeededAppTemplateDatabaseSqlServerContainer(string image) : 
     private string? _connectionStringInitialization;
     private string? _connectionStringMigrations;
     private readonly MsSqlContainer _container = new MsSqlBuilder(image).Build();
+    private readonly string _databaaseName = Constants.DatabaseName;
     private const string TemplateImageRepositoryNamePrefix = "mssql-int-tests";
     private const string TemplateImageTag = "temporary";
     private string? _templateImage;
@@ -28,6 +28,7 @@ public sealed class SeededAppTemplateDatabaseSqlServerContainer(string image) : 
     public string ConnectionStringApi => _connectionStringApi ?? throw Exceptions.DatabaseNotInitialized();
     public string ConnectionStringInitialization => _connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized();
     public string ConnectionStringMigrations => _connectionStringMigrations ?? throw Exceptions.DatabaseNotInitialized();
+    public string DatabaseName => _databaaseName;
     public string TemplateImage => _templateImage ?? throw Exceptions.DatabaseNotInitialized();
 
     public ITestDatabase NewTestDatabase() => new SeededAppDatabaseSqlServerContainer(this);
@@ -39,7 +40,7 @@ public sealed class SeededAppTemplateDatabaseSqlServerContainer(string image) : 
 
         _connectionStringInitialization = _container.GetConnectionString();
 
-        var connectionStringDatabase = new SqlConnectionStringBuilder(_connectionStringInitialization) { InitialCatalog = Constants.DatabaseName, UserID = string.Empty, Password = string.Empty }.ConnectionString;
+        var connectionStringDatabase = new SqlConnectionStringBuilder(_connectionStringInitialization) { InitialCatalog = DatabaseName, UserID = string.Empty, Password = string.Empty }.ConnectionString;
 
         var hostBuilder = ApplicationDbContextFactory.CreateHostBuilder(["--ConnectionStrings:SqlServer", connectionStringDatabase, "--environment", Constants.TestEnvironmentName]);
         _connectionStringMigrations = hostBuilder.Configuration.GetSqlServerConnectionString(ConnectionStringType.Migrations);
@@ -52,38 +53,36 @@ public sealed class SeededAppTemplateDatabaseSqlServerContainer(string image) : 
         var request = new InitializeApplicationDatabaseRequest
         {
             ConnectionString = _connectionStringInitialization,
-            DatabaseName = Constants.DatabaseName,
+            DatabaseName = _databaaseName,
         };
         await mediator.Send(request: request, cancellationToken: default);
-        Console.Write($"Successfully initialized database: {Constants.DatabaseName}");
+        Console.Write($"Successfully initialized database: {_databaaseName}");
 
         // apply migrations
         using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await context.Database.MigrateAsync();
-        Console.Write($"Successfully migrated database: {Constants.DatabaseName}");
+        Console.Write($"Successfully migrated database: {_databaaseName}");
 
         // ensure can connect to the database as the api user
         var hostConfiguration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
         _connectionStringApi = hostConfiguration.GetSqlServerConnectionString(ConnectionStringType.Api);
         using var connection = new SqlConnection(_connectionStringApi);
-        if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database using the api connection string");
+        await connection.OpenAsync();
         await connection.CloseAsync();
         Console.Write($"Successfully connected to database as api user");
 
         var sqlCmdFilePath = await _container.GetSqlCmdFilePathAsync().ConfigureAwait(false);
         await _container.ExecAsync([sqlCmdFilePath, "-C", "-Q", "SHUTDOWN"]).ConfigureAwait(false);
-        Console.Write("Successfully shutdown database server");
+        Console.Write("Successfully cleanly shutdown database server");
 
         await _container.StopAsync();
         Console.Write("Successfully stopped SqlServer container");
 
         using var clientConfiguration = TestcontainersSettings.OS.DockerEndpointAuthConfig.GetDockerClientConfiguration(ResourceReaper.DefaultSessionId);
         using var client = clientConfiguration.CreateClient();
-
-        var containerId = _container.Id;
         var model = new Docker.DotNet.Models.CommitContainerChangesParameters
         {
-            ContainerID = containerId,
+            ContainerID = _container.Id,
             RepositoryName = $"{TemplateImageRepositoryNamePrefix}-{Guid.NewGuid()}",
             Tag = TemplateImageTag,
         };

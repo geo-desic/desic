@@ -1,4 +1,3 @@
-using Desic.Shared.Data;
 using Microsoft.Data.SqlClient;
 using System.Data.Common;
 
@@ -27,7 +26,7 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSql
         _connectionString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringApi) { InitialCatalog = _database.DatabaseName }.ConnectionString;
 
         using var connection = GetConnection();
-        if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database using the api connection string");
+        await connection.OpenAsync();
     }
 
     private async Task SetUserLogins()

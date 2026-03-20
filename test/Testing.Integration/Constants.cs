@@ -13,7 +13,7 @@ public static class Constants
 
     public const string DatabaseName = "Desic";
 
-    public const string DatabaseNotInitialized = "Database has not been initialized";
+    public const string TestsTempDirectoryName = "desic-tests";
 
     public const string TestEnvironmentName = "Test";
 }

@@ -1,7 +1,6 @@
 ﻿using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.Providers;
 using Desic.Infrastructure.Data.SqlServer;
-using Desic.Shared.Data;
 using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +34,7 @@ public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStr
 
     public ITestDatabase NewTestDatabase()
     {
-        if (string.IsNullOrEmpty(_databaseBackupFilePath)) throw new InvalidOperationException(Constants.DatabaseNotInitialized);
+        if (string.IsNullOrEmpty(_databaseBackupFilePath)) throw Exceptions.DatabaseNotInitialized();
         return new SeededAppDatabaseSqlServerLocal(templateDatabase: this);
     }
 
@@ -70,7 +69,7 @@ public sealed class SeededAppTemplateDatabaseSqlServerLocal(string connectionStr
         var hostConfiguration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
         _connectionStringApi = hostConfiguration.GetSqlServerConnectionString(ConnectionStringType.Api);
         using var connection = new SqlConnection(_connectionStringApi);
-        if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database using the api connection string");
+        await connection.OpenAsync();
         await connection.CloseAsync();
         Console.Write($"Successfully connected to database [{_databaseName}] as api user");
 

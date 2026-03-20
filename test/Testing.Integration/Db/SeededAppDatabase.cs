@@ -10,9 +10,9 @@ public sealed class SeededAppDatabase(SeededAppTemplateDatabaseBasedOnConfig tem
     private ITestDatabase? _database;
     private readonly SeededAppTemplateDatabaseBasedOnConfig _templateDatabase = templateDatabase ?? throw new ArgumentNullException(nameof(templateDatabase));
 
-    public DbConnection GetConnection() => _database?.GetConnection() ?? throw NewDatabaseNotInitializedException();
+    public DbConnection GetConnection() => _database?.GetConnection() ?? throw Exceptions.DatabaseNotInitialized();
 
-    public string GetConnectionString() => _database?.GetConnectionString() ?? throw NewDatabaseNotInitializedException();
+    public string GetConnectionString() => _database?.GetConnectionString() ?? throw Exceptions.DatabaseNotInitialized();
 
     public DbProvider DbProvider => _templateDatabase.DbProvider;
 
@@ -24,8 +24,6 @@ public sealed class SeededAppDatabase(SeededAppTemplateDatabaseBasedOnConfig tem
 
     public async ValueTask DisposeAsync()
     {
-        _database?.DisposeAsync().AsTask().Wait();
+        if (_database != null) await _database.DisposeAsync();
     }
-
-    private static InvalidOperationException NewDatabaseNotInitializedException() => new(Constants.DatabaseNotInitialized);
 }

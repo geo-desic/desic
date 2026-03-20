@@ -109,7 +109,7 @@ internal static class SqlServerOperations
         using var command = connection.CreateCommand();
         command.CommandText = $"SELECT containment FROM sys.databases WHERE name = '{databaseName}';";
         var result = await command.ExecuteScalarAsync();
-        if (result != null && result != DBNull.Value && Convert.ToInt64(result) == 1) // non-contained database
+        if (result != null && result != DBNull.Value && Convert.ToInt64(result) == 1)
         {
             return true;
         }
