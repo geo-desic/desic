@@ -3,12 +3,11 @@ using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
-public interface ITestDatabaseSqlite : ITestDatabase
+public interface IDatabaseSqlite : IDatabase
 {
     SqliteConnection GetSqliteConnection();
-    DbConnection ITestDatabase.GetConnection() => GetSqliteConnection();
+    DbConnection IDatabaseServer.GetConnection() => GetSqliteConnection();
     string DatabaseDirectoryPath { get; }
     string DatabaseFilePath { get; }
     string DatabaseFileName { get; }
-    string DatabaseName { get; }
 }

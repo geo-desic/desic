@@ -5,14 +5,15 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simpler IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSqlServerLocal templateDatabase) : ITestDatabase
+public sealed class SeededAppDatabaseSqlServerLocal(SeededAppDatabaseTemplateSqlServerLocal databaseTemplate) : IDatabase
 {
     private string? _connectionString;
-    private readonly EmptyDatabaseSqlServerLocal _database = new(connectionString: templateDatabase.ConnectionStringInitialization, contained: templateDatabase.IsContained,
-        databaseCreator: async (connectionString, databaseName, contained) => await SqlServerOperations.RestoreDatabase(connectionString: connectionString, databaseName: databaseName, backupFilePath: templateDatabase.BackupFilePath,
-            backupDatabaseName: templateDatabase.DatabaseName, backupFileList: templateDatabase.GetBackupFileList()));
-    private readonly SeededAppTemplateDatabaseSqlServerLocal _templateDatabase = templateDatabase ?? throw new ArgumentNullException(nameof(templateDatabase));
+    private readonly EmptyDatabaseSqlServerLocal _database = new(connectionString: databaseTemplate.ConnectionStringInitialization, contained: databaseTemplate.IsContained,
+        databaseCreator: async (connectionString, databaseName, contained) => await SqlServerOperations.RestoreDatabase(connectionString: connectionString, databaseName: databaseName, backupFilePath: databaseTemplate.BackupFilePath,
+            backupDatabaseName: databaseTemplate.DatabaseName, backupFileList: databaseTemplate.GetBackupFileList()));
+    private readonly SeededAppDatabaseTemplateSqlServerLocal _databaseTemplate = databaseTemplate ?? throw new ArgumentNullException(nameof(databaseTemplate));
 
+    public string DatabaseName => _database.DatabaseName;
     public DbConnection GetConnection() => new SqlConnection(_connectionString ?? throw Exceptions.DatabaseNotInitialized());
     public string GetConnectionString() => _connectionString ?? throw Exceptions.DatabaseNotInitialized();
 
@@ -23,7 +24,7 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSql
 
         await SetUserLogins();
 
-        _connectionString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringApi) { InitialCatalog = _database.DatabaseName }.ConnectionString;
+        _connectionString = new SqlConnectionStringBuilder(_databaseTemplate.ConnectionStringApi) { InitialCatalog = _database.DatabaseName }.ConnectionString;
 
         using var connection = GetConnection();
         await connection.OpenAsync();
@@ -31,11 +32,11 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppTemplateDatabaseSql
 
     private async Task SetUserLogins()
     {
-        if (_templateDatabase.IsContained) return;
-        var connectionsString = new SqlConnectionStringBuilder(_templateDatabase.ConnectionStringInitialization) { InitialCatalog = _database.DatabaseName }.ConnectionString;
+        if (_databaseTemplate.IsContained) return;
+        var connectionsString = new SqlConnectionStringBuilder(_databaseTemplate.ConnectionStringInitialization) { InitialCatalog = _database.DatabaseName }.ConnectionString;
         using var connection = new SqlConnection(connectionsString);
         await connection.OpenAsync();
-        foreach (var user in _templateDatabase.UsersOptions.Values)
+        foreach (var user in _databaseTemplate.UsersOptions.Values)
         {
             using var command = connection.CreateCommand();
             command.CommandText = $"ALTER USER [{user.Name}] WITH LOGIN = [{user.LoginName}];";

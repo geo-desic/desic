@@ -1,10 +1,9 @@
-﻿using Desic.Shared.Data;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
-public sealed class EmptyDatabaseSqlServerContainer(bool contained = true, string databaseName = Constants.DatabaseName, string image = Containers.DefaultImageSqlServer) : ITestDatabase
+public sealed class EmptyDatabaseSqlServerContainer(bool contained = true, string databaseName = Constants.DatabaseName, string image = Containers.DefaultImageSqlServer) : IDatabase
 {
     private string? _connectionString;
     private readonly SqlServerContainer _container = new(image);
@@ -27,7 +26,7 @@ public sealed class EmptyDatabaseSqlServerContainer(bool contained = true, strin
 
         _connectionString = new SqlConnectionStringBuilder(connectionStringContainer) { InitialCatalog = _databaseName }.ConnectionString;
         using var connection = GetConnection();
-        if (!await connection.TryOpenAsync()) throw new Exception($"Unable to connect to the empty container database [{_databaseName}]");
+        await connection.OpenAsync();
     }
 
     public async ValueTask DisposeAsync()

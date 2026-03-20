@@ -1,12 +1,11 @@
-﻿using Desic.Shared.Data;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simpler IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class EmptyDatabaseSqlServerLocal : ITestDatabase
+public sealed class EmptyDatabaseSqlServerLocal : IDatabase
 {
     private readonly string _connectionString;
     private readonly bool _contained;
@@ -36,7 +35,7 @@ public sealed class EmptyDatabaseSqlServerLocal : ITestDatabase
         Console.Write($"Successfully created database [{_databaseName}] with contained = {_contained}");
 
         using var connection = GetConnection();
-        if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database");
+        await connection.OpenAsync();
     }
 
     public async ValueTask DisposeAsync()

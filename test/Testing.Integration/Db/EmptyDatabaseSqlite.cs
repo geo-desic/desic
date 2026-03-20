@@ -1,9 +1,8 @@
-﻿using Desic.Shared.Data;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 
 namespace Desic.Testing.Integration.Db;
 
-public sealed class EmptyDatabaseSqlite : ITestDatabaseSqlite
+public sealed class EmptyDatabaseSqlite : IDatabaseSqlite
 {
     private string? _connectionString;
     private readonly string _databaseFilePath;
@@ -28,10 +27,11 @@ public sealed class EmptyDatabaseSqlite : ITestDatabaseSqlite
 
     public async ValueTask InitializeAsync()
     {
+        Directory.CreateDirectory(_databaseDirectoryPath);
         _connectionString = $"Data Source={_databaseFilePath};Pooling=False;"; // pooling is disabled to avoid issues with file locks when deleting the database file(s) after tests are done
 
         using var connection = GetSqliteConnection();
-        if (!await connection.TryOpenAsync()) throw new Exception("Unable to connect to the database"); // opening this connection should create the database file
+        await connection.OpenAsync();
     }
 
     public ValueTask DisposeAsync()

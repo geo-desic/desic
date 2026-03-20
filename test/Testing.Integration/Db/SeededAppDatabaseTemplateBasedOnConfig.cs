@@ -1,12 +1,12 @@
 ﻿namespace Desic.Testing.Integration.Db;
 
-public sealed class SeededAppTemplateDatabaseBasedOnConfig : ITemplateDatabase
+public sealed class SeededAppDatabaseTemplateBasedOnConfig : IDatabaseTemplate
 {
-    private ITemplateDatabase? _database;
+    private IDatabaseTemplate? _database;
     private readonly IntegrationTestsOptions? _options = TestConfiguration.Options;
 
     public DbProvider DbProvider => _options?.DbProvider == DbProvider.Sqlite ? DbProvider.Sqlite : DbProvider.SqlServer;
-    public ITestDatabase NewTestDatabase() => _database?.NewTestDatabase() ?? throw Exceptions.DatabaseNotInitialized();
+    public IDatabase NewDatabase() => _database?.NewDatabase() ?? throw Exceptions.DatabaseNotInitialized();
 
     public async ValueTask InitializeAsync()
     {
@@ -17,22 +17,22 @@ public sealed class SeededAppTemplateDatabaseBasedOnConfig : ITemplateDatabase
         if (DbProvider == DbProvider.Sqlite)
         {
             Console.WriteLine($"Using database: {DbProvider}");
-            _database = new SeededAppTemplateDatabaseSqlite(databaseDirectoryPath: tempDirectoryPath);
+            _database = new SeededAppDatabaseTemplateSqlite(databaseDirectoryPath: tempDirectoryPath);
         }
         else // sql server
         {
             if (_options?.DbProviders?.SqlServer?.UseContainer ?? false) // container
             {
-                var image = _options?.DbProviders?.SqlServer?.ContainerImage ?? throw new InvalidOperationException("Container image for sql server is not configured");
+                var image = _options?.DbProviders?.SqlServer?.ContainerImage ?? Containers.DefaultImageSqlServer;
                 Console.WriteLine($"Using database: {DbProvider} (container) {image}");
-                _database = new SeededAppTemplateDatabaseSqlServerContainer(image: image);
+                _database = new SeededAppDatabaseTemplateSqlServerContainer(image: image);
             }
             else // local
             {
                 var connectionStringInitialization = _options?.ConnectionStrings?.SqlServer ?? throw new InvalidOperationException("Connection string for database initialization could not be determined");
                 var databaseInitializerOptions = _options?.Databases?.Application?.SqlServer?.Initialization ?? throw new InvalidOperationException($"Database initializer options for {DbProvider} is not configured");
                 Console.WriteLine($"Using database: {DbProvider} (local)");
-                _database = new SeededAppTemplateDatabaseSqlServerLocal(connectionStringInitialization: connectionStringInitialization, backupDirectoryPath: tempDirectoryPath, options: databaseInitializerOptions);
+                _database = new SeededAppDatabaseTemplateSqlServerLocal(connectionStringInitialization: connectionStringInitialization, backupDirectoryPath: tempDirectoryPath, options: databaseInitializerOptions);
             }
         }
         await _database.InitializeAsync();

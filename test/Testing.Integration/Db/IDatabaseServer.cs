@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Desic.Testing.Integration.Db;
 
-public interface ITestDatabase : IAsyncLifetime
+public interface IDatabaseServer : IAsyncLifetime
 {
     DbConnection GetConnection();
     string GetConnectionString();
