@@ -1,5 +1,5 @@
 ﻿using Desic.Testing.Integration.Db;
-using Desic.Testing.Integration.WebApplication;
+using Desic.Testing.Integration.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Desic.Api.Tests.Functional;

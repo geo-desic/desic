@@ -1,5 +1,5 @@
-﻿using Desic.Testing.Integration;
-using Desic.Testing.Integration.Db;
+﻿using Desic.Testing.Integration.Db;
+using Desic.Testing.Integration.Hosting;
 using Microsoft.Extensions.Hosting;
 
 namespace Desic.Application.Tests.Integration;

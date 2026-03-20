@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Desic.Testing.Integration;
+namespace Desic.Testing.Integration.Hosting;
 
 public class TestHost(string connectionString, DbProvider dbProvider) : IDisposable, IAsyncDisposable
 {

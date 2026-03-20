@@ -1,12 +1,12 @@
 ﻿using Desic.Infrastructure.Data;
-using Desic.Infrastructure.Data.Sqlite;
-using Desic.Infrastructure.Data.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
 
-namespace Desic.Testing.Integration.WebApplication;
+namespace Desic.Testing.Integration.Hosting;
 
 public class TestWebApplicationFactory<TProgram>(string connectionString, DbProvider dbProvider) : WebApplicationFactory<TProgram> where TProgram : class
 {
@@ -28,14 +28,15 @@ public class TestWebApplicationFactory<TProgram>(string connectionString, DbProv
                 services.Remove(dbConnectionDescriptor);
             }
 
-            if (dbProvider == DbProvider.Sqlite)
+            services.AddDbContext<ApplicationDbContext>(options =>
             {
-                services.ConfigureApplicationDbContextForSqlite(connectionString: _connectionString, setMigrationsAssembly: false, useSeeding: false);
-            }
-            else // SqlServer
-            {
-                services.ConfigureApplicationDbContextForSqlServer(connectionString: _connectionString, setMigrationsAssembly: false, useSeeding: false);
-            }
+                _ = dbProvider switch
+                {
+                    DbProvider.Sqlite => options.UseSqlite(connectionString: _connectionString),
+                    DbProvider.SqlServer => options.UseSqlServer(connectionString: _connectionString),
+                    _ => throw new NotSupportedException($"Unsupported db provider: {dbProvider}"),
+                };
+            });
         });
     }
 }
