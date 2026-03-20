@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class UsersControllerTests(SeededAppDatabase testDatabase) : FunctionalTests(testDatabase), IClassFixture<SeededAppDatabase>
+public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDependencyTests(testDatabase), IClassFixture<SeededAppDatabase>
 {
     private readonly TimeSpan _acceptablePrecision = TimeSpan.FromSeconds(1);
 
@@ -19,6 +19,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : FunctionalTe
     public async Task Get_UserExists_Status200OkAndUserReturned()
     {
         // arrange
+        var expectedStatusCode = System.Net.HttpStatusCode.OK;
         var expected = TestUsers.User01Active.ToDto(); // exists in seeded data
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{expected.Id}");
 
@@ -26,7 +27,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : FunctionalTe
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request);
 
         // assert
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.StatusCode.Should().Be(expectedStatusCode);
         response.Content.Should().BeEquivalentTo(expected);
     }
 
@@ -34,6 +35,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : FunctionalTe
     public async Task Get_UserDoesNotExist_Status404NotFound()
     {
         // arrange
+        var expectedStatusCode = System.Net.HttpStatusCode.NotFound;
         var id = new Guid("A0000000-0000-0000-0000-000000000001"); // does not exist in seeded data
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{id}");
 
@@ -41,15 +43,16 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : FunctionalTe
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
 
         // assert
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
+        response.StatusCode.Should().Be(expectedStatusCode);
         response.Content.Should().NotBeNull();
-        response.Content.Status.Should().Be(404);
+        response.Content.Status.Should().Be((int)expectedStatusCode);
     }
 
     [Fact]
     public async Task Create_InvalidRequestUsernameExists_Status400()
     {
         // arrange
+        var expectedStatusCode = System.Net.HttpStatusCode.BadRequest;
         var user = new CreateUser
         {
             Username = TestUsers.User01Active.Username, // exists in seeded data
@@ -60,16 +63,17 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : FunctionalTe
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
 
         // assert
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
+        response.StatusCode.Should().Be(expectedStatusCode);
         response.Message.Headers.TryGetValues(Headers.Keys.EntityId, out _).Should().BeFalse();
         response.Content.Should().NotBeNull();
-        response.Content.Status.Should().Be(400);
+        response.Content.Status.Should().Be((int)expectedStatusCode);
     }
 
     [Fact]
     public async Task Create_ValidRequestNoPreferHeader_Status204WithEntityIdHeader()
     {
         // arrange
+        var expectedStatusCode = System.Net.HttpStatusCode.NoContent;
         var user = new CreateUser
         {
             Username = "username-does-not-exist-1",
@@ -80,7 +84,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : FunctionalTe
         var response = await HttpClient.SendAsyncAndReadResponseAsString(request);
 
         // assert
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+        response.StatusCode.Should().Be(expectedStatusCode);
         response.Message.Headers.TryGetValues(Headers.Keys.EntityId, out var values).Should().BeTrue();
         values.Should().HaveCount(1);
         Guid.TryParse(values.First(), out _).Should().BeTrue();
@@ -91,6 +95,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : FunctionalTe
     public async Task Create_ValidRequestWithPreferRepresentationHeader_Status201AndUserReturned()
     {
         // arrange
+        var expectedStatusCode = System.Net.HttpStatusCode.Created;
         var user = new CreateUser
         {
             Username = "username-does-not-exist-2",
@@ -102,7 +107,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : FunctionalTe
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request);
 
         // assert
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
+        response.StatusCode.Should().Be(expectedStatusCode);
         response.Message.Headers.TryGetValues(Headers.Keys.EntityId, out var values).Should().BeTrue();
         values.Should().HaveCount(1);
         Guid.TryParse(values.First(), out _).Should().BeTrue();

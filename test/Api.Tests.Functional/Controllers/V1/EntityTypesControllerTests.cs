@@ -6,12 +6,13 @@ using Desic.Testing.Integration.Http;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : FunctionalTests(testDatabase), IClassFixture<SeededAppDatabase>
+public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : TestWebAppDependencyTests(testDatabase), IClassFixture<SeededAppDatabase>
 {
     [Fact]
     public async Task List_All_Status200OkAndEntitiesReturned()
     {
         // arrange
+        var expectedStatusCode = System.Net.HttpStatusCode.OK;
         var expected = ExpectedResponseContent(); // all entity types should exist by db seeding
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/entitytypes");
 
@@ -19,7 +20,7 @@ public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : Functi
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<DeserializableListResult<EntityType>>(request);
 
         // assert
-        response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+        response.StatusCode.Should().Be(expectedStatusCode);
         response.Content.Should().NotBeNull();
         response.Content.Should().BeEquivalentTo(expected, x => x.WithStrictOrdering());
     }
