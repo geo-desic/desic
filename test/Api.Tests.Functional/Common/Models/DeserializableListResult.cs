@@ -1,6 +1,6 @@
-﻿namespace Desic.Api.Tests.Functional.Common;
+﻿namespace Desic.Api.Tests.Functional.Common.Models;
 
-public class DeserializablePaginatedList<T>
+public class DeserializableListResult<T>
 {
     public int StartIndex { get; set; }
     public int? TotalCount { get; set; }

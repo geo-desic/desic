@@ -1,5 +1,5 @@
 ﻿using AwesomeAssertions;
-using Desic.Api.Tests.Functional.Common;
+using Desic.Api.Tests.Functional.Common.Models;
 using Desic.Application.EntityTypes;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Http;
@@ -16,7 +16,7 @@ public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : Functi
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/entitytypes");
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsJson<DeserializablePaginatedList<EntityType>>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<DeserializableListResult<EntityType>>(request);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -24,7 +24,7 @@ public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : Functi
         response.Content.Should().BeEquivalentTo(expected, x => x.WithStrictOrdering());
     }
 
-    private static DeserializablePaginatedList<EntityType> ExpectedResponseContent()
+    private static DeserializableListResult<EntityType> ExpectedResponseContent()
     {
         List<EntityType> items = [.. Domain.EntityTypes.SystemEntityTypes.AllAsEntities().Select(x => new EntityType { Key = x.Key, Name = x.Name }).OrderBy(x => x.Name)];
         return new()

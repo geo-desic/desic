@@ -41,7 +41,7 @@ builder.Services
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
-builder.Services.AddDbContext<ApplicationDbContext>((Action<DbContextOptionsBuilder>?)(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     _ = dbProvider switch
     {
@@ -53,7 +53,7 @@ builder.Services.AddDbContext<ApplicationDbContext>((Action<DbContextOptionsBuil
     {
         options.EnableSensitiveDataLogging();
     }
-}));
+});
 
 builder.Services.AddHostedService<StartupBackgroundService>();
 builder.Services.AddSingleton<StartupHealthCheck>();
