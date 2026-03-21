@@ -53,7 +53,7 @@ In [IApplicationDbContext.cs](src/Application/Common/Interfaces/IApplicationDbCo
 ```
 
 ### Log Events
-In [LogEvents.cs](src/Application/Common/LogEvents.cs) the section of the file with all of the entity regions add append a new region for the entity specifying at least the entity's constant integer start value which would reference the start value of the directly prior entity.
+In [LogEvents.cs](src/Application/Common/LogEvents.cs) in the section of the file with all of the entity regions add append a new region for the entity specifying at least the entity's constant integer start value which would reference the start value of the directly prior entity.
 
 ```c#
     #region Persons
@@ -131,4 +131,4 @@ This should make changes in the `Migrations` folder/namespace inside both of the
 Execute all tests to make sure there aren't any outstanding issues. Can also manually execute the DbUpdater application against a local database server to create the database and view the table for the entity that was created.
 
 ## Entity Use Cases
-In the Application project can add use cases for the entity, e.g. `CreatePerson`, `GetPerson`, `ListPersons` and any related api endpoints in the Api project. Make sure any such code added is covered under all types of testing (e.g. Unit, Integration, Functional).
+In the Application project can add use cases for the entity, e.g. `CreatePerson`, `GetPerson`, `ListPersons` and any related api endpoints in the Api project. Make sure any such code added is covered under all applicable types of testing (e.g. Unit, Integration, Functional).
