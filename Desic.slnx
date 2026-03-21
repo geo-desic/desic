@@ -2,6 +2,7 @@
   <Folder Name="/solution-items/">
     <File Path=".editorconfig" />
     <File Path="code-coverage.runsettings" />
+    <File Path="migrations.md" />
     <File Path="new-entity.md" />
     <File Path="README.md" />
   </Folder>
