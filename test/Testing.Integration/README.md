@@ -32,7 +32,7 @@ With the above configuration setting a local Sqlite database is used. Each test 
 - `DbProvider == SqlServer`
 - `DbProviders:SqlServer:UseContainer == false`
 
-With the above configuration settings a locally running sql server is used. Near the end of the template creation process its database is backed up. Then each test database is restored using this backup. The template and test databases have a guid component as part of their name to prevent database name conflicts and allow multiple test databases to be used in parallel. The template backup (\*.bak) are stored locally in a temporary directory and cleaned up at the end of the test run.
+With the above configuration settings a locally running sql server is used. Near the end of the template creation process its database is backed up. Then each test database is restored using this backup. The template and test databases have a guid component as part of their name to prevent database name conflicts and allow multiple test databases to be used in parallel. The template backup (\*.bak) is stored locally in a temporary directory and deleted at the end of the test run. The database template and any test databases are dropped at the end of the test run which should also remove their underlying database files (e.g. *.mdf, *.ldf).
 
 ### SqlServer - Container
 - `DbProvider == SqlServer`
