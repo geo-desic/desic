@@ -17,7 +17,7 @@
   - [Application/EntityTypes](src/Application/EntityTypes)
   - [Infrastructure.Data/EntityTypes](src/Infrastructure/Data/EntityTypes)
   - [Api.Controllers.V1.EntityTypesController.cs](src/Api/Controllers/V1/EntityTypesController.cs)
-    - Could be modified to a [minimal api](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-10.0) or [fast endpoint](https://fast-endpoints.com) implementation to segregate each action
+    - Could be modified to a [minimal api](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-10.0) or [fast endpoint](https://fast-endpoints.com) implementation if segregating each action is desired
 - No sensitive data checked into source control
   - [user secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) are used for development purposes which would be handled by desired secret manager for other environments, e.g. azure keyvault
   - see the [development guide](development.md) for more information
