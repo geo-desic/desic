@@ -32,6 +32,7 @@
     <Project Path="test/Domain.Tests.Unit/Domain.Tests.Unit.csproj" Id="c346b4c4-4fd3-45dd-934b-16acbe117e6f" />
     <Project Path="test/Infrastructure.Data.Sqlite.Tests.Integration/Infrastructure.Data.Sqlite.Tests.Integration.csproj" />
     <Project Path="test/Infrastructure.Data.Sqlite.Tests.Unit/Infrastructure.Data.Sqlite.Tests.Unit.csproj" />
+    <Project Path="test/Infrastructure.Data.SqlServer.Tests.Integration/Infrastructure.Data.SqlServer.Tests.Integration.csproj" />
     <Project Path="test/Infrastructure.Data.SqlServer.Tests.Unit/Infrastructure.Data.SqlServer.Tests.Unit.csproj" />
     <Project Path="test/Infrastructure.Tests.Unit/Infrastructure.Tests.Unit.csproj" />
     <Project Path="test/MediatR.Benchmarks/MediatR.Benchmarks.csproj" />

@@ -1,12 +1,11 @@
 ﻿using DotNet.Testcontainers.Builders;
 using Microsoft.Data.SqlClient;
-using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class SeededAppDatabaseSqlServerContainer(SeededAppDatabaseTemplateSqlServerContainer databaseTemplate) : IDatabase
+public sealed class SeededAppDatabaseSqlServerContainer(SeededAppDatabaseTemplateSqlServerContainer databaseTemplate) : IDatabaseSqlServer
 {
     private string? _connectionString;
     // waiting for both log messages seems to be important to ensure not only that the server is online and accepting requests, but the desired database is ready
@@ -21,7 +20,7 @@ public sealed class SeededAppDatabaseSqlServerContainer(SeededAppDatabaseTemplat
     private readonly SeededAppDatabaseTemplateSqlServerContainer _databaseTemplate = databaseTemplate ?? throw new ArgumentNullException(nameof(databaseTemplate));
 
     public string DatabaseName => _databaseTemplate.DatabaseName;
-    public DbConnection GetConnection() => new SqlConnection(_connectionString ?? throw Exceptions.DatabaseNotInitialized());
+    public SqlConnection GetSqlServerConnection() => new(_connectionString ?? throw Exceptions.DatabaseNotInitialized());
     public string GetConnectionString() => _connectionString ?? throw Exceptions.DatabaseNotInitialized();
 
     public async ValueTask InitializeAsync()
@@ -31,7 +30,7 @@ public sealed class SeededAppDatabaseSqlServerContainer(SeededAppDatabaseTemplat
         var dataSource = new SqlConnectionStringBuilder(_container.GetConnectionString()).DataSource;
         _connectionString = new SqlConnectionStringBuilder(_databaseTemplate.ConnectionStringApi) { DataSource = dataSource }.ConnectionString;
 
-        using var connection = GetConnection();
+        using var connection = GetSqlServerConnection();
         await connection.OpenAsync();
     }
 

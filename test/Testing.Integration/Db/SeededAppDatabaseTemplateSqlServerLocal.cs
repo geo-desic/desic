@@ -6,13 +6,12 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class SeededAppDatabaseTemplateSqlServerLocal(string connectionStringInitialization, string backupDirectoryPath, InitializeApplicationDatabaseOptions options) : IDatabaseTemplate, IDatabase
+public sealed class SeededAppDatabaseTemplateSqlServerLocal(string connectionStringInitialization, string backupDirectoryPath, InitializeApplicationDatabaseOptions options) : IDatabaseTemplate, IDatabaseSqlServer
 {
     private List<SqlServerDatabaseFile>? _backupFileList;
     private string? _connectionStringApi;
@@ -30,7 +29,7 @@ public sealed class SeededAppDatabaseTemplateSqlServerLocal(string connectionStr
     public string ConnectionStringInitialization => _connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized();
     public string ConnectionStringMigrations => _connectionStringMigrations ?? throw Exceptions.DatabaseNotInitialized();
     public string DatabaseName => _databaseName;
-    public DbConnection GetConnection() => new SqlConnection(_connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized());
+    public SqlConnection GetSqlServerConnection() => new(_connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized());
     public string GetConnectionString() => _connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized();
     public bool IsContained => _contained ?? throw Exceptions.DatabaseNotInitialized();
     public InitializeApplicationDatabaseUsersOptions UsersOptions => _options.Users ?? throw Exceptions.DatabaseNotInitialized();

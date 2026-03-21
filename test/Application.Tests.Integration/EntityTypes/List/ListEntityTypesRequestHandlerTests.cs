@@ -12,7 +12,7 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
     public async Task ListEntityTypes_ValidRequestWithCount1_OneEntityTypeReturned()
     {
         // arrange
-        var mediator = Host.Services.GetRequiredService<IMediator>();
+        var mediator = ServiceProvider.GetRequiredService<IMediator>();
         var request = new ListEntityTypesRequest { Count = 1, StartIndex = 0 };
 
         // act

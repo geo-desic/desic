@@ -1,11 +1,10 @@
 using Microsoft.Data.SqlClient;
-using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simpler IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class SeededAppDatabaseSqlServerLocal(SeededAppDatabaseTemplateSqlServerLocal databaseTemplate) : IDatabase
+public sealed class SeededAppDatabaseSqlServerLocal(SeededAppDatabaseTemplateSqlServerLocal databaseTemplate) : IDatabaseSqlServer
 {
     private string? _connectionString;
     private readonly EmptyDatabaseSqlServerLocal _database = new(connectionString: databaseTemplate.ConnectionStringInitialization, contained: databaseTemplate.IsContained,
@@ -14,7 +13,7 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppDatabaseTemplateSql
     private readonly SeededAppDatabaseTemplateSqlServerLocal _databaseTemplate = databaseTemplate ?? throw new ArgumentNullException(nameof(databaseTemplate));
 
     public string DatabaseName => _database.DatabaseName;
-    public DbConnection GetConnection() => new SqlConnection(_connectionString ?? throw Exceptions.DatabaseNotInitialized());
+    public SqlConnection GetSqlServerConnection() => new(_connectionString ?? throw Exceptions.DatabaseNotInitialized());
     public string GetConnectionString() => _connectionString ?? throw Exceptions.DatabaseNotInitialized();
 
     public async ValueTask InitializeAsync()
@@ -26,7 +25,7 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppDatabaseTemplateSql
 
         _connectionString = new SqlConnectionStringBuilder(_databaseTemplate.ConnectionStringApi) { InitialCatalog = _database.DatabaseName }.ConnectionString;
 
-        using var connection = GetConnection();
+        using var connection = GetSqlServerConnection();
         await connection.OpenAsync();
     }
 

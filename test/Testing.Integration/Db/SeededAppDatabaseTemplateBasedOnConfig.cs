@@ -29,7 +29,7 @@ public sealed class SeededAppDatabaseTemplateBasedOnConfig : IDatabaseTemplate
             }
             else // local
             {
-                var connectionStringInitialization = _options?.ConnectionStrings?.SqlServer ?? throw new InvalidOperationException("Connection string for database initialization could not be determined");
+                var connectionStringInitialization = _options?.ConnectionStrings?.SqlServer ?? throw new InvalidOperationException($"Connection string for local {DbProvider} could not be determined");
                 var databaseInitializerOptions = _options?.Databases?.Application?.SqlServer?.Initialization ?? throw new InvalidOperationException($"Database initializer options for {DbProvider} is not configured");
                 Console.WriteLine($"Using database: {DbProvider} (local)");
                 _database = new SeededAppDatabaseTemplateSqlServerLocal(connectionStringInitialization: connectionStringInitialization, backupDirectoryPath: tempDirectoryPath, options: databaseInitializerOptions);

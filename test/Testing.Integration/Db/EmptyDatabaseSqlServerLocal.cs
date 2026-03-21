@@ -1,11 +1,10 @@
 ﻿using Microsoft.Data.SqlClient;
-using System.Data.Common;
 
 namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simpler IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class EmptyDatabaseSqlServerLocal : IDatabase
+public sealed class EmptyDatabaseSqlServerLocal : IDatabaseSqlServer
 {
     private readonly string _connectionString;
     private readonly bool _contained;
@@ -22,7 +21,7 @@ public sealed class EmptyDatabaseSqlServerLocal : IDatabase
         _connectionStringDatabase = new SqlConnectionStringBuilder(_connectionString) { InitialCatalog = _databaseName }.ConnectionString;
     }
 
-    public DbConnection GetConnection() => new SqlConnection(_connectionStringDatabase ?? throw Exceptions.DatabaseNotInitialized());
+    public SqlConnection GetSqlServerConnection() => new(_connectionStringDatabase ?? throw Exceptions.DatabaseNotInitialized());
     public string GetConnectionString() => _connectionStringDatabase ?? throw Exceptions.DatabaseNotInitialized();
     public string GetConnectionStringMaster() => _connectionString;
     public string DatabaseName => _databaseName;
@@ -34,7 +33,7 @@ public sealed class EmptyDatabaseSqlServerLocal : IDatabase
         else await SqlServerOperations.CreateDatabase(connectionString: _connectionString, contained: _contained, databaseName: _databaseName);
         Console.Write($"Successfully created database [{_databaseName}] with contained = {_contained}");
 
-        using var connection = GetConnection();
+        using var connection = GetSqlServerConnection();
         await connection.OpenAsync();
     }
 

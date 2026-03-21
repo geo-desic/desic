@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Infrastructure.Data.Sqlite.Tests.Integration;
 
-public class MigrationsTests
+public class MigrationAndSeedingTests
 {
     [Fact]
     public async Task MigrateAsync_FromApplicationDbContextFactory_MigratesAndSeedsDatabase()

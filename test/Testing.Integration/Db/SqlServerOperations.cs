@@ -33,6 +33,26 @@ internal static class SqlServerOperations
         return await connection.FileListFromBackup(databaseBackupFilePath: databaseBackupFilePath);
     }
 
+    public static async Task<bool> ContainedDatabaseAuthenticationEnabled(this SqlConnection connection)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT [value_in_use] FROM sys.configurations WHERE name = 'contained database authentication';";
+        var result = await command.ExecuteScalarAsync();
+        if (result != null && result != DBNull.Value && Convert.ToInt64(result) == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static async Task EnableContainedDatabaseAuthentication(this SqlConnection connection)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = "EXEC sp_configure 'contained database authentication', 1;";
+        await command.ExecuteNonQueryAsync();
+        await connection.Reconfigure();
+    }
+
     public static async Task<List<SqlServerDatabaseFile>> FileListFromBackup(this SqlConnection connection, string databaseBackupFilePath)
     {
         var result = new List<SqlServerDatabaseFile>();
@@ -60,6 +80,7 @@ internal static class SqlServerOperations
 
     public static async Task CreateDatabase(this SqlConnection connection, bool contained, string databaseName)
     {
+        if (!await connection.ContainedDatabaseAuthenticationEnabled()) await connection.EnableContainedDatabaseAuthentication();
         var containmentType = contained ? "PARTIAL" : "NONE";
         using var command = connection.CreateCommand();
         command.CommandText = $"CREATE DATABASE [{databaseName}] CONTAINMENT = {containmentType};";
@@ -114,6 +135,13 @@ internal static class SqlServerOperations
             return true;
         }
         return false;
+    }
+
+    public static async Task Reconfigure(this SqlConnection connection)
+    {
+        using var command = connection.CreateCommand();
+        command.CommandText = "RECONFIGURE;";
+        await command.ExecuteNonQueryAsync();
     }
 
     private static string? DbValueToString(object? value)

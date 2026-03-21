@@ -8,14 +8,13 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data.Common;
 using Testcontainers.MsSql;
 
 namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-public sealed class SeededAppDatabaseTemplateSqlServerContainer(string image = Containers.DefaultImageSqlServer) : IDatabaseTemplate, IDatabase
+public sealed class SeededAppDatabaseTemplateSqlServerContainer(string image = Containers.DefaultImageSqlServer) : IDatabaseTemplate, IDatabaseSqlServer
 {
     private string? _connectionStringApi;
     private string? _connectionStringInitialization;
@@ -30,7 +29,7 @@ public sealed class SeededAppDatabaseTemplateSqlServerContainer(string image = C
     public string ConnectionStringInitialization => _connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized();
     public string ConnectionStringMigrations => _connectionStringMigrations ?? throw Exceptions.DatabaseNotInitialized();
     public string DatabaseName => _databaaseName;
-    public DbConnection GetConnection() => new SqlConnection(_connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized());
+    public SqlConnection GetSqlServerConnection() => new(_connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized());
     public string GetConnectionString() => _connectionStringInitialization ?? throw Exceptions.DatabaseNotInitialized();
     public string TemplateImage => _templateImage ?? throw Exceptions.DatabaseNotInitialized();
 
