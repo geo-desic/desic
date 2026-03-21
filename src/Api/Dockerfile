@@ -16,10 +16,12 @@ WORKDIR /src
 COPY ["src/Api/Api.csproj", "src/Api/"]
 COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
-COPY ["src/Desic/Desic.csproj", "src/Desic/"]
-COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
 COPY ["src/MediatR.Contracts/MediatR.Contracts.csproj", "src/MediatR.Contracts/"]
+COPY ["src/Shared/Shared.csproj", "src/Shared/"]
+COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
+COPY ["src/Infrastructure.Data.Providers/Infrastructure.Data.Providers.csproj", "src/Infrastructure.Data.Providers/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
+COPY ["src/ServiceDefaults/ServiceDefaults.csproj", "src/ServiceDefaults/"]
 RUN dotnet restore "./src/Api/Api.csproj"
 COPY . .
 WORKDIR "/src/src/Api"

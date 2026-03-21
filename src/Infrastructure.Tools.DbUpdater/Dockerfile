@@ -11,12 +11,14 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Infrastructure.Tools.DbUpdater/Infrastructure.Tools.DbUpdater.csproj", "src/Infrastructure.Tools.DbUpdater/"]
+COPY ["src/Infrastructure.Data.Providers/Infrastructure.Data.Providers.csproj", "src/Infrastructure.Data.Providers/"]
 COPY ["src/Infrastructure.Data.Sqlite/Infrastructure.Data.Sqlite.csproj", "src/Infrastructure.Data.Sqlite/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
-COPY ["src/Desic/Desic.csproj", "src/Desic/"]
-COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
-COPY ["src/MediatR.Contracts/MediatR.Contracts.csproj", "src/MediatR.Contracts/"]
+COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
+COPY ["src/MediatR.Contracts/MediatR.Contracts.csproj", "src/MediatR.Contracts/"]
+COPY ["src/Shared/Shared.csproj", "src/Shared/"]
+COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
 COPY ["src/Infrastructure.Data.SqlServer/Infrastructure.Data.SqlServer.csproj", "src/Infrastructure.Data.SqlServer/"]
 RUN dotnet restore "./src/Infrastructure.Tools.DbUpdater/Infrastructure.Tools.DbUpdater.csproj"
 COPY . .
@@ -33,5 +35,4 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Desic.Infrastructure.Tools.DbUpdater.dll"]
-
 CMD ["--provider", "SqlServer"]
