@@ -1,6 +1,6 @@
 # Integration Testing Library
 
-All integration tests require a database provider. The provider is set using the configuration element `DbProvider` which currently supports the following values.
+Most integration tests require a database provider. The provider is set using the configuration element `DbProvider` which currently supports the following values.
 - `Sqlite`
 - `SqlServer`
 
@@ -15,13 +15,13 @@ Locally running SQL Server such as [LocalDB](https://learn.microsoft.com/en-us/s
 - Used when `DbProviders:SqlServer:UseContainer == false`
 - `ConnectionStrings.SqlServer` must be set properly in `appsettings.Test.json` to connect to the local server's master database
 
-## Test Database
+## Seeded Test Databases
 At the very beginning of the test run a database "template" is created (using an [xunit assembly fixture](https://xunit.net/docs/shared-context#assembly-fixture)) which performs the following steps for the application database:
 1. initialization (if applicable)
 2. migrations
 3. seeding
 
-Then this template is used to create any databases used by tests. Using this flow the steps above are performed only once per test run. The exact method for creating the test database from the template depends on the configuration.
+Then this template is used to create any seeded databases used by tests. Using this flow the steps above are performed only once per test run which should help performance-wise when the number of tests grow. Also this mimics production behavior, including certain tests authenticating to the database as users with restricted access, which should help identify any potential issues. The exact method for creating the test database from the template depends on the configuration.
 
 ### Sqlite
 - `DbProvider == Sqlite`
