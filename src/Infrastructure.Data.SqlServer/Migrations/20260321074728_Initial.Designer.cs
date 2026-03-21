@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Desic.Infrastructure.Data.SqlServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260228183451_Initial")]
+    [Migration("20260321074728_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("app")
-                .HasAnnotation("ProductVersion", "10.0.3")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -35,12 +35,14 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(4)
+                        .HasColumnType("nvarchar(4)")
                         .HasColumnOrder(1);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnOrder(2);
 
                     b.HasKey("Id");
@@ -63,12 +65,14 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
 
                     b.Property<string>("Alpha2")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)")
                         .HasColumnOrder(13);
 
                     b.Property<string>("Alpha3")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)")
                         .HasColumnOrder(14);
 
                     b.Property<Guid>("CreatedById")
@@ -161,6 +165,84 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                     b.ToTable("Iso3166Countries", "ref");
                 });
 
+            modelBuilder.Entity("Desic.Domain.Labels.Label", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0);
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(1);
+
+                    b.Property<Guid>("CreatedByTypeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(2);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(3)
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid?>("DeletedById")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(8);
+
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(9);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(10);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit")
+                        .HasColumnOrder(7);
+
+                    b.Property<Guid>("ModifiedById")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(4);
+
+                    b.Property<Guid>("ModifiedByTypeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(5);
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(6)
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
+                        .HasColumnOrder(11);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("DeletedByTypeId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("Labels", "app");
+                });
+
             modelBuilder.Entity("Desic.Domain.Tags.Tag", b =>
                 {
                     b.Property<Guid>("Id")
@@ -214,8 +296,14 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
                         .HasColumnOrder(11);
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
+                        .HasColumnOrder(12);
 
                     b.HasKey("Id");
 
@@ -234,6 +322,8 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                     b.HasIndex("ModifiedByTypeId");
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("Value");
 
                     b.ToTable("Tags", "app");
                 });
@@ -324,6 +414,26 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                 });
 
             modelBuilder.Entity("Desic.Domain.Iso3166Countries.Iso3166Country", b =>
+                {
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("DeletedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("ModifiedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Desic.Domain.Labels.Label", b =>
                 {
                     b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
                         .WithMany()

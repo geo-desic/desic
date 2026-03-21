@@ -1,7 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common;
 using Desic.Domain.EntityTypes;
-using Desic.Domain.Tags;
+using Desic.Domain.Labels;
 using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.EntityTypes;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +13,7 @@ namespace Desic.Infrastructure.Tests.Unit.Data.EntityTypes;
 public class SeedEntityTypesRequestHandlerTests : ApplicationDbContextImSqliteDependencyTests
 {
     private readonly FakeLogger<SeedEntityTypesRequestHandler> _logger = new();
-    private readonly Tag _by = SystemTags.System.ToEntity();
+    private readonly Label _by = SystemLabels.System.ToEntity();
     private readonly DbSet<EntityType> _dbSet;
     private readonly EntityType _seededEntity = SystemEntityTypes.Unspecified.ToEntity();
 

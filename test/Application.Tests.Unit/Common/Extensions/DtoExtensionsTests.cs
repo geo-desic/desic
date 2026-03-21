@@ -3,7 +3,7 @@ using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Interfaces;
 using Desic.Application.Common.Models;
 using Desic.Domain.Common.Entities;
-using Desic.Domain.Tags;
+using Desic.Domain.Labels;
 using Desic.Domain.Users;
 using Desic.Shared.Extensions;
 
@@ -11,6 +11,7 @@ namespace Desic.Application.Tests.Unit.Common.Extensions;
 
 public class DtoExtensionsTests
 {
+    private readonly IReadOnlyMinimalEntity _by = SystemLabels.System;
     private const string Unchanged = nameof(Unchanged);
 
     public class DtoExtensionsTests001 : DtoExtensionsTests
@@ -19,7 +20,7 @@ public class DtoExtensionsTests
         public void MapCreated_SpecifiedModels_PerformsExpectedMapping()
         {
             // arrange
-            var createdBy = SystemTags.System;
+            var createdBy = _by;
             var item = new TestCreatableDto();
             var entity = new TestCreatableEntity()
             {
@@ -46,7 +47,7 @@ public class DtoExtensionsTests
         public void MapModified_SpecifiedModels_PerformsExpectedMapping()
         {
             // arrange
-            var modifiedBy = SystemTags.System;
+            var modifiedBy = _by;
             var item = new TestModifiableDto();
             var entity = new TestModifiableEntity()
             {
@@ -73,7 +74,7 @@ public class DtoExtensionsTests
         public void MapDeleted_SpecifiedModels_PerformsExpectedMapping()
         {
             // arrange
-            var deletedBy = SystemTags.System;
+            var deletedBy = _by;
             var item = new TestSoftDeletableDto();
             var entity = new TestSoftDeletableEntity()
             {
@@ -100,7 +101,7 @@ public class DtoExtensionsTests
         public void MapCreatedModified_SpecifiedModels_PerformsExpectedMapping()
         {
             // arrange
-            var createdBy = SystemTags.System;
+            var createdBy = _by;
             var modifiedBy = new User { Username = "user-1" };
             var item = new TestModifiableDto();
             var entity = new TestModifiableEntity()
@@ -135,7 +136,7 @@ public class DtoExtensionsTests
         public void MapCreatedModifiedDeleted_SpecifiedModels_PerformsExpectedMapping()
         {
             // arrange
-            var createdBy = SystemTags.System;
+            var createdBy = _by;
             var modifiedBy = new User { Id = 1.ToGuid(), Username = "user-1" };
             var deletedBy = new User { Id = 2.ToGuid(), Username = "user-2" };
             var item = new TestSoftDeletableDto();

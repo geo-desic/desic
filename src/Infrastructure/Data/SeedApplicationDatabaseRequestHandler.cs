@@ -1,8 +1,8 @@
 ﻿using Desic.Domain.Common.Entities;
-using Desic.Domain.Tags;
+using Desic.Domain.Labels;
 using Desic.Infrastructure.Data.EntityTypes;
 using Desic.Infrastructure.Data.Iso3166Countries;
-using Desic.Infrastructure.Data.Tags;
+using Desic.Infrastructure.Data.Labels;
 using Desic.Infrastructure.Data.Test.Users;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -35,9 +35,9 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
 
         // ordering is important due to potential entity dependencies
         await SeedEntityTypes(options: options.EntityTypes, cancellationToken: cancellationToken);
-        await SeedTags(options: options.Tags, cancellationToken: cancellationToken);
+        await SeedLabels(options: options.Labels, cancellationToken: cancellationToken);
 
-        // entity types and tags must be seeded before this by object can be created due to foriegn key and dependency requirements
+        // entity types and labels must be seeded before this by object can be created due to foriegn key and dependency requirements
         var by = await CreateBy(cancellationToken: cancellationToken);
 
         await SeedIso3166Countries(options: options.Iso3166Countries, by: by, cancellationToken: cancellationToken);
@@ -48,16 +48,16 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
 
     private async Task<IReadOnlyMinimalEntity> CreateBy(CancellationToken cancellationToken)
     {
-        var nowTagOn = DateTime.UtcNow;
-        var by = new Tag
+        var now = DateTime.UtcNow;
+        var by = new Label
         {
             Id = Guid.CreateVersion7(),
-            Name = $"Process-SeedApplicationDatabase-{nowTagOn:yyyyMMddHHmmss}",
+            Name = $"Process-SeedApplicationDatabase-{now:yyyyMMddHHmmss}",
         };
-        by.SetCreatedAndModifiedBy(by: SystemTags.System, on: nowTagOn);
+        by.SetCreatedAndModifiedBy(by: SystemLabels.System, on: now);
 
-        _logger.LogDebug("Creating tag {TagName}", by.Name);
-        _context.Tags.Add(by);
+        _logger.LogDebug("Creating label {LabelName}", by.Name);
+        _context.Labels.Add(by);
         await _context.SaveChangesAsync(cancellationToken);
         return by;
     }
@@ -72,23 +72,23 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
 
         var request = new SeedEntityTypesRequest
         {
-            By = SystemTags.System, // unused
+            By = SystemLabels.System, // unused
             Method = options?.Method ?? DefaultSeedingMethod,
         };
         await _mediator.Send(request, cancellationToken);
     }
 
-    private async Task SeedTags(SeedApplicationDatabaseTagsOptions? options, CancellationToken cancellationToken)
+    private async Task SeedLabels(SeedApplicationDatabaseLabelsOptions? options, CancellationToken cancellationToken)
     {
         if (!(options?.Enabled ?? true))
         {
-            _logger.LogDebug("Seeding {TableName} is not enabled", nameof(_context.Tags));
+            _logger.LogDebug("Seeding {TableName} is not enabled", nameof(_context.Labels));
             return;
         }
 
-        var request = new SeedTagsRequest
+        var request = new SeedLabelsRequest
         {
-            By = SystemTags.System,
+            By = SystemLabels.System,
             Method = options?.Method ?? DefaultSeedingMethod,
         };
         await _mediator.Send(request, cancellationToken);

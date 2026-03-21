@@ -1,5 +1,5 @@
 ﻿using Desic.Domain.Common.Entities;
-using Desic.Domain.Tags;
+using Desic.Domain.Labels;
 using Desic.Shared.Extensions;
 using System.Runtime.CompilerServices;
 
@@ -64,7 +64,7 @@ public static class TestUsers
     {
         createdOn ??= DefaultOn;
         modifiedOn ??= DefaultOn;
-        by ??= SystemTags.System;
+        by ??= SystemLabels.System;
         return new User
         {
             Id = User.ClassEntityType.Id.ToIntBasedGuid(sequentialId),

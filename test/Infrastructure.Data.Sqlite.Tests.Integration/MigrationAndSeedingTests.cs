@@ -22,7 +22,7 @@ public class MigrationAndSeedingTests
         // assert
         (await context.EntityTypes.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().BeTrue();
         (await context.Iso3166Countries.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().BeTrue();
-        (await context.Tags.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().BeTrue();
+        (await context.Labels.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().BeTrue();
         (await context.Users.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().BeTrue();
     }
 
@@ -41,7 +41,7 @@ public class MigrationAndSeedingTests
         // assert
         (await context.EntityTypes.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().BeFalse();
         (await context.Iso3166Countries.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().BeFalse();
-        (await context.Tags.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().BeFalse();
+        (await context.Labels.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().BeFalse();
         (await context.Users.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().BeFalse();
     }
 }

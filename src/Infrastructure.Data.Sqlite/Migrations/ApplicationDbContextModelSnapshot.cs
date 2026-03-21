@@ -17,7 +17,7 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("app")
-                .HasAnnotation("ProductVersion", "10.0.3");
+                .HasAnnotation("ProductVersion", "10.0.5");
 
             modelBuilder.Entity("Desic.Domain.EntityTypes.EntityType", b =>
                 {
@@ -28,11 +28,13 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.Property<string>("Key")
                         .IsRequired()
+                        .HasMaxLength(4)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(2);
 
@@ -56,11 +58,13 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.Property<string>("Alpha2")
                         .IsRequired()
+                        .HasMaxLength(2)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(13);
 
                     b.Property<string>("Alpha3")
                         .IsRequired()
+                        .HasMaxLength(3)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(14);
 
@@ -154,6 +158,84 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                     b.ToTable("Iso3166Countries", "ref");
                 });
 
+            modelBuilder.Entity("Desic.Domain.Labels.Label", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(0);
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(1);
+
+                    b.Property<Guid>("CreatedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(2);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(3)
+                        .HasDefaultValueSql("DATETIME('now')");
+
+                    b.Property<Guid?>("DeletedById")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(8);
+
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(9);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(10);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER")
+                        .HasColumnOrder(7);
+
+                    b.Property<Guid>("ModifiedById")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(4);
+
+                    b.Property<Guid>("ModifiedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(5);
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(6)
+                        .HasDefaultValueSql("DATETIME('now')");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(11);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("DeletedByTypeId");
+
+                    b.HasIndex("IsDeleted");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("Labels", "app");
+                });
+
             modelBuilder.Entity("Desic.Domain.Tags.Tag", b =>
                 {
                     b.Property<Guid>("Id")
@@ -207,8 +289,14 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(11);
+
+                    b.Property<string>("Value")
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(12);
 
                     b.HasKey("Id");
 
@@ -227,6 +315,8 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                     b.HasIndex("ModifiedByTypeId");
 
                     b.HasIndex("Name");
+
+                    b.HasIndex("Value");
 
                     b.ToTable("Tags", "app");
                 });
@@ -317,6 +407,26 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 });
 
             modelBuilder.Entity("Desic.Domain.Iso3166Countries.Iso3166Country", b =>
+                {
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("DeletedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("ModifiedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Desic.Domain.Labels.Label", b =>
                 {
                     b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
                         .WithMany()

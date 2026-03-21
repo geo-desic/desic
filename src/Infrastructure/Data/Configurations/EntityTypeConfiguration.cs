@@ -11,8 +11,8 @@ internal class EntityTypeConfiguration : IEntityTypeConfiguration<EntityType>
     {
         builder.ToTable(nameof(ApplicationDbContext.EntityTypes), ApplicationDbContext.RefSchema);
         var columnOrder = builder.ConfigureBaseEntity();
-        builder.Property(x => x.Key).IsRequired().HasColumnOrder(++columnOrder);
-        builder.Property(x => x.Name).IsRequired().HasColumnOrder(++columnOrder);
+        builder.Property(x => x.Key).IsRequired().HasMaxLength(4).HasColumnOrder(++columnOrder);
+        builder.Property(x => x.Name).IsRequired().HasMaxLength(50).HasColumnOrder(++columnOrder);
         builder.HasIndex(x => x.Key).IsUnique();
         builder.HasIndex(x => x.Name).IsUnique();
     }

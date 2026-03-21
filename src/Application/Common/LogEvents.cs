@@ -17,8 +17,17 @@ public static class LogEvents
     public const int SeedEntityTypes                       = StartEntityTypes + OffsetSeed;
     #endregion
 
+    #region Labels
+    internal const int StartLabels                         = StartEntityTypes + OffsetEntity;
+    public const int SeedLabels                            = StartLabels + OffsetSeed;
+    #endregion
+
+    #region Tags
+    internal const int StartTags                           = StartLabels + OffsetEntity;
+    #endregion
+
     #region Users
-    internal const int StartUsers                          = StartEntityTypes + OffsetEntity;
+    internal const int StartUsers                          = StartTags + OffsetEntity;
     public const int CreateUser                            = StartUsers + OffsetCreate;
     public const int GetUser                               = StartUsers + OffsetGet;
     public const int SeedTestUsers                         = StartUsers + OffsetSeedTest;
@@ -27,11 +36,6 @@ public static class LogEvents
     #region Iso3166Countries
     internal const int StartIso3166Countries               = StartUsers + OffsetEntity;
     public const int SeedIso3166Countries                  = StartIso3166Countries + OffsetSeed;
-    #endregion
-
-    #region Tags
-    internal const int StartTags                           = StartIso3166Countries + OffsetEntity;
-    public const int SeedTags                              = StartTags + OffsetSeed;
     #endregion
 
     #region Offsets

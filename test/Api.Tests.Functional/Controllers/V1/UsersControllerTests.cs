@@ -3,7 +3,7 @@ using Desic.Api.Common;
 using Desic.Application.Users;
 using Desic.Application.Users.Create;
 using Desic.Domain.Common.Entities;
-using Desic.Domain.Tags;
+using Desic.Domain.Labels;
 using Desic.Domain.Users.Test;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Http;
@@ -141,7 +141,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
     private static User NewUser(Guid? id = null, string? username = null, DateTime? on = null, IReadOnlyMinimalEntity? by = null)
     {
         on ??= DateTime.UtcNow;
-        by ??= SystemTags.System;
+        by ??= SystemLabels.System;
         return new User
         {
             Id = id ?? Guid.Empty,

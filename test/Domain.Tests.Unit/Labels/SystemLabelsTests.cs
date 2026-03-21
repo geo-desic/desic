@@ -1,16 +1,16 @@
 ﻿using AwesomeAssertions;
-using Desic.Domain.Tags;
+using Desic.Domain.Labels;
 
-namespace Desic.Domain.Tests.Unit.Tags;
+namespace Desic.Domain.Tests.Unit.Labels;
 
-public class SystemTagsTests
+public class SystemLabelsTests
 {
-    public class SystemTagsTests001 : SystemTagsTests
+    public class SystemLabelsTests001 : SystemLabelsTests
     {
         [Fact]
         public void SystemEntityTypes_All_HaveUniqueValues()
         {
-            var items = SystemTags.All().ToList();
+            var items = SystemLabels.All().ToList();
             var ids = items.Select(x => x.Id).ToList();
             var names = items.Select(x => x.Name).ToList();
 

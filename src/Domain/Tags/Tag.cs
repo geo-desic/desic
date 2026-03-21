@@ -9,4 +9,5 @@ public class Tag : SoftDeletableEntity, IStaticEntityType
     public override SystemEntityType SystemEntityType => ClassEntityType;
 
     public required string Name { get; set; }
+    public string? Value { get; set; }
 }

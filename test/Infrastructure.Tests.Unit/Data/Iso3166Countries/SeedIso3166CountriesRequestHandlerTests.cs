@@ -3,7 +3,7 @@ using Desic.Application.Common;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.EntityTypes;
 using Desic.Domain.Iso3166Countries;
-using Desic.Domain.Tags;
+using Desic.Domain.Labels;
 using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.Iso3166Countries;
 using Desic.Shared.Extensions;
@@ -16,7 +16,7 @@ namespace Desic.Infrastructure.Tests.Unit.Data.Iso3166Countries;
 
 public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSqliteDependencyTests
 {
-    private readonly Tag _by = SystemTags.System.ToEntity();
+    private readonly Label _by = SystemLabels.System.ToEntity();
     private readonly DbSet<Iso3166Country> _dbSet;
     private readonly FakeLogger<SeedIso3166CountriesRequestHandler> _logger = new();
     private readonly Mock<IMediator> _mediator = new();
@@ -32,8 +32,8 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
         // these need to exist due to foriegn key constaints
         _dbSet = DbContext.Iso3166Countries;
         _seededEntity.SetCreatedAndModifiedBy(_by);
-        DbContext.EntityTypes.AddRange(SystemEntityTypes.Tag.ToEntity(), SystemEntityTypes.Iso3166Country.ToEntity());
-        DbContext.Tags.Add(_by);
+        DbContext.EntityTypes.AddRange(SystemEntityTypes.Label.ToEntity(), SystemEntityTypes.Iso3166Country.ToEntity());
+        DbContext.Labels.Add(_by);
         DbContext.SaveChanges();
     }
 

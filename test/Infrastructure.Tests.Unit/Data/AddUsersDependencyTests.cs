@@ -1,4 +1,4 @@
-﻿using Desic.Domain.Tags;
+﻿using Desic.Domain.Labels;
 using Desic.Domain.Users;
 using Desic.Infrastructure.Data;
 using Desic.Shared.Extensions;
@@ -17,11 +17,11 @@ public class AddUsersDependencyTests : ApplicationDbContextImEfCoreDependencyTes
         {
             Id = id.Value,
             Username = username,
-            CreatedById = SystemTags.System.Id,
-            CreatedByTypeId = SystemTags.System.SystemEntityType.Id,
+            CreatedById = SystemLabels.System.Id,
+            CreatedByTypeId = SystemLabels.System.SystemEntityType.Id,
             CreatedOn = on,
-            ModifiedById = SystemTags.System.Id,
-            ModifiedByTypeId = SystemTags.System.SystemEntityType.Id,
+            ModifiedById = SystemLabels.System.Id,
+            ModifiedByTypeId = SystemLabels.System.SystemEntityType.Id,
             ModifiedOn = on,
         };
     }

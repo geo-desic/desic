@@ -1,24 +1,24 @@
 ﻿using Desic.Application.Common;
 using Desic.Domain.Common.Entities;
-using Desic.Domain.Tags;
+using Desic.Domain.Labels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace Desic.Infrastructure.Data.Tags;
+namespace Desic.Infrastructure.Data.Labels;
 
-public class SeedTagsRequestHandler(ApplicationDbContext context, ILogger<SeedTagsRequestHandler> logger) : IRequestHandler<SeedTagsRequest, SeedTagsResult>
+public class SeedLabelsRequestHandler(ApplicationDbContext context, ILogger<SeedLabelsRequestHandler> logger) : IRequestHandler<SeedLabelsRequest, SeedLabelsResult>
 {
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
-    private readonly ILogger<SeedTagsRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    private readonly ILogger<SeedLabelsRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
-    private const int LogEventId = LogEvents.SeedTags;
+    private const int LogEventId = LogEvents.SeedLabels;
 
-    public async Task<SeedTagsResult> Handle(SeedTagsRequest request, CancellationToken cancellationToken)
+    public async Task<SeedLabelsResult> Handle(SeedLabelsRequest request, CancellationToken cancellationToken)
     {
-        var result = new SeedTagsResult();
-        var dbSet = _context.Tags;
-        var tableName = nameof(_context.Tags);
+        var result = new SeedLabelsResult();
+        var dbSet = _context.Labels;
+        var tableName = nameof(_context.Labels);
 
         var any = await dbSet.AnyAsync(cancellationToken);
         if (any && request?.Method != SeedApplicationDatabaseMethod.Full)
@@ -27,7 +27,7 @@ public class SeedTagsRequestHandler(ApplicationDbContext context, ILogger<SeedTa
             return result;
         }
 
-        var items = SystemTags.AllAsEntities().ToList();
+        var items = SystemLabels.AllAsEntities().ToList();
         result.ReferenceCount = items.Count;
         if (!any) // fast method
         {
@@ -36,7 +36,7 @@ public class SeedTagsRequestHandler(ApplicationDbContext context, ILogger<SeedTa
         }
         else // full method
         {
-            var itemsToAdd = new List<Tag>();
+            var itemsToAdd = new List<Label>();
             foreach (var item in items)
             {
                 var existing = await dbSet.AsTracking().FirstOrDefaultAsync(x => x.Id == item.Id, cancellationToken);

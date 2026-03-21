@@ -15,8 +15,8 @@ internal class Iso3166CountryConfiguration(DatabaseFacade databaseFacade) : IEnt
         builder.ToTable(nameof(ApplicationDbContext.Iso3166Countries), ApplicationDbContext.RefSchema);
         var columnOrder = builder.ConfigureSeedableSoftDeletableEntity(_databaseFacade);
         builder.Property(x => x.IsoId).IsRequired().HasColumnOrder(++columnOrder);
-        builder.Property(x => x.Alpha2).IsRequired().HasColumnOrder(++columnOrder);
-        builder.Property(x => x.Alpha3).IsRequired().HasColumnOrder(++columnOrder);
+        builder.Property(x => x.Alpha2).IsRequired().HasMaxLength(2).HasColumnOrder(++columnOrder);
+        builder.Property(x => x.Alpha3).IsRequired().HasMaxLength(3).HasColumnOrder(++columnOrder);
         builder.Property(x => x.Name).IsRequired().HasMaxLength(100).HasColumnOrder(++columnOrder);
         builder.HasIndex(x => x.IsoId).IsUnique();
         builder.HasIndex(x => x.Alpha2).IsUnique();

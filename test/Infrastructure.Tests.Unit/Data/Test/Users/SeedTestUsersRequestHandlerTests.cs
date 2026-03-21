@@ -2,7 +2,7 @@
 using Desic.Application.Common;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.EntityTypes;
-using Desic.Domain.Tags;
+using Desic.Domain.Labels;
 using Desic.Domain.Users;
 using Desic.Domain.Users.Test;
 using Desic.Infrastructure.Data;
@@ -14,7 +14,7 @@ namespace Desic.Infrastructure.Tests.Unit.Data.Test.Users;
 
 public class SeedTestUsersRequestHandlerTests : ApplicationDbContextImSqliteDependencyTests
 {
-    private readonly Tag _by = SystemTags.System.ToEntity();
+    private readonly Label _by = SystemLabels.System.ToEntity();
     private readonly DbSet<User> _dbSet;
     private readonly List<User> _expectedEntities;
     private readonly FakeLogger<SeedTestUsersRequestHandler> _logger = new();
@@ -30,8 +30,8 @@ public class SeedTestUsersRequestHandlerTests : ApplicationDbContextImSqliteDepe
         _dbSet = DbContext.Users;
         _expectedEntities = ExpectedEntities().GetAwaiter().GetResult();
         _seededEntity = EntityFromIndex(index: 0);
-        DbContext.EntityTypes.AddRange(SystemEntityTypes.Tag.ToEntity(), SystemEntityTypes.User.ToEntity());
-        DbContext.Tags.Add(_by);
+        DbContext.EntityTypes.AddRange(SystemEntityTypes.Label.ToEntity(), SystemEntityTypes.User.ToEntity());
+        DbContext.Labels.Add(_by);
         DbContext.SaveChanges();
     }
 

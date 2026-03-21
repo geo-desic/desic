@@ -2,7 +2,7 @@
 using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.EntityTypes;
 using Desic.Infrastructure.Data.Iso3166Countries;
-using Desic.Infrastructure.Data.Tags;
+using Desic.Infrastructure.Data.Labels;
 using Desic.Infrastructure.Data.Test.Users;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -31,7 +31,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Tags.Any().Should().BeFalse();
+            DbContext.Labels.Any().Should().BeFalse();
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never());
         }
     }
@@ -55,7 +55,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Tags.Count().Should().Be(1);
+            DbContext.Labels.Count().Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedEntityTypesRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Once());
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedEntityTypesRequestHandler));
         }
@@ -66,13 +66,13 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
         [Theory]
         [InlineData(SeedApplicationDatabaseMethod.Fast)]
         [InlineData(SeedApplicationDatabaseMethod.Full)]
-        public async Task Handle_SeedingOnlyTagsEnabled_OnlyExpectedSeedingOccurs(SeedApplicationDatabaseMethod expectedMethod)
+        public async Task Handle_SeedingOnlyLabelsEnabled_OnlyExpectedSeedingOccurs(SeedApplicationDatabaseMethod expectedMethod)
         {
             // arrange
             Setup();
             var options = NewOptions();
-            options.Value.Tags!.Enabled = true;
-            options.Value.Tags!.Method = expectedMethod;
+            options.Value.Labels!.Enabled = true;
+            options.Value.Labels!.Method = expectedMethod;
             var handler = new SeedApplicationDatabaseRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object, seedingOptions: options);
             var request = new SeedApplicationDatabaseRequest();
 
@@ -80,9 +80,9 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Tags.Count().Should().BeGreaterThanOrEqualTo(1);
-            _mediator.Verify(x => x.Send(It.Is<SeedTagsRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Once());
-            VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedTagsRequestHandler));
+            DbContext.Labels.Count().Should().BeGreaterThanOrEqualTo(1);
+            _mediator.Verify(x => x.Send(It.Is<SeedLabelsRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Once());
+            VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedLabelsRequestHandler));
         }
     }
 
@@ -105,7 +105,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Tags.Count().Should().Be(1);
+            DbContext.Labels.Count().Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedIso3166CountriesRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Once());
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedIso3166CountriesRequestHandler));
         }
@@ -132,7 +132,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Tags.Count().Should().Be(1);
+            DbContext.Labels.Count().Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedTestUsersRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Exactly(expectedTimes));
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedTestUsersRequestHandler));
         }
@@ -145,7 +145,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             Enabled = enabled,
             EntityTypes = new SeedApplicationDatabaseEntityTypesOptions { Enabled = individualEntitiesEnabled },
             Iso3166Countries = new SeedApplicationDatabaseIso3166CountriesOptions { Enabled = individualEntitiesEnabled },
-            Tags = new SeedApplicationDatabaseTagsOptions { Enabled = individualEntitiesEnabled },
+            Labels = new SeedApplicationDatabaseLabelsOptions { Enabled = individualEntitiesEnabled },
             Test = new SeedApplicationDatabaseTestOptions
             {
                 Enabled = testEnabled,
@@ -158,7 +158,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
     private void Setup()
     {
         _mediator.Setup(x => x.Send(It.IsAny<SeedEntityTypesRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedEntityTypesResult());
-        _mediator.Setup(x => x.Send(It.IsAny<SeedTagsRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedTagsResult());
+        _mediator.Setup(x => x.Send(It.IsAny<SeedLabelsRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedLabelsResult());
         _mediator.Setup(x => x.Send(It.IsAny<SeedIso3166CountriesRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedIso3166CountriesResult());
         _mediator.Setup(x => x.Send(It.IsAny<SeedTestUsersRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedTestUsersResult());
     }
@@ -166,7 +166,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
     private static void VerifyAllSeedRequestHandlers(Mock<IMediator> mediator, Times times, Type? except = null)
     {
         if (except != typeof(SeedEntityTypesRequestHandler)) mediator.Verify(x => x.Send(It.IsAny<SeedEntityTypesRequest>(), It.IsAny<CancellationToken>()), times);
-        if (except != typeof(SeedTagsRequestHandler)) mediator.Verify(x => x.Send(It.IsAny<SeedTagsRequest>(), It.IsAny<CancellationToken>()), times);
+        if (except != typeof(SeedLabelsRequestHandler)) mediator.Verify(x => x.Send(It.IsAny<SeedLabelsRequest>(), It.IsAny<CancellationToken>()), times);
         if (except != typeof(SeedIso3166CountriesRequestHandler)) mediator.Verify(x => x.Send(It.IsAny<SeedIso3166CountriesRequest>(), It.IsAny<CancellationToken>()), times);
         if (except != typeof(SeedTestUsersRequestHandler)) mediator.Verify(x => x.Send(It.IsAny<SeedTestUsersRequest>(), It.IsAny<CancellationToken>()), times);
     }

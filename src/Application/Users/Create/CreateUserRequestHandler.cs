@@ -2,7 +2,7 @@
 using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Interfaces;
 using Desic.Domain.Common.Entities;
-using Desic.Domain.Tags;
+using Desic.Domain.Labels;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +35,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
             Username = request.Model.Username!
         };
 
-        user.SetCreatedAndModifiedBy(by: SystemTags.System, on: DateTime.UtcNow);
+        user.SetCreatedAndModifiedBy(by: SystemLabels.System, on: DateTime.UtcNow);
 
         _dbContext.Users.Add(user);
 
