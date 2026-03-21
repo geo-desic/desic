@@ -11,7 +11,7 @@
   - dedicated api database user with restricted access: no ddl and write access only to a specific schema in the application database (read only elsewhere)
   - dedicated migrations database user with more permissive access: ddl and dml permissions to the application database
   - currently implemented by the functional testing framework so any potential issues with new code should be identified quickly
-  - Note that this is not supported by the Sqlite infrastructure as it does not support database users, schemas, etc.
+  - note that this is not supported by the Sqlite infrastructure as it does not support database users, schemas, etc.
 - Designed with vertical slicing in mind, e.g.
   - [Domain/EntityTypes](src/Domain/EntityTypes)
   - [Application/EntityTypes](src/Application/EntityTypes)

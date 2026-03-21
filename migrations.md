@@ -1,5 +1,12 @@
 # Entity Framework Migrations
-All commands below assume a terminal in the top level solution directory.
+All commands below assume a terminal in the top level solution directory. The entity framework cli tools are required and can be installed/updated using the following commands. The tools should be kept relatively up to date as warnings could be issues with out of date versions.
+
+```powershell
+# initial install
+dotnet tool install --global dotnet-ef
+# update to latest version
+dotnet tool update --global dotnet-ef
+```
 
 ## Determine If There Are Pending Model Changes
 ```powershell
