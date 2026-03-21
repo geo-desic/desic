@@ -43,3 +43,13 @@ Content-Type: application/json
 {
   "username": "test-user-pm-{{$datetime "yyyyMMddhhmmss"}}"
 }
+
+###
+
+POST {{HostAddressApi}}/v1/users/
+Accept: application/json
+Content-Type: application/json
+
+{
+  "username": "invalid username"
+}

@@ -49,6 +49,27 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
     }
 
     [Fact]
+    public async Task Create_InvalidRequestUsernameInvalid_Status400()
+    {
+        // arrange
+        var expectedStatusCode = System.Net.HttpStatusCode.BadRequest;
+        var user = new CreateUser
+        {
+            Username = "invalid username", // contains a space character
+        };
+        var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user);
+
+        // act
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
+
+        // assert
+        response.StatusCode.Should().Be(expectedStatusCode);
+        response.Message.Headers.TryGetValues(Headers.Keys.EntityId, out _).Should().BeFalse();
+        response.Content.Should().NotBeNull();
+        response.Content.Status.Should().Be((int)expectedStatusCode);
+    }
+
+    [Fact]
     public async Task Create_InvalidRequestUsernameExists_Status400()
     {
         // arrange
