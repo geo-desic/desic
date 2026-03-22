@@ -13,6 +13,7 @@ namespace Desic.Infrastructure.Data;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IApplicationDbContext
 {
     // note: when adding a new DbSet<T> also add it to the IApplicationDbContext inside the Application project (if it needs to use it)
+    // alphebetized dbsets
     public DbSet<EntityType> EntityTypes { get; set; }
     public DbSet<Iso3166Country> Iso3166Countries { get; set; }
     public DbSet<Label> Labels { get; set; }

@@ -9,6 +9,7 @@ namespace Desic.Application.Common.Interfaces;
 
 public interface IApplicationDbContext : IBaseDbContext
 {
+    // alphebetized dbsets
     DbSet<EntityType> EntityTypes { get; }
     DbSet<Iso3166Country> Iso3166Countries { get; }
     DbSet<Label> Labels { get; }
