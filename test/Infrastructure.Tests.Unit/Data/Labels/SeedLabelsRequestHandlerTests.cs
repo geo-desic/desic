@@ -125,8 +125,8 @@ public class SeedLabelsRequestHandlerTests : ApplicationDbContextImSqliteDepende
             result.Inserts.Should().Be(expected.Count - 1);
             result.ReferenceCount.Should().Be(expected.Count);
             result.Updates.Should().Be(1);
-            // note excluding ModifiedById and ModifiedByTypeId because we are using a non-normal _by above (not a Label)
-            _dbSet.AsEnumerable().Should().BeEquivalentTo(expected, o => o.Excluding(x => x.Id).Excluding(x => x.CreatedOn).Excluding(x => x.ModifiedOn).Excluding(x => x.ModifiedById).Excluding(x => x.ModifiedByTypeId));
+            // note excluding ModifiedBy* properties because we are using a non-normal _by above (not a Label)
+            _dbSet.AsEnumerable().Should().BeEquivalentTo(expected, o => o.Excluding(x => x.Id).Excluding(x => x.CreatedOn).Excluding(x => x.ModifiedOn).Excluding(x => x.ModifiedById).Excluding(x => x.ModifiedByName).Excluding(x => x.ModifiedByTypeId));
         }
     }
 

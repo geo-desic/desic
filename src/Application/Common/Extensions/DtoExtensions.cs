@@ -10,6 +10,7 @@ internal static class DtoExtensions
     {
         var entityType = SystemEntityTypes.GetById(entity.CreatedByTypeId);
         item.Created.By.Id = entity.CreatedById;
+        item.Created.By.Name = entity.CreatedByName;
         item.Created.By.Type.Key = entityType?.Key ?? string.Empty;
         item.Created.By.Type.Name = entityType?.Name ?? string.Empty;
         item.Created.On = entity.CreatedOn;
@@ -19,6 +20,7 @@ internal static class DtoExtensions
     {
         var entityType = SystemEntityTypes.GetById(entity.ModifiedByTypeId);
         item.Modified.By.Id = entity.ModifiedById;
+        item.Modified.By.Name = entity.ModifiedByName;
         item.Modified.By.Type.Key = entityType?.Key ?? string.Empty;
         item.Modified.By.Type.Name = entityType?.Name ?? string.Empty;
         item.Modified.On = entity.ModifiedOn;
@@ -28,6 +30,7 @@ internal static class DtoExtensions
     {
         var entityType = entity.DeletedByTypeId.HasValue ? SystemEntityTypes.GetById(entity.DeletedByTypeId.Value) : null;
         item.Deleted.By.Id = entity.DeletedById;
+        item.Deleted.By.Name = entity.DeletedByName;
         item.Deleted.By.Type.Key = entityType?.Key;
         item.Deleted.By.Type.Name = entityType?.Name;
         item.Deleted.On = entity.DeletedOn;

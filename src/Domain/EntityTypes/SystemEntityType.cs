@@ -2,7 +2,7 @@
 
 namespace Desic.Domain.EntityTypes;
 
-public record SystemEntityType(Guid Id, string Key, string Name) : IReadOnlyMinimalEntity
+public record SystemEntityType(Guid Id, string Key, string Name) : IReadOnlyMinimalEntity, IReadOnlyNameable
 {
     SystemEntityType IReadOnlyMinimalEntity.SystemEntityType => SystemEntityTypes.EntityType;
 

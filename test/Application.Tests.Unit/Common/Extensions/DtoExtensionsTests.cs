@@ -11,7 +11,7 @@ namespace Desic.Application.Tests.Unit.Common.Extensions;
 
 public class DtoExtensionsTests
 {
-    private readonly IReadOnlyMinimalEntity _by = SystemLabels.System;
+    private readonly SystemLabel _by = SystemLabels.System;
     private const string Unchanged = nameof(Unchanged);
 
     public class DtoExtensionsTests001 : DtoExtensionsTests
@@ -25,6 +25,7 @@ public class DtoExtensionsTests
             var entity = new TestCreatableEntity()
             {
                 CreatedById = createdBy.Id,
+                CreatedByName = createdBy.Name,
                 CreatedByTypeId = createdBy.SystemEntityType.Id,
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             };
@@ -35,6 +36,7 @@ public class DtoExtensionsTests
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
             item.Created.By.Id.Should().Be(createdBy.Id);
+            item.Created.By.Name.Should().Be(createdBy.Name);
             item.Created.By.Type.Key.Should().Be(createdBy.SystemEntityType.Key);
             item.Created.By.Type.Name.Should().Be(createdBy.SystemEntityType.Name);
             item.Created.On.Should().Be(entity.CreatedOn);
@@ -52,6 +54,7 @@ public class DtoExtensionsTests
             var entity = new TestModifiableEntity()
             {
                 ModifiedById = modifiedBy.Id,
+                ModifiedByName = modifiedBy.Name,
                 ModifiedByTypeId = modifiedBy.SystemEntityType.Id,
                 ModifiedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             };
@@ -62,6 +65,7 @@ public class DtoExtensionsTests
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
             item.Modified.By.Id.Should().Be(modifiedBy.Id);
+            item.Modified.By.Name.Should().Be(modifiedBy.Name);
             item.Modified.By.Type.Key.Should().Be(modifiedBy.SystemEntityType.Key);
             item.Modified.By.Type.Name.Should().Be(modifiedBy.SystemEntityType.Name);
             item.Modified.On.Should().Be(entity.ModifiedOn);
@@ -79,6 +83,7 @@ public class DtoExtensionsTests
             var entity = new TestSoftDeletableEntity()
             {
                 DeletedById = deletedBy.Id,
+                DeletedByName = deletedBy.Name,
                 DeletedByTypeId = deletedBy.SystemEntityType.Id,
                 DeletedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             };
@@ -89,6 +94,7 @@ public class DtoExtensionsTests
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
             item.Deleted.By.Id.Should().Be(deletedBy.Id);
+            item.Deleted.By.Name.Should().Be(deletedBy.Name);
             item.Deleted.By.Type.Key.Should().Be(deletedBy.SystemEntityType.Key);
             item.Deleted.By.Type.Name.Should().Be(deletedBy.SystemEntityType.Name);
             item.Deleted.On.Should().Be(entity.DeletedOn);
@@ -107,9 +113,11 @@ public class DtoExtensionsTests
             var entity = new TestModifiableEntity()
             {
                 CreatedById = createdBy.Id,
+                CreatedByName = createdBy.Name,
                 CreatedByTypeId = createdBy.SystemEntityType.Id,
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 ModifiedById = modifiedBy.Id,
+                ModifiedByName = ((IReadOnlyNameable)modifiedBy).Name,
                 ModifiedByTypeId = modifiedBy.SystemEntityType.Id,
                 ModifiedOn = new DateTime(2020, 1, 2, 0, 0, 0, DateTimeKind.Utc),
             };
@@ -120,10 +128,12 @@ public class DtoExtensionsTests
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
             item.Created.By.Id.Should().Be(createdBy.Id);
+            item.Created.By.Name.Should().Be(createdBy.Name);
             item.Created.By.Type.Key.Should().Be(createdBy.SystemEntityType.Key);
             item.Created.By.Type.Name.Should().Be(createdBy.SystemEntityType.Name);
             item.Created.On.Should().Be(entity.CreatedOn);
             item.Modified.By.Id.Should().Be(modifiedBy.Id);
+            item.Modified.By.Name.Should().Be(((IReadOnlyNameable)modifiedBy).Name);
             item.Modified.By.Type.Key.Should().Be(modifiedBy.SystemEntityType.Key);
             item.Modified.By.Type.Name.Should().Be(modifiedBy.SystemEntityType.Name);
             item.Modified.On.Should().Be(entity.ModifiedOn);
@@ -143,12 +153,15 @@ public class DtoExtensionsTests
             var entity = new TestSoftDeletableEntity()
             {
                 CreatedById = createdBy.Id,
+                CreatedByName = createdBy.Name,
                 CreatedByTypeId = createdBy.SystemEntityType.Id,
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 ModifiedById = modifiedBy.Id,
+                ModifiedByName = ((IReadOnlyNameable)modifiedBy).Name,
                 ModifiedByTypeId = modifiedBy.SystemEntityType.Id,
                 ModifiedOn = new DateTime(2020, 1, 2, 0, 0, 0, DateTimeKind.Utc),
                 DeletedById = deletedBy.Id,
+                DeletedByName = ((IReadOnlyNameable)deletedBy).Name,
                 DeletedByTypeId = deletedBy.SystemEntityType.Id,
                 DeletedOn = new DateTime(2020, 1, 3, 0, 0, 0, DateTimeKind.Utc),
             };
@@ -159,14 +172,17 @@ public class DtoExtensionsTests
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
             item.Created.By.Id.Should().Be(createdBy.Id);
+            item.Created.By.Name.Should().Be(createdBy.Name);
             item.Created.By.Type.Key.Should().Be(createdBy.SystemEntityType.Key);
             item.Created.By.Type.Name.Should().Be(createdBy.SystemEntityType.Name);
             item.Created.On.Should().Be(entity.CreatedOn);
             item.Modified.By.Id.Should().Be(modifiedBy.Id);
+            item.Modified.By.Name.Should().Be(((IReadOnlyNameable)modifiedBy).Name);
             item.Modified.By.Type.Key.Should().Be(modifiedBy.SystemEntityType.Key);
             item.Modified.By.Type.Name.Should().Be(modifiedBy.SystemEntityType.Name);
             item.Modified.On.Should().Be(entity.ModifiedOn);
             item.Deleted.By.Id.Should().Be(deletedBy.Id);
+            item.Deleted.By.Name.Should().Be(((IReadOnlyNameable)deletedBy).Name);
             item.Deleted.By.Type.Key.Should().Be(deletedBy.SystemEntityType.Key);
             item.Deleted.By.Type.Name.Should().Be(deletedBy.SystemEntityType.Name);
             item.Deleted.On.Should().Be(entity.DeletedOn);
@@ -197,6 +213,7 @@ public class DtoExtensionsTests
     private class TestCreatableEntity : ICreatable
     {
         public Guid CreatedById { get; set; }
+        public string? CreatedByName { get; set; }
         public Guid CreatedByTypeId { get; set; }
         public DateTime CreatedOn { get; set; }
     }
@@ -204,9 +221,11 @@ public class DtoExtensionsTests
     private class TestModifiableEntity : IModifiable, ICreatable
     {
         public Guid CreatedById { get; set; }
+        public string? CreatedByName { get; set; }
         public Guid CreatedByTypeId { get; set; }
         public DateTime CreatedOn { get; set; }
         public Guid ModifiedById { get; set; }
+        public string? ModifiedByName { get; set; }
         public Guid ModifiedByTypeId { get; set; }
         public DateTime ModifiedOn { get; set; }
     }
@@ -214,14 +233,17 @@ public class DtoExtensionsTests
     private class TestSoftDeletableEntity : ISoftDeletable, IModifiable, ICreatable
     {
         public Guid CreatedById { get; set; }
+        public string? CreatedByName { get; set; }
         public Guid CreatedByTypeId { get; set; }
         public DateTime CreatedOn { get; set; }
         public Guid ModifiedById { get; set; }
+        public string? ModifiedByName { get; set; }
         public Guid ModifiedByTypeId { get; set; }
         public DateTime ModifiedOn { get; set; }
-        public bool IsDeleted { get; set; }
         public Guid? DeletedById { get; set; }
+        public string? DeletedByName { get; set; }
         public Guid? DeletedByTypeId { get; set; }
         public DateTime? DeletedOn { get; set; }
+        public bool IsDeleted => DeletedOn.HasValue;
     }
 }

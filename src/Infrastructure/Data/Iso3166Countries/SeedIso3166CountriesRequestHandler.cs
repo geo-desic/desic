@@ -87,7 +87,6 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
         result.Deletes = await dbSet
             .Where(c => c.IsBeingSeeded)
             .ExecuteUpdateAsync(c => c
-                .SetProperty(p => p.IsDeleted, p => true)
                 .SetProperty(p => p.DeletedById, p => request.By.Id)
                 .SetProperty(p => p.DeletedByTypeId, p => request.By.SystemEntityType.Id)
                 .SetProperty(p => p.DeletedOn, p => now)

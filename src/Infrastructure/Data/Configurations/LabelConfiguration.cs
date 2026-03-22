@@ -13,7 +13,7 @@ public class LabelConfiguration(DatabaseFacade databaseFacade) : IEntityTypeConf
     public void Configure(EntityTypeBuilder<Label> builder)
     {
         var columnOrder = builder.ConfigureSoftDeletableEntity(_databaseFacade);
-        builder.Property(x => x.Name).IsRequired().HasMaxLength(250).HasColumnOrder(++columnOrder);
+        builder.Property(x => x.Name).IsRequired().HasMaxLength(Label.MaxLengthName).HasColumnOrder(++columnOrder);
         builder.HasIndex(x => x.Name).IsUnique(false);
     }
 }

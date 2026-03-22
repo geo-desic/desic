@@ -3,7 +3,7 @@ using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Users;
 
-public class User : SoftDeletableEntity, IStaticEntityType
+public class User : SoftDeletableEntity, IStaticEntityType, IReadOnlyNameable
 {
     public static SystemEntityType ClassEntityType => SystemEntityTypes.User;
     public override SystemEntityType SystemEntityType => ClassEntityType;
@@ -15,4 +15,8 @@ public class User : SoftDeletableEntity, IStaticEntityType
         set => _iaActive = value;
     }
     private bool? _iaActive;
+
+    string IReadOnlyNameable.Name => Username;
+
+    public const int MaxLengthUsername = 100;
 }

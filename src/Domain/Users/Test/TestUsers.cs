@@ -65,18 +65,22 @@ public static class TestUsers
         createdOn ??= DefaultOn;
         modifiedOn ??= DefaultOn;
         by ??= SystemLabels.System;
+        IReadOnlyNameable? namedBy = null;
+        if (by is IReadOnlyNameable item) namedBy = item;
         return new User
         {
             Id = User.ClassEntityType.Id.ToIntBasedGuid(sequentialId),
             CreatedOn = createdOn ?? DefaultOn,
             CreatedById = by.Id,
+            CreatedByName = namedBy?.Name,
             CreatedByTypeId = by.SystemEntityType.Id,
             ModifiedOn = modifiedOn ?? DefaultOn,
             ModifiedById = by.Id,
+            ModifiedByName = namedBy?.Name,
             ModifiedByTypeId = by.SystemEntityType.Id,
-            IsDeleted = isDeleted,
             DeletedOn = isDeleted ? modifiedOn : null,
             DeletedById = isDeleted ? by.Id : null,
+            DeletedByName = namedBy?.Name,
             DeletedByTypeId = isDeleted ? by.SystemEntityType.Id : null,
             Username = $"user-{sequentialId}",
             IsActive = isActive,

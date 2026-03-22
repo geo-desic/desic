@@ -3,7 +3,7 @@ using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Labels;
 
-public record SystemLabel(Guid Id, string Name) : IReadOnlyMinimalEntity
+public record SystemLabel(Guid Id, string Name) : IReadOnlyMinimalEntity, IReadOnlyNameable
 {
     public SystemEntityType SystemEntityType => SystemEntityTypes.Label;
 

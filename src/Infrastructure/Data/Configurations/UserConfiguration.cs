@@ -13,7 +13,7 @@ internal class UserConfiguration(DatabaseFacade databaseFacade) : IEntityTypeCon
     public void Configure(EntityTypeBuilder<User> builder)
     {
         var columnOrder = builder.ConfigureSoftDeletableEntity(_databaseFacade);
-        builder.Property(x => x.Username).IsRequired().HasMaxLength(100).HasColumnOrder(++columnOrder);
+        builder.Property(x => x.Username).IsRequired().HasMaxLength(User.MaxLengthUsername).HasColumnOrder(++columnOrder);
         builder.Property(x => x.IsActive).HasDefaultValue(true).IsRequired().HasColumnOrder(++columnOrder);
         builder.HasIndex(x => x.Username).IsUnique();
     }

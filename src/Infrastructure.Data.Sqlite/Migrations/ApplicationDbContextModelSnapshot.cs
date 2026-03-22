@@ -60,71 +60,82 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                         .IsRequired()
                         .HasMaxLength(2)
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(13);
+                        .HasColumnOrder(15);
 
                     b.Property<string>("Alpha3")
                         .IsRequired()
                         .HasMaxLength(3)
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(14);
+                        .HasColumnOrder(16);
 
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
-                    b.Property<Guid>("CreatedByTypeId")
+                    b.Property<string>("CreatedByName")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(2);
+
+                    b.Property<Guid>("CreatedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(3);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(3)
+                        .HasColumnOrder(4)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<Guid?>("DeletedById")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(8);
-
-                    b.Property<Guid?>("DeletedByTypeId")
-                        .HasColumnType("TEXT")
                         .HasColumnOrder(9);
 
-                    b.Property<DateTime?>("DeletedOn")
+                    b.Property<string>("DeletedByName")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(10);
 
-                    b.Property<bool>("IsBeingSeeded")
-                        .HasColumnType("INTEGER")
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("TEXT")
                         .HasColumnOrder(11);
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(12);
+
+                    b.Property<bool>("IsBeingSeeded")
                         .HasColumnType("INTEGER")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(13);
 
                     b.Property<int>("IsoId")
                         .HasColumnType("INTEGER")
-                        .HasColumnOrder(12);
+                        .HasColumnOrder(14);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
+
+                    b.Property<string>("ModifiedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(6);
 
                     b.Property<Guid>("ModifiedByTypeId")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(7);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(6)
+                        .HasColumnOrder(8)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(15);
+                        .HasColumnOrder(17);
 
                     b.HasKey("Id");
 
@@ -138,13 +149,15 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.HasIndex("CreatedByTypeId");
 
+                    b.HasIndex("CreatedOn");
+
                     b.HasIndex("DeletedById");
 
                     b.HasIndex("DeletedByTypeId");
 
-                    b.HasIndex("IsBeingSeeded");
+                    b.HasIndex("DeletedOn");
 
-                    b.HasIndex("IsDeleted");
+                    b.HasIndex("IsBeingSeeded");
 
                     b.HasIndex("IsoId")
                         .IsUnique();
@@ -152,6 +165,8 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("ModifiedOn");
 
                     b.HasIndex("Name");
 
@@ -169,51 +184,62 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
-                    b.Property<Guid>("CreatedByTypeId")
+                    b.Property<string>("CreatedByName")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(2);
+
+                    b.Property<Guid>("CreatedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(3);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(3)
+                        .HasColumnOrder(4)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<Guid?>("DeletedById")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(8);
-
-                    b.Property<Guid?>("DeletedByTypeId")
-                        .HasColumnType("TEXT")
                         .HasColumnOrder(9);
 
-                    b.Property<DateTime?>("DeletedOn")
+                    b.Property<string>("DeletedByName")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(10);
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER")
-                        .HasColumnOrder(7);
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(11);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(12);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
+
+                    b.Property<string>("ModifiedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(6);
 
                     b.Property<Guid>("ModifiedByTypeId")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(7);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(6)
+                        .HasColumnOrder(8)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(11);
+                        .HasColumnOrder(13);
 
                     b.HasKey("Id");
 
@@ -221,15 +247,19 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.HasIndex("CreatedByTypeId");
 
+                    b.HasIndex("CreatedOn");
+
                     b.HasIndex("DeletedById");
 
                     b.HasIndex("DeletedByTypeId");
 
-                    b.HasIndex("IsDeleted");
+                    b.HasIndex("DeletedOn");
 
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("ModifiedOn");
 
                     b.HasIndex("Name");
 
@@ -247,56 +277,67 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
-                    b.Property<Guid>("CreatedByTypeId")
+                    b.Property<string>("CreatedByName")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(2);
+
+                    b.Property<Guid>("CreatedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(3);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(3)
+                        .HasColumnOrder(4)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<Guid?>("DeletedById")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(8);
-
-                    b.Property<Guid?>("DeletedByTypeId")
-                        .HasColumnType("TEXT")
                         .HasColumnOrder(9);
 
-                    b.Property<DateTime?>("DeletedOn")
+                    b.Property<string>("DeletedByName")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(10);
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER")
-                        .HasColumnOrder(7);
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(11);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(12);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
+
+                    b.Property<string>("ModifiedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(6);
 
                     b.Property<Guid>("ModifiedByTypeId")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(7);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(6)
+                        .HasColumnOrder(8)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(11);
+                        .HasColumnOrder(13);
 
                     b.Property<string>("Value")
                         .HasMaxLength(250)
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(12);
+                        .HasColumnOrder(14);
 
                     b.HasKey("Id");
 
@@ -304,15 +345,19 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.HasIndex("CreatedByTypeId");
 
+                    b.HasIndex("CreatedOn");
+
                     b.HasIndex("DeletedById");
 
                     b.HasIndex("DeletedByTypeId");
 
-                    b.HasIndex("IsDeleted");
+                    b.HasIndex("DeletedOn");
 
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("ModifiedOn");
 
                     b.HasIndex("Name");
 
@@ -332,57 +377,68 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnOrder(1);
 
-                    b.Property<Guid>("CreatedByTypeId")
+                    b.Property<string>("CreatedByName")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT")
                         .HasColumnOrder(2);
+
+                    b.Property<Guid>("CreatedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(3);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(3)
+                        .HasColumnOrder(4)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<Guid?>("DeletedById")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(8);
+                        .HasColumnOrder(9);
+
+                    b.Property<string>("DeletedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(10);
 
                     b.Property<Guid?>("DeletedByTypeId")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(9);
+                        .HasColumnOrder(11);
 
                     b.Property<DateTime?>("DeletedOn")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(10);
+                        .HasColumnOrder(12);
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER")
                         .HasDefaultValue(true)
-                        .HasColumnOrder(12);
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER")
-                        .HasColumnOrder(7);
+                        .HasColumnOrder(14);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(4);
+                        .HasColumnOrder(5);
+
+                    b.Property<string>("ModifiedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(6);
 
                     b.Property<Guid>("ModifiedByTypeId")
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(5);
+                        .HasColumnOrder(7);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(6)
+                        .HasColumnOrder(8)
                         .HasDefaultValueSql("DATETIME('now')");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(11);
+                        .HasColumnOrder(13);
 
                     b.HasKey("Id");
 
@@ -390,15 +446,19 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.HasIndex("CreatedByTypeId");
 
+                    b.HasIndex("CreatedOn");
+
                     b.HasIndex("DeletedById");
 
                     b.HasIndex("DeletedByTypeId");
 
-                    b.HasIndex("IsDeleted");
+                    b.HasIndex("DeletedOn");
 
                     b.HasIndex("ModifiedById");
 
                     b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("ModifiedOn");
 
                     b.HasIndex("Username")
                         .IsUnique();

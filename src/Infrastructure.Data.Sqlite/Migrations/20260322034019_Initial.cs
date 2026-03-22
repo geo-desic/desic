@@ -38,13 +38,15 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     CreatedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
                     ModifiedById = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ModifiedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     ModifiedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     DeletedById = table.Column<Guid>(type: "TEXT", nullable: true),
+                    DeletedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     DeletedByTypeId = table.Column<Guid>(type: "TEXT", nullable: true),
                     DeletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     IsBeingSeeded = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -83,13 +85,15 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     CreatedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
                     ModifiedById = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ModifiedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     ModifiedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     DeletedById = table.Column<Guid>(type: "TEXT", nullable: true),
+                    DeletedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     DeletedByTypeId = table.Column<Guid>(type: "TEXT", nullable: true),
                     DeletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false)
@@ -124,13 +128,15 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     CreatedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
                     ModifiedById = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ModifiedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     ModifiedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     DeletedById = table.Column<Guid>(type: "TEXT", nullable: true),
+                    DeletedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     DeletedByTypeId = table.Column<Guid>(type: "TEXT", nullable: true),
                     DeletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
@@ -166,13 +172,15 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedById = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     CreatedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
                     ModifiedById = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ModifiedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     ModifiedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     DeletedById = table.Column<Guid>(type: "TEXT", nullable: true),
+                    DeletedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     DeletedByTypeId = table.Column<Guid>(type: "TEXT", nullable: true),
                     DeletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Username = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
@@ -242,6 +250,12 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 column: "CreatedByTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Iso3166Countries_CreatedOn",
+                schema: "ref",
+                table: "Iso3166Countries",
+                column: "CreatedOn");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Iso3166Countries_DeletedById",
                 schema: "ref",
                 table: "Iso3166Countries",
@@ -254,16 +268,16 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 column: "DeletedByTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Iso3166Countries_DeletedOn",
+                schema: "ref",
+                table: "Iso3166Countries",
+                column: "DeletedOn");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Iso3166Countries_IsBeingSeeded",
                 schema: "ref",
                 table: "Iso3166Countries",
                 column: "IsBeingSeeded");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Iso3166Countries_IsDeleted",
-                schema: "ref",
-                table: "Iso3166Countries",
-                column: "IsDeleted");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Iso3166Countries_IsoId",
@@ -285,6 +299,12 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 column: "ModifiedByTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Iso3166Countries_ModifiedOn",
+                schema: "ref",
+                table: "Iso3166Countries",
+                column: "ModifiedOn");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Iso3166Countries_Name",
                 schema: "ref",
                 table: "Iso3166Countries",
@@ -303,6 +323,12 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 column: "CreatedByTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Labels_CreatedOn",
+                schema: "app",
+                table: "Labels",
+                column: "CreatedOn");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Labels_DeletedById",
                 schema: "app",
                 table: "Labels",
@@ -315,10 +341,10 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 column: "DeletedByTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Labels_IsDeleted",
+                name: "IX_Labels_DeletedOn",
                 schema: "app",
                 table: "Labels",
-                column: "IsDeleted");
+                column: "DeletedOn");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Labels_ModifiedById",
@@ -331,6 +357,12 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 schema: "app",
                 table: "Labels",
                 column: "ModifiedByTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Labels_ModifiedOn",
+                schema: "app",
+                table: "Labels",
+                column: "ModifiedOn");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Labels_Name",
@@ -351,6 +383,12 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 column: "CreatedByTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tags_CreatedOn",
+                schema: "app",
+                table: "Tags",
+                column: "CreatedOn");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tags_DeletedById",
                 schema: "app",
                 table: "Tags",
@@ -363,10 +401,10 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 column: "DeletedByTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tags_IsDeleted",
+                name: "IX_Tags_DeletedOn",
                 schema: "app",
                 table: "Tags",
-                column: "IsDeleted");
+                column: "DeletedOn");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tags_ModifiedById",
@@ -379,6 +417,12 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 schema: "app",
                 table: "Tags",
                 column: "ModifiedByTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_ModifiedOn",
+                schema: "app",
+                table: "Tags",
+                column: "ModifiedOn");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tags_Name",
@@ -405,6 +449,12 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 column: "CreatedByTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_CreatedOn",
+                schema: "app",
+                table: "Users",
+                column: "CreatedOn");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_DeletedById",
                 schema: "app",
                 table: "Users",
@@ -417,10 +467,10 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 column: "DeletedByTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_IsDeleted",
+                name: "IX_Users_DeletedOn",
                 schema: "app",
                 table: "Users",
-                column: "IsDeleted");
+                column: "DeletedOn");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_ModifiedById",
@@ -433,6 +483,12 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 schema: "app",
                 table: "Users",
                 column: "ModifiedByTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ModifiedOn",
+                schema: "app",
+                table: "Users",
+                column: "ModifiedOn");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Username",

@@ -142,6 +142,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
     {
         on ??= DateTime.UtcNow;
         by ??= SystemLabels.System;
+        var byNamed = by as IReadOnlyNameable;
         return new User
         {
             Id = id ?? Guid.Empty,
@@ -151,6 +152,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
                 By = new()
                 {
                     Id = by.Id,
+                    Name = byNamed?.Name,
                     Type = new()
                     {
                         Key = by.SystemEntityType.Key,
@@ -164,6 +166,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
                 By = new()
                 {
                     Id = by.Id,
+                    Name = byNamed?.Name,
                     Type = new()
                     {
                         Key = by.SystemEntityType.Key,
@@ -177,6 +180,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
                 By = new()
                 {
                     Id = null,
+                    Name = null,
                     Type = new()
                     {
                         Key = null,

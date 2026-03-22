@@ -13,8 +13,8 @@ internal class TagConfiguration(DatabaseFacade databaseFacade) : IEntityTypeConf
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
         var columnOrder = builder.ConfigureSoftDeletableEntity(_databaseFacade);
-        builder.Property(x => x.Name).IsRequired().HasMaxLength(250).HasColumnOrder(++columnOrder);
-        builder.Property(x => x.Value).HasMaxLength(250).HasColumnOrder(++columnOrder);
+        builder.Property(x => x.Name).IsRequired().HasMaxLength(Tag.MaxLengthName).HasColumnOrder(++columnOrder);
+        builder.Property(x => x.Value).HasMaxLength(Tag.MaxLengthValue).HasColumnOrder(++columnOrder);
         builder.HasIndex(x => x.Name).IsUnique(false);
         builder.HasIndex(x => x.Value).IsUnique(false);
     }

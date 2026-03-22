@@ -160,7 +160,7 @@ public class SeedIso3166CountriesRequestHandlerTests : ApplicationDbContextImSql
             result.Inserts.Should().Be(expected.Count);
             result.ReferenceCount.Should().Be(expected.Count);
             result.Updates.Should().Be(0);
-            _dbSet.Where(x => !x.IsDeleted).AsEnumerable().Should().BeEquivalentTo(expected, o => o.Excluding(x => x.Id).Excluding(x => x.CreatedOn).Excluding(x => x.ModifiedOn));
+            _dbSet.Where(x => x.DeletedOn == null).AsEnumerable().Should().BeEquivalentTo(expected, o => o.Excluding(x => x.Id).Excluding(x => x.CreatedOn).Excluding(x => x.ModifiedOn));
         }
     }
 
