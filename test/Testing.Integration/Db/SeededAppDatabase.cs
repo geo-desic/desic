@@ -4,7 +4,7 @@ namespace Desic.Testing.Integration.Db;
 
 // class is sealed for simper IAsyncLifetime implementation
 // see https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#sealed-alternative-async-dispose-pattern
-// note: the templateDatabase constructor argument type should be defined as an assembly fixture in any xunit test project using this class so that it will be provided automatically during instantiation
+// note: the constructor argument type should be defined as an assembly fixture in any xunit test project using this class so that it will be provided automatically during instantiation
 public sealed class SeededAppDatabase(SeededAppDatabaseTemplateBasedOnConfig databaseTemplate) : IDatabase
 {
     private IDatabase? _database;

@@ -11,7 +11,6 @@ using Moq;
 
 namespace Desic.Api.Tests.Unit.Controllers.V1;
 
-// do not add and rely on any fixtures or similar to this parent class (inherited by the test classes below) that are not safe for parallel access
 public class UsersControllerTests
 {
     private readonly Guid _id = new("00000000-0000-0000-0000-000000000001");
