@@ -16,7 +16,7 @@ The projects use [User Secrets](https://learn.microsoft.com/en-us/aspnet/core/se
 #### Automatic Configuration
 Simply run the AppHost project. It currently has support for creating the necessary user secrets if they do not exist.
 
-#### Manual User Secret Configuration
+#### Manual Configuration
 
 Right click on the Api project in Visual Studio and select "Manage User Secrets". This will open a `secrets.json` file where you can add your secrets. There may be a few already present and if there are don't remove them. But you will likely need to add some additional ones.
 
