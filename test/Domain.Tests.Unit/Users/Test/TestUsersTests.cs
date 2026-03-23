@@ -20,13 +20,13 @@ public class TestUsersTests
             var results = await TestUsers.Generate(count: count, cancellationToken: TestContext.Current.CancellationToken).ToListAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            var stop = count < TestUsers.NonRandomUserCount ? count : TestUsers.NonRandomUserCount;
+            var stop = count < TestUsers.PredefinedCount ? count : TestUsers.PredefinedCount;
             for (var i = 1; i <= stop; ++i)
             {
-                results[i - 1].Should().BeEquivalentTo(TestUsers.NonRandomUser(sequentialId: i));
+                results[i - 1].Should().BeEquivalentTo(TestUsers.GetPredefined(sequentialId: i));
             }
             results.Count.Should().Be(count);
-            for (var i = TestUsers.NonRandomUserCount; i <= count; ++i)
+            for (var i = TestUsers.PredefinedCount; i <= count; ++i)
             {
                 results[i - 1].Should().NotBeNull();
             }

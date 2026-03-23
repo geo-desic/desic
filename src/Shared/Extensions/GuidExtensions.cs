@@ -3,6 +3,11 @@ namespace Desic.Shared.Extensions;
 
 public static class GuidExtensions
 {
+    public static Guid ChangeGuidCharacter(this Guid guid, char value, int characterIndex)
+    {
+        return guid.ToString("N").ChangeGuidCharacter(value: value, characterIndex: characterIndex);
+    }
+
     public static Guid ToIntBasedGuid(this Guid guid, int value)
     {
         return guid.ToString().ToIntBasedGuid(value);

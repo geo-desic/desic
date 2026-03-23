@@ -37,4 +37,17 @@ public static class StringExtensions
         var resultString = guid[..^valueString.Length] + valueString;
         return new Guid(resultString);
     }
+
+    // guid argument should be in the "N" format; see https://learn.microsoft.com/en-us/dotnet/api/system.guid.tostring
+    internal static Guid ChangeGuidCharacter(this string guid, char value, int characterIndex)
+    {
+        if (guid.Length != 32) throw new ArgumentOutOfRangeException(nameof(guid));
+        ArgumentOutOfRangeException.ThrowIfNegative(characterIndex);
+        if (characterIndex >= 32) throw new ArgumentOutOfRangeException(nameof(characterIndex));
+        // value: only 0-9, A-F, or a-f
+        if (value < 48 || (value > 57 && value < 65) || (value > 70 && value < 97) || (value > 102)) throw new ArgumentOutOfRangeException(nameof(value)); // 48 => '0'; 57 => '9'; 65 => 'A'; 70 => 'F'; 97 => 'a'; 102 => 'f'
+        var temp = guid.ToCharArray();
+        temp[characterIndex] = value;
+        return new Guid(new string(temp));
+    }
 }
