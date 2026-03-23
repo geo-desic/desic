@@ -324,7 +324,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                     b.Property<string>("Message")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)")
-                        .HasColumnOrder(16);
+                        .HasColumnOrder(17);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("uniqueidentifier")
@@ -344,6 +344,11 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnOrder(8)
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
+                        .HasColumnOrder(16);
 
                     b.Property<DateTime?>("StartedOn")
                         .HasColumnType("datetime2")
@@ -372,6 +377,8 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                     b.HasIndex("ModifiedByTypeId");
 
                     b.HasIndex("ModifiedOn");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("StartedOn");
 

@@ -320,7 +320,7 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                     b.Property<string>("Message")
                         .HasMaxLength(250)
                         .HasColumnType("TEXT")
-                        .HasColumnOrder(16);
+                        .HasColumnOrder(17);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("TEXT")
@@ -340,6 +340,11 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnOrder(8)
                         .HasDefaultValueSql("DATETIME('now')");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(16);
 
                     b.Property<DateTime?>("StartedOn")
                         .HasColumnType("TEXT")
@@ -368,6 +373,8 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                     b.HasIndex("ModifiedByTypeId");
 
                     b.HasIndex("ModifiedOn");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("StartedOn");
 

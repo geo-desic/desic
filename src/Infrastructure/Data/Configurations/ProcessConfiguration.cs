@@ -16,9 +16,11 @@ public class ProcessConfiguration(DatabaseFacade databaseFacade) : IEntityTypeCo
         builder.Property(x => x.StartedOn).IsRequired(false).HasColumnOrder(++columnOrder);
         builder.Property(x => x.CompletedOn).IsRequired(false).HasColumnOrder(++columnOrder);
         builder.Property(x => x.FaileddOn).IsRequired(false).HasColumnOrder(++columnOrder);
+        builder.Property(x => x.Name).IsRequired(false).HasMaxLength(Process.MaxLengthName).HasColumnOrder(++columnOrder);
         builder.Property(x => x.Message).IsRequired(false).HasMaxLength(Process.MaxLengthMessage).HasColumnOrder(++columnOrder);
         builder.HasIndex(x => x.StartedOn).IsUnique(false);
         builder.HasIndex(x => x.CompletedOn).IsUnique(false);
         builder.HasIndex(x => x.FaileddOn).IsUnique(false);
+        builder.HasIndex(x => x.Name).IsUnique(false);
     }
 }

@@ -3,7 +3,7 @@ using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Processes;
 
-public class Process : SoftDeletableEntity, IStaticEntityType
+public class Process : SoftDeletableEntity, IStaticEntityType, IReadOnlyNameable
 {
     public static SystemEntityType ClassEntityType => SystemEntityTypes.Process;
     public override SystemEntityType SystemEntityType => ClassEntityType;
@@ -11,6 +11,7 @@ public class Process : SoftDeletableEntity, IStaticEntityType
     public DateTime? StartedOn { get; set; }
     public DateTime? CompletedOn { get; set; }
     public DateTime? FaileddOn { get; set; }
+    public required string Name { get; set; }
     public string? Message { get; set; }
 
     public ProcessStatus Status
@@ -24,5 +25,6 @@ public class Process : SoftDeletableEntity, IStaticEntityType
         }
     }
 
+    public const int MaxLengthName = 250;
     public const int MaxLengthMessage = 250;
 }

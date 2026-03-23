@@ -142,6 +142,7 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                     StartedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     CompletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     FaileddOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
                     Message = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
@@ -481,6 +482,12 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 schema: "app",
                 table: "Processes",
                 column: "ModifiedOn");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_Name",
+                schema: "app",
+                table: "Processes",
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Processes_StartedOn",

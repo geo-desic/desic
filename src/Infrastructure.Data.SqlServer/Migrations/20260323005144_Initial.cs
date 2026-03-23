@@ -142,6 +142,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                     StartedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CompletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     FaileddOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
                     Message = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
@@ -481,6 +482,12 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                 schema: "app",
                 table: "Processes",
                 column: "ModifiedOn");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_Name",
+                schema: "app",
+                table: "Processes",
+                column: "Name");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Processes_StartedOn",

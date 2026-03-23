@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Desic.Infrastructure.Data.SqlServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260323001543_Initial")]
+    [Migration("20260323005144_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -327,7 +327,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                     b.Property<string>("Message")
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)")
-                        .HasColumnOrder(16);
+                        .HasColumnOrder(17);
 
                     b.Property<Guid>("ModifiedById")
                         .HasColumnType("uniqueidentifier")
@@ -347,6 +347,11 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .HasColumnType("datetime2")
                         .HasColumnOrder(8)
                         .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
+                        .HasColumnOrder(16);
 
                     b.Property<DateTime?>("StartedOn")
                         .HasColumnType("datetime2")
@@ -375,6 +380,8 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                     b.HasIndex("ModifiedByTypeId");
 
                     b.HasIndex("ModifiedOn");
+
+                    b.HasIndex("Name");
 
                     b.HasIndex("StartedOn");
 

@@ -9,6 +9,7 @@ public class ProcessTests
     private const string DefaultStartedOnString = "2020-01-01T00:00:00";
     private const string DefaultCompletedOnString = "2020-01-01T02:00:00";
     private const string DefaultFailedOnString = "2020-01-01T01:00:00";
+    private const string DefaultName = nameof(DefaultName);
     public class ProcessTests001 : ProcessTests
     {
         [Theory]
@@ -25,6 +26,7 @@ public class ProcessTests
                 StartedOn = NullableDateTimeFromString(startedOnString),
                 CompletedOn = NullableDateTimeFromString(completedOnString),
                 FaileddOn = NullableDateTimeFromString(failedOnString),
+                Name = DefaultName,
             };
 
             // act
