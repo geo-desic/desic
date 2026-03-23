@@ -15,7 +15,12 @@ Accept: application/json
 
 ###
 
-GET {{HostAddressApi}}/v1/entitytypes?startIndex=1&count=3
+GET {{HostAddressApi}}/v1/entitytypes
+Accept: application/json
+
+###
+
+GET {{HostAddressApi}}/v1/entitytypes?startIndex=1&count=3&orderingMethod=KeyDesc
 Accept: application/json
 
 ###
