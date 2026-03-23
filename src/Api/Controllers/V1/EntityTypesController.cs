@@ -18,11 +18,11 @@ public class EntityTypesController(ILogger<EntityTypesController> logger, IMedia
     [ProducesResponseType(typeof(ListResult<EntityType>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<ListResult<EntityType>>> List(int? startIndex = null, int? count = null)
+    public async Task<ActionResult<ListResult<EntityType>>> List(int? startIndex = null, int? count = null, EntityTypesOrderingMethod? orderingMethod = null)
     {
-        _logger.LogInformation(LogEvents.ListEntityTypes, $"{nameof(EntityTypesController)}.{nameof(List)}({{{nameof(startIndex)}}}, {{{nameof(count)}}})", startIndex, count);
+        _logger.LogInformation(LogEvents.ListEntityTypes, $"{nameof(EntityTypesController)}.{nameof(List)}({{{nameof(startIndex)}}}, {{{nameof(count)}}}, {{{nameof(orderingMethod)}}})", startIndex, count, orderingMethod);
 
-        var request = new ListEntityTypesRequest { Count = count, StartIndex = startIndex };
+        var request = new ListEntityTypesRequest { Count = count, StartIndex = startIndex, OrderingMethod = orderingMethod };
         var result = await _mediator.Send(request);
 
         return result.Match(onSuccess: u => Ok(u), onFailure: e => Problem(e));

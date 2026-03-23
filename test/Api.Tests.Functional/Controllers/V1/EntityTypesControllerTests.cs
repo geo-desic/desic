@@ -9,12 +9,18 @@ namespace Desic.Api.Tests.Functional.Controllers.V1;
 public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : TestWebAppDependencyTests(testDatabase), IClassFixture<SeededAppDatabase>
 {
     [Fact]
-    public async Task List_All_Status200OkAndEntitiesReturned()
+    public async Task List_ValidRequestWithNonDefaultStartIndexCountAndOrderingMethod_Status200OkAndExpectedOrderedItems()
     {
         // arrange
+        var startIndex = 1;
+        var count = 5;
+        var orderingMethod = EntityTypesOrderingMethod.KeyDesc;
         var expectedStatusCode = System.Net.HttpStatusCode.OK;
-        var expected = ExpectedResponseContent(); // all entity types should exist by db seeding
-        var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/entitytypes");
+        var expected = ExpectedResponseContent(startIndex: startIndex, count: count, orderingMethod: orderingMethod); // all entity types should exist by db seeding
+        var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/entitytypes")
+            .AddQueryStringParameter(name: nameof(startIndex), value: $"{startIndex}")
+            .AddQueryStringParameter(name: nameof(count), value: $"{count}")
+            .AddQueryStringParameter(name: nameof(orderingMethod), value: $"{orderingMethod}");
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<ListEntityTypesResult>(request);
@@ -25,13 +31,17 @@ public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : TestWe
         response.Content.Should().BeEquivalentTo(expected, x => x.WithStrictOrdering());
     }
 
-    private static ListEntityTypesResult ExpectedResponseContent()
+    private static ListEntityTypesResult ExpectedResponseContent(int? startIndex = null, int? count = null, EntityTypesOrderingMethod? orderingMethod = null)
     {
-        List<EntityType> items = [.. Domain.EntityTypes.SystemEntityTypes.AllAsEntities().Select(x => new EntityType { Key = x.Key, Name = x.Name }).OrderBy(x => x.Name)];
+        startIndex ??= 0;
+        var allItems = Domain.EntityTypes.SystemEntityTypes.AllAsEntities().Select(x => new EntityType { Key = x.Key, Name = x.Name }).ToList();
+        var query = allItems.AsQueryable().OrderBy(orderingMethod: orderingMethod).Skip(startIndex.Value);
+        if (count.HasValue) query = query.Take(count.Value);
+        List<EntityType> items = [.. query];
         return new()
         {
-            StartIndex = 0,
-            TotalCount = items.Count,
+            StartIndex = startIndex.Value,
+            TotalCount = allItems.Count,
             Items = items,
         };
     }

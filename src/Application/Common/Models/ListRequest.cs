@@ -1,6 +1,8 @@
-﻿namespace Desic.Application.Common.Models;
+﻿using Desic.Application.Common.Interfaces;
 
-public class ListRequest
+namespace Desic.Application.Common.Models;
+
+public class ListRequest : IListRequest
 {
     public int? Count { get; set; }
     public int? StartIndex { get; set; }

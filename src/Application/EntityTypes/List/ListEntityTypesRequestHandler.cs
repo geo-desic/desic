@@ -27,7 +27,7 @@ public class ListEntityTypesRequestHandler(ILogger<ListEntityTypesRequestHandler
             request.Count = MaximumAllowedCount;
         }
 
-        var query = _dbContext.EntityTypes.Select(x => new EntityType { Name = x.Name, Key = x.Key }).OrderBy(x => x.Name);
+        var query = _dbContext.EntityTypes.Select(x => new EntityType { Name = x.Name, Key = x.Key }).OrderBy(orderingMethod: request.OrderingMethod);
         return await query.ToListResultAsync<EntityType, ListEntityTypesResult>(startIndex: request.StartIndex, takeCount: request.Count, includeTotalCount: IncludeTotalCount, cancellationToken: cancellationToken);
     }
 }

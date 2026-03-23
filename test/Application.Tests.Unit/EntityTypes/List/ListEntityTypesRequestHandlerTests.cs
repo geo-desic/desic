@@ -1,5 +1,4 @@
-﻿
-using AwesomeAssertions;
+﻿using AwesomeAssertions;
 using Desic.Application.Common;
 using Desic.Application.EntityTypes;
 using Desic.Application.EntityTypes.List;
@@ -13,11 +12,11 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
 {
     private readonly ILogger<ListEntityTypesRequestHandler> _logger = NullLogger<ListEntityTypesRequestHandler>.Instance;
     private readonly Domain.EntityTypes.EntityType[] _seededEntityTypes;
-    private const int TotalCount = 150; // greater than ListEntityTypesRequestHandler.MaximumAllowedCount
+    private const int TotalCount = ListEntityTypesRequestHandler.MaximumAllowedCount + 10;
 
     public ListEntityTypesRequestHandlerTests() : base(o => new(o))
     {
-        _seededEntityTypes = GetEntityTypes().ToArray();
+        _seededEntityTypes = [.. GetEntityTypes()];
         DbContext.EntityTypes.AddRange(_seededEntityTypes);
         DbContext.SaveChanges();
     }
@@ -42,7 +41,11 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
                 TotalCount = ListEntityTypesRequestHandler.IncludeTotalCount ? TotalCount : null,
             });
             var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext);
-            var request = new ListEntityTypesRequest { Count = count, StartIndex = startIndex };
+            var request = new ListEntityTypesRequest
+            {
+                Count = count,
+                StartIndex = startIndex,
+            };
 
             // act
             var result = await handler.Handle(request, cancellationToken: TestContext.Current.CancellationToken);
@@ -54,18 +57,57 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
         }
     }
 
-    private static IEnumerable<Domain.EntityTypes.EntityType> GetEntityTypes()
+    public class ListEntityTypesRequestHandlerTests002 : ListEntityTypesRequestHandlerTests
     {
-        // purposely not ordered by name
-        for (var i = TotalCount; i > 0; --i)
+        [Theory]
+        [InlineData(null)]
+        [InlineData(EntityTypesOrderingMethod.KeyAsc)]
+        [InlineData(EntityTypesOrderingMethod.KeyDesc)]
+        [InlineData(EntityTypesOrderingMethod.NameAsc)]
+        [InlineData(EntityTypesOrderingMethod.NameDesc)]
+        public async Task Handle_SpecifiedOrderingMethod_ExpectedResultsOrderedCorrectly(EntityTypesOrderingMethod? orderingMethod)
         {
-            var iString = $"{i}".PadLeft(3, '0');
-            yield return new Domain.EntityTypes.EntityType { Id = i.ToGuid(), Key = $"k{iString}", Name = $"Entity{iString}" };
+            // arrange
+            var count = 10;
+            var expected = new Result<ListEntityTypesResult>(new ListEntityTypesResult
+            {
+                // if no ordering method is specified it should default to ordering by name ascending
+                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? EntityTypesOrderingMethod.NameAsc)],
+                StartIndex = 0,
+                TotalCount = ListEntityTypesRequestHandler.IncludeTotalCount ? TotalCount : null,
+            });
+            var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext);
+            var request = new ListEntityTypesRequest
+            {
+                Count = count,
+                StartIndex = 0,
+                OrderingMethod = orderingMethod
+            };
+
+            // act
+            var result = await handler.Handle(request, cancellationToken: TestContext.Current.CancellationToken);
+
+            // assert
+            result.Should().BeOfType(expected.GetType());
+            result.Value.Should().BeOfType(expected.Value.GetType());
+            result.Value.Should().BeEquivalentTo(expected.Value, opt => opt.WithStrictOrderingFor(x => x.Items));
         }
     }
 
-    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count)
+    private static IEnumerable<Domain.EntityTypes.EntityType> GetEntityTypes()
     {
-        return _seededEntityTypes.OrderBy(x => x.Name).Skip(minIndex).Take(count).Select(x => new EntityType { Key = x.Key, Name = x.Name });
+        // purposely not ordered asc by any property
+        for (var i = TotalCount; i > 0; --i)
+        {
+            var iString = $"{i}".PadLeft(3, '0');
+            var alphaCharacterCapitalized = (i % 26) + 'A'; // this is to ensure that ordering by key vs name will be different
+            yield return new Domain.EntityTypes.EntityType { Id = i.ToGuid(), Key = $"k{iString}", Name = $"Entity{alphaCharacterCapitalized}{iString}" };
+        }
+    }
+
+    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, EntityTypesOrderingMethod orderingMethod = EntityTypesOrderingMethod.NameAsc)
+    {
+        // note that the OrderBy extension method used here is already covered by tests ====> see Desic.Application.Tests.Unit.EntityTypes.QueryableExtensionsTests
+        return _seededEntityTypes.AsQueryable().Select(x => new EntityType { Key = x.Key, Name = x.Name }).OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count));
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Web;
 
 namespace Desic.Testing.Integration.Http;
 
@@ -32,6 +33,32 @@ public class FluentHttpRequest(HttpMethod httpMethod, string? requestUri)
     public FluentHttpRequest AddHeader(string name, IEnumerable<string?> values)
     {
         HttpRequestMessage.Headers.Add(name, values);
+        return this;
+    }
+
+    public FluentHttpRequest AddQueryStringParameter(string name, string? value)
+    {
+        if (HttpRequestMessage.RequestUri == null) throw new InvalidOperationException($"Cannot add query string parameters when {nameof(HttpRequestMessage.RequestUri)} is null");
+        if (HttpRequestMessage.RequestUri.IsAbsoluteUri)
+        {
+            var builder = new UriBuilder(HttpRequestMessage.RequestUri);
+            var queryParameters = HttpUtility.ParseQueryString(builder.Query);
+            queryParameters[name] = value;
+            builder.Query = queryParameters.ToString();
+            HttpRequestMessage.RequestUri = builder.Uri;
+        }
+        else
+        {
+            const string dummyBaseUriString = "http://dummyhost:80/";
+            var currentUriString = HttpRequestMessage.RequestUri.ToString();
+            var uri = new Uri(dummyBaseUriString + currentUriString.TrimStart('/'));
+            var builder = new UriBuilder(uri);
+            var queryParameters = HttpUtility.ParseQueryString(builder.Query);
+            builder.Query = string.Empty;
+            var currentUriStringWithoutQueryParameters = string.Concat("/", builder.ToString().AsSpan(start: dummyBaseUriString.Length));
+            queryParameters[name] = value;
+            HttpRequestMessage.RequestUri = new Uri($"{currentUriStringWithoutQueryParameters}?{queryParameters}", UriKind.Relative);
+        }
         return this;
     }
 
