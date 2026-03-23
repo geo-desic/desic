@@ -1,4 +1,5 @@
 ﻿using Desic.Domain.Common.Entities;
+using Desic.Domain.EntityTypes;
 using Desic.Domain.Labels;
 using Desic.Domain.Processes;
 using Desic.Infrastructure.Data.EntityTypes;
@@ -7,6 +8,7 @@ using Desic.Infrastructure.Data.Labels;
 using Desic.Infrastructure.Data.Test.Users;
 using Desic.Shared.Extensions;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -35,15 +37,17 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
             return;
         }
 
-        // ordering is important due to potential entity dependencies
-        await SeedEntityTypes(options: options.EntityTypes, cancellationToken: cancellationToken);
-        await SeedLabels(options: options.Labels, cancellationToken: cancellationToken);
-
-        // entity types and labels must be seeded before this by object can be created due to foriegn key and dependency requirements
-        var process = await CreateProcess(cancellationToken: cancellationToken);
-
+        var processPersisted = false;
+        var process = CreateProcessUnpersisted();
         try
         {
+            // ordering is important due to potential entity dependencies
+            await SeedEntityTypes(options: options.EntityTypes, cancellationToken: cancellationToken);
+            await SeedLabels(options: options.Labels, cancellationToken: cancellationToken);
+            // note that the Process entity type and System label must be seeded before the process entity can safely be persisted due to foreign key constaints
+            await PersistProcess(process: process, cancellationToken: cancellationToken);
+            processPersisted = true;
+
             await SeedIso3166Countries(options: options.Iso3166Countries, by: process, cancellationToken: cancellationToken);
 
             // test data
@@ -54,14 +58,14 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
         {
             try
             {
-                await FailProcess(process: process, message: ex.Message, cancellationToken: cancellationToken);
+                await FailProcess(process: process, message: ex.Message, processPersisted: processPersisted, cancellationToken: cancellationToken);
             }
             catch { /* nothing => rethrow original exception not this one */ }
             throw;
         }
     }
 
-    private async Task<Process> CreateProcess(CancellationToken cancellationToken)
+    private static Process CreateProcessUnpersisted()
     {
         var now = DateTime.UtcNow;
         var by = new Process
@@ -71,23 +75,35 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
             StartedOn = now,
         };
         by.SetCreatedAndModifiedBy(by: SystemLabels.System, on: now);
-
-        _logger.LogDebug("Creating process {ProcessName}", by.Name);
-        _context.Processes.Add(by);
-        await _context.SaveChangesAsync(cancellationToken: cancellationToken);
         return by;
+    }
+
+    private async Task PersistProcess(Process process, CancellationToken cancellationToken)
+    {
+        _logger.LogDebug("Creating process: id = {ProcessId}; name = {ProcessName}", process.Id, process.Name);
+        _context.Processes.Add(process);
+        await _context.SaveChangesAsync(cancellationToken: cancellationToken);
     }
 
     private async Task CompleteProcess(Process process, CancellationToken cancellationToken)
     {
+        _logger.LogDebug("Completing process: id = {ProcessId}; name = {ProcessName}", process.Id, process.Name);
         _context.Processes.Attach(process); // _context.ChangeTracker.Clear() has likely been called since process was created
         process.CompletedOn = DateTime.UtcNow;
         await _context.SaveChangesAsync(cancellationToken: cancellationToken);
     }
 
-    private async Task FailProcess(Process process, string? message, CancellationToken cancellationToken)
+    private async Task FailProcess(Process process, string? message, bool processPersisted, CancellationToken cancellationToken)
     {
-        _context.Processes.Attach(process); // _context.ChangeTracker.Clear() has likely been called since process was created
+        if (!await _context.EntityTypes.AnyAsync(x => x.Id == SystemEntityTypes.Process.Id, cancellationToken: cancellationToken)
+            || !await _context.Labels.AnyAsync(x => x.Id == SystemLabels.System.Id, cancellationToken: cancellationToken))
+        {
+            _logger.LogDebug("Unabled to persist failed process due to non-existant required seed dependencies");
+            return;
+        }
+        _logger.LogDebug("Failing process: id = {ProcessId}; name = {ProcessName}", process.Id, process.Name);
+        if (processPersisted) _context.Processes.Attach(process); // _context.ChangeTracker.Clear() has likely been called since process was created
+        else _context.Processes.Add(process);
         process.FaileddOn = DateTime.UtcNow;
         process.Message = message.Left(Process.MaxLengthMessage);
         await _context.SaveChangesAsync(cancellationToken: cancellationToken);
