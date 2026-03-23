@@ -266,6 +266,114 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                     b.ToTable("Labels", "app");
                 });
 
+            modelBuilder.Entity("Desic.Domain.Processes.Process", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(0);
+
+                    b.Property<DateTime?>("CompletedOn")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(14);
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(1);
+
+                    b.Property<string>("CreatedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(2);
+
+                    b.Property<Guid>("CreatedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(3);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(4)
+                        .HasDefaultValueSql("DATETIME('now')");
+
+                    b.Property<Guid?>("DeletedById")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(9);
+
+                    b.Property<string>("DeletedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(10);
+
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(11);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(12);
+
+                    b.Property<DateTime?>("FaileddOn")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(15);
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(16);
+
+                    b.Property<Guid>("ModifiedById")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(5);
+
+                    b.Property<string>("ModifiedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(6);
+
+                    b.Property<Guid>("ModifiedByTypeId")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(7);
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(8)
+                        .HasDefaultValueSql("DATETIME('now')");
+
+                    b.Property<DateTime?>("StartedOn")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(13);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompletedOn");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("DeletedByTypeId");
+
+                    b.HasIndex("DeletedOn");
+
+                    b.HasIndex("FaileddOn");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("ModifiedOn");
+
+                    b.HasIndex("StartedOn");
+
+                    b.ToTable("Processes", "app");
+                });
+
             modelBuilder.Entity("Desic.Domain.Tags.Tag", b =>
                 {
                     b.Property<Guid>("Id")
@@ -487,6 +595,26 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 });
 
             modelBuilder.Entity("Desic.Domain.Labels.Label", b =>
+                {
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("DeletedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("ModifiedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Desic.Domain.Processes.Process", b =>
                 {
                     b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
                         .WithMany()

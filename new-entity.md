@@ -64,6 +64,17 @@ In [LogEvents.cs](src/Application/Common/LogEvents.cs) in the section of the fil
     #endregion
 ```
 
+## Application Unit Tests Project
+
+### TestApplicationDbContext
+In [TestApplicationDbContext.cs](test/Application.Tests.Unit/TestApplicationDbContext.cs) add an alphebetized named (plural) `DbSet<T>` property for the entity.
+
+```c#
+    // alphebetize this in the file
+    public DbSet<Person> Persons { get; set; }
+```
+
+
 ## Infrastructure Project - Data Folder/Namespace
 
 ### Entity Configuration - Persistence Information
@@ -92,11 +103,11 @@ public class PersonConfiguration(DatabaseFacade databaseFacade) : IEntityTypeCon
 ### ApplicationDbContext
 In [ApplicationDbContext.cs](src/Infrastructure/Data/ApplicationDbContext.cs)
 - Add an alphebetized named (plural) `DbSet<T>` for the entity
-- Add a line to configure the entity in the `OnModelCreating` method using the configuration class created above, e.g. `PersonConfiguration`
+- Add an alphabetized line to configure the entity in the `OnModelCreating` method using the configuration class created above, e.g. `PersonConfiguration`
 
 ```c#
     // alphebetize this in the file
-    DbSet<Person> Persons { get; }
+    public DbSet<Person> Persons { get; set; }
 
     //...
 
@@ -104,9 +115,10 @@ In [ApplicationDbContext.cs](src/Infrastructure/Data/ApplicationDbContext.cs)
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema(AppSchema);
-        modelBuilder.ApplyConfiguration(new EntityTypeConfiguration());
-        // ApplyConfiguration for other entities
+        // alphabetized entity configurations
+        // ...
         modelBuilder.ApplyConfiguration(new PersonConfiguration()); // <==== new line added
+        // ...
         modelBuilder.SetUtcValueConverterForAllDateTimeProperties();
     }
 ```

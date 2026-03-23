@@ -38,6 +38,10 @@ public static class LogEvents
     public const int SeedIso3166Countries                  = StartIso3166Countries + OffsetSeed;
     #endregion
 
+    #region Processes
+    internal const int StartProcesses                      = StartIso3166Countries + OffsetEntity;
+    #endregion
+
     #region Offsets
     internal const int OffsetNonEntities                   = 1000000;
     internal const int OffsetEntity                        = 1000;

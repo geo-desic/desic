@@ -122,6 +122,52 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Processes",
+                schema: "app",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    DeletedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    DeletedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StartedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CompletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FaileddOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Processes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Processes_EntityTypes_CreatedByTypeId",
+                        column: x => x.CreatedByTypeId,
+                        principalSchema: "ref",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Processes_EntityTypes_DeletedByTypeId",
+                        column: x => x.DeletedByTypeId,
+                        principalSchema: "ref",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Processes_EntityTypes_ModifiedByTypeId",
+                        column: x => x.ModifiedByTypeId,
+                        principalSchema: "ref",
+                        principalTable: "EntityTypes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Tags",
                 schema: "app",
                 columns: table => new
@@ -371,6 +417,78 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                 column: "Name");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Processes_CompletedOn",
+                schema: "app",
+                table: "Processes",
+                column: "CompletedOn");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_CreatedById",
+                schema: "app",
+                table: "Processes",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_CreatedByTypeId",
+                schema: "app",
+                table: "Processes",
+                column: "CreatedByTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_CreatedOn",
+                schema: "app",
+                table: "Processes",
+                column: "CreatedOn");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_DeletedById",
+                schema: "app",
+                table: "Processes",
+                column: "DeletedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_DeletedByTypeId",
+                schema: "app",
+                table: "Processes",
+                column: "DeletedByTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_DeletedOn",
+                schema: "app",
+                table: "Processes",
+                column: "DeletedOn");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_FaileddOn",
+                schema: "app",
+                table: "Processes",
+                column: "FaileddOn");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_ModifiedById",
+                schema: "app",
+                table: "Processes",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_ModifiedByTypeId",
+                schema: "app",
+                table: "Processes",
+                column: "ModifiedByTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_ModifiedOn",
+                schema: "app",
+                table: "Processes",
+                column: "ModifiedOn");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Processes_StartedOn",
+                schema: "app",
+                table: "Processes",
+                column: "StartedOn");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tags_CreatedById",
                 schema: "app",
                 table: "Tags",
@@ -507,6 +625,10 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Labels",
+                schema: "app");
+
+            migrationBuilder.DropTable(
+                name: "Processes",
                 schema: "app");
 
             migrationBuilder.DropTable(

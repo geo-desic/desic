@@ -16,14 +16,15 @@ public static class SystemEntityTypes
     // see SystemEntityTypeValidator for validation rules
     // do not change any values for an existing item once it has been added to a non-development database
     // this list should be ordered by Id
-    #pragma warning disable format
+#pragma warning disable format
     public static readonly SystemEntityType Unspecified                   = new(Id: new("00000001-0000-0000-0000-000000000000"), Key: "unsp", Name: nameof(Unspecified));
     public static readonly SystemEntityType EntityType                    = new(Id: new("00000002-0000-0000-0000-000000000000"), Key: "enty", Name: nameof(EntityType));
     public static readonly SystemEntityType Label                         = new(Id: new("00000003-0000-0000-0000-000000000000"), Key: "labl", Name: nameof(Label));
     public static readonly SystemEntityType Tag                           = new(Id: new("00000004-0000-0000-0000-000000000000"), Key: "tags", Name: nameof(Tag));
     public static readonly SystemEntityType User                          = new(Id: new("00000005-0000-0000-0000-000000000000"), Key: "user", Name: nameof(User));
     public static readonly SystemEntityType Iso3166Country                = new(Id: new("00000006-0000-0000-0000-000000000000"), Key: "ctry", Name: nameof(Iso3166Country));
-    #pragma warning restore format
+    public static readonly SystemEntityType Process                       = new(Id: new("00000007-0000-0000-0000-000000000000"), Key: "proc", Name: nameof(Process));
+#pragma warning restore format
 
     // this should be ordered by Id (i.e. same order as list above)
     internal static IEnumerable<SystemEntityType> All()
@@ -34,6 +35,7 @@ public static class SystemEntityTypes
         yield return Tag;
         yield return User;
         yield return Iso3166Country;
+        yield return Process;
     }
 
     private static readonly Dictionary<Guid, SystemEntityType> _dictionaryById = All().ToDictionary(x => x.Id);

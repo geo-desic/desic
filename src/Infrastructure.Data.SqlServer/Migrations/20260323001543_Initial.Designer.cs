@@ -3,15 +3,16 @@ using System;
 using Desic.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Desic.Infrastructure.Data.Sqlite.Migrations
+namespace Desic.Infrastructure.Data.SqlServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260322034019_Initial")]
+    [Migration("20260323001543_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,25 +21,28 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("app")
-                .HasAnnotation("ProductVersion", "10.0.5");
+                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Desic.Domain.EntityTypes.EntityType", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(0);
 
                     b.Property<string>("Key")
                         .IsRequired()
                         .HasMaxLength(4)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(4)")
                         .HasColumnOrder(1);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(50)")
                         .HasColumnOrder(2);
 
                     b.HasKey("Id");
@@ -56,88 +60,88 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(0);
 
                     b.Property<string>("Alpha2")
                         .IsRequired()
                         .HasMaxLength(2)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(2)")
                         .HasColumnOrder(15);
 
                     b.Property<string>("Alpha3")
                         .IsRequired()
                         .HasMaxLength(3)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(3)")
                         .HasColumnOrder(16);
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
 
                     b.Property<string>("CreatedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(2);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(3);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(4)
-                        .HasDefaultValueSql("DATETIME('now')");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<Guid?>("DeletedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(9);
 
                     b.Property<string>("DeletedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(10);
 
                     b.Property<Guid?>("DeletedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(11);
 
                     b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(12);
 
                     b.Property<bool>("IsBeingSeeded")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bit")
                         .HasColumnOrder(13);
 
                     b.Property<int>("IsoId")
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("int")
                         .HasColumnOrder(14);
 
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(5);
 
                     b.Property<string>("ModifiedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(6);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(7);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(8)
-                        .HasDefaultValueSql("DATETIME('now')");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(17);
 
                     b.HasKey("Id");
@@ -180,68 +184,68 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(0);
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
 
                     b.Property<string>("CreatedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(2);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(3);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(4)
-                        .HasDefaultValueSql("DATETIME('now')");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<Guid?>("DeletedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(9);
 
                     b.Property<string>("DeletedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(10);
 
                     b.Property<Guid?>("DeletedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(11);
 
                     b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(12);
 
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(5);
 
                     b.Property<string>("ModifiedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(6);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(7);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(8)
-                        .HasDefaultValueSql("DATETIME('now')");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(250)")
                         .HasColumnOrder(13);
 
                     b.HasKey("Id");
@@ -269,77 +273,185 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                     b.ToTable("Labels", "app");
                 });
 
-            modelBuilder.Entity("Desic.Domain.Tags.Tag", b =>
+            modelBuilder.Entity("Desic.Domain.Processes.Process", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(0);
 
+                    b.Property<DateTime?>("CompletedOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(14);
+
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
 
                     b.Property<string>("CreatedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(2);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(3);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(4)
-                        .HasDefaultValueSql("DATETIME('now')");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<Guid?>("DeletedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(9);
 
                     b.Property<string>("DeletedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(10);
 
                     b.Property<Guid?>("DeletedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(11);
 
                     b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(12);
 
+                    b.Property<DateTime?>("FaileddOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(15);
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)")
+                        .HasColumnOrder(16);
+
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(5);
 
                     b.Property<string>("ModifiedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(6);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(7);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(8)
-                        .HasDefaultValueSql("DATETIME('now')");
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<DateTime?>("StartedOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(13);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompletedOn");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("CreatedByTypeId");
+
+                    b.HasIndex("CreatedOn");
+
+                    b.HasIndex("DeletedById");
+
+                    b.HasIndex("DeletedByTypeId");
+
+                    b.HasIndex("DeletedOn");
+
+                    b.HasIndex("FaileddOn");
+
+                    b.HasIndex("ModifiedById");
+
+                    b.HasIndex("ModifiedByTypeId");
+
+                    b.HasIndex("ModifiedOn");
+
+                    b.HasIndex("StartedOn");
+
+                    b.ToTable("Processes", "app");
+                });
+
+            modelBuilder.Entity("Desic.Domain.Tags.Tag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(0);
+
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(1);
+
+                    b.Property<string>("CreatedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnOrder(2);
+
+                    b.Property<Guid>("CreatedByTypeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(3);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(4)
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid?>("DeletedById")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(9);
+
+                    b.Property<string>("DeletedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnOrder(10);
+
+                    b.Property<Guid?>("DeletedByTypeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(11);
+
+                    b.Property<DateTime?>("DeletedOn")
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(12);
+
+                    b.Property<Guid>("ModifiedById")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(5);
+
+                    b.Property<string>("ModifiedByName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnOrder(6);
+
+                    b.Property<Guid>("ModifiedByTypeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnOrder(7);
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnOrder(8)
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(250)")
                         .HasColumnOrder(13);
 
                     b.Property<string>("Value")
                         .HasMaxLength(250)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(250)")
                         .HasColumnOrder(14);
 
                     b.HasKey("Id");
@@ -373,74 +485,74 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(0);
 
                     b.Property<Guid>("CreatedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(1);
 
                     b.Property<string>("CreatedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(2);
 
                     b.Property<Guid>("CreatedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(3);
 
                     b.Property<DateTime>("CreatedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(4)
-                        .HasDefaultValueSql("DATETIME('now')");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<Guid?>("DeletedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(9);
 
                     b.Property<string>("DeletedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(10);
 
                     b.Property<Guid?>("DeletedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(11);
 
                     b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(12);
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
+                        .HasColumnType("bit")
                         .HasDefaultValue(true)
                         .HasColumnOrder(14);
 
                     b.Property<Guid>("ModifiedById")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(5);
 
                     b.Property<string>("ModifiedByName")
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(6);
 
                     b.Property<Guid>("ModifiedByTypeId")
-                        .HasColumnType("TEXT")
+                        .HasColumnType("uniqueidentifier")
                         .HasColumnOrder(7);
 
                     b.Property<DateTime>("ModifiedOn")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
+                        .HasColumnType("datetime2")
                         .HasColumnOrder(8)
-                        .HasDefaultValueSql("DATETIME('now')");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnOrder(13);
 
                     b.HasKey("Id");
@@ -490,6 +602,26 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 });
 
             modelBuilder.Entity("Desic.Domain.Labels.Label", b =>
+                {
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("DeletedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
+                        .WithMany()
+                        .HasForeignKey("ModifiedByTypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Desic.Domain.Processes.Process", b =>
                 {
                     b.HasOne("Desic.Domain.EntityTypes.EntityType", null)
                         .WithMany()

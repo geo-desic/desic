@@ -2,6 +2,7 @@
 using Desic.Domain.EntityTypes;
 using Desic.Domain.Iso3166Countries;
 using Desic.Domain.Labels;
+using Desic.Domain.Processes;
 using Desic.Domain.Tags;
 using Desic.Domain.Users;
 using Desic.Infrastructure.Data.Common.Extensions;
@@ -17,6 +18,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<EntityType> EntityTypes { get; set; }
     public DbSet<Iso3166Country> Iso3166Countries { get; set; }
     public DbSet<Label> Labels { get; set; }
+    public DbSet<Process> Processes { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<User> Users { get; set; }
 
@@ -33,9 +35,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.HasDefaultSchema(AppSchema);
+        // alphabetized entity configurations
         modelBuilder.ApplyConfiguration(new EntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new Iso3166CountryConfiguration(Database));
         modelBuilder.ApplyConfiguration(new LabelConfiguration(Database));
+        modelBuilder.ApplyConfiguration(new ProcessConfiguration(Database));
         modelBuilder.ApplyConfiguration(new TagConfiguration(Database));
         modelBuilder.ApplyConfiguration(new UserConfiguration(Database));
         modelBuilder.SetUtcValueConverterForAllDateTimeProperties();
