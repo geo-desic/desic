@@ -1,9 +1,11 @@
 ﻿using Desic.Domain.Common.Entities;
 using Desic.Domain.Labels;
+using Desic.Domain.Processes;
 using Desic.Infrastructure.Data.EntityTypes;
 using Desic.Infrastructure.Data.Iso3166Countries;
 using Desic.Infrastructure.Data.Labels;
 using Desic.Infrastructure.Data.Test.Users;
+using Desic.Shared.Extensions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -38,28 +40,57 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
         await SeedLabels(options: options.Labels, cancellationToken: cancellationToken);
 
         // entity types and labels must be seeded before this by object can be created due to foriegn key and dependency requirements
-        var by = await CreateBy(cancellationToken: cancellationToken);
+        var process = await CreateProcess(cancellationToken: cancellationToken);
 
-        await SeedIso3166Countries(options: options.Iso3166Countries, by: by, cancellationToken: cancellationToken);
+        try
+        {
+            await SeedIso3166Countries(options: options.Iso3166Countries, by: process, cancellationToken: cancellationToken);
 
-        // test data
-        await SeedTestData(options: options.Test, by: by, cancellationToken: cancellationToken);
+            // test data
+            await SeedTestData(options: options.Test, by: process, cancellationToken: cancellationToken);
+            await CompleteProcess(process: process, cancellationToken: cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                await FailProcess(process: process, message: ex.Message, cancellationToken: cancellationToken);
+            }
+            catch { /* nothing => rethrow original exception not this one */ }
+            throw;
+        }
     }
 
-    private async Task<IReadOnlyMinimalEntity> CreateBy(CancellationToken cancellationToken)
+    private async Task<Process> CreateProcess(CancellationToken cancellationToken)
     {
         var now = DateTime.UtcNow;
-        var by = new Label
+        var by = new Process
         {
             Id = Guid.CreateVersion7(),
-            Name = $"Process-SeedApplicationDatabase-{now:yyyyMMddHHmmss}",
+            Name = $"Seed Application Database - {now:yyyyMMddHHmmss}",
+            StartedOn = now,
         };
         by.SetCreatedAndModifiedBy(by: SystemLabels.System, on: now);
 
-        _logger.LogDebug("Creating label {LabelName}", by.Name);
-        _context.Labels.Add(by);
-        await _context.SaveChangesAsync(cancellationToken);
+        _logger.LogDebug("Creating process {ProcessName}", by.Name);
+        _context.Processes.Add(by);
+        await _context.SaveChangesAsync(cancellationToken: cancellationToken);
         return by;
+    }
+
+    private async Task CompleteProcess(Process process, CancellationToken cancellationToken)
+    {
+        _context.Processes.Attach(process); // _context.ChangeTracker.Clear() has likely been called since process was created
+        process.CompletedOn = DateTime.UtcNow;
+        await _context.SaveChangesAsync(cancellationToken: cancellationToken);
+    }
+
+    private async Task FailProcess(Process process, string? message, CancellationToken cancellationToken)
+    {
+        _context.Processes.Attach(process); // _context.ChangeTracker.Clear() has likely been called since process was created
+        process.FaileddOn = DateTime.UtcNow;
+        process.Message = message.Left(Process.MaxLengthMessage);
+        await _context.SaveChangesAsync(cancellationToken: cancellationToken);
     }
 
     private async Task SeedEntityTypes(SeedApplicationDatabaseEntityTypesOptions? options, CancellationToken cancellationToken)

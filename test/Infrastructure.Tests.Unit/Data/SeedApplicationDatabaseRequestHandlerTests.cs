@@ -31,7 +31,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Labels.Any().Should().BeFalse();
+            DbContext.Processes.Any().Should().BeFalse();
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never());
         }
     }
@@ -55,7 +55,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Labels.Count().Should().Be(1);
+            DbContext.Processes.Count().Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedEntityTypesRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Once());
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedEntityTypesRequestHandler));
         }
@@ -80,7 +80,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Labels.Count().Should().BeGreaterThanOrEqualTo(1);
+            DbContext.Processes.Count().Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedLabelsRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Once());
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedLabelsRequestHandler));
         }
@@ -105,7 +105,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Labels.Count().Should().Be(1);
+            DbContext.Processes.Count().Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedIso3166CountriesRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Once());
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedIso3166CountriesRequestHandler));
         }
@@ -132,7 +132,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Labels.Count().Should().Be(1);
+            DbContext.Processes.Count().Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedTestUsersRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Exactly(expectedTimes));
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedTestUsersRequestHandler));
         }
