@@ -1,5 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common;
+using Desic.Application.Common.Infrastructure;
 using Desic.Application.EntityTypes;
 using Desic.Application.EntityTypes.List;
 using Desic.Shared.Extensions;
@@ -12,7 +13,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
 {
     private readonly ILogger<ListEntityTypesRequestHandler> _logger = NullLogger<ListEntityTypesRequestHandler>.Instance;
     private readonly Domain.EntityTypes.EntityType[] _seededEntityTypes;
-    private const int DefaultCount = Application.Common.Extensions.QueryableExtensions.DefaultTakeCount;
+    private const int DefaultCount = ListRequests.DefaultCount;
     private const EntityTypesOrderingMethod DefaultOrderingMethod = EntityTypesOrderingMethod.NameAsc;
     private const int MaximumAllowedCount = ListEntityTypesRequestHandler.MaximumAllowedCount;
     private const int TotalCount = MaximumAllowedCount + 10;
