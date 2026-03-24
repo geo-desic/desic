@@ -2,5 +2,5 @@
 
 public interface IOrderingMethod<T> where T : struct, Enum
 {
-    T? OrderingMethod { get; set; }
+    T OrderingMethod { get; set; }
 }

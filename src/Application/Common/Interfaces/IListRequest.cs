@@ -2,6 +2,6 @@
 
 public interface IListRequest
 {
-    int? Count { get; set; }
-    int? StartIndex { get; set; }
+    int Count { get; set; }
+    int StartIndex { get; set; }
 }

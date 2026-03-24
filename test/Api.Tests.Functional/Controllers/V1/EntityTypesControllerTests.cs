@@ -31,16 +31,15 @@ public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : TestWe
         response.Content.Should().BeEquivalentTo(expected, x => x.WithStrictOrdering());
     }
 
-    private static ListEntityTypesResult ExpectedResponseContent(int? startIndex = null, int? count = null, EntityTypesOrderingMethod? orderingMethod = null)
+    private static ListEntityTypesResult ExpectedResponseContent(int startIndex = 0, int? count = null, EntityTypesOrderingMethod? orderingMethod = null)
     {
-        startIndex ??= 0;
         var allItems = Domain.EntityTypes.SystemEntityTypes.AllAsEntities().Select(x => new EntityType { Key = x.Key, Name = x.Name }).ToList();
-        var query = allItems.AsQueryable().OrderBy(orderingMethod: orderingMethod).Skip(startIndex.Value);
+        var query = allItems.AsQueryable().OrderBy(orderingMethod: orderingMethod).Skip(startIndex);
         if (count.HasValue) query = query.Take(count.Value);
         List<EntityType> items = [.. query];
         return new()
         {
-            StartIndex = startIndex.Value,
+            StartIndex = startIndex,
             TotalCount = allItems.Count,
             Items = items,
         };

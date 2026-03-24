@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using var loggerFactory = LoggerFactory.Create(loggingBuilder =>
 {
@@ -58,7 +60,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddHostedService<StartupBackgroundService>();
 builder.Services.AddSingleton<StartupHealthCheck>();
 
-builder.Services.AddControllers();
+builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+{
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 
 builder.Services.AddHealthChecks()
     .AddCheck("Alive", x => HealthCheckResult.Healthy(), tags: ["live"])

@@ -1,5 +1,6 @@
 ﻿using Desic.Application.Common;
 using Desic.Application.Common.Extensions;
+using Desic.Application.Common.Infrastructure;
 using Desic.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -12,22 +13,21 @@ public class ListEntityTypesRequestHandler(ILogger<ListEntityTypesRequestHandler
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     internal const bool IncludeTotalCount = true;
     private const int LogEventId = LogEvents.ListEntityTypes;
-    internal const int MaximumAllowedCount = 100;
+    internal const int MaximumAllowedCount = 200;
 
     public async Task<Result<ListEntityTypesResult>> Handle(ListEntityTypesRequest request, CancellationToken cancellationToken)
     {
-        if (request.StartIndex < 0)
-        {
-            _logger.LogWarning(LogEventId, "Negative offset is not supported, defaulting offset to 0");
-            request.StartIndex = 0;
-        }
-        if (request.Count > MaximumAllowedCount)
-        {
-            _logger.LogInformation(LogEventId, "Requested count is greater than maximum allowed, capping at the maximum: {RequestCount} > {MaximumAllowedCount}", request.Count, MaximumAllowedCount);
-            request.Count = MaximumAllowedCount;
-        }
+        request.Sanitize(settings: GetRequestSanitizationSettings());
 
         var query = _dbContext.EntityTypes.Select(x => new EntityType { Name = x.Name, Key = x.Key }).OrderBy(orderingMethod: request.OrderingMethod);
         return await query.ToListResultAsync<EntityType, ListEntityTypesResult>(startIndex: request.StartIndex, takeCount: request.Count, includeTotalCount: IncludeTotalCount, cancellationToken: cancellationToken);
     }
+
+    private ListRequestSanitizationSettings GetRequestSanitizationSettings() =>
+        new()
+        {
+            MaximumAllowedCount = MaximumAllowedCount,
+            Logger = _logger,
+            LogEventId = LogEventId
+        };
 }

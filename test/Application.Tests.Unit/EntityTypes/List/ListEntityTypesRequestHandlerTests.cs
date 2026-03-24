@@ -12,7 +12,10 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
 {
     private readonly ILogger<ListEntityTypesRequestHandler> _logger = NullLogger<ListEntityTypesRequestHandler>.Instance;
     private readonly Domain.EntityTypes.EntityType[] _seededEntityTypes;
-    private const int TotalCount = ListEntityTypesRequestHandler.MaximumAllowedCount + 10;
+    private const int DefaultCount = Application.Common.Extensions.QueryableExtensions.DefaultTakeCount;
+    private const EntityTypesOrderingMethod DefaultOrderingMethod = EntityTypesOrderingMethod.NameAsc;
+    private const int MaximumAllowedCount = ListEntityTypesRequestHandler.MaximumAllowedCount;
+    private const int TotalCount = MaximumAllowedCount + 10;
 
     public ListEntityTypesRequestHandlerTests() : base(o => new(o))
     {
@@ -24,16 +27,20 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
     public class ListEntityTypesRequestHandlerTests001 : ListEntityTypesRequestHandlerTests
     {
         [Theory]
-        [InlineData(0, ListEntityTypesRequestHandler.MaximumAllowedCount, null, null)] // count == null, startIndex == null =====> maximum allowed ordered items returned
-        [InlineData(1, ListEntityTypesRequestHandler.MaximumAllowedCount, null, 1)]    // count == null, startIndex == 1    =====> maximum allowed ordered items returned except the first
-        [InlineData(0, 1, 1, null)]                                                    // count == 1   , startIndex == null =====> only first ordered item returned
-        [InlineData(0, 1, 1, -1)]                                                      // count == 1   , startIndex == -1   =====> only first ordered item returned (negative startIndex treated as 0)
-        [InlineData(1, 1, 1, 1)]                                                       // count == 1   , startIndex == 1    =====> only the second ordered item returned
-        public async Task Handle_SpecifiedRequestValues_ExpectedResults(int expectedMinIndex, int expectedCount, int? count, int? startIndex)
+        [InlineData(0, 0, -1, 0)]                                         // count == -1                                  =====> no items returned (negative count treated as 0)
+        [InlineData(0, 0, 0, 0)]                                          // count == 0                                   =====> no items returned
+        [InlineData(0, 1, 1, 0)]                                          // count == 1                                   =====> only first ordered item returned
+        [InlineData(0, DefaultCount, DefaultCount, 0)]                    // count == default                             =====> default count of ordered items returned
+        [InlineData(0, MaximumAllowedCount, MaximumAllowedCount, 0)]      // count == maximum                             =====> maximum count of ordered items returned
+        [InlineData(0, MaximumAllowedCount, MaximumAllowedCount + 1, 0)]  // count >  maximum                             =====> maximum count of ordered items returned (count capped at maximum)
+        [InlineData(0, 0, 0, -1)]                                         // count == 0       , startIndex == -1          =====> no items returned (negative startIndex treated as 0)
+        [InlineData(0, 1, 1, -1)]                                         // count == 1       , startIndex == -1          =====> only the first ordered item returned (negative startIndex treated as 0)
+        [InlineData(1, 1, 1, 1)]                                          // count == 1       , startIndex == 1           =====> only the second ordered item returned (first item skipped)
+        [InlineData(0, 0, 1, TotalCount)]                                 // count == 1       , startIndex == total count =====> no items returned (all skipped)
+        public async Task Handle_SpecifiedRequestValues_ExpectedResults(int expectedMinIndex, int expectedCount, int count, int startIndex)
         {
             // arrange
-            var expectedStartIndex = startIndex ?? 0;
-            if (expectedStartIndex < 0) expectedStartIndex = 0;
+            var expectedStartIndex = startIndex < 0 ? 0 : startIndex;
             var expected = new Result<ListEntityTypesResult>(new ListEntityTypesResult
             {
                 Items = [.. ExpectedItems(minIndex: expectedMinIndex, count: expectedCount)],
@@ -72,7 +79,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
             var expected = new Result<ListEntityTypesResult>(new ListEntityTypesResult
             {
                 // if no ordering method is specified it should default to ordering by name ascending
-                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? EntityTypesOrderingMethod.NameAsc)],
+                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? DefaultOrderingMethod)],
                 StartIndex = 0,
                 TotalCount = ListEntityTypesRequestHandler.IncludeTotalCount ? TotalCount : null,
             });
@@ -81,8 +88,8 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
             {
                 Count = count,
                 StartIndex = 0,
-                OrderingMethod = orderingMethod
             };
+            if (orderingMethod.HasValue) request.OrderingMethod = orderingMethod.Value;
 
             // act
             var result = await handler.Handle(request, cancellationToken: TestContext.Current.CancellationToken);
@@ -100,12 +107,12 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
         for (var i = TotalCount; i > 0; --i)
         {
             var iString = $"{i}".PadLeft(3, '0');
-            var alphaCharacterCapitalized = (i % 26) + 'A'; // this is to ensure that ordering by key vs name will be different
+            char alphaCharacterCapitalized = (char)((i % 26) + 'A'); // this is to ensure that ordering by key vs name will be different
             yield return new Domain.EntityTypes.EntityType { Id = i.ToGuid(), Key = $"k{iString}", Name = $"Entity{alphaCharacterCapitalized}{iString}" };
         }
     }
 
-    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, EntityTypesOrderingMethod orderingMethod = EntityTypesOrderingMethod.NameAsc)
+    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, EntityTypesOrderingMethod orderingMethod = DefaultOrderingMethod)
     {
         // note that the OrderBy extension method used here is already covered by tests ====> see Desic.Application.Tests.Unit.EntityTypes.QueryableExtensionsTests
         return _seededEntityTypes.AsQueryable().Select(x => new EntityType { Key = x.Key, Name = x.Name }).OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count));
