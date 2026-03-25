@@ -15,13 +15,8 @@ public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger
 
     public async Task<Result<User>> Handle(GetUserByIdRequest request, CancellationToken cancellationToken)
     {
-        var user = await _dbContext.Users.GetEntityByIdAsync(request.Id, cancellationToken);
-
-        if (user == null)
-        {
-            _logger.LogDebug(LogEventId, "User with id {UserId} not found", request.Id);
-            return (User?)null;
-        }
-        return user.ToModel();
+        var result = (await _dbContext.Users.GetEntityByIdAsync(id: request.Id, cancellationToken: cancellationToken))?.ToModel();
+        if (result == null) _logger.LogDebug(LogEventId, "User with id {UserId} not found", request.Id);
+        return result;
     }
 }
