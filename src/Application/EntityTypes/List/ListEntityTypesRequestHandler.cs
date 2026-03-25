@@ -19,7 +19,7 @@ public class ListEntityTypesRequestHandler(ILogger<ListEntityTypesRequestHandler
     {
         request.Pagination.Sanitize(settings: GetRequestSanitizationSettings());
 
-        var query = _dbContext.EntityTypes.ApplyFilter(filter: request.Filter).OrderBy(orderingMethod: request.OrderingMethod).Select(x => new EntityType { Name = x.Name, Key = x.Key });
+        var query = _dbContext.EntityTypes.ApplyFilter(filter: request.Filter).OrderBy(orderingMethod: request.OrderingMethod).SelectToModel();
         return await query.ToListResultAsync<EntityType, ListEntityTypesResult>(pagination: request.Pagination, cancellationToken: cancellationToken);
     }
 

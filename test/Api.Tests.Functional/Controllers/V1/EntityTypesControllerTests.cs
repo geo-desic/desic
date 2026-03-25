@@ -63,7 +63,7 @@ public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : TestWe
         var allItems = Domain.EntityTypes.SystemEntityTypes.AllAsEntities().ToList();
         var query = allItems.AsQueryable().OrderBy(orderingMethod: orderingMethod).Skip(startIndex);
         if (count.HasValue) query = query.Take(count.Value);
-        List<EntityType> items = [.. query.Select(x => new EntityType { Key = x.Key, Name = x.Name })];
+        List<EntityType> items = [.. query.SelectToModel()];
         return new()
         {
             StartIndex = startIndex,

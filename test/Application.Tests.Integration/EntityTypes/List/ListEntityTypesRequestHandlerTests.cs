@@ -42,7 +42,7 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
         // arrange
         var count = 3; // there needs to be at least this number of seeded entity types for this test to work correctly, see Desic.Domain.EntityTypes.SystemEntityTypes
         var startIndex = 1;
-        var allOrderedByKeyDesc = SystemEntityTypes.AllAsEntities().Select(x => new Application.EntityTypes.EntityType { Name = x.Name, Key = x.Key }).OrderByDescending(x => x.Key).ToList();
+        var allOrderedByKeyDesc = SystemEntityTypes.AllAsEntities().AsQueryable().SelectToModel().OrderByDescending(x => x.Key).ToList();
         var expected = new ListEntityTypesResult
         {
             StartIndex = startIndex,
