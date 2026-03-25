@@ -3,10 +3,10 @@ using Desic.Domain.Common.Entities;
 
 namespace Desic.Application.Common.Models;
 
-public class ModifiableModel : CreatableModel, Interfaces.IModifiable
+public abstract class ModifiableModel : CreatableModel, Interfaces.IModifiable
 {
-    public ModifiableModel() : base() { }
-    public ModifiableModel(ModifiableEntity entity) : base(entity)
+    protected ModifiableModel() : base() { }
+    protected ModifiableModel(ModifiableEntity entity) : base(entity)
     {
         this.MapModified(entity);
     }

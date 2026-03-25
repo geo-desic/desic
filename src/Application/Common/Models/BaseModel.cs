@@ -2,10 +2,10 @@
 
 namespace Desic.Application.Common.Models;
 
-public class BaseModel
+public abstract class BaseModel
 {
-    public BaseModel() { }
-    public BaseModel(BaseEntity entity)
+    protected BaseModel() { }
+    protected BaseModel(BaseEntity entity)
     {
         Id = entity.Id;
     }

@@ -3,10 +3,10 @@ using Desic.Domain.Common.Entities;
 
 namespace Desic.Application.Common.Models;
 
-public class CreatableModel : BaseModel, Interfaces.ICreatable
+public abstract class CreatableModel : BaseModel, Interfaces.ICreatable
 {
-    public CreatableModel() : base() { }
-    public CreatableModel(CreatableEntity entity) : base(entity)
+    protected CreatableModel() : base() { }
+    protected CreatableModel(CreatableEntity entity) : base(entity)
     {
         this.MapCreated(entity);
     }
