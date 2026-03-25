@@ -2,5 +2,5 @@
 
 public interface IFilterable<out T>
 {
-    T Filters { get; }
+    T Filter { get; }
 }

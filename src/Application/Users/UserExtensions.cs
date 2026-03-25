@@ -2,11 +2,11 @@
 
 public static class UserExtensions
 {
-    public static User ToDto(this Domain.Users.User user)
+    public static User ToDto(this Domain.Users.User source)
     {
-        return new User(user)
+        return new User(source)
         {
-            Username = user.Username,
+            Username = source.Username,
         };
     }
 }

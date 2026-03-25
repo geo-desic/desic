@@ -125,6 +125,6 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
     private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, EntityTypesOrderingMethod orderingMethod = DefaultOrderingMethod)
     {
         // note that the OrderBy extension method used here is already covered by tests ====> see Desic.Application.Tests.Unit.EntityTypes.QueryableExtensionsTests
-        return _seededEntityTypes.AsQueryable().Select(x => new EntityType { Key = x.Key, Name = x.Name }).OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count));
+        return _seededEntityTypes.AsQueryable().OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count)).Select(x => new EntityType { Key = x.Key, Name = x.Name });
     }
 }

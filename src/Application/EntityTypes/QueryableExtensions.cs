@@ -1,8 +1,10 @@
-﻿namespace Desic.Application.EntityTypes;
+﻿using Desic.Application.EntityTypes;
+
+namespace Desic.Application.EntityTypes;
 
 public static class QueryableExtensions
 {
-    public static IOrderedQueryable<EntityType> OrderBy(this IQueryable<EntityType> query, EntityTypesOrderingMethod? orderingMethod)
+    public static IOrderedQueryable<Domain.EntityTypes.EntityType> OrderBy(this IQueryable<Domain.EntityTypes.EntityType> query, EntityTypesOrderingMethod? orderingMethod)
     {
         return (orderingMethod ?? EntityTypesOrderingMethod.NameAsc) switch
         {
@@ -12,5 +14,19 @@ public static class QueryableExtensions
             EntityTypesOrderingMethod.NameDesc => query.OrderByDescending(x => x.Name),
             _ => query.OrderBy(x => x.Name),
         };
+    }
+
+    public static IQueryable<Domain.EntityTypes.EntityType> ApplyFilter(this IQueryable<Domain.EntityTypes.EntityType> query, EntityTypesFilter filter)
+    {
+        var result = query;
+        if (filter.Key != null)
+        {
+            result = result.Where(x => x.Key == filter.Key);
+        }
+        if (filter.Name != null)
+        {
+            result = result.Where(x => x.Name == filter.Name);
+        }
+        return result;
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Desic.Application.Common.Infrastructure;
 using System.ComponentModel;
 
-namespace Desic.Application.EntityTypes.List;
+namespace Desic.Application.EntityTypes;
 
-public class ListEntityTypesFilters
+public class EntityTypesFilter
 {
     [Description(Filters.DescriptionNonNullExact)]
     public string? Key { get; set; }

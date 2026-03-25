@@ -47,7 +47,7 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
         {
             StartIndex = startIndex,
             TotalCount = allOrderedByKeyDesc.Count,
-            Items = [.. allOrderedByKeyDesc.Take(startIndex..(startIndex + count))]
+            Items = [.. allOrderedByKeyDesc.Take(startIndex..(startIndex + count))],
         };
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
         var request = new ListEntityTypesRequest
@@ -59,6 +59,36 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
                 StartIndex = startIndex,
             },
             OrderingMethod = EntityTypesOrderingMethod.KeyDesc,
+        };
+
+        // act
+        var result = await mediator.Send(request: request, cancellationToken: TestContext.Current.CancellationToken);
+
+        // assert
+        result.IsSuccess.Should().BeTrue();
+        result.Value.Should().NotBeNull();
+        result.Value.Should().BeEquivalentTo(expected, opt => opt.WithStrictOrderingFor(x => x.Items));
+    }
+
+    [Fact]
+    public async Task ListEntityTypes_ValidRequestWithFilter_ExpectedResult()
+    {
+        // arrange
+        var expectedEntityType = SystemEntityTypes.Label.ToEntity().ToDto();
+        var expected = new ListEntityTypesResult
+        {
+            StartIndex = 0,
+            TotalCount = null,
+            Items = [expectedEntityType],
+        };
+        var mediator = ServiceProvider.GetRequiredService<IMediator>();
+        var request = new ListEntityTypesRequest
+        {
+            Pagination = new Pagination
+            {
+                IncludeTotalCount = false,
+            },
+            Filter = new EntityTypesFilter { Name = expectedEntityType.Name },
         };
 
         // act

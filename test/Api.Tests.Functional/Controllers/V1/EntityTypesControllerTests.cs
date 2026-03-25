@@ -33,12 +33,37 @@ public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : TestWe
         response.Content.Should().BeEquivalentTo(expected, x => x.WithStrictOrdering());
     }
 
+    [Fact]
+    public async Task List_ValidRequestWithFilterByKey_Status200OkAndExpectedItem()
+    {
+        // arrange
+        var expectedItem = Domain.EntityTypes.SystemEntityTypes.Label.ToEntity().ToDto(); // should exist by db seeding
+        var key = expectedItem.Key;
+        var expectedStatusCode = System.Net.HttpStatusCode.OK;
+        var expected = new ListEntityTypesResult
+        {
+            StartIndex = 0,
+            TotalCount = null,
+            Items = [expectedItem],
+        };
+        var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/entitytypes")
+            .AddQueryStringParameter(name: nameof(key), value: $"{key}");
+
+        // act
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ListEntityTypesResult>(request);
+
+        // assert
+        response.StatusCode.Should().Be(expectedStatusCode);
+        response.Content.Should().NotBeNull();
+        response.Content.Should().BeEquivalentTo(expected);
+    }
+
     private static ListEntityTypesResult ExpectedResponseContent(int? count = null, bool includeTotalCount = false, int startIndex = 0, EntityTypesOrderingMethod? orderingMethod = null)
     {
-        var allItems = Domain.EntityTypes.SystemEntityTypes.AllAsEntities().Select(x => new EntityType { Key = x.Key, Name = x.Name }).ToList();
+        var allItems = Domain.EntityTypes.SystemEntityTypes.AllAsEntities().ToList();
         var query = allItems.AsQueryable().OrderBy(orderingMethod: orderingMethod).Skip(startIndex);
         if (count.HasValue) query = query.Take(count.Value);
-        List<EntityType> items = [.. query];
+        List<EntityType> items = [.. query.Select(x => new EntityType { Key = x.Key, Name = x.Name })];
         return new()
         {
             StartIndex = startIndex,
