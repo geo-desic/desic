@@ -1,6 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common;
 using Desic.Application.Common.Infrastructure;
+using Desic.Application.Common.Models;
 using Desic.Application.EntityTypes;
 using Desic.Application.EntityTypes.List;
 using Desic.Shared.Extensions;
@@ -46,13 +47,17 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
             {
                 Items = [.. ExpectedItems(minIndex: expectedMinIndex, count: expectedCount)],
                 StartIndex = expectedStartIndex,
-                TotalCount = ListEntityTypesRequestHandler.IncludeTotalCount ? TotalCount : null,
+                TotalCount = ListEntityTypesRequestHandler.IncludeTotalCountAllowed ? TotalCount : null,
             });
             var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext);
             var request = new ListEntityTypesRequest
             {
-                Count = count,
-                StartIndex = startIndex,
+                Pagination = new Pagination
+                {
+                    Count = count,
+                    IncludeTotalCount = true,
+                    StartIndex = startIndex,
+                },
             };
 
             // act
@@ -82,13 +87,17 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
                 // if no ordering method is specified it should default to ordering by name ascending
                 Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? DefaultOrderingMethod)],
                 StartIndex = 0,
-                TotalCount = ListEntityTypesRequestHandler.IncludeTotalCount ? TotalCount : null,
+                TotalCount = ListEntityTypesRequestHandler.IncludeTotalCountAllowed ? TotalCount : null,
             });
             var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext);
             var request = new ListEntityTypesRequest
             {
-                Count = count,
-                StartIndex = 0,
+                Pagination = new Pagination
+                {
+                    Count = count,
+                    IncludeTotalCount = true,
+                    StartIndex = 0,
+                },
             };
             if (orderingMethod.HasValue) request.OrderingMethod = orderingMethod.Value;
 

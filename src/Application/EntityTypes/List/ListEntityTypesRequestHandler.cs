@@ -11,21 +11,22 @@ public class ListEntityTypesRequestHandler(ILogger<ListEntityTypesRequestHandler
 {
     private readonly ILogger<ListEntityTypesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-    internal const bool IncludeTotalCount = true;
+    internal const bool IncludeTotalCountAllowed = true;
     private const int LogEventId = LogEvents.ListEntityTypes;
     internal const int MaximumAllowedCount = 200;
 
     public async Task<Result<ListEntityTypesResult>> Handle(ListEntityTypesRequest request, CancellationToken cancellationToken)
     {
-        request.Sanitize(settings: GetRequestSanitizationSettings());
+        request.Pagination.Sanitize(settings: GetRequestSanitizationSettings());
 
         var query = _dbContext.EntityTypes.Select(x => new EntityType { Name = x.Name, Key = x.Key }).OrderBy(orderingMethod: request.OrderingMethod);
-        return await query.ToListResultAsync<EntityType, ListEntityTypesResult>(startIndex: request.StartIndex, takeCount: request.Count, includeTotalCount: IncludeTotalCount, cancellationToken: cancellationToken);
+        return await query.ToListResultAsync<EntityType, ListEntityTypesResult>(pagination: request.Pagination, cancellationToken: cancellationToken);
     }
 
-    private ListRequestSanitizationSettings GetRequestSanitizationSettings() =>
+    private PaginationSanitizationSettings GetRequestSanitizationSettings() =>
         new()
         {
+            IncludeTotalCountAllowed = IncludeTotalCountAllowed,
             MaximumAllowedCount = MaximumAllowedCount,
             Logger = _logger,
             LogEventId = LogEventId

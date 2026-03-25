@@ -2,6 +2,5 @@
 
 public interface IListRequest
 {
-    int Count { get; set; }
-    int StartIndex { get; set; }
+    IPagination Pagination { get; }
 }

@@ -1,4 +1,5 @@
 ﻿using AwesomeAssertions;
+using Desic.Application.Common.Models;
 using Desic.Application.EntityTypes;
 using Desic.Application.EntityTypes.List;
 using Desic.Domain.EntityTypes;
@@ -15,7 +16,15 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
     {
         // arrange
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
-        var request = new ListEntityTypesRequest { Count = 1, StartIndex = 0 };
+        var request = new ListEntityTypesRequest
+        {
+            Pagination = new Pagination
+            {
+                Count = 1,
+                IncludeTotalCount = true,
+                StartIndex = 0,
+            },
+        };
 
         // act
         var result = await mediator.Send(request: request, cancellationToken: TestContext.Current.CancellationToken);
@@ -43,8 +52,12 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
         var request = new ListEntityTypesRequest
         {
-            Count = count,
-            StartIndex = startIndex,
+            Pagination = new Pagination
+            {
+                Count = count,
+                IncludeTotalCount = true,
+                StartIndex = startIndex,
+            },
             OrderingMethod = EntityTypesOrderingMethod.KeyDesc,
         };
 

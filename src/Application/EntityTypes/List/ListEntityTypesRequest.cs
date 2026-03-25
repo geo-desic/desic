@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace Desic.Application.EntityTypes.List;
 
-public class ListEntityTypesRequest : ListRequestWithOrderingMethod<EntityTypesOrderingMethod>, IRequest<Result<ListEntityTypesResult>>
+public class ListEntityTypesRequest : FilterableOrderableListRequest<ListEntityTypesFilters, EntityTypesOrderingMethod>, IRequest<Result<ListEntityTypesResult>>
 {
     // overriding to specify desired default value
     [DefaultValue(EntityTypesOrderingMethod.NameAsc)]

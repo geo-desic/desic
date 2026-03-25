@@ -18,10 +18,19 @@ public class EntityTypesController(ILogger<EntityTypesController> logger, IMedia
     [ProducesResponseType(typeof(ListResult<EntityType>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<ListResult<EntityType>>> List([FromQuery] ListEntityTypesRequest request)
+    public async Task<ActionResult<ListResult<EntityType>>> List([FromQuery] Pagination pagination, [FromQuery] EntityTypesOrderingMethod orderingMethod, [FromQuery] ListEntityTypesFilters filters)
     {
-        _logger.LogInformation(LogEvents.ListEntityTypes, $"{nameof(EntityTypesController)}.{nameof(List)}({nameof(request)}) with {nameof(request.StartIndex)} = {{{nameof(request.StartIndex)}}}, {nameof(request.Count)} = {{{nameof(request.Count)}}}, {nameof(request.OrderingMethod)} = {{{nameof(request.OrderingMethod)}}})", request.StartIndex, request.Count, request.OrderingMethod);
+        _logger.LogInformation(LogEvents.ListEntityTypes, $"{nameof(EntityTypesController)}.{nameof(List)}({nameof(Pagination)}, {{{nameof(EntityTypesOrderingMethod)}}}, {nameof(ListEntityTypesFilters)})", orderingMethod);
+        _logger.LogDebug(LogEvents.ListEntityTypes, $"{nameof(Pagination)}: {nameof(Pagination.Count)} = {{{nameof(Pagination.Count)}}}; {nameof(Pagination.IncludeTotalCount)} = {{{nameof(Pagination.IncludeTotalCount)}}}; {nameof(Pagination.StartIndex)} = {{{nameof(Pagination.StartIndex)}}}", pagination.Count, pagination.IncludeTotalCount, pagination.StartIndex);
+        _logger.LogTrace(LogEvents.ListEntityTypes, $"{nameof(Pagination)}: {{@{nameof(Pagination)}}}", pagination);
+        _logger.LogTrace(LogEvents.ListEntityTypes, $"{nameof(ListEntityTypesFilters)}: {{@{nameof(ListEntityTypesFilters)}}}", filters);
 
+        var request = new ListEntityTypesRequest
+        {
+            Pagination = pagination,
+            OrderingMethod = orderingMethod,
+            Filters = filters,
+        };
         var result = await _mediator.Send(request);
 
         return result.Match(onSuccess: u => Ok(u), onFailure: e => Problem(e));
