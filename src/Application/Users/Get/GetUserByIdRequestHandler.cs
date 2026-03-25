@@ -22,6 +22,6 @@ public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger
             _logger.LogDebug(LogEventId, "User with id {UserId} not found", request.Id);
             return (User?)null;
         }
-        return user.ToDto();
+        return user.ToModel();
     }
 }

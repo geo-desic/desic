@@ -2,7 +2,7 @@
 
 namespace Desic.Application.Common.Interfaces;
 
-internal interface ISoftDeletableDto
+internal interface ISoftDeletable
 {
     OptionalOnByType Deleted { get; set; }
 }

@@ -2,7 +2,7 @@
 
 namespace Desic.Application.Common.Interfaces;
 
-internal interface ICreatableDto
+internal interface ICreatable
 {
     RequiredOnByType Created { get; set; }
 }

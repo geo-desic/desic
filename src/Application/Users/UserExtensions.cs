@@ -2,7 +2,7 @@
 
 public static class UserExtensions
 {
-    public static User ToDto(this Domain.Users.User source)
+    public static User ToModel(this Domain.Users.User source)
     {
         return new User(source)
         {

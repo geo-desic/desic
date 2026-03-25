@@ -24,7 +24,7 @@ public class GetUserByIdRequestHandlerTests
         {
             // arrange
             Setup();
-            var expected = DomainUser().ToDto();
+            var expected = DomainUser().ToModel();
             var handler = new GetUserByIdRequestHandler(logger: _logger, dbContext: _dbContext.Object);
             var request = new GetUserByIdRequest
             {

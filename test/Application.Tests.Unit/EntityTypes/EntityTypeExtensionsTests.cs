@@ -9,7 +9,7 @@ public class EntityTypeExtensionsTests
     public class EntityTypeExtensionsTests001 : EntityTypeExtensionsTests
     {
         [Fact]
-        public void ToDto_AllPropertiesSpecified_ItemWithAllExpectedPropertyValuesReturned()
+        public void ToModel_AllPropertiesSpecified_ItemWithAllExpectedPropertyValuesReturned()
         {
             // arrange
             var source = new Domain.EntityTypes.EntityType
@@ -25,7 +25,7 @@ public class EntityTypeExtensionsTests
             };
 
             // act
-            var result = EntityTypeExtensions.ToDto(source: source);
+            var result = EntityTypeExtensions.ToModel(source: source);
 
             // assert
             result.Should().BeEquivalentTo(expected);

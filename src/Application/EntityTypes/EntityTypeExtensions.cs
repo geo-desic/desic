@@ -2,7 +2,7 @@
 
 public static class EntityTypeExtensions
 {
-    public static EntityType ToDto(this Domain.EntityTypes.EntityType source)
+    public static EntityType ToModel(this Domain.EntityTypes.EntityType source)
     {
         return new EntityType
         {

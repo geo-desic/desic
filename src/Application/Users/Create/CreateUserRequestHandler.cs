@@ -47,7 +47,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
         if (!request.ReturnRepresentation) return result;
 
-        result.Model = user.ToDto();
+        result.Model = user.ToModel();
 
         return result;
     }

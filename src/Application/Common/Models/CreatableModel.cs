@@ -1,13 +1,12 @@
 ﻿using Desic.Application.Common.Extensions;
-using Desic.Application.Common.Interfaces;
 using Desic.Domain.Common.Entities;
 
 namespace Desic.Application.Common.Models;
 
-public class CreatableDto : BaseDto, ICreatableDto
+public class CreatableModel : BaseModel, Interfaces.ICreatable
 {
-    public CreatableDto() : base() { }
-    public CreatableDto(CreatableEntity entity) : base(entity)
+    public CreatableModel() : base() { }
+    public CreatableModel(CreatableEntity entity) : base(entity)
     {
         this.MapCreated(entity);
     }

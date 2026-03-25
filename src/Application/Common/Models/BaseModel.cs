@@ -2,10 +2,10 @@
 
 namespace Desic.Application.Common.Models;
 
-public class BaseDto
+public class BaseModel
 {
-    public BaseDto() { }
-    public BaseDto(BaseEntity entity)
+    public BaseModel() { }
+    public BaseModel(BaseEntity entity)
     {
         Id = entity.Id;
     }

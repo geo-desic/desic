@@ -30,7 +30,7 @@ public class QueryableExtensionsTests
     public class QueryableExtensionsTests002 : QueryableExtensionsTests
     {
         [Fact]
-        public void ApplyFilter_NoFilters_AllItemsReturned ()
+        public void ApplyFilter_NoFilters_AllItemsReturned()
         {
             // arrange
             var expected = GetItems().ToList();

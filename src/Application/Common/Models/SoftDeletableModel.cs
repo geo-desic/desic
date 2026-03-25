@@ -1,13 +1,12 @@
 ﻿using Desic.Application.Common.Extensions;
-using Desic.Application.Common.Interfaces;
 using Desic.Domain.Common.Entities;
 
 namespace Desic.Application.Common.Models;
 
-public class SoftDeletableDto : ModifiableDto, ISoftDeletableDto
+public class SoftDeletableModel : ModifiableModel, Interfaces.ISoftDeletable
 {
-    public SoftDeletableDto() : base() { }
-    public SoftDeletableDto(SoftDeletableEntity entity) : base(entity)
+    public SoftDeletableModel() : base() { }
+    public SoftDeletableModel(SoftDeletableEntity entity) : base(entity)
     {
         this.MapDeleted(entity);
     }

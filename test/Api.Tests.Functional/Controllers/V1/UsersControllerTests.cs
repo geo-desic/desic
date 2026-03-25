@@ -20,7 +20,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
     {
         // arrange
         var expectedStatusCode = System.Net.HttpStatusCode.OK;
-        var expected = TestUsers.User01Active.ToDto(); // exists in seeded data
+        var expected = TestUsers.User01Active.ToModel(); // exists in seeded data
         var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{expected.Id}");
 
         // act

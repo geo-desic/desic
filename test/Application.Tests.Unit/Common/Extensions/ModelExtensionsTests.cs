@@ -1,6 +1,5 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Extensions;
-using Desic.Application.Common.Interfaces;
 using Desic.Application.Common.Models;
 using Desic.Domain.Common.Entities;
 using Desic.Domain.Labels;
@@ -9,12 +8,12 @@ using Desic.Shared.Extensions;
 
 namespace Desic.Application.Tests.Unit.Common.Extensions;
 
-public class DtoExtensionsTests
+public class ModelExtensionsTests
 {
     private readonly SystemLabel _by = SystemLabels.System;
     private const string Unchanged = nameof(Unchanged);
 
-    public class DtoExtensionsTests001 : DtoExtensionsTests
+    public class ModelExtensionsTests001 : ModelExtensionsTests
     {
         [Fact]
         public void MapCreated_SpecifiedModels_PerformsExpectedMapping()
@@ -31,7 +30,7 @@ public class DtoExtensionsTests
             };
 
             // act
-            DtoExtensions.MapCreated(item, entity);
+            ModelExtensions.MapCreated(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -43,7 +42,7 @@ public class DtoExtensionsTests
         }
     }
 
-    public class DtoExtensionsTests002 : DtoExtensionsTests
+    public class ModelExtensionsTests002 : ModelExtensionsTests
     {
         [Fact]
         public void MapModified_SpecifiedModels_PerformsExpectedMapping()
@@ -60,7 +59,7 @@ public class DtoExtensionsTests
             };
 
             // act
-            DtoExtensions.MapModified(item, entity);
+            ModelExtensions.MapModified(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -72,7 +71,7 @@ public class DtoExtensionsTests
         }
     }
 
-    public class DtoExtensionsTests003 : DtoExtensionsTests
+    public class ModelExtensionsTests003 : ModelExtensionsTests
     {
         [Fact]
         public void MapDeleted_SpecifiedModels_PerformsExpectedMapping()
@@ -89,7 +88,7 @@ public class DtoExtensionsTests
             };
 
             // act
-            DtoExtensions.MapDeleted(item, entity);
+            ModelExtensions.MapDeleted(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -101,7 +100,7 @@ public class DtoExtensionsTests
         }
     }
 
-    public class DtoExtensionsTests004 : DtoExtensionsTests
+    public class ModelExtensionsTests004 : ModelExtensionsTests
     {
         [Fact]
         public void MapCreatedModified_SpecifiedModels_PerformsExpectedMapping()
@@ -123,7 +122,7 @@ public class DtoExtensionsTests
             };
 
             // act
-            DtoExtensions.MapCreatedModified(item, entity);
+            ModelExtensions.MapCreatedModified(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -140,7 +139,7 @@ public class DtoExtensionsTests
         }
     }
 
-    public class DtoExtensionsTests005 : DtoExtensionsTests
+    public class ModelExtensionsTests005 : ModelExtensionsTests
     {
         [Fact]
         public void MapCreatedModifiedDeleted_SpecifiedModels_PerformsExpectedMapping()
@@ -167,7 +166,7 @@ public class DtoExtensionsTests
             };
 
             // act
-            DtoExtensions.MapCreatedModifiedDeleted(item, entity);
+            ModelExtensions.MapCreatedModifiedDeleted(item, entity);
 
             // assert
             item.ExtraProperty.Should().Be(Unchanged);
@@ -189,20 +188,20 @@ public class DtoExtensionsTests
         }
     }
 
-    private class TestCreatableDto : ICreatableDto
+    private class TestCreatableDto : Application.Common.Interfaces.ICreatable
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
     }
 
-    private class TestModifiableDto : IModifiableDto, ICreatableDto
+    private class TestModifiableDto : Application.Common.Interfaces.IModifiable, Application.Common.Interfaces.ICreatable
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
         public RequiredOnByType Modified { get; set; } = new();
     }
 
-    private class TestSoftDeletableDto : ISoftDeletableDto, IModifiableDto, ICreatableDto
+    private class TestSoftDeletableDto : Application.Common.Interfaces.ISoftDeletable, Application.Common.Interfaces.IModifiable, Application.Common.Interfaces.ICreatable
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
@@ -210,7 +209,7 @@ public class DtoExtensionsTests
         public OptionalOnByType Deleted { get; set; } = new();
     }
 
-    private class TestCreatableEntity : ICreatable
+    private class TestCreatableEntity : Domain.Common.Entities.ICreatable
     {
         public Guid CreatedById { get; set; }
         public string? CreatedByName { get; set; }
@@ -218,7 +217,7 @@ public class DtoExtensionsTests
         public DateTime CreatedOn { get; set; }
     }
 
-    private class TestModifiableEntity : IModifiable, ICreatable
+    private class TestModifiableEntity : Domain.Common.Entities.IModifiable, Domain.Common.Entities.ICreatable
     {
         public Guid CreatedById { get; set; }
         public string? CreatedByName { get; set; }
@@ -230,7 +229,7 @@ public class DtoExtensionsTests
         public DateTime ModifiedOn { get; set; }
     }
 
-    private class TestSoftDeletableEntity : ISoftDeletable, IModifiable, ICreatable
+    private class TestSoftDeletableEntity : Domain.Common.Entities.ISoftDeletable, Domain.Common.Entities.IModifiable, Domain.Common.Entities.ICreatable
     {
         public Guid CreatedById { get; set; }
         public string? CreatedByName { get; set; }

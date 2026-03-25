@@ -1,13 +1,12 @@
 ﻿using Desic.Application.Common.Extensions;
-using Desic.Application.Common.Interfaces;
 using Desic.Domain.Common.Entities;
 
 namespace Desic.Application.Common.Models;
 
-public class ModifiableDto : CreatableDto, IModifiableDto
+public class ModifiableModel : CreatableModel, Interfaces.IModifiable
 {
-    public ModifiableDto() : base() { }
-    public ModifiableDto(ModifiableEntity entity) : base(entity)
+    public ModifiableModel() : base() { }
+    public ModifiableModel(ModifiableEntity entity) : base(entity)
     {
         this.MapModified(entity);
     }
