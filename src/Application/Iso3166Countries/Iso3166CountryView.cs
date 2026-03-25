@@ -5,12 +5,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Desic.Application.Iso3166Countries;
 
-public class Iso3166Country : SoftDeletableModel, IIso3166CountryReferenceData
+public class Iso3166CountryView : BaseModel, IIso3166CountryReferenceData
 {
-    public Iso3166Country() : base() { }
+    public Iso3166CountryView() : base() { }
 
     [SetsRequiredMembers]
-    public Iso3166Country(Domain.Iso3166Countries.Iso3166Country source) : base(source)
+    public Iso3166CountryView(Domain.Iso3166Countries.Iso3166Country source) : base(source)
     {
         this.UpdateFrom(source);
     }

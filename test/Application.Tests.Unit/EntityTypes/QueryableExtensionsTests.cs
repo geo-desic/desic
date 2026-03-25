@@ -30,7 +30,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemKey3NameC;
-            var expected = new List<Domain.EntityTypes.EntityType>() { expectedItem };
+            var expected = new List<Domain.EntityTypes.EntityType> { expectedItem };
             var items = GetItems();
             var filter = new EntityTypesFilter { Key = expectedItem.Key };
 
@@ -38,25 +38,25 @@ public class QueryableExtensionsTests
             var result = QueryableExtensions.ApplyFilter(source: items.AsQueryable(), filter: filter).ToList();
 
             // assert
-            result.Should().BeEquivalentTo(expected, opt => opt.WithStrictOrdering());
+            result.Should().BeEquivalentTo(expected);
         }
     }
 
     public class QueryableExtensionsTests003 : QueryableExtensionsTests
     {
         [Fact]
-        public void ApplyFilter_FilterByKeyThatDoesMatchAnItem_NoItemsReturned()
+        public void ApplyFilter_FilterByKeyThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
             var expected = new List<Domain.EntityTypes.EntityType>();
             var items = GetItems();
-            var filter = new EntityTypesFilter { Key = "zzzz" }; // non-existant key
+            var filter = new EntityTypesFilter { Key = "zzzz" }; // non-existant value
 
             // act
             var result = QueryableExtensions.ApplyFilter(source: items.AsQueryable(), filter: filter).ToList();
 
             // assert
-            result.Should().BeEquivalentTo(expected, opt => opt.WithStrictOrdering());
+            result.Should().BeEquivalentTo(expected);
         }
     }
 
@@ -67,7 +67,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemKey3NameC;
-            var expected = new List<Domain.EntityTypes.EntityType>() { expectedItem };
+            var expected = new List<Domain.EntityTypes.EntityType> { expectedItem };
             var items = GetItems();
             var filter = new EntityTypesFilter { Name = expectedItem.Name };
 
@@ -75,25 +75,25 @@ public class QueryableExtensionsTests
             var result = QueryableExtensions.ApplyFilter(source: items.AsQueryable(), filter: filter).ToList();
 
             // assert
-            result.Should().BeEquivalentTo(expected, opt => opt.WithStrictOrdering());
+            result.Should().BeEquivalentTo(expected);
         }
     }
 
     public class QueryableExtensionsTests005 : QueryableExtensionsTests
     {
         [Fact]
-        public void ApplyFilter_FilterByNameThatDoesMatchAnItem_NoItemsReturned()
+        public void ApplyFilter_FilterByNameThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
             var expected = new List<Domain.EntityTypes.EntityType>();
             var items = GetItems();
-            var filter = new EntityTypesFilter { Name = "DoesNotExist" }; // non-existant name
+            var filter = new EntityTypesFilter { Name = "DoesNotExist" }; // non-existant value
 
             // act
             var result = QueryableExtensions.ApplyFilter(source: items.AsQueryable(), filter: filter).ToList();
 
             // assert
-            result.Should().BeEquivalentTo(expected, opt => opt.WithStrictOrdering());
+            result.Should().BeEquivalentTo(expected);
         }
     }
 
@@ -104,7 +104,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemKey3NameC;
-            var expected = new List<Domain.EntityTypes.EntityType>() { expectedItem };
+            var expected = new List<Domain.EntityTypes.EntityType> { expectedItem };
             var items = GetItems();
             var filter = new EntityTypesFilter { Key = expectedItem.Key, Name = expectedItem.Name };
 
@@ -112,14 +112,14 @@ public class QueryableExtensionsTests
             var result = QueryableExtensions.ApplyFilter(source: items.AsQueryable(), filter: filter).ToList();
 
             // assert
-            result.Should().BeEquivalentTo(expected, opt => opt.WithStrictOrdering());
+            result.Should().BeEquivalentTo(expected);
         }
     }
 
     public class QueryableExtensionsTests007 : QueryableExtensionsTests
     {
         [Fact]
-        public void ApplyFilter_FilterByKeyAndNameThatDoesNotMatchAnItem_NoItemsReturned()
+        public void ApplyFilter_FilterByKeyAndNameThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
             var expected = new List<Domain.EntityTypes.EntityType>();
@@ -130,7 +130,7 @@ public class QueryableExtensionsTests
             var result = QueryableExtensions.ApplyFilter(source: items.AsQueryable(), filter: filter).ToList();
 
             // assert
-            result.Should().BeEquivalentTo(expected, opt => opt.WithStrictOrdering());
+            result.Should().BeEquivalentTo(expected);
         }
     }
 
@@ -174,7 +174,7 @@ public class QueryableExtensionsTests
         }
     }
 
-    // purposely constructed so that ordering by key is different than ordering by name
+    // purposely constructed so that ordering by each property is different
     private static Domain.EntityTypes.EntityType ItemKey1NameE => new() { Key = "key1", Name = "E" };
     private static Domain.EntityTypes.EntityType ItemKey2NameB => new() { Key = "key2", Name = "B" };
     private static Domain.EntityTypes.EntityType ItemKey3NameC => new() { Key = "key3", Name = "C" };
@@ -183,7 +183,7 @@ public class QueryableExtensionsTests
 
     private static IEnumerable<Domain.EntityTypes.EntityType> GetItems()
     {
-        // purposely in jumbled order
+        // in no particular order
         yield return ItemKey1NameE;
         yield return ItemKey4NameA;
         yield return ItemKey2NameB;
