@@ -35,6 +35,7 @@ public static class LogEvents
 
     #region Iso3166Countries
     internal const int StartIso3166Countries               = StartUsers + OffsetEntity;
+    public const int ListIso3166Countries                  = StartIso3166Countries + OffsetList;
     public const int SeedIso3166Countries                  = StartIso3166Countries + OffsetSeed;
     #endregion
 

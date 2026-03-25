@@ -1,30 +1,30 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common;
 using Desic.Application.Common.Models;
-using Desic.Application.EntityTypes;
-using Desic.Application.EntityTypes.List;
+using Desic.Application.Iso3166Countries;
+using Desic.Application.Iso3166Countries.List;
 using Desic.Shared.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace Desic.Application.Tests.Unit.EntityTypes.List;
+namespace Desic.Application.Tests.Unit.Iso3166Countries.List;
 
-public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<TestApplicationDbContext>
+public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyTests<TestApplicationDbContext>
 {
-    private readonly ILogger<ListEntityTypesRequestHandler> _logger = NullLogger<ListEntityTypesRequestHandler>.Instance;
-    private readonly Domain.EntityTypes.EntityType[] _seededEntities;
-    private const EntityTypesOrderingMethod DefaultOrderingMethod = EntityTypesOrderingMethod.NameAsc;
-    private const int MaximumAllowedCount = ListEntityTypesRequestHandler.MaximumAllowedCount;
+    private readonly ILogger<ListIso3166CountriesRequestHandler> _logger = NullLogger<ListIso3166CountriesRequestHandler>.Instance;
+    private readonly Domain.Iso3166Countries.Iso3166Country[] _seededEntities;
+    private const Iso3166CountriesOrderingMethod DefaultOrderingMethod = Iso3166CountriesOrderingMethod.NameAsc;
+    private const int MaximumAllowedCount = ListIso3166CountriesRequestHandler.MaximumAllowedCount;
     private const int TotalCount = MaximumAllowedCount + 10;
 
-    public ListEntityTypesRequestHandlerTests() : base(o => new(o))
+    public ListIso3166CountriesRequestHandlerTests() : base(o => new(o))
     {
         _seededEntities = [.. GetEntities()];
-        DbContext.EntityTypes.AddRange(_seededEntities);
+        DbContext.Iso3166Countries.AddRange(_seededEntities);
         DbContext.SaveChanges();
     }
 
-    public class ListEntityTypesRequestHandlerTests001 : ListEntityTypesRequestHandlerTests
+    public class ListIso3166CountriesRequestHandlerTests001 : ListIso3166CountriesRequestHandlerTests
     {
         [Theory]
         [InlineData(0, 0, -1, 0)]                                         // count == -1                                  =====> no items returned (negative count treated as 0)
@@ -39,14 +39,14 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
         {
             // arrange
             var expectedStartIndex = startIndex < 0 ? 0 : startIndex;
-            var expected = new Result<ListEntityTypesResult>(new ListEntityTypesResult
+            var expected = new Result<ListIso3166CountriesResult>(new ListIso3166CountriesResult
             {
                 Items = [.. ExpectedItems(minIndex: expectedMinIndex, count: expectedCount)],
                 StartIndex = expectedStartIndex,
-                TotalCount = ListEntityTypesRequestHandler.IncludeTotalCountAllowed ? TotalCount : null,
+                TotalCount = ListIso3166CountriesRequestHandler.IncludeTotalCountAllowed ? TotalCount : null,
             });
-            var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext);
-            var request = new ListEntityTypesRequest
+            var handler = new ListIso3166CountriesRequestHandler(logger: _logger, dbContext: DbContext);
+            var request = new ListIso3166CountriesRequest
             {
                 Pagination = new Pagination
                 {
@@ -66,27 +66,33 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
         }
     }
 
-    public class ListEntityTypesRequestHandlerTests002 : ListEntityTypesRequestHandlerTests
+    public class ListIso3166CountriesRequestHandlerTests002 : ListIso3166CountriesRequestHandlerTests
     {
         [Theory]
         [InlineData(null)]
-        [InlineData(EntityTypesOrderingMethod.KeyAsc)]
-        [InlineData(EntityTypesOrderingMethod.KeyDesc)]
-        [InlineData(EntityTypesOrderingMethod.NameAsc)]
-        [InlineData(EntityTypesOrderingMethod.NameDesc)]
-        public async Task Handle_SpecifiedOrderingMethod_ExpectedResultsOrderedCorrectly(EntityTypesOrderingMethod? orderingMethod)
+        [InlineData(Iso3166CountriesOrderingMethod.Alpha2Asc)]
+        [InlineData(Iso3166CountriesOrderingMethod.Alpha2Desc)]
+        [InlineData(Iso3166CountriesOrderingMethod.Alpha3Asc)]
+        [InlineData(Iso3166CountriesOrderingMethod.Alpha3Desc)]
+        [InlineData(Iso3166CountriesOrderingMethod.IdAsc)]
+        [InlineData(Iso3166CountriesOrderingMethod.IdDesc)]
+        [InlineData(Iso3166CountriesOrderingMethod.IsoIdAsc)]
+        [InlineData(Iso3166CountriesOrderingMethod.IsoIdDesc)]
+        [InlineData(Iso3166CountriesOrderingMethod.NameAsc)]
+        [InlineData(Iso3166CountriesOrderingMethod.NameDesc)]
+        public async Task Handle_SpecifiedOrderingMethod_ExpectedResultsOrderedCorrectly(Iso3166CountriesOrderingMethod? orderingMethod)
         {
             // arrange
             var count = 10;
-            var expected = new Result<ListEntityTypesResult>(new ListEntityTypesResult
+            var expected = new Result<ListIso3166CountriesResult>(new ListIso3166CountriesResult
             {
                 // if no ordering method is specified it should use the default
                 Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? DefaultOrderingMethod)],
                 StartIndex = 0,
                 TotalCount = null,
             });
-            var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext);
-            var request = new ListEntityTypesRequest
+            var handler = new ListIso3166CountriesRequestHandler(logger: _logger, dbContext: DbContext);
+            var request = new ListIso3166CountriesRequest
             {
                 Pagination = new Pagination
                 {
@@ -107,15 +113,15 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
         }
     }
 
-    public class ListEntityTypesRequestHandlerTests003 : ListEntityTypesRequestHandlerTests
+    public class ListIso3166CountriesRequestHandlerTests003 : ListIso3166CountriesRequestHandlerTests
     {
         [Fact]
         public async Task Handle_WithFilterMatchingOneItem_ItemReturnedInResult()
         {
             // arrange
-            var expectedKey = "e004"; // should be 5th item seeded in constructor
-            var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext);
-            var request = new ListEntityTypesRequest
+            var expectedIsoId = TotalCount - 5; // should be 5th seeded in constructor
+            var handler = new ListIso3166CountriesRequestHandler(logger: _logger, dbContext: DbContext);
+            var request = new ListIso3166CountriesRequest
             {
                 Pagination = new Pagination
                 {
@@ -123,7 +129,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
                 },
                 Filter = new()
                 {
-                    Key = expectedKey,
+                    IsoId = expectedIsoId,
                 }
             };
 
@@ -132,30 +138,36 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeNull();
             result.Value.Items.Count.Should().Be(1);
-            result.Value.Items.ElementAt(0).Key.Should().Be(expectedKey);
+            result.Value.Items.ElementAt(0).IsoId.Should().Be(expectedIsoId);
         }
     }
 
-    private static IEnumerable<Domain.EntityTypes.EntityType> GetEntities()
+    private static IEnumerable<Domain.Iso3166Countries.Iso3166Country> GetEntities()
     {
         // purposely in no particular order and ordering by any property should result in different orderings
         for (var i = 0; i < TotalCount; ++i)
         {
-            var iString = $"{i}".PadLeft(3, '0');
-            char keyCharacter = (char)((i % 26) + 'a');
-            char nameCharacter = (char)('Z' - (i % 26));
-            yield return new Domain.EntityTypes.EntityType
+            var iString = $"{i}".PadLeft(4, '0');
+            char alpha2Character1 = (char)((i % 26) + 'a');
+            char alpha2Character2 = (char)(((i / 26) % 26) + 'a');
+            char alpha3Character1 = (char)('z' - (i % 26));
+            char alpha3Character2 = (char)('z' - ((i / 26) % 26));
+            char alpha3Character3 = (char)('z' - ((i / 26 / 26) % 26));
+            char nameCharacter = (char)(((i + 1) % 26) + 'A');
+            yield return new Domain.Iso3166Countries.Iso3166Country
             {
+                Alpha2 = $"{alpha2Character1}{alpha2Character2}",
+                Alpha3 = $"{alpha3Character1}{alpha3Character2}{alpha3Character3}",
                 Id = i == 0 ? (TotalCount + 1).ToGuid() : i.ToGuid(),
-                Key = $"{keyCharacter}{iString}",
-                Name = $"Entity{nameCharacter}{iString}"
+                IsoId = TotalCount - i,
+                Name = $"Name{nameCharacter}{iString}",
             };
         }
     }
 
-    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, EntityTypesOrderingMethod orderingMethod = DefaultOrderingMethod)
+    private IEnumerable<Iso3166CountryView> ExpectedItems(int minIndex, int count, Iso3166CountriesOrderingMethod orderingMethod = DefaultOrderingMethod)
     {
         // note that the OrderBy and SelectToModel extension methods used here are already covered by tests of their own
-        return _seededEntities.AsQueryable().OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count)).SelectToModel();
+        return _seededEntities.AsQueryable().OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count)).SelectToView();
     }
 }

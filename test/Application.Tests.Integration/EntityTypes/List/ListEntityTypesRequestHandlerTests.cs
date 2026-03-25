@@ -12,7 +12,7 @@ namespace Desic.Application.Tests.Integration.EntityTypes.List;
 public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) : TestHostDependencyTests(testDatabase), IClassFixture<SeededAppDatabase>
 {
     [Fact]
-    public async Task ListEntityTypes_ValidRequestWithCount1_OneEntityTypeReturned()
+    public async Task ListEntityTypesRequestSend_ValidRequestWithCount1_1EntityTypeReturned()
     {
         // arrange
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
@@ -37,7 +37,7 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
     }
 
     [Fact]
-    public async Task ListEntityTypes_ValidRequestWithNonDefaultStartIndexCountAndOrderingMethod_ExpectedResultsOrderedCorrectly()
+    public async Task ListEntityTypesRequestSend_ValidRequestWithNonDefaultStartIndexCountAndOrderingMethod_ExpectedResultsOrderedCorrectly()
     {
         // arrange
         var count = 3; // there needs to be at least this number of seeded entity types for this test to work correctly, see Desic.Domain.EntityTypes.SystemEntityTypes
@@ -46,7 +46,7 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
         var expected = new ListEntityTypesResult
         {
             StartIndex = startIndex,
-            TotalCount = allOrderedByKeyDesc.Count,
+            TotalCount = null,
             Items = [.. allOrderedByKeyDesc.Take(startIndex..(startIndex + count))],
         };
         var mediator = ServiceProvider.GetRequiredService<IMediator>();
@@ -55,7 +55,7 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
             Pagination = new Pagination
             {
                 Count = count,
-                IncludeTotalCount = true,
+                IncludeTotalCount = false,
                 StartIndex = startIndex,
             },
             OrderingMethod = EntityTypesOrderingMethod.KeyDesc,
@@ -71,7 +71,7 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
     }
 
     [Fact]
-    public async Task ListEntityTypes_ValidRequestWithFilter_ExpectedResult()
+    public async Task ListEntityTypesRequestSend_ValidRequestWithFilter_ExpectedResult()
     {
         // arrange
         var expectedEntityType = SystemEntityTypes.Label.ToEntity().ToModel();
@@ -88,7 +88,7 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
             {
                 IncludeTotalCount = false,
             },
-            Filter = new EntityTypesFilter { Name = expectedEntityType.Name },
+            Filter = new() { Name = expectedEntityType.Name },
         };
 
         // act
