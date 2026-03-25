@@ -1,11 +1,22 @@
 ﻿using Desic.Application.Common.Interfaces;
 using Desic.Application.Common.Models;
+using Desic.Domain.Common.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Application.Common.Extensions;
 
 internal static class QueryableExtensions
 {
+    public static async Task<T?> GetEntityByIdAsync<T>(this IQueryable<T> source, Guid id, CancellationToken cancellationToken) where T : BaseEntity
+    {
+        return await source.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public static IQueryable<T> GetEntityByIdQuery<T>(this IQueryable<T> source, Guid id, CancellationToken cancellationToken) where T : BaseEntity
+    {
+        return source.Where(x => x.Id == id);
+    }
+
     public static async Task<ListResult<T>> ToListResultAsync<T>(this IQueryable<T> source, IPagination pagination, CancellationToken cancellationToken = default)
     {
         return await source.ToListResultAsync<T, ListResult<T>>(pagination: pagination, cancellationToken: cancellationToken);
