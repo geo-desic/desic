@@ -24,8 +24,8 @@ public class UsersControllerTests
         public async Task Get_UserDoesNotExist_Status404NotFound()
         {
             // arrange
-            Setup(user: null);
-            var controller = NewUsersController();
+            Setup(item: null);
+            var controller = NewController();
 
             // act
             var result = (await controller.Get(_id))?.Result as NotFoundResult;
@@ -42,9 +42,9 @@ public class UsersControllerTests
         public async Task Get_UserExists_Status200OK()
         {
             // arrange
-            var userExpected = NewUser();
-            Setup(user: userExpected);
-            var controller = NewUsersController();
+            var expectedItem = NewItem();
+            Setup(item: expectedItem);
+            var controller = NewController();
 
             // act
             var result = (await controller.Get(_id))?.Result as OkObjectResult;
@@ -52,22 +52,22 @@ public class UsersControllerTests
             // assert
             result.Should().NotBeNull();
             result.StatusCode.Should().Be(200);
-            result.Value.Should().BeEquivalentTo(userExpected);
+            result.Value.Should().BeEquivalentTo(expectedItem);
         }
     }
 
-    private void Setup(User? user)
+    private void Setup(User? item)
     {
-        var result = user == null ? new Result<User>() : new Result<User>(user);
+        var result = item == null ? new Result<User>() : new Result<User>(item);
         _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(result);
     }
 
-    private UsersController NewUsersController()
+    private UsersController NewController()
     {
         return new UsersController(logger: _logger, mediator: _mediator.Object);
     }
 
-    private static User NewUser(Guid? id = null)
+    private static User NewItem(Guid? id = null)
     {
         id ??= Guid.CreateVersion7();
         return new User

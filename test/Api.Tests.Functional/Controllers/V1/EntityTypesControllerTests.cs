@@ -8,6 +8,8 @@ namespace Desic.Api.Tests.Functional.Controllers.V1;
 
 public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : TestWebAppDependencyTests(testDatabase), IClassFixture<SeededAppDatabase>
 {
+    private const string RequestUri = "/v1/entitytypes";
+
     [Fact]
     public async Task List_ValidRequestWithNonDefaultStartIndexCountAndOrderingMethod_Status200OkAndExpectedOrderedItems()
     {
@@ -18,7 +20,7 @@ public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : TestWe
         var startIndex = 1;
         var expectedStatusCode = System.Net.HttpStatusCode.OK;
         var expected = ExpectedResponseContent(count: count, includeTotalCount: includeTotalCount, startIndex: startIndex, orderingMethod: orderingMethod); // all entity types should exist by db seeding
-        var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/entitytypes")
+        var request = new FluentHttpRequest(HttpMethod.Get, RequestUri)
             .AddQueryStringParameter(name: nameof(count), value: $"{count}")
             .AddQueryStringParameter(name: nameof(includeTotalCount), value: $"{includeTotalCount}")
             .AddQueryStringParameter(name: nameof(orderingMethod), value: $"{orderingMethod}")
@@ -46,7 +48,7 @@ public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : TestWe
             TotalCount = null,
             Items = [expectedItem],
         };
-        var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/entitytypes")
+        var request = new FluentHttpRequest(HttpMethod.Get, RequestUri)
             .AddQueryStringParameter(name: nameof(key), value: $"{key}");
 
         // act

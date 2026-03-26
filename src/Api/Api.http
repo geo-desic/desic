@@ -13,14 +13,14 @@ Accept: text/plain
 GET {{HostAddressApi}}/v1/healthz/report
 Accept: application/json
 
-###
+### Entity Types
 
 GET {{HostAddressApi}}/v1/entitytypes
 Accept: application/json
 
 ###
 
-GET {{HostAddressApi}}/v1/entitytypes?startIndex=1&count=3&orderingMethod=KeyDesc
+GET {{HostAddressApi}}/v1/entitytypes?startIndex=1&count=2&orderingMethod=KeyDesc
 Accept: application/json
 
 ###
@@ -28,7 +28,22 @@ Accept: application/json
 GET {{HostAddressApi}}/v1/entitytypes?name=Label
 Accept: application/json
 
+### Iso 3166 Countries
+
+GET {{HostAddressApi}}/v1/iso3166countries
+Accept: application/json
+
 ###
+
+GET {{HostAddressApi}}/v1/iso3166countries?startIndex=1&count=2&orderingMethod=alpha2Desc
+Accept: application/json
+
+###
+
+GET {{HostAddressApi}}/v1/iso3166countries?namecontains=states
+Accept: application/json
+
+### Users
 
 GET {{HostAddressApi}}/v1/users/00000005-000F-0000-0000-000000000001
 Accept: application/json

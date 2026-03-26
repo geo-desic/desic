@@ -14,6 +14,7 @@ namespace Desic.Api.Tests.Functional.Controllers.V1;
 public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDependencyTests(testDatabase), IClassFixture<SeededAppDatabase>
 {
     private readonly TimeSpan _acceptablePrecision = TimeSpan.FromSeconds(1);
+    private const string RequestUri = "/v1/users";
 
     [Fact]
     public async Task Get_UserExists_Status200OkAndUserReturned()
@@ -21,7 +22,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         // arrange
         var expectedStatusCode = System.Net.HttpStatusCode.OK;
         var expected = TestUsers.User01Active.ToModel(); // exists in seeded data
-        var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{expected.Id}");
+        var request = new FluentHttpRequest(HttpMethod.Get, $"{RequestUri}/{expected.Id}");
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request);
@@ -37,7 +38,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         // arrange
         var expectedStatusCode = System.Net.HttpStatusCode.NotFound;
         var id = new Guid("A0000000-0000-0000-0000-000000000001"); // does not exist in seeded data
-        var request = new FluentHttpRequest(HttpMethod.Get, $"/v1/users/{id}");
+        var request = new FluentHttpRequest(HttpMethod.Get, $"{RequestUri}/{id}");
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
@@ -57,7 +58,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         {
             Username = "invalid username", // contains a space character
         };
-        var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user);
+        var request = new FluentHttpRequest(HttpMethod.Post, RequestUri).SetJsonContent(user);
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
@@ -78,7 +79,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         {
             Username = TestUsers.User01Active.Username, // exists in seeded data
         };
-        var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user);
+        var request = new FluentHttpRequest(HttpMethod.Post, RequestUri).SetJsonContent(user);
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
@@ -99,7 +100,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         {
             Username = "username-does-not-exist-1",
         };
-        var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user);
+        var request = new FluentHttpRequest(HttpMethod.Post, RequestUri).SetJsonContent(user);
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsString(request);
@@ -122,7 +123,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
             Username = "username-does-not-exist-2",
         };
         var expected = NewUser(username: "username-does-not-exist-2");
-        var request = new FluentHttpRequest(HttpMethod.Post, $"/v1/users/").SetJsonContent(user).AddHeader(Headers.Keys.Prefer, Headers.Values.PreferRepresentation);
+        var request = new FluentHttpRequest(HttpMethod.Post, RequestUri).SetJsonContent(user).AddHeader(Headers.Keys.Prefer, Headers.Values.PreferRepresentation);
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request);
