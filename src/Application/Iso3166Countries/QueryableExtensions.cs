@@ -16,7 +16,7 @@ public static class QueryableExtensions
 
     public static IOrderedQueryable<Domain.Iso3166Countries.Iso3166Country> OrderBy(this IQueryable<Domain.Iso3166Countries.Iso3166Country> source, Iso3166CountriesOrderingMethod? orderingMethod)
     {
-        return (orderingMethod ?? Iso3166CountriesOrderingMethod.NameAsc) switch
+        return (orderingMethod ?? Iso3166CountriesOrderingMethods.Default) switch
         {
             Iso3166CountriesOrderingMethod.Alpha2Asc => source.OrderBy(x => x.Alpha2),
             Iso3166CountriesOrderingMethod.Alpha2Desc => source.OrderByDescending(x => x.Alpha2),

@@ -13,7 +13,6 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
 {
     private readonly ILogger<ListEntityTypesRequestHandler> _logger = NullLogger<ListEntityTypesRequestHandler>.Instance;
     private readonly Domain.EntityTypes.EntityType[] _seededEntities;
-    private const EntityTypesOrderingMethod DefaultOrderingMethod = EntityTypesOrderingMethod.NameAsc;
     private const int MaximumAllowedCount = ListEntityTypesRequestHandler.MaximumAllowedCount;
     private const int TotalCount = MaximumAllowedCount + 10;
 
@@ -81,7 +80,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
             var expected = new Result<ListEntityTypesResult>(new ListEntityTypesResult
             {
                 // if no ordering method is specified it should use the default
-                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? DefaultOrderingMethod)],
+                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? EntityTypesOrderingMethods.Default)],
                 StartIndex = 0,
                 TotalCount = null,
             });
@@ -153,7 +152,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
         }
     }
 
-    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, EntityTypesOrderingMethod orderingMethod = DefaultOrderingMethod)
+    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, EntityTypesOrderingMethod orderingMethod = EntityTypesOrderingMethods.Default)
     {
         // note that the OrderBy and SelectToModel extension methods used here are already covered by tests of their own
         return _seededEntities.AsQueryable().OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count)).SelectToModel();

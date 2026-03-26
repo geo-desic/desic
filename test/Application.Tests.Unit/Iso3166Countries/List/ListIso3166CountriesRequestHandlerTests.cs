@@ -13,7 +13,6 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
 {
     private readonly ILogger<ListIso3166CountriesRequestHandler> _logger = NullLogger<ListIso3166CountriesRequestHandler>.Instance;
     private readonly Domain.Iso3166Countries.Iso3166Country[] _seededEntities;
-    private const Iso3166CountriesOrderingMethod DefaultOrderingMethod = Iso3166CountriesOrderingMethod.NameAsc;
     private const int MaximumAllowedCount = ListIso3166CountriesRequestHandler.MaximumAllowedCount;
     private const int TotalCount = MaximumAllowedCount + 10;
 
@@ -87,7 +86,7 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
             var expected = new Result<ListIso3166CountriesResult>(new ListIso3166CountriesResult
             {
                 // if no ordering method is specified it should use the default
-                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? DefaultOrderingMethod)],
+                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? Iso3166CountriesOrderingMethods.Default)],
                 StartIndex = 0,
                 TotalCount = null,
             });
@@ -165,7 +164,7 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
         }
     }
 
-    private IEnumerable<Iso3166CountryView> ExpectedItems(int minIndex, int count, Iso3166CountriesOrderingMethod orderingMethod = DefaultOrderingMethod)
+    private IEnumerable<Iso3166CountryView> ExpectedItems(int minIndex, int count, Iso3166CountriesOrderingMethod orderingMethod = Iso3166CountriesOrderingMethods.Default)
     {
         // note that the OrderBy and SelectToModel extension methods used here are already covered by tests of their own
         return _seededEntities.AsQueryable().OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count)).SelectToView();
