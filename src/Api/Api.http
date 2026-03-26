@@ -20,7 +20,7 @@ Accept: application/json
 
 ###
 
-GET {{HostAddressApi}}/v1/entitytypes?startIndex=1&count=2&orderingMethod=KeyDesc
+GET {{HostAddressApi}}/v1/entitytypes?includeTotalCount=true&startIndex=1&count=2&orderingMethod=KeyDesc
 Accept: application/json
 
 ###
@@ -35,7 +35,7 @@ Accept: application/json
 
 ###
 
-GET {{HostAddressApi}}/v1/iso3166countries?startIndex=1&count=2&orderingMethod=alpha2Desc
+GET {{HostAddressApi}}/v1/iso3166countries?includeTotalCount=true&startIndex=1&count=2&orderingMethod=alpha2Desc
 Accept: application/json
 
 ###

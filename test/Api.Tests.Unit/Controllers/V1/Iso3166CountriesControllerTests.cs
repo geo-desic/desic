@@ -47,7 +47,7 @@ public class Iso3166CountriesControllerTests
             var controller = NewController();
 
             // act
-            var result = (await controller.List(pagination: pagination, orderingMethod: orderingMethod, filter: filter))?.Result as OkObjectResult;
+            var result = (await controller.List(pagination: pagination, filter: filter, orderingMethod: orderingMethod))?.Result as OkObjectResult;
 
             // assert
             _mediator.Verify(x => x.Send(It.Is<ListIso3166CountriesRequest>(x => IsEquivalentTo(source: x.Pagination, compare: pagination) && x.OrderingMethod == orderingMethod && IsEquivalentTo(source: x.Filter, compare: filter))), Times.Once());
@@ -66,7 +66,7 @@ public class Iso3166CountriesControllerTests
         var controller = NewController();
 
         // act
-        var result = (await controller.List(pagination: new(), orderingMethod: default, filter: new()))?.Result as ObjectResult;
+        var result = (await controller.List(pagination: new(), filter: new(), orderingMethod: default))?.Result as ObjectResult;
 
         // assert
         result.Should().NotBeNull();
