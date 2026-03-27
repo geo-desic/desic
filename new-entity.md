@@ -130,7 +130,7 @@ If seeding support is desired for the entity then that isn't currently covered b
 At this point, if everything was done correctly, the solution should hopefully compile.
 
 ## New Migration
-If a non-development environment doesn't exist yet, can simply run [migrations-squash-all.cmd](migrations-squash-all.cmd). This will delete and re-create the `Initial` migration. However once migrations are actually in use, a new migration would be needed. Choose a mostly unique name for the migration, e.g. `PersonEntityAdded` and execute each of the following commands (for all supported providers) from a terminal in the top level solution directory. See [migrations.md](migrations.md) for more information.
+If a non-development environment doesn't exist yet, can simply run [migrations-squash-all.ps1](tools/migrations-squash-all.ps1). This will delete and re-create the `Initial` migration. However once migrations are actually in use, a new migration would be needed. Choose a mostly unique name for the migration, e.g. `PersonEntityAdded` and execute each of the following commands (for all supported providers) from a terminal in the top level solution directory. See [migrations.md](migrations.md) for more information.
 
 ```
 dotnet ef migrations add PersonEntityAdded --no-build --context ApplicationDbContext --project ./Infrastructure.Data.Sqlite
