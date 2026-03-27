@@ -10,7 +10,7 @@ public class Iso3166CountryTests
     public class Iso3166CountryTests001 : Iso3166CountryTests
     {
         [Fact]
-        public void Contructor_WithIso3166CountryEntity_AllPropertiesMappedCorrectly()
+        public void Constructor_WithDomainEntity_AllPropertiesMappedCorrectly()
         {
             // arrange
             var createdByType = SystemEntityTypes.Unspecified;

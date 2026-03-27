@@ -4,12 +4,12 @@ using Desic.Shared.Extensions;
 
 namespace Desic.Application.Tests.Unit.EntityTypes;
 
-public class EntityTypeExtensionsTests
+public class EntityTypeTests
 {
-    public class EntityTypeExtensionsTests001 : EntityTypeExtensionsTests
+    public class EntityTypeTests001 : EntityTypeTests
     {
         [Fact]
-        public void ToModel_AllPropertiesSpecified_ItemWithAllExpectedPropertyValuesReturned()
+        public void Constructor_WithDomainEntity_AllPropertiesMappedCorrectly()
         {
             // arrange
             var source = new Domain.EntityTypes.EntityType
@@ -25,7 +25,7 @@ public class EntityTypeExtensionsTests
             };
 
             // act
-            var result = EntityTypeExtensions.ToModel(source: source);
+            var result = new EntityType(source: source);
 
             // assert
             result.Should().BeEquivalentTo(expected);

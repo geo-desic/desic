@@ -39,7 +39,7 @@ public class EntityTypesControllerTests(SeededAppDatabase testDatabase) : TestWe
     public async Task List_ValidRequestWithFilterByKey_Status200OkAndExpectedItem()
     {
         // arrange
-        var expectedItem = Domain.EntityTypes.SystemEntityTypes.Label.ToEntity().ToModel(); // should exist by db seeding
+        var expectedItem = new EntityType(Domain.EntityTypes.SystemEntityTypes.Label.ToEntity()); // should exist by db seeding
         var key = expectedItem.Key;
         var expectedStatusCode = System.Net.HttpStatusCode.OK;
         var expected = new ListEntityTypesResult

@@ -1,7 +1,21 @@
-﻿namespace Desic.Application.EntityTypes;
+﻿using Desic.Domain.EntityTypes;
+using System.Diagnostics.CodeAnalysis;
 
-public class EntityType
+namespace Desic.Application.EntityTypes;
+
+public class EntityType : IReadOnlyEntityTypeReferenceData
 {
-    public required string Name { get; set; }
+    public EntityType() { }
+
+    [SetsRequiredMembers]
+    public EntityType(IReadOnlyEntityTypeReferenceData source) : this()
+    {
+        Key = source.Key;
+        Name = source.Name;
+    }
+
     public required string Key { get; set; }
+    public required string Name { get; set; }
+
+    bool IEquatable<IReadOnlyEntityTypeReferenceData>.Equals(IReadOnlyEntityTypeReferenceData? compare) => this.IsEquivalentTo(compare);
 }

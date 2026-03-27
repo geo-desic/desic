@@ -2,7 +2,7 @@
 
 namespace Desic.Domain.EntityTypes;
 
-public class EntityType : BaseEntity, IStaticEntityType, IReadOnlyNameable
+public class EntityType : BaseEntity, IStaticEntityType, IReadOnlyNameable, IReadOnlyEntityTypeReferenceData
 {
     public static SystemEntityType ClassEntityType => SystemEntityTypes.EntityType;
     public override SystemEntityType SystemEntityType => ClassEntityType;
@@ -12,4 +12,6 @@ public class EntityType : BaseEntity, IStaticEntityType, IReadOnlyNameable
 
     public const int LengthKey = 4;
     public const int MaxLengthName = 50;
+
+    bool IEquatable<IReadOnlyEntityTypeReferenceData>.Equals(IReadOnlyEntityTypeReferenceData? compare) => this.IsEquivalentTo(compare);
 }

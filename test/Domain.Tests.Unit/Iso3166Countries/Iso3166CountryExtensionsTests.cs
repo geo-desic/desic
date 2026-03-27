@@ -1,5 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Domain.Iso3166Countries;
+using Xunit.Sdk;
 
 namespace Desic.Domain.Tests.Unit.Iso3166Countries;
 
@@ -7,13 +8,13 @@ public class Iso3166CountryExtensionsTests
 {
     public class Iso3166CountryExtensionsTests001 : Iso3166CountryExtensionsTests
     {
-        public static IEnumerable<TheoryDataRow<bool, IIso3166CountryReferenceData?, IIso3166CountryReferenceData?>> IsEquivalentToTheoryData()
+        public static IEnumerable<TheoryDataRow<bool, TestItem?, TestItem?>> IsEquivalentToTheoryData()
         {
-            IIso3166CountryReferenceData? item1, item2;
+            TestItem? item1, item2;
 
             // true: all fields equal
-            item1 = NewCountryReferenceData();
-            item2 = NewCountryReferenceData();
+            item1 = NewItem();
+            item2 = NewItem();
             yield return new(true, item1, item2);
 
             // true: both null
@@ -23,42 +24,42 @@ public class Iso3166CountryExtensionsTests
 
             // false: only item1 null
             item1 = null;
-            item2 = NewCountryReferenceData();
+            item2 = NewItem();
             yield return new(false, item1, item2);
 
             // false: only item2 null
-            item1 = NewCountryReferenceData();
+            item1 = NewItem();
             item2 = null;
             yield return new(false, item1, item2);
 
             // false: property does not match: IsoId
-            item1 = NewCountryReferenceData();
-            item2 = NewCountryReferenceData();
+            item1 = NewItem();
+            item2 = NewItem();
             item2.IsoId = 0;
             yield return new(false, item1, item2);
 
             // false: property does not match: Alpha2
-            item1 = NewCountryReferenceData();
-            item2 = NewCountryReferenceData();
+            item1 = NewItem();
+            item2 = NewItem();
             item2.Alpha2 = "does-not-match";
             yield return new(false, item1, item2);
 
             // false: property does not match: Alpha3
-            item1 = NewCountryReferenceData();
-            item2 = NewCountryReferenceData();
+            item1 = NewItem();
+            item2 = NewItem();
             item2.Alpha3 = "does-not-match";
             yield return new(false, item1, item2);
 
             // false: property does not match: Name
-            item1 = NewCountryReferenceData();
-            item2 = NewCountryReferenceData();
+            item1 = NewItem();
+            item2 = NewItem();
             item2.Name = "does-not-match";
             yield return new(false, item1, item2);
         }
 
         [Theory]
         [MemberData(nameof(IsEquivalentToTheoryData))]
-        public void IsEquivalentTo_SpecifiedTheoryData_ExpectedResult(bool expected, IIso3166CountryReferenceData? item1, IIso3166CountryReferenceData? item2)
+        public void IsEquivalentTo_SpecifiedTheoryData_ExpectedResult(bool expected, TestItem? item1, TestItem? item2)
         {
             Iso3166CountryExtensions.IsEquivalentTo(item1, item2).Should().Be(expected);
         }
@@ -70,8 +71,8 @@ public class Iso3166CountryExtensionsTests
         public void UpdateFrom_ItemWithDifferentValues_UpdatesAllProperties()
         {
             // arrange
-            var item = NewCountryReferenceData();
-            var expected = new TestCountryReferenceData { IsoId = 2, Alpha2 = "alpha2-updated", Alpha3 = "alpha3-updated", Name = "name-updated" }; // all values different from item
+            var item = NewItem();
+            var expected = new TestItem { IsoId = 2, Alpha2 = "alpha2-updated", Alpha3 = "alpha3-updated", Name = "name-updated" }; // all values different from item
 
             // act
             Iso3166CountryExtensions.UpdateFrom(item, expected);
@@ -84,19 +85,35 @@ public class Iso3166CountryExtensionsTests
         }
     }
 
-    private static TestCountryReferenceData NewCountryReferenceData()
+    private static TestItem NewItem()
     {
-        return new TestCountryReferenceData { IsoId = 1, Alpha2 = "alpha2", Alpha3 = "alpha3", Name = "name" };
+        return new TestItem { IsoId = 1, Alpha2 = "alpha2", Alpha3 = "alpha3", Name = "name" };
     }
 
-    private class TestCountryReferenceData : IIso3166CountryReferenceData
+    public sealed class TestItem : IIso3166CountryReferenceData, IXunitSerializable
     {
-        public int IsoId { get; set; }
         public string Alpha2 { get; set; } = string.Empty;
         public string Alpha3 { get; set; } = string.Empty;
+        public int IsoId { get; set; }
         public string Name { get; set; } = string.Empty;
 
+        public void Deserialize(IXunitSerializationInfo info)
+        {
+            Alpha2 = info.GetValue<string>(nameof(Alpha2))!;
+            Alpha3 = info.GetValue<string>(nameof(Alpha3))!;
+            IsoId = info.GetValue<int>(nameof(IsoId))!;
+            Name = info.GetValue<string>(nameof(Name))!;
+        }
+
         public bool Equals(IIso3166CountryReferenceData? other) => throw new NotImplementedException(); // should not get called => testing extension methods directly, not this
+
+        public void Serialize(IXunitSerializationInfo info)
+        {
+            info.AddValue(nameof(Alpha2), Alpha2);
+            info.AddValue(nameof(Alpha3), Alpha3);
+            info.AddValue(nameof(IsoId), IsoId);
+            info.AddValue(nameof(Name), Name);
+        }
 
         public void UpdateFrom(IIso3166CountryReferenceData compare) => throw new NotImplementedException(); // should not get called => testing extension methods directly, not this
     }

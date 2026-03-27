@@ -74,7 +74,7 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
     public async Task ListEntityTypesRequestSend_ValidRequestWithFilter_ExpectedResult()
     {
         // arrange
-        var expectedEntityType = SystemEntityTypes.Label.ToEntity().ToModel();
+        var expectedEntityType = new Application.EntityTypes.EntityType(SystemEntityTypes.Label.ToEntity());
         var expected = new ListEntityTypesResult
         {
             StartIndex = 0,
