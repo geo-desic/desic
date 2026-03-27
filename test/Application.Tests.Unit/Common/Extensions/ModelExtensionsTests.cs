@@ -2,6 +2,7 @@
 using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Models;
 using Desic.Domain.Common.Entities;
+using Desic.Domain.EntityTypes;
 using Desic.Domain.Labels;
 using Desic.Domain.Users;
 using Desic.Shared.Extensions;
@@ -16,11 +17,32 @@ public class ModelExtensionsTests
     public class ModelExtensionsTests001 : ModelExtensionsTests
     {
         [Fact]
+        public void MapId_SpecifiedModels_PerformsExpectedMapping()
+        {
+            // arrange
+            var item = new TestIdModel();
+            var entity = new TestIdEntity()
+            {
+                Id = 1.ToGuid(),
+            };
+
+            // act
+            ModelExtensions.MapId(item, entity);
+
+            // assert
+            item.ExtraProperty.Should().Be(Unchanged);
+            item.Id.Should().Be(entity.Id);
+        }
+    }
+
+    public class ModelExtensionsTests002 : ModelExtensionsTests
+    {
+        [Fact]
         public void MapCreated_SpecifiedModels_PerformsExpectedMapping()
         {
             // arrange
             var createdBy = _by;
-            var item = new TestCreatableDto();
+            var item = new TestCreatableModel();
             var entity = new TestCreatableEntity()
             {
                 CreatedById = createdBy.Id,
@@ -42,14 +64,14 @@ public class ModelExtensionsTests
         }
     }
 
-    public class ModelExtensionsTests002 : ModelExtensionsTests
+    public class ModelExtensionsTests003 : ModelExtensionsTests
     {
         [Fact]
         public void MapModified_SpecifiedModels_PerformsExpectedMapping()
         {
             // arrange
             var modifiedBy = _by;
-            var item = new TestModifiableDto();
+            var item = new TestModifiableModel();
             var entity = new TestModifiableEntity()
             {
                 ModifiedById = modifiedBy.Id,
@@ -71,14 +93,14 @@ public class ModelExtensionsTests
         }
     }
 
-    public class ModelExtensionsTests003 : ModelExtensionsTests
+    public class ModelExtensionsTests004 : ModelExtensionsTests
     {
         [Fact]
         public void MapDeleted_SpecifiedModels_PerformsExpectedMapping()
         {
             // arrange
             var deletedBy = _by;
-            var item = new TestSoftDeletableDto();
+            var item = new TestSoftDeletableModel();
             var entity = new TestSoftDeletableEntity()
             {
                 DeletedById = deletedBy.Id,
@@ -100,7 +122,7 @@ public class ModelExtensionsTests
         }
     }
 
-    public class ModelExtensionsTests004 : ModelExtensionsTests
+    public class ModelExtensionsTests005 : ModelExtensionsTests
     {
         [Fact]
         public void MapCreatedModified_SpecifiedModels_PerformsExpectedMapping()
@@ -108,7 +130,7 @@ public class ModelExtensionsTests
             // arrange
             var createdBy = _by;
             var modifiedBy = new User { Username = "user-1" };
-            var item = new TestModifiableDto();
+            var item = new TestModifiableModel();
             var entity = new TestModifiableEntity()
             {
                 CreatedById = createdBy.Id,
@@ -139,7 +161,7 @@ public class ModelExtensionsTests
         }
     }
 
-    public class ModelExtensionsTests005 : ModelExtensionsTests
+    public class ModelExtensionsTests006 : ModelExtensionsTests
     {
         [Fact]
         public void MapCreatedModifiedDeleted_SpecifiedModels_PerformsExpectedMapping()
@@ -148,7 +170,7 @@ public class ModelExtensionsTests
             var createdBy = _by;
             var modifiedBy = new User { Id = 1.ToGuid(), Username = "user-1" };
             var deletedBy = new User { Id = 2.ToGuid(), Username = "user-2" };
-            var item = new TestSoftDeletableDto();
+            var item = new TestSoftDeletableModel();
             var entity = new TestSoftDeletableEntity()
             {
                 CreatedById = createdBy.Id,
@@ -188,25 +210,37 @@ public class ModelExtensionsTests
         }
     }
 
-    private class TestCreatableDto : Application.Common.Interfaces.ICreatable
+    private class TestIdModel : Application.Common.Interfaces.IGuidId
+    {
+        public string ExtraProperty { get; set; } = Unchanged;
+        public Guid Id { get; set; }
+    }
+
+    private class TestCreatableModel : Application.Common.Interfaces.ICreatable
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
     }
 
-    private class TestModifiableDto : Application.Common.Interfaces.IModifiable, Application.Common.Interfaces.ICreatable
+    private class TestModifiableModel : Application.Common.Interfaces.IModifiable, Application.Common.Interfaces.ICreatable
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
         public RequiredOnByType Modified { get; set; } = new();
     }
 
-    private class TestSoftDeletableDto : Application.Common.Interfaces.ISoftDeletable, Application.Common.Interfaces.IModifiable, Application.Common.Interfaces.ICreatable
+    private class TestSoftDeletableModel : Application.Common.Interfaces.ISoftDeletable, Application.Common.Interfaces.IModifiable, Application.Common.Interfaces.ICreatable
     {
         public string ExtraProperty { get; set; } = Unchanged;
         public RequiredOnByType Created { get; set; } = new();
         public RequiredOnByType Modified { get; set; } = new();
         public OptionalOnByType Deleted { get; set; } = new();
+    }
+
+    private class TestIdEntity : Domain.Common.Entities.IReadOnlyMinimalEntity
+    {
+        public SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
+        public Guid Id { get; set; }
     }
 
     private class TestCreatableEntity : Domain.Common.Entities.ICreatable
