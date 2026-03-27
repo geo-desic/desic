@@ -6,7 +6,7 @@ namespace Desic.Application.Tests.Unit.Iso3166Countries;
 
 public class Iso3166CountryViewTests
 {
-    public class Iso3166CountryViewTests001: Iso3166CountryViewTests
+    public class Iso3166CountryViewTests001 : Iso3166CountryViewTests
     {
         [Fact]
         public void Contructor_WithIso3166CountryEntity_AllPropertiesMappedCorrectly()
