@@ -10,7 +10,7 @@ dotnet test --ignore-exit-code 8 -- --filter-trait "Type=Unit"
 # --ignore-exit-code 8 ===> so errors will not be generated if 0 tests are found for a specific test project due to the trait filter
 ```
 
-There is also [dotnet-test-with-coverage-report.ps1](../dotnet-test-with-coverage-report.ps1) which demonstrates how to execute all tests generating a code coverage report. Afterward can view the report in a browser by navigating to the created [index.html](../coverage-report/index.html) file.
+There is also [dotnet-test-with-coverage-report.ps1](../tools/dotnet-test-with-coverage-report.ps1) which demonstrates how to execute all tests generating a code coverage report. Afterward can view the report in a browser by navigating to the created coverage-report/index.html file.
 
 ## Unit Tests
 Unit tests validate an individual unit (e.g. function, method, class) works in isolation. Any external dependencies should be mocked or stubbed. In some cases in-memory database providers (entity framework core / sqlite) are used since mocking DbSets / DbContexts have various issues and do not support all types of operations. Such tests may technically be integration tests (or closer to them depending on how many other dependencies are mocked), but since they execute significantly faster, grouping them with unit for performance reasons makes sense. Unit test projects have the naming convention `*.Tests.Unit` where `*` is the name of the project containing the unit being tested.
