@@ -51,7 +51,7 @@ public class EntityTypeExtensionsTests
         }
     }
 
-    private static TestItem NewItem(string key = "key1", string name = "Name1")
+    private static TestItem NewItem(string key = "key", string name = "Name")
     {
         return new TestItem { Key = key, Name = name };
     }

@@ -12,6 +12,9 @@ public class EntityType : BaseEntity, IStaticEntityType, IReadOnlyNameable, IRea
 
     public const int LengthKey = 4;
     public const int MaxLengthName = 50;
+    public const int MinLengthName = 2;
+    public const string RegexKey = "^[a-z]*$"; // lowercase alphabetic characters
+    public const string RegexName = "^[A-Z]{1}[a-zA-Z0-9]*$"; // starts with an upper case alphabetic character and contains only alphanumeric characters
 
     bool IEquatable<IReadOnlyEntityTypeReferenceData>.Equals(IReadOnlyEntityTypeReferenceData? compare) => this.IsEquivalentTo(compare);
 }

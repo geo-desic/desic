@@ -21,6 +21,7 @@ public class DependencyInjectionTests
             // assert
             // currently no use of mediatR in the assembly
             // at least one validator is registered (FluentAssertions)
+            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IValidator<IReadOnlyEntityTypeReferenceData>)).Should().NotBeNull();
             serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IValidator<SystemEntityType>)).Should().NotBeNull();
             serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IValidator<EntityType>)).Should().NotBeNull();
         }
