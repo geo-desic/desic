@@ -62,7 +62,7 @@ public class Iso3166CountriesControllerTests
     public async Task List_InvalidRequestSendReturnsError_400BadRequestWithExpectedProblemDetails()
     {
         // arrange
-        Setup(result: new(new Error("TestError")));
+        Setup(result: new(new Error("Test")));
         var controller = NewController();
 
         // act
@@ -76,7 +76,7 @@ public class Iso3166CountriesControllerTests
         objectResult.Status.Should().Be((int)HttpStatusCode.BadRequest);
     }
 
-    private static Result<ListIso3166CountriesResult> GetSendResult(IEnumerable<Iso3166CountryView>? items = null, Pagination? pagination = null)
+    private static Result<ListIso3166CountriesResult> GetSendResult(IEnumerable<Iso3166CountryView>? items = null, IPagination? pagination = null)
     {
         return new Result<ListIso3166CountriesResult>(new ListIso3166CountriesResult
         {
@@ -99,9 +99,16 @@ public class Iso3166CountriesControllerTests
 
     private static IEnumerable<Iso3166CountryView> GetItems(int count)
     {
-        for (var i = 0; i < count; ++i)
+        for (var i = 0; i < count; ++i) // count must be <= 26 for alpha2 & alpha3 values to be unique using generation method below
         {
-            yield return new Iso3166CountryView { Alpha2 = new string((char)('a' + i), 2), Alpha3 = new string((char)('a' + i), 3), Id = i.ToGuid(), IsoId = i, Name = $"Name{i}" };
+            yield return new Iso3166CountryView
+            {
+                Alpha2 = new string((char)('a' + i), Domain.Iso3166Countries.Iso3166Country.LengthAlpha2),
+                Alpha3 = new string((char)('a' + i), Domain.Iso3166Countries.Iso3166Country.LengthAlpha3),
+                Id = i.ToGuid(),
+                IsoId = i,
+                Name = $"Name{i}",
+            };
         }
     }
 
@@ -112,10 +119,6 @@ public class Iso3166CountriesControllerTests
 
     private static bool IsEquivalentTo(Iso3166CountriesFilter source, Iso3166CountriesFilter compare)
     {
-        return (source.Alpha2 == compare.Alpha2 || (source.Alpha2 == null && compare.Alpha2 == null))
-            && (source.Alpha3 == compare.Alpha3 || (source.Alpha3 == null && compare.Alpha3 == null))
-            && (source.Id == compare.Id || (source.Id == null && compare.Id == null))
-            && (source.IsoId == compare.IsoId || (source.IsoId == null && compare.IsoId == null))
-            && (source.Name == compare.Name || (source.Name == null && compare.Name == null));
+        return source.Alpha2 == compare.Alpha2 && source.Alpha3 == compare.Alpha3 && source.Id == compare.Id && source.IsoId == compare.IsoId && source.Name == compare.Name;
     }
 }
