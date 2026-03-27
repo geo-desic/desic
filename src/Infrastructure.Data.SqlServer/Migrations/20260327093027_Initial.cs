@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Desic.Infrastructure.Data.Sqlite.Migrations
+namespace Desic.Infrastructure.Data.SqlServer.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -22,9 +22,9 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 schema: "ref",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Key = table.Column<string>(type: "TEXT", maxLength: 4, nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Key = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,24 +36,24 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 schema: "ref",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    CreatedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    ModifiedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ModifiedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    ModifiedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    DeletedById = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DeletedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    DeletedByTypeId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DeletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    IsBeingSeeded = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsoId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Alpha2 = table.Column<string>(type: "TEXT", maxLength: 2, nullable: false),
-                    Alpha3 = table.Column<string>(type: "TEXT", maxLength: 3, nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    DeletedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    DeletedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsBeingSeeded = table.Column<bool>(type: "bit", nullable: false),
+                    IsoId = table.Column<int>(type: "int", nullable: false),
+                    Alpha2 = table.Column<string>(type: "nvarchar(2)", maxLength: 2, nullable: false),
+                    Alpha3 = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -83,20 +83,20 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    CreatedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    ModifiedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ModifiedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    ModifiedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    DeletedById = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DeletedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    DeletedByTypeId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DeletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    DeletedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    DeletedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -126,24 +126,24 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    CreatedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    ModifiedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ModifiedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    ModifiedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    DeletedById = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DeletedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    DeletedByTypeId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DeletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    StartedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CompletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    FaileddOn = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
-                    Message = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    DeletedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    DeletedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    StartedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CompletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FaileddOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -173,21 +173,21 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    CreatedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    ModifiedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ModifiedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    ModifiedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    DeletedById = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DeletedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    DeletedByTypeId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DeletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
-                    Value = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    DeletedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    DeletedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -217,21 +217,21 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 schema: "app",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    CreatedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    ModifiedById = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ModifiedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    ModifiedByTypeId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "DATETIME('now')"),
-                    DeletedById = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DeletedByName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    DeletedByTypeId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    DeletedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    Username = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false, defaultValue: true)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    CreatedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    ModifiedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ModifiedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    DeletedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedByName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    DeletedByTypeId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Username = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -274,15 +274,13 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                 name: "IX_Iso3166Countries_Alpha2",
                 schema: "ref",
                 table: "Iso3166Countries",
-                column: "Alpha2",
-                unique: true);
+                column: "Alpha2");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Iso3166Countries_Alpha3",
                 schema: "ref",
                 table: "Iso3166Countries",
-                column: "Alpha3",
-                unique: true);
+                column: "Alpha3");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Iso3166Countries_CreatedById",

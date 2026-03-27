@@ -15,9 +15,7 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasDefaultSchema("app")
-                .HasAnnotation("ProductVersion", "10.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
 
             modelBuilder.Entity("Desic.Domain.EntityTypes.EntityType", b =>
                 {
@@ -46,7 +44,7 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("EntityTypes", "ref");
+                    b.ToTable("EntityTypes", (string)null);
                 });
 
             modelBuilder.Entity("Desic.Domain.Iso3166Countries.Iso3166Country", b =>
@@ -139,11 +137,9 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Alpha2")
-                        .IsUnique();
+                    b.HasIndex("Alpha2");
 
-                    b.HasIndex("Alpha3")
-                        .IsUnique();
+                    b.HasIndex("Alpha3");
 
                     b.HasIndex("CreatedById");
 
@@ -170,7 +166,7 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Iso3166Countries", "ref");
+                    b.ToTable("Iso3166Countries", (string)null);
                 });
 
             modelBuilder.Entity("Desic.Domain.Labels.Label", b =>
@@ -263,7 +259,7 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Labels", "app");
+                    b.ToTable("Labels", (string)null);
                 });
 
             modelBuilder.Entity("Desic.Domain.Processes.Process", b =>
@@ -378,7 +374,7 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.HasIndex("StartedOn");
 
-                    b.ToTable("Processes", "app");
+                    b.ToTable("Processes", (string)null);
                 });
 
             modelBuilder.Entity("Desic.Domain.Tags.Tag", b =>
@@ -478,7 +474,7 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
 
                     b.HasIndex("Value");
 
-                    b.ToTable("Tags", "app");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Desic.Domain.Users.User", b =>
@@ -578,7 +574,7 @@ namespace Desic.Infrastructure.Data.Sqlite.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users", "app");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Desic.Domain.Iso3166Countries.Iso3166Country", b =>

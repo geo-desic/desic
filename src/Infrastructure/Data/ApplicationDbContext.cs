@@ -34,9 +34,9 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.HasDefaultSchema(AppSchema);
+        if (!Database.IsSqlite()) modelBuilder.HasDefaultSchema(AppSchema); // sqlite does not support schemas
         // alphabetized entity configurations
-        modelBuilder.ApplyConfiguration(new EntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new EntityTypeConfiguration(Database));
         modelBuilder.ApplyConfiguration(new Iso3166CountryConfiguration(Database));
         modelBuilder.ApplyConfiguration(new LabelConfiguration(Database));
         modelBuilder.ApplyConfiguration(new ProcessConfiguration(Database));

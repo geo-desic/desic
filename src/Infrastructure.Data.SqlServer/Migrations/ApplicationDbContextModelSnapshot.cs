@@ -143,11 +143,9 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Alpha2")
-                        .IsUnique();
+                    b.HasIndex("Alpha2");
 
-                    b.HasIndex("Alpha3")
-                        .IsUnique();
+                    b.HasIndex("Alpha3");
 
                     b.HasIndex("CreatedById");
 

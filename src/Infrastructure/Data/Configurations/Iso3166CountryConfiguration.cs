@@ -12,15 +12,16 @@ internal class Iso3166CountryConfiguration(DatabaseFacade databaseFacade) : IEnt
 
     public void Configure(EntityTypeBuilder<Iso3166Country> builder)
     {
-        builder.ToTable(nameof(ApplicationDbContext.Iso3166Countries), ApplicationDbContext.RefSchema);
+        var schema = _databaseFacade.IsSqlite() ? null : ApplicationDbContext.RefSchema;
+        builder.ToTable(nameof(ApplicationDbContext.Iso3166Countries), schema);
         var columnOrder = builder.ConfigureSeedableSoftDeletableEntity(_databaseFacade);
         builder.Property(x => x.IsoId).IsRequired().HasColumnOrder(++columnOrder);
         builder.Property(x => x.Alpha2).IsRequired().HasMaxLength(Iso3166Country.LengthAlpha2).HasColumnOrder(++columnOrder);
         builder.Property(x => x.Alpha3).IsRequired().HasMaxLength(Iso3166Country.LengthAlpha3).HasColumnOrder(++columnOrder);
         builder.Property(x => x.Name).IsRequired().HasMaxLength(Iso3166Country.MaxLengthName).HasColumnOrder(++columnOrder);
         builder.HasIndex(x => x.IsoId).IsUnique();
-        builder.HasIndex(x => x.Alpha2).IsUnique();
-        builder.HasIndex(x => x.Alpha3).IsUnique();
+        builder.HasIndex(x => x.Alpha2); // both alpha2 and alpha3 codes can potentially be re-used so their indexes are not defined as unique
+        builder.HasIndex(x => x.Alpha3);
         builder.HasIndex(x => x.Name);
     }
 }

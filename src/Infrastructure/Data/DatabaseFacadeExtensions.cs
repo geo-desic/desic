@@ -18,4 +18,6 @@ internal static class DatabaseFacadeExtensions
             _ => "GETUTCDATE()",
         };
     }
+
+    internal static bool IsSqlite(this DatabaseFacade db) => db.ProviderName == ProviderNames.Sqlite;
 }
