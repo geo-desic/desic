@@ -80,7 +80,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
             var expected = new Result<ListEntityTypesResult>(new ListEntityTypesResult
             {
                 // if no ordering method is specified it should use the default
-                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? EntityTypesOrderingMethods.Default)],
+                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? default)],
                 StartIndex = 0,
                 TotalCount = null,
             });
@@ -152,7 +152,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
         }
     }
 
-    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, EntityTypesOrderingMethod orderingMethod = EntityTypesOrderingMethods.Default)
+    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, EntityTypesOrderingMethod orderingMethod = default)
     {
         // note that the OrderBy and SelectToModel extension methods used here are already covered by tests of their own
         return _seededEntities.AsQueryable().OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count)).SelectToModel();

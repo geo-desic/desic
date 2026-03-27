@@ -8,5 +8,5 @@ public class FilterableOrderableListRequest<F, O> : ListRequest, IOrderingMethod
 {
     public F Filter { get; set; } = new();
 
-    public virtual O OrderingMethod { get; set; } = default;
+    public O OrderingMethod { get; set; } = default;
 }

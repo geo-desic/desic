@@ -86,7 +86,7 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
             var expected = new Result<ListIso3166CountriesResult>(new ListIso3166CountriesResult
             {
                 // if no ordering method is specified it should use the default
-                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? Iso3166CountriesOrderingMethods.Default)],
+                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? default)],
                 StartIndex = 0,
                 TotalCount = null,
             });
@@ -164,7 +164,7 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
         }
     }
 
-    private IEnumerable<Iso3166CountryView> ExpectedItems(int minIndex, int count, Iso3166CountriesOrderingMethod orderingMethod = Iso3166CountriesOrderingMethods.Default)
+    private IEnumerable<Iso3166CountryView> ExpectedItems(int minIndex, int count, Iso3166CountriesOrderingMethod orderingMethod = default)
     {
         // note that the OrderBy and SelectToModel extension methods used here are already covered by tests of their own
         return _seededEntities.AsQueryable().OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count)).SelectToView();

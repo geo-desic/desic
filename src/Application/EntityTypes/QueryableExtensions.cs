@@ -20,7 +20,7 @@ public static class QueryableExtensions
 
     public static IOrderedQueryable<Domain.EntityTypes.EntityType> OrderBy(this IQueryable<Domain.EntityTypes.EntityType> source, EntityTypesOrderingMethod? orderingMethod)
     {
-        return (orderingMethod ?? EntityTypesOrderingMethod.NameAsc) switch
+        return (orderingMethod ?? default) switch
         {
             EntityTypesOrderingMethod.KeyAsc => source.OrderBy(x => x.Key),
             EntityTypesOrderingMethod.KeyDesc => source.OrderByDescending(x => x.Key),
