@@ -1,6 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Extensions;
 using Desic.Domain.EntityTypes;
 using Desic.Domain.Labels;
 using Desic.Domain.Users;

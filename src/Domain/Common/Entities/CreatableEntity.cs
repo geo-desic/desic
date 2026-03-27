@@ -1,4 +1,6 @@
-﻿namespace Desic.Domain.Common.Entities;
+﻿using Desic.Domain.Common.Interfaces;
+
+namespace Desic.Domain.Common.Entities;
 
 public abstract class CreatableEntity : BaseEntity, ICreatable
 {

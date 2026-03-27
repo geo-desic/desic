@@ -3,12 +3,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Desic.Application.EntityTypes;
 
-public class EntityType : IReadOnlyEntityTypeReferenceData
+public class EntityType : IReadOnlyEntityType
 {
     public EntityType() { }
 
     [SetsRequiredMembers]
-    public EntityType(IReadOnlyEntityTypeReferenceData source) : this()
+    public EntityType(IReadOnlyEntityType source) : this()
     {
         Key = source.Key;
         Name = source.Name;
@@ -17,5 +17,5 @@ public class EntityType : IReadOnlyEntityTypeReferenceData
     public required string Key { get; set; }
     public required string Name { get; set; }
 
-    bool IEquatable<IReadOnlyEntityTypeReferenceData>.Equals(IReadOnlyEntityTypeReferenceData? compare) => this.IsEquivalentTo(compare);
+    bool IEquatable<IReadOnlyEntityType>.Equals(IReadOnlyEntityType? compare) => this.IsEquivalentTo(compare);
 }

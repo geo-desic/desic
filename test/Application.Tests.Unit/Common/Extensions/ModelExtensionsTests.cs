@@ -1,7 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Models;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Interfaces;
 using Desic.Domain.EntityTypes;
 using Desic.Domain.Labels;
 using Desic.Domain.Users;
@@ -237,13 +237,13 @@ public class ModelExtensionsTests
         public OptionalOnByType Deleted { get; set; } = new();
     }
 
-    private class TestIdEntity : Domain.Common.Entities.IReadOnlyMinimalEntity
+    private class TestIdEntity : IReadOnlyMinimalEntity
     {
         public SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
         public Guid Id { get; set; }
     }
 
-    private class TestCreatableEntity : Domain.Common.Entities.ICreatable
+    private class TestCreatableEntity : ICreatable
     {
         public Guid CreatedById { get; set; }
         public string? CreatedByName { get; set; }
@@ -251,7 +251,7 @@ public class ModelExtensionsTests
         public DateTime CreatedOn { get; set; }
     }
 
-    private class TestModifiableEntity : Domain.Common.Entities.IModifiable, Domain.Common.Entities.ICreatable
+    private class TestModifiableEntity : IModifiable, ICreatable
     {
         public Guid CreatedById { get; set; }
         public string? CreatedByName { get; set; }
@@ -263,7 +263,7 @@ public class ModelExtensionsTests
         public DateTime ModifiedOn { get; set; }
     }
 
-    private class TestSoftDeletableEntity : Domain.Common.Entities.ISoftDeletable, Domain.Common.Entities.IModifiable, Domain.Common.Entities.ICreatable
+    private class TestSoftDeletableEntity : ISoftDeletable, IModifiable, ICreatable
     {
         public Guid CreatedById { get; set; }
         public string? CreatedByName { get; set; }

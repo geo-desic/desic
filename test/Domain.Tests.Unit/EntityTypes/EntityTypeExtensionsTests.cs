@@ -56,7 +56,7 @@ public class EntityTypeExtensionsTests
         return new TestItem { Key = key, Name = name };
     }
 
-    public sealed class TestItem : IReadOnlyEntityTypeReferenceData, IXunitSerializable
+    public sealed class TestItem : IReadOnlyEntityType, IXunitSerializable
     {
         public string Key { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
@@ -67,7 +67,7 @@ public class EntityTypeExtensionsTests
             Name = info.GetValue<string>(nameof(Name))!;
         }
 
-        public bool Equals(IReadOnlyEntityTypeReferenceData? other) => throw new NotImplementedException(); // should not get called => testing extension methods directly, not this
+        public bool Equals(IReadOnlyEntityType? other) => throw new NotImplementedException(); // should not get called => testing extension methods directly, not this
 
         public void Serialize(IXunitSerializationInfo info)
         {

@@ -1,4 +1,4 @@
-﻿namespace Desic.Domain.Common.Entities;
+﻿namespace Desic.Domain.Common.Interfaces;
 
 public interface IUpdatableFrom<T>
 {

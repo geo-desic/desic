@@ -1,4 +1,5 @@
-﻿using Desic.Domain.Common.Entities;
+﻿using Desic.Domain.Common.Extensions;
+using Desic.Domain.Common.Interfaces;
 using Desic.Domain.EntityTypes;
 using Desic.Domain.Labels;
 using Desic.Domain.Processes;

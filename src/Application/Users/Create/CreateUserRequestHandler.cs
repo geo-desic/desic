@@ -1,7 +1,7 @@
 ﻿using Desic.Application.Common;
 using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Interfaces;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Extensions;
 using Desic.Domain.Labels;
 using FluentValidation;
 using MediatR;

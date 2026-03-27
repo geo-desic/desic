@@ -30,7 +30,7 @@ public class CreateUserValidatorTests
     {
         [Theory]
         [InlineData("aaaa")] // too short (4 characters)
-        [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")] // too long (51 characters)
+        [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")] // too long (101 characters)
         [InlineData(".username")] // starts with non alphanumeric character
         [InlineData("_username")] // starts with non alphanumeric character
         [InlineData("-username")] // starts with non alphanumeric character

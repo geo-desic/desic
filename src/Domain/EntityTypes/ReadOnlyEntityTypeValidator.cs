@@ -2,9 +2,9 @@
 
 namespace Desic.Domain.EntityTypes;
 
-public class ReadOnlyEntityTypeReferenceDataValidator : AbstractValidator<IReadOnlyEntityTypeReferenceData>
+public class ReadOnlyEntityTypeValidator : AbstractValidator<IReadOnlyEntityType>
 {
-    public ReadOnlyEntityTypeReferenceDataValidator()
+    public ReadOnlyEntityTypeValidator()
     {
         RuleFor(x => x.Key)
             .NotEmpty()

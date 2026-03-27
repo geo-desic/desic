@@ -24,7 +24,7 @@ public class EntityTypeValidatorTests
             // arrange
             var systemEntityType = new SystemEntityType(Id: 1.ToGuid(), Key: key, Name: NotTested);
             var entityType = systemEntityType.ToEntity();
-            var validator1 = new ReadOnlyEntityTypeReferenceDataValidator();
+            var validator1 = new ReadOnlyEntityTypeValidator();
             var validator2 = new SystemEntityTypeValidator();
             var validator3 = new EntityTypeValidator();
 
@@ -55,7 +55,7 @@ public class EntityTypeValidatorTests
             // arrange
             var systemEntityType = new SystemEntityType(Id: 1.ToGuid(), Key: NotTested, Name: name);
             var entityType = systemEntityType.ToEntity();
-            var validator1 = new ReadOnlyEntityTypeReferenceDataValidator();
+            var validator1 = new ReadOnlyEntityTypeValidator();
             var validator2 = new SystemEntityTypeValidator();
             var validator3 = new EntityTypeValidator();
 

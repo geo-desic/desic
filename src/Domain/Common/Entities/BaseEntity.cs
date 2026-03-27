@@ -1,4 +1,5 @@
-﻿using Desic.Domain.EntityTypes;
+﻿using Desic.Domain.Common.Interfaces;
+using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Common.Entities;
 

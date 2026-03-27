@@ -1,4 +1,4 @@
-﻿using Desic.Domain.Common.Entities;
+﻿using Desic.Domain.Common.Interfaces;
 using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Labels;

@@ -1,6 +1,8 @@
-﻿using Desic.Shared.Extensions;
+﻿using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Interfaces;
+using Desic.Shared.Extensions;
 
-namespace Desic.Domain.Common.Entities;
+namespace Desic.Domain.Common.Extensions;
 
 public static class EntityExtensions
 {

@@ -2,7 +2,7 @@
 using Desic.Api.Common;
 using Desic.Application.Users;
 using Desic.Application.Users.Create;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Interfaces;
 using Desic.Domain.Labels;
 using Desic.Domain.Users.Test;
 using Desic.Testing.Integration.Db;

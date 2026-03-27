@@ -1,5 +1,5 @@
 ﻿using Desic.Application.Common.Models;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Interfaces;
 using Desic.Domain.Iso3166Countries;
 using System.Diagnostics.CodeAnalysis;
 

@@ -1,5 +1,5 @@
 ﻿using Desic.Domain.Common;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Interfaces;
 using Desic.Domain.Labels;
 using Desic.Shared.Extensions;
 using System.Runtime.CompilerServices;

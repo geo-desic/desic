@@ -1,10 +1,11 @@
 ﻿using AwesomeAssertions;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Extensions;
+using Desic.Domain.Common.Interfaces;
 using Desic.Domain.EntityTypes;
 using Desic.Shared.Extensions;
 using System.Globalization;
 
-namespace Desic.Domain.Tests.Unit.Common.Entities;
+namespace Desic.Domain.Tests.Unit.Common.Extensions;
 
 public class EntityExtensionsTests
 {

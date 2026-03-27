@@ -1,5 +1,5 @@
 ﻿using Desic.Application.Common;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Extensions;
 using Desic.Domain.Iso3166Countries;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

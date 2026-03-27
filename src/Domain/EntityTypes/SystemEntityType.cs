@@ -1,12 +1,12 @@
-﻿using Desic.Domain.Common.Entities;
+﻿using Desic.Domain.Common.Interfaces;
 
 namespace Desic.Domain.EntityTypes;
 
-public record SystemEntityType(Guid Id, string Key, string Name) : IReadOnlyMinimalEntity, IReadOnlyNameable, IReadOnlyEntityTypeReferenceData
+public record SystemEntityType(Guid Id, string Key, string Name) : IReadOnlyMinimalEntity, IReadOnlyNameable, IReadOnlyEntityType
 {
     SystemEntityType IReadOnlyMinimalEntity.SystemEntityType => SystemEntityTypes.EntityType;
 
     public EntityType ToEntity() => new() { Id = Id, Key = Key, Name = Name };
 
-    bool IEquatable<IReadOnlyEntityTypeReferenceData>.Equals(IReadOnlyEntityTypeReferenceData? compare) => this.IsEquivalentTo(compare);
+    bool IEquatable<IReadOnlyEntityType>.Equals(IReadOnlyEntityType? compare) => this.IsEquivalentTo(compare);
 }

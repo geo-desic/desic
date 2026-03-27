@@ -6,6 +6,6 @@ public class EntityTypeValidator : AbstractValidator<EntityType>
 {
     public EntityTypeValidator()
     {
-        Include(new ReadOnlyEntityTypeReferenceDataValidator());
+        Include(new ReadOnlyEntityTypeValidator());
     }
 }

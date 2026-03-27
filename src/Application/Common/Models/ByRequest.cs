@@ -1,5 +1,5 @@
 ﻿using Desic.Application.Common.Interfaces;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Interfaces;
 
 namespace Desic.Application.Common.Models;
 
