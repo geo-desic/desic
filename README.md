@@ -12,6 +12,11 @@ This is currently a template for a new .net api following recommended/best pract
 - Extensive common infrastructure for promoting consistency and simplifying implementation ([DRY principle](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself))
   - [Domain.Common](src/Domain/Common)
   - [Application.Common](src/Application/Common)
+    - Includes [pagination, ordering, and filtering](src/Application/Common/Models/FilterableOrderableListRequest.cs) infrastructure - here is an example implementation
+      - [Iso3166CountriesOrderingMethod](src/Application/Iso3166Countries/Iso3166CountriesOrderingMethod.cs)
+      - [Iso3166CountriesFilter](src/Application/Iso3166Countries/Iso3166CountriesFilter.cs)
+      - [QueryableExtensions](src/Application/Iso3166Countries/QueryableExtensions.cs)
+      - [ListIso3166CountriesRequestHandler](src/Application/Iso3166Countries/List/ListIso3166CountriesRequestHandler.cs)
   - [Infrastructure.Data.Common](src/Infrastructure/Data/Common)
   - [Api.Common](src/Api/Common)
   - [Testing.Integration](test/Testing.Integration) - used by all integration/functional test projects
@@ -32,3 +37,7 @@ This is currently a template for a new .net api following recommended/best pract
   - see the [development guide](development.md) for more information
 - Solution-wide [.editorconfig](.editorconfig) nearly identical to [Microsoft's example](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options#example-editorconfig-file) to assist with coding consistency
   - [dotnet-format-verification.ps1](tools/dotnet-format-verification.ps1) can be executed, potentially as part of the CI/CD process, to quickly identify non-compliant code
+- The [Guid](https://learn.microsoft.com/en-us/dotnet/api/system.guid) datatype is used for all entity identifiers
+  - [UUIDv7](https://uuid7.com) is the default generation algorithm used which allows for the possibility of time based sorting (e.g. [keyset pagination](https://learn.microsoft.com/en-us/ef/core/querying/pagination#keyset-pagination))
+    - Note: Sql Server does not currently support UUIDv7 - byte shuffling the result of this generation is required for it to sort correctly
+- Development environment [OpenAPI generation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/aspnetcore-openapi) and Swagger support included with various documented response types and component schemas
