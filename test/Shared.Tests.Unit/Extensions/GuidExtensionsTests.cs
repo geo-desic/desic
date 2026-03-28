@@ -1,10 +1,13 @@
 ﻿using AwesomeAssertions;
 using Desic.Shared.Extensions;
+using System.Data.SqlTypes;
 
 namespace Desic.Shared.Tests.Unit.Extensions;
 
 public class GuidExtensionsTests
 {
+    private const int GuidGenerationDelayMs = 2;
+
     public class GuidExtensionsTests001 : GuidExtensionsTests
     {
         [Theory]
@@ -93,5 +96,63 @@ public class GuidExtensionsTests
             // assert
             result.Should().Be(expectedResult);
         }
+    }
+
+    public class GuidExtensionsTests003 : GuidExtensionsTests
+    {
+        [Fact]
+        public async Task CreateSequentialGuid_AlterForSqlServerFalse_GeneratedGuidsSortSequentially()
+        {
+            // arrange
+            var list = new List<GuidAndSequentialId>();
+            var count = 50;
+
+            // act
+            for (var i = 0; i < count; ++i)
+            {
+                list.Add(new() { Guid = Guid.CreateSequentialGuid(alterForSqlServer: false), SequentialId = i });
+                await Task.Delay(GuidGenerationDelayMs, cancellationToken: TestContext.Current.CancellationToken);
+            }
+
+            // assert
+            var listOrderedByGuid = list.OrderBy(x => x.Guid).ToList();
+            var listOrderedBySequentialId = list.OrderBy(x => x.SequentialId).ToList();
+            listOrderedByGuid.Should().BeEquivalentTo(listOrderedBySequentialId, opt => opt.WithStrictOrdering());
+        }
+    }
+
+    public class GuidExtensionsTests004 : GuidExtensionsTests
+    {
+        [Fact]
+        public async Task CreateSequentialGuid_AlterForSqlServerTrue_GeneratedGuidsSortSequentially()
+        {
+            // arrange
+            var list = new List<SqlGuidAndSequentialId>();
+            var count = 50;
+
+            // act
+            for (var i = 0; i < count; ++i)
+            {
+                list.Add(new() { Guid = Guid.CreateSequentialGuid(alterForSqlServer: true), SequentialId = i });
+                await Task.Delay(GuidGenerationDelayMs, cancellationToken: TestContext.Current.CancellationToken);
+            }
+
+            // assert
+            var listOrderedByGuid = list.OrderBy(x => x.Guid).ToList();
+            var listOrderedBySequentialId = list.OrderBy(x => x.SequentialId).ToList();
+            listOrderedByGuid.Should().BeEquivalentTo(listOrderedBySequentialId, opt => opt.WithStrictOrdering());
+        }
+    }
+
+    private class GuidAndSequentialId
+    {
+        public Guid Guid { get; set; }
+        public int SequentialId { get; set; }
+    }
+
+    private class SqlGuidAndSequentialId
+    {
+        public SqlGuid Guid { get; set; } // the SqlGuid data type correctly implements Sql Server's unqueidentifier sorting
+        public int SequentialId { get; set; }
     }
 }

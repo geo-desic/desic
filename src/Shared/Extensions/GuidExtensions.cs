@@ -1,5 +1,4 @@
-﻿// source: https://github.com/bitfoundation/bitplatform/blob/develop/src/Templates/Boilerplate/Bit.Boilerplate/src/Shared/Infrastructure/Extensions/GuidExtensions.cs
-namespace Desic.Shared.Extensions;
+﻿namespace Desic.Shared.Extensions;
 
 public static class GuidExtensions
 {
@@ -13,13 +12,14 @@ public static class GuidExtensions
         return guid.ToString().ToIntBasedGuid(value);
     }
 
+    // source: https://github.com/bitfoundation/bitplatform/blob/develop/src/Templates/Boilerplate/Bit.Boilerplate/src/Shared/Infrastructure/Extensions/GuidExtensions.cs
     extension(Guid source)
     {
-        public static Guid CreateSequentialGuid(bool compatibleWithSqlServer)
+        public static Guid CreateSequentialGuid(bool alterForSqlServer)
         {
             Guid standardV7 = Guid.CreateVersion7();
 
-            if (!compatibleWithSqlServer) return standardV7;
+            if (!alterForSqlServer) return standardV7;
 
             Span<byte> bytes = stackalloc byte[16];
             standardV7.TryWriteBytes(bytes, bigEndian: true, out _);
