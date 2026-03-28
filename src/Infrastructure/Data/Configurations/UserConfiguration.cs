@@ -12,7 +12,7 @@ internal class UserConfiguration(DatabaseFacade databaseFacade) : IEntityTypeCon
 
     public void Configure(EntityTypeBuilder<User> builder)
     {
-        var schema = _databaseFacade.IsSqlite() ? null : ApplicationDbContext.AppSchema;
+        var schema = _databaseFacade.SupportsSchemas() ? ApplicationDbContext.AppSchema : null;
         builder.ToTable(nameof(ApplicationDbContext.Users), schema);
         var columnOrder = builder.ConfigureSoftDeletableEntity(_databaseFacade);
         builder.Property(x => x.Username).IsRequired().HasMaxLength(User.MaxLengthUsername).HasColumnOrder(++columnOrder);

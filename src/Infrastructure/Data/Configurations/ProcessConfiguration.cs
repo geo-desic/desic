@@ -12,7 +12,7 @@ public class ProcessConfiguration(DatabaseFacade databaseFacade) : IEntityTypeCo
 
     public void Configure(EntityTypeBuilder<Process> builder)
     {
-        var schema = _databaseFacade.IsSqlite() ? null : ApplicationDbContext.AppSchema;
+        var schema = _databaseFacade.SupportsSchemas() ? ApplicationDbContext.AppSchema : null;
         builder.ToTable(nameof(ApplicationDbContext.Processes), schema);
         var columnOrder = builder.ConfigureSoftDeletableEntity(_databaseFacade);
         builder.Property(x => x.StartedOn).IsRequired(false).HasColumnOrder(++columnOrder);

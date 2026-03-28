@@ -12,7 +12,7 @@ internal class Iso3166CountryConfiguration(DatabaseFacade databaseFacade) : IEnt
 
     public void Configure(EntityTypeBuilder<Iso3166Country> builder)
     {
-        var schema = _databaseFacade.IsSqlite() ? null : ApplicationDbContext.RefSchema;
+        var schema = _databaseFacade.SupportsSchemas() ? ApplicationDbContext.RefSchema : null;
         builder.ToTable(nameof(ApplicationDbContext.Iso3166Countries), schema);
         var columnOrder = builder.ConfigureSeedableSoftDeletableEntity(_databaseFacade);
         builder.Property(x => x.IsoId).IsRequired().HasColumnOrder(++columnOrder);

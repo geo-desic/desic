@@ -12,7 +12,7 @@ internal class EntityTypeConfiguration(DatabaseFacade databaseFacade) : IEntityT
 
     public void Configure(EntityTypeBuilder<EntityType> builder)
     {
-        var schema = _databaseFacade.IsSqlite() ? null : ApplicationDbContext.RefSchema;
+        var schema = _databaseFacade.SupportsSchemas() ? ApplicationDbContext.RefSchema : null;
         builder.ToTable(nameof(ApplicationDbContext.EntityTypes), schema);
         var columnOrder = builder.ConfigureBaseEntity();
         builder.Property(x => x.Key).IsRequired().HasMaxLength(EntityType.LengthKey).HasColumnOrder(++columnOrder);

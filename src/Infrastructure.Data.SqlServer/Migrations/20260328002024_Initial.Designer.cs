@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Desic.Infrastructure.Data.SqlServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260327093027_Initial")]
+    [Migration("20260328002024_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -92,7 +92,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(4)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<Guid?>("DeletedById")
                         .HasColumnType("uniqueidentifier")
@@ -136,7 +136,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(8)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -202,7 +202,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(4)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<Guid?>("DeletedById")
                         .HasColumnType("uniqueidentifier")
@@ -238,7 +238,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(8)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -299,7 +299,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(4)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<Guid?>("DeletedById")
                         .HasColumnType("uniqueidentifier")
@@ -344,7 +344,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(8)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<string>("Name")
                         .HasMaxLength(250)
@@ -410,7 +410,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(4)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<Guid?>("DeletedById")
                         .HasColumnType("uniqueidentifier")
@@ -446,7 +446,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(8)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -510,7 +510,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(4)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<Guid?>("DeletedById")
                         .HasColumnType("uniqueidentifier")
@@ -552,7 +552,7 @@ namespace Desic.Infrastructure.Data.SqlServer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasColumnOrder(8)
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasDefaultValueSql("SYSUTCDATETIME()");
 
                     b.Property<string>("Username")
                         .IsRequired()

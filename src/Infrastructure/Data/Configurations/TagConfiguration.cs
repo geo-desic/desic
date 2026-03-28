@@ -12,7 +12,7 @@ internal class TagConfiguration(DatabaseFacade databaseFacade) : IEntityTypeConf
 
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
-        var schema = _databaseFacade.IsSqlite() ? null : ApplicationDbContext.AppSchema;
+        var schema = _databaseFacade.SupportsSchemas() ? ApplicationDbContext.AppSchema : null;
         builder.ToTable(nameof(ApplicationDbContext.Tags), schema);
         var columnOrder = builder.ConfigureSoftDeletableEntity(_databaseFacade);
         builder.Property(x => x.Name).IsRequired().HasMaxLength(Tag.MaxLengthName).HasColumnOrder(++columnOrder);

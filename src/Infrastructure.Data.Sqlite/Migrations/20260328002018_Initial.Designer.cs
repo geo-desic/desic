@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Desic.Infrastructure.Data.Sqlite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260327093021_Initial")]
+    [Migration("20260328002018_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

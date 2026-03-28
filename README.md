@@ -30,3 +30,5 @@ This is currently a template for a new .net api following recommended/best pract
 - No sensitive data checked into source control
   - [user secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) are used for development purposes which would be handled by desired secret manager for other environments, e.g. azure keyvault
   - see the [development guide](development.md) for more information
+- Solution-wide [.editorconfig](.editorconfig) nearly identical to [Microsoft's example](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options#example-editorconfig-file) to assist with coding consistency
+  - [dotnet-format-verification.ps1](tools/dotnet-format-verification.ps1) can be executed, potentially as part of the CI/CD process, to quickly identify non-compliant code

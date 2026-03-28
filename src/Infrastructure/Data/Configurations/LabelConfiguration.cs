@@ -12,7 +12,7 @@ public class LabelConfiguration(DatabaseFacade databaseFacade) : IEntityTypeConf
 
     public void Configure(EntityTypeBuilder<Label> builder)
     {
-        var schema = _databaseFacade.IsSqlite() ? null : ApplicationDbContext.AppSchema;
+        var schema = _databaseFacade.SupportsSchemas() ? ApplicationDbContext.AppSchema : null;
         builder.ToTable(nameof(ApplicationDbContext.Labels), schema);
         var columnOrder = builder.ConfigureSoftDeletableEntity(_databaseFacade);
         builder.Property(x => x.Name).IsRequired().HasMaxLength(Label.MaxLengthName).HasColumnOrder(++columnOrder);
