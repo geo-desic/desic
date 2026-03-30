@@ -6,6 +6,7 @@
     <File Path="migrations.md" />
     <File Path="new-entity.md" />
     <File Path="README.md" />
+    <File Path="todo.md" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Api/Api.csproj" Id="2d0b624e-4fcc-4ab0-a3f3-7f91db2352d9" />
