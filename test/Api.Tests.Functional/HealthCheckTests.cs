@@ -6,7 +6,7 @@ using Desic.Testing.Integration.Http;
 
 namespace Desic.Api.Tests.Functional;
 
-public class HealthCheckTests(SeededAppDatabase testDatabase) : TestWebAppDependencyTests(testDatabase), IClassFixture<SeededAppDatabase>
+public class HealthCheckTests(SeededAppDatabase testDatabase, ITestOutputHelper output) : TestWebAppDependencyTests(testDatabase, output), IClassFixture<SeededAppDatabase>
 {
     [Fact]
     public async Task Live_ValidRequest_Status200OkAndHealthy()
@@ -15,7 +15,7 @@ public class HealthCheckTests(SeededAppDatabase testDatabase) : TestWebAppDepend
         var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/live");
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsString(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsString(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -29,7 +29,7 @@ public class HealthCheckTests(SeededAppDatabase testDatabase) : TestWebAppDepend
         var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/ready");
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsString(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsString(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
@@ -55,7 +55,7 @@ public class HealthCheckTests(SeededAppDatabase testDatabase) : TestWebAppDepend
         var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/report");
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsJson<HealthReport>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<HealthReport>(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);

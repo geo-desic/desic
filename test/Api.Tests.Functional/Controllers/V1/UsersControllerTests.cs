@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDependencyTests(testDatabase), IClassFixture<SeededAppDatabase>
+public class UsersControllerTests(SeededAppDatabase testDatabase, ITestOutputHelper output) : TestWebAppDependencyTests(testDatabase, output), IClassFixture<SeededAppDatabase>
 {
     private readonly TimeSpan _acceptablePrecision = TimeSpan.FromSeconds(1);
     private const string RequestUri = "/v1/users";
@@ -25,7 +25,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         var request = new FluentHttpRequest(HttpMethod.Get, $"{RequestUri}/{expected.Id}");
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(expectedStatusCode);
@@ -41,7 +41,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         var request = new FluentHttpRequest(HttpMethod.Get, $"{RequestUri}/{id}");
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(expectedStatusCode);
@@ -61,7 +61,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         var request = new FluentHttpRequest(HttpMethod.Post, RequestUri).SetJsonContent(user);
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(expectedStatusCode);
@@ -82,7 +82,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         var request = new FluentHttpRequest(HttpMethod.Post, RequestUri).SetJsonContent(user);
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ProblemDetails>(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(expectedStatusCode);
@@ -103,7 +103,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         var request = new FluentHttpRequest(HttpMethod.Post, RequestUri).SetJsonContent(user);
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsString(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsString(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(expectedStatusCode);
@@ -126,7 +126,7 @@ public class UsersControllerTests(SeededAppDatabase testDatabase) : TestWebAppDe
         var request = new FluentHttpRequest(HttpMethod.Post, RequestUri).SetJsonContent(user).AddHeader(Headers.Keys.Prefer, Headers.Values.PreferRepresentation);
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<User>(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(expectedStatusCode);

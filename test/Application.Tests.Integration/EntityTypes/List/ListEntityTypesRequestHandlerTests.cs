@@ -42,7 +42,7 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
         // arrange
         var count = 3; // there needs to be at least this number of seeded entity types for this test to work correctly, see Desic.Domain.EntityTypes.SystemEntityTypes
         var startIndex = 1;
-        var allOrderedByKeyDesc = SystemEntityTypes.AllAsEntities().AsQueryable().SelectToModel().OrderByDescending(x => x.Key).ToList();
+        var allOrderedByKeyDesc = SystemEntityTypes.AllAsEntities().AsQueryable().OrderByDescending(x => x.Key).SelectToModel().ToList();
         var expected = new ListEntityTypesResult
         {
             StartIndex = startIndex,
@@ -58,7 +58,13 @@ public class ListEntityTypesRequestHandlerTests(SeededAppDatabase testDatabase) 
                 IncludeTotalCount = false,
                 StartIndex = startIndex,
             },
-            OrderingMethod = EntityTypesOrderingMethod.KeyDesc,
+            OrderingMethod = new OrderingMethod<EntityTypesOrderingProperty>
+            {
+                OrderBy =
+                [
+                    new OrderBy<EntityTypesOrderingProperty> { Ascending = false, Property = EntityTypesOrderingProperty.Key }
+                ],
+            },
         };
 
         // act

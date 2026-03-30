@@ -1,4 +1,5 @@
 ﻿using AwesomeAssertions;
+using Desic.Application.Common.Models;
 using Desic.Application.EntityTypes;
 
 namespace Desic.Application.Tests.Unit.EntityTypes;
@@ -137,16 +138,28 @@ public class QueryableExtensionsTests
     public class QueryableExtensionsTests008 : QueryableExtensionsTests
     {
         [Theory]
-        [InlineData(null)]
-        [InlineData(EntityTypesOrderingMethod.KeyAsc)]
-        [InlineData(EntityTypesOrderingMethod.KeyDesc)]
-        [InlineData(EntityTypesOrderingMethod.NameAsc)]
-        [InlineData(EntityTypesOrderingMethod.NameDesc)]
-        public void OrderBy_SpecifiedOrderingMethod_OrdersItemsAsExpected(EntityTypesOrderingMethod? orderingMethod)
+        [InlineData(null, null)]
+        [InlineData(EntityTypesOrderingProperty.Key, true)]
+        [InlineData(EntityTypesOrderingProperty.Key, false)]
+        [InlineData(EntityTypesOrderingProperty.Name, true)]
+        [InlineData(EntityTypesOrderingProperty.Name, false)]
+        public void OrderBy_SpecifiedOrderingMethod_OrdersItemsAsExpected(EntityTypesOrderingProperty? property, bool? ascending)
         {
             // arrange
-            var expected = GetItemsOrdered(orderingMethod).ToList();
+            var expected = GetItemsOrdered(property: property, ascending: ascending).ToList();
             var items = GetItems();
+            OrderingMethod<EntityTypesOrderingProperty> orderingMethod;
+            if (property.HasValue && ascending.HasValue)
+            {
+                orderingMethod = new OrderingMethod<EntityTypesOrderingProperty>
+                {
+                    OrderBy = [new OrderBy<EntityTypesOrderingProperty> { Ascending = ascending.Value, Property = property.Value }],
+                };
+            }
+            else
+            {
+                orderingMethod = OrderingMethod<EntityTypesOrderingProperty>.Default;
+            }
 
             // act
             var result = QueryableExtensions.OrderBy(source: items.AsQueryable(), orderingMethod: orderingMethod).ToList();
@@ -191,37 +204,37 @@ public class QueryableExtensionsTests
         yield return ItemKey3NameC;
     }
 
-    private static IEnumerable<Domain.EntityTypes.EntityType> GetItemsOrdered(EntityTypesOrderingMethod? orderingMethod)
+    private static IEnumerable<Domain.EntityTypes.EntityType> GetItemsOrdered(EntityTypesOrderingProperty? property, bool? ascending)
     {
-        switch (orderingMethod)
+        switch ((property, ascending))
         {
-            case EntityTypesOrderingMethod.NameAsc:
-                yield return ItemKey4NameA;
-                yield return ItemKey2NameB;
-                yield return ItemKey3NameC;
-                yield return ItemKey5NameD;
-                yield return ItemKey1NameE;
-                break;
-            case EntityTypesOrderingMethod.NameDesc:
+            case (EntityTypesOrderingProperty.Name, false):
                 yield return ItemKey1NameE;
                 yield return ItemKey5NameD;
                 yield return ItemKey3NameC;
                 yield return ItemKey2NameB;
                 yield return ItemKey4NameA;
                 break;
-            case EntityTypesOrderingMethod.KeyAsc:
-                yield return ItemKey1NameE;
+            case (EntityTypesOrderingProperty.Name, _):
+                yield return ItemKey4NameA;
                 yield return ItemKey2NameB;
                 yield return ItemKey3NameC;
-                yield return ItemKey4NameA;
                 yield return ItemKey5NameD;
+                yield return ItemKey1NameE;
                 break;
-            case EntityTypesOrderingMethod.KeyDesc:
+            case (EntityTypesOrderingProperty.Key, false):
                 yield return ItemKey5NameD;
                 yield return ItemKey4NameA;
                 yield return ItemKey3NameC;
                 yield return ItemKey2NameB;
                 yield return ItemKey1NameE;
+                break;
+            case (EntityTypesOrderingProperty.Key, _):
+                yield return ItemKey1NameE;
+                yield return ItemKey2NameB;
+                yield return ItemKey3NameC;
+                yield return ItemKey4NameA;
+                yield return ItemKey5NameD;
                 break;
             default: // default ordering method is name ascending
                 yield return ItemKey4NameA;

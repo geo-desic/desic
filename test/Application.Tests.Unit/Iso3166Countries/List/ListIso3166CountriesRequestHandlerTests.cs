@@ -68,21 +68,37 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
     public class ListIso3166CountriesRequestHandlerTests002 : ListIso3166CountriesRequestHandlerTests
     {
         [Theory]
-        [InlineData(null)]
-        [InlineData(Iso3166CountriesOrderingMethod.Alpha2Asc)]
-        [InlineData(Iso3166CountriesOrderingMethod.Alpha2Desc)]
-        [InlineData(Iso3166CountriesOrderingMethod.Alpha3Asc)]
-        [InlineData(Iso3166CountriesOrderingMethod.Alpha3Desc)]
-        [InlineData(Iso3166CountriesOrderingMethod.IdAsc)]
-        [InlineData(Iso3166CountriesOrderingMethod.IdDesc)]
-        [InlineData(Iso3166CountriesOrderingMethod.IsoIdAsc)]
-        [InlineData(Iso3166CountriesOrderingMethod.IsoIdDesc)]
-        [InlineData(Iso3166CountriesOrderingMethod.NameAsc)]
-        [InlineData(Iso3166CountriesOrderingMethod.NameDesc)]
-        public async Task Handle_SpecifiedOrderingMethod_ExpectedResultsOrderedCorrectly(Iso3166CountriesOrderingMethod? orderingMethod)
+        [InlineData(null, null, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha2, true, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha2, false, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha3, true, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha3, false, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Id, true, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Id, false, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.IsoId, true, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.IsoId, false, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Name, true, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Name, false, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha2, true, Iso3166CountriesOrderingProperty.Id, false)]
+        public async Task Handle_SpecifiedOrderingMethod_ExpectedResultsOrderedCorrectly(Iso3166CountriesOrderingProperty? property1, bool? ascending1, Iso3166CountriesOrderingProperty? property2, bool? ascending2)
         {
             // arrange
             var count = 10;
+            OrderingMethod<Iso3166CountriesOrderingProperty>? orderingMethod = null;
+            if (property1 != null && ascending1.HasValue)
+            {
+                orderingMethod = new OrderingMethod<Iso3166CountriesOrderingProperty>
+                {
+                    OrderBy =
+                    [
+                        new OrderBy<Iso3166CountriesOrderingProperty> { Ascending = ascending1.Value, Property = property1.Value },
+                    ],
+                };
+                if (property2 != null && ascending2.HasValue)
+                {
+                    orderingMethod.OrderBy.Add(new OrderBy<Iso3166CountriesOrderingProperty> { Ascending = ascending2.Value, Property = property2.Value });
+                }
+            }
             var expected = new Result<ListIso3166CountriesResult>(new ListIso3166CountriesResult
             {
                 // if no ordering method is specified it should use the default
@@ -100,7 +116,7 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
                     StartIndex = 0,
                 },
             };
-            if (orderingMethod.HasValue) request.OrderingMethod = orderingMethod.Value;
+            if (orderingMethod != null) request.OrderingMethod = orderingMethod;
 
             // act
             var result = await handler.Handle(request, cancellationToken: TestContext.Current.CancellationToken);
@@ -164,8 +180,9 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
         }
     }
 
-    private IEnumerable<Iso3166CountryView> ExpectedItems(int minIndex, int count, Iso3166CountriesOrderingMethod orderingMethod = default)
+    private IEnumerable<Iso3166CountryView> ExpectedItems(int minIndex, int count, OrderingMethod<Iso3166CountriesOrderingProperty>? orderingMethod = null)
     {
+        orderingMethod ??= OrderingMethod<Iso3166CountriesOrderingProperty>.Default;
         // note that the OrderBy and SelectToModel extension methods used here are already covered by tests of their own
         return _seededEntities.AsQueryable().OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count)).SelectToView();
     }

@@ -1,5 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Api.Controllers.V1;
+using Desic.Api.Dtos;
 using Desic.Application.Common;
 using Desic.Application.Common.Interfaces;
 using Desic.Application.Common.Models;
@@ -31,7 +32,19 @@ public class EntityTypesControllerTests
                 Count = 10,
                 IncludeTotalCount = true,
             };
-            var orderingMethod = EntityTypesOrderingMethod.KeyDesc;
+            var orderingMethodFromQuery = new Dtos.OrderingMethodFromQuery<EntityTypesOrderingProperty>
+            {
+                Asc = [false, true],
+                OrderBy = [EntityTypesOrderingProperty.Key, EntityTypesOrderingProperty.Name],
+            };
+            var expectedOrderingMethod = new OrderingMethod<EntityTypesOrderingProperty>
+            {
+                OrderBy =
+                [
+                    new OrderBy<EntityTypesOrderingProperty> { Ascending = false, Property = EntityTypesOrderingProperty.Key},
+                    new OrderBy<EntityTypesOrderingProperty> { Ascending = true, Property = EntityTypesOrderingProperty.Name},
+                ],
+            };
             var filter = new EntityTypesFilter
             {
                 Key = "aaaa",
@@ -42,10 +55,13 @@ public class EntityTypesControllerTests
             var controller = NewController();
 
             // act
-            var result = (await controller.List(pagination: pagination, filter: filter, orderingMethod: orderingMethod))?.Result as OkObjectResult;
+            var result = (await controller.List(pagination: pagination, filter: filter, orderingMethodFromQuery: orderingMethodFromQuery))?.Result as OkObjectResult;
 
             // assert
-            _mediator.Verify(x => x.Send(It.Is<ListEntityTypesRequest>(x => IsEquivalentTo(source: x.Pagination, compare: pagination) && x.OrderingMethod == orderingMethod && IsEquivalentTo(source: x.Filter, compare: filter))), Times.Once());
+            _mediator.Verify(x => x.Send(It.Is<ListEntityTypesRequest>(x =>
+                x.Pagination.IsEquivalentTo(pagination)
+                && x.OrderingMethod.IsEquivalentTo(expectedOrderingMethod)
+                && IsEquivalentTo(source: x.Filter, compare: filter))), Times.Once());
             result.Should().NotBeNull();
             result.StatusCode.Should().Be((int)HttpStatusCode.OK);
             var objectResult = result.Value as ListEntityTypesResult;
@@ -56,6 +72,33 @@ public class EntityTypesControllerTests
     public class EntityTypesControllerTests002 : EntityTypesControllerTests
     {
         [Fact]
+        public async Task List_InvalidRequestInvalidOrderingMethodFromQuery_400BadRequestWithExpectedProblemDetails()
+        {
+            // arrange
+            var sendResult = GetSendResult(items: GetItems(count: 1), pagination: new Pagination());
+            Setup(result: sendResult);
+            var controller = NewController();
+            var orderingMethodFromQueryInvalid = new OrderingMethodFromQuery<EntityTypesOrderingProperty>
+            {
+                Asc = [true, true], // has more items than OrderBy which is invalid
+                OrderBy = [EntityTypesOrderingProperty.Name],
+            };
+
+            // act
+            var result = (await controller.List(pagination: new(), filter: new(), orderingMethodFromQuery: orderingMethodFromQueryInvalid))?.Result as ObjectResult;
+
+            // assert
+            result.Should().NotBeNull();
+            result.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+            var objectResult = result.Value as ProblemDetails;
+            objectResult.Should().NotBeNull();
+            objectResult.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        }
+    }
+
+    public class EntityTypesControllerTests003 : EntityTypesControllerTests
+    {
+        [Fact]
         public async Task List_InvalidRequestSendReturnsError_400BadRequestWithExpectedProblemDetails()
         {
             // arrange
@@ -63,7 +106,7 @@ public class EntityTypesControllerTests
             var controller = NewController();
 
             // act
-            var result = (await controller.List(pagination: new(), filter: new(), orderingMethod: default))?.Result as ObjectResult;
+            var result = (await controller.List(pagination: new(), filter: new(), orderingMethodFromQuery: new()))?.Result as ObjectResult;
 
             // assert
             result.Should().NotBeNull();
@@ -106,11 +149,6 @@ public class EntityTypesControllerTests
                 Name = $"Name{i}",
             };
         }
-    }
-
-    private static bool IsEquivalentTo(IPagination source, IPagination compare)
-    {
-        return source.StartIndex == compare.StartIndex && source.Count == compare.Count && source.IncludeTotalCount == compare.IncludeTotalCount;
     }
 
     private static bool IsEquivalentTo(EntityTypesFilter source, EntityTypesFilter compare)

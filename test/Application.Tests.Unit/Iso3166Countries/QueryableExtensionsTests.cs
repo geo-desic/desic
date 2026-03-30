@@ -1,6 +1,8 @@
 ﻿using AwesomeAssertions;
+using Desic.Application.Common.Models;
 using Desic.Application.Iso3166Countries;
 using Desic.Domain.EntityTypes;
+using Desic.Domain.Labels;
 using Desic.Shared.Extensions;
 
 namespace Desic.Application.Tests.Unit.Iso3166Countries;
@@ -28,13 +30,15 @@ public class QueryableExtensionsTests
     public class QueryableExtensionsTests002 : QueryableExtensionsTests
     {
         [Fact]
-        public void ApplyFilter_FilterByAlpha2ThatMatchesAnItem_MatchingItemReturned()
+        public void ApplyFilter_FilterByAlpha2ThatMatches2Items_MatchingItemsReturned()
         {
             // arrange
-            var expectedItem = ItemA2eA3dId2IsoId1NameC;
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem };
+            var expectedItem1 = ItemA2eA3dId2IsoId1NameC;
+            var expectedItem2 = ItemA2eA3dId3IsoId2NameD;
+            expectedItem1.Alpha2.Should().Be(expectedItem2.Alpha2);
+            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem1, expectedItem2 };
             var items = GetItems();
-            var filter = new Iso3166CountriesFilter { Alpha2 = expectedItem.Alpha2 };
+            var filter = new Iso3166CountriesFilter { Alpha2 = expectedItem1.Alpha2 };
 
             // act
             var result = QueryableExtensions.ApplyFilter(source: items.AsQueryable(), filter: filter).ToList();
@@ -65,13 +69,15 @@ public class QueryableExtensionsTests
     public class QueryableExtensionsTests004 : QueryableExtensionsTests
     {
         [Fact]
-        public void ApplyFilter_FilterByAlpha3ThatMatchesAnItem_MatchingItemReturned()
+        public void ApplyFilter_FilterByAlpha3ThatMatches2Items_MatchingItemsReturned()
         {
             // arrange
-            var expectedItem = ItemA2eA3dId2IsoId1NameC;
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem };
+            var expectedItem1 = ItemA2eA3dId2IsoId1NameC;
+            var expectedItem2 = ItemA2eA3dId3IsoId2NameD;
+            expectedItem1.Alpha3.Should().Be(expectedItem2.Alpha3);
+            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem1, expectedItem2 };
             var items = GetItems();
-            var filter = new Iso3166CountriesFilter { Alpha3 = expectedItem.Alpha3 };
+            var filter = new Iso3166CountriesFilter { Alpha3 = expectedItem1.Alpha3 };
 
             // act
             var result = QueryableExtensions.ApplyFilter(source: items.AsQueryable(), filter: filter).ToList();
@@ -285,7 +291,7 @@ public class QueryableExtensionsTests
             var filter = new Iso3166CountriesFilter
             {
                 // each filter individually matches an item, but none when combined because different source reference is used for the first
-                Alpha2 = ItemA2aA3eId3IsoId2NameD.Alpha2,
+                Alpha2 = ItemA2aA3eId4IsoId3NameE.Alpha2,
                 Alpha3 = ItemA2eA3dId2IsoId1NameC.Alpha3,
                 Id = ItemA2eA3dId2IsoId1NameC.Id,
                 IsoId = ItemA2eA3dId2IsoId1NameC.IsoId,
@@ -304,22 +310,42 @@ public class QueryableExtensionsTests
     public class QueryableExtensionsTests016 : QueryableExtensionsTests
     {
         [Theory]
-        [InlineData(null)]
-        [InlineData(Iso3166CountriesOrderingMethod.Alpha2Asc)]
-        [InlineData(Iso3166CountriesOrderingMethod.Alpha2Desc)]
-        [InlineData(Iso3166CountriesOrderingMethod.Alpha3Asc)]
-        [InlineData(Iso3166CountriesOrderingMethod.Alpha3Desc)]
-        [InlineData(Iso3166CountriesOrderingMethod.IdAsc)]
-        [InlineData(Iso3166CountriesOrderingMethod.IdDesc)]
-        [InlineData(Iso3166CountriesOrderingMethod.IsoIdAsc)]
-        [InlineData(Iso3166CountriesOrderingMethod.IsoIdDesc)]
-        [InlineData(Iso3166CountriesOrderingMethod.NameAsc)]
-        [InlineData(Iso3166CountriesOrderingMethod.NameDesc)]
-        public void OrderBy_SpecifiedOrderingMethod_OrdersItemsAsExpected(Iso3166CountriesOrderingMethod? orderingMethod)
+        [InlineData(null, null, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha2, true, Iso3166CountriesOrderingProperty.Id, true)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha2, true, Iso3166CountriesOrderingProperty.Id, false)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha2, false, Iso3166CountriesOrderingProperty.Id, true)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha2, false, Iso3166CountriesOrderingProperty.Id, false)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha3, true, Iso3166CountriesOrderingProperty.IsoId, true)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha3, true, Iso3166CountriesOrderingProperty.IsoId, false)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha3, false, Iso3166CountriesOrderingProperty.IsoId, true)]
+        [InlineData(Iso3166CountriesOrderingProperty.Alpha3, false, Iso3166CountriesOrderingProperty.IsoId, false)]
+        [InlineData(Iso3166CountriesOrderingProperty.Id, true, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Id, false, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.IsoId, true, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.IsoId, false, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Name, true, null, null)]
+        [InlineData(Iso3166CountriesOrderingProperty.Name, false, null, null)]
+        public void OrderBy_SpecifiedOrderingMethod_OrdersItemsAsExpected(Iso3166CountriesOrderingProperty? property1, bool? ascending1, Iso3166CountriesOrderingProperty? property2, bool? ascending2)
         {
             // arrange
-            var expected = GetItemsOrdered(orderingMethod).ToList();
+            var expected = GetItemsOrdered(property1: property1, ascending1: ascending1, property2: property2, ascending2: ascending2).ToList();
             var items = GetItems();
+            OrderingMethod<Iso3166CountriesOrderingProperty> orderingMethod;
+            if (property1.HasValue && ascending1.HasValue)
+            {
+                orderingMethod = new OrderingMethod<Iso3166CountriesOrderingProperty>
+                {
+                    OrderBy = [new OrderBy<Iso3166CountriesOrderingProperty> { Ascending = ascending1.Value, Property = property1.Value }],
+                };
+                if (property2.HasValue && ascending2.HasValue)
+                {
+                    orderingMethod.OrderBy.Add(new OrderBy<Iso3166CountriesOrderingProperty> { Ascending = ascending2.Value, Property = property2.Value });
+                }
+            }
+            else
+            {
+                orderingMethod = OrderingMethod<Iso3166CountriesOrderingProperty>.Default;
+            }
 
             // act
             var result = QueryableExtensions.OrderBy(source: items.AsQueryable(), orderingMethod: orderingMethod).ToList();
@@ -476,96 +502,155 @@ public class QueryableExtensionsTests
     }
 
     // purposely constructed so that ordering by each property is different
-    private static Domain.Iso3166Countries.Iso3166Country ItemA2aA3eId3IsoId2NameD => new() { Alpha2 = "aa", Alpha3 = "eee", Id = 3.ToGuid(), IsoId = 2, Name = "NameD" };
-    private static Domain.Iso3166Countries.Iso3166Country ItemA2bA3aId4IsoId3NameE => new() { Alpha2 = "bb", Alpha3 = "aaa", Id = 4.ToGuid(), IsoId = 3, Name = "NameE" };
-    private static Domain.Iso3166Countries.Iso3166Country ItemA2cA3bId5IsoId4NameA => new() { Alpha2 = "cc", Alpha3 = "bbb", Id = 5.ToGuid(), IsoId = 4, Name = "NameA" };
-    private static Domain.Iso3166Countries.Iso3166Country ItemA2dA3cId1IsoId5NameB => new() { Alpha2 = "dd", Alpha3 = "ccc", Id = 1.ToGuid(), IsoId = 5, Name = "NameB" };
+    private static Domain.Iso3166Countries.Iso3166Country ItemA2aA3eId4IsoId3NameE => new() { Alpha2 = "aa", Alpha3 = "eee", Id = 4.ToGuid(), IsoId = 3, Name = "NameE" };
+    private static Domain.Iso3166Countries.Iso3166Country ItemA2bA3aId5IsoId4NameF => new() { Alpha2 = "bb", Alpha3 = "aaa", Id = 5.ToGuid(), IsoId = 4, Name = "NameF" };
+    private static Domain.Iso3166Countries.Iso3166Country ItemA2cA3bId6IsoId5NameA => new() { Alpha2 = "cc", Alpha3 = "bbb", Id = 6.ToGuid(), IsoId = 5, Name = "NameA" };
+    private static Domain.Iso3166Countries.Iso3166Country ItemA2dA3cId1IsoId6NameB => new() { Alpha2 = "dd", Alpha3 = "ccc", Id = 1.ToGuid(), IsoId = 6, Name = "NameB" };
     private static Domain.Iso3166Countries.Iso3166Country ItemA2eA3dId2IsoId1NameC => new() { Alpha2 = "ee", Alpha3 = "ddd", Id = 2.ToGuid(), IsoId = 1, Name = "NameC" };
+    // note: alpha2 and alpha3 values are not unique and same as above, but all other values are unique
+    private static Domain.Iso3166Countries.Iso3166Country ItemA2eA3dId3IsoId2NameD => new()
+    {
+        Alpha2 = "ee",
+        Alpha3 = "ddd",
+        Id = 3.ToGuid(),
+        IsoId = 2,
+        Name = "NameD",
+        DeletedById = SystemLabels.System.Id,
+        DeletedByTypeId = SystemLabels.System.SystemEntityType.Id,
+        DeletedByName = SystemLabels.System.Name,
+        DeletedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+    };
 
     private static IEnumerable<Domain.Iso3166Countries.Iso3166Country> GetItems()
     {
         // in no particular order
-        yield return ItemA2bA3aId4IsoId3NameE;
-        yield return ItemA2dA3cId1IsoId5NameB;
+        yield return ItemA2bA3aId5IsoId4NameF;
+        yield return ItemA2dA3cId1IsoId6NameB;
         yield return ItemA2eA3dId2IsoId1NameC;
-        yield return ItemA2cA3bId5IsoId4NameA;
-        yield return ItemA2aA3eId3IsoId2NameD;
+        yield return ItemA2cA3bId6IsoId5NameA;
+        yield return ItemA2eA3dId3IsoId2NameD;
+        yield return ItemA2aA3eId4IsoId3NameE;
     }
 
-    private static IEnumerable<Domain.Iso3166Countries.Iso3166Country> GetItemsOrdered(Iso3166CountriesOrderingMethod? orderingMethod)
+    private static IEnumerable<Domain.Iso3166Countries.Iso3166Country> GetItemsOrdered(Iso3166CountriesOrderingProperty? property1, bool? ascending1, Iso3166CountriesOrderingProperty? property2, bool? ascending2)
     {
-        switch (orderingMethod)
+        switch ((property1, ascending1))
         {
-            case Iso3166CountriesOrderingMethod.Alpha2Asc:
-                yield return ItemA2aA3eId3IsoId2NameD;
-                yield return ItemA2bA3aId4IsoId3NameE;
-                yield return ItemA2cA3bId5IsoId4NameA;
-                yield return ItemA2dA3cId1IsoId5NameB;
+            case (Iso3166CountriesOrderingProperty.Alpha2, false):
+                switch ((property2, ascending2))
+                {
+                    case (_, false):
+                        yield return ItemA2eA3dId3IsoId2NameD;
+                        yield return ItemA2eA3dId2IsoId1NameC;
+                        break;
+                    default:
+                        yield return ItemA2eA3dId2IsoId1NameC;
+                        yield return ItemA2eA3dId3IsoId2NameD;
+                        break;
+                }
+                yield return ItemA2dA3cId1IsoId6NameB;
+                yield return ItemA2cA3bId6IsoId5NameA;
+                yield return ItemA2bA3aId5IsoId4NameF;
+                yield return ItemA2aA3eId4IsoId3NameE;
+                break;
+            case (Iso3166CountriesOrderingProperty.Alpha2, _):
+                yield return ItemA2aA3eId4IsoId3NameE;
+                yield return ItemA2bA3aId5IsoId4NameF;
+                yield return ItemA2cA3bId6IsoId5NameA;
+                yield return ItemA2dA3cId1IsoId6NameB;
+                switch ((property2, ascending2))
+                {
+                    case (_, false):
+                        yield return ItemA2eA3dId3IsoId2NameD;
+                        yield return ItemA2eA3dId2IsoId1NameC;
+                        break;
+                    default:
+                        yield return ItemA2eA3dId2IsoId1NameC;
+                        yield return ItemA2eA3dId3IsoId2NameD;
+                        break;
+                }
+                break;
+            case (Iso3166CountriesOrderingProperty.Alpha3, false):
+                yield return ItemA2aA3eId4IsoId3NameE;
+                switch ((property2, ascending2))
+                {
+                    case (_, false):
+                        yield return ItemA2eA3dId3IsoId2NameD;
+                        yield return ItemA2eA3dId2IsoId1NameC;
+                        break;
+                    default:
+                        yield return ItemA2eA3dId2IsoId1NameC;
+                        yield return ItemA2eA3dId3IsoId2NameD;
+                        break;
+                }
+                yield return ItemA2dA3cId1IsoId6NameB;
+                yield return ItemA2cA3bId6IsoId5NameA;
+                yield return ItemA2bA3aId5IsoId4NameF;
+                break;
+            case (Iso3166CountriesOrderingProperty.Alpha3, _):
+                yield return ItemA2bA3aId5IsoId4NameF;
+                yield return ItemA2cA3bId6IsoId5NameA;
+                yield return ItemA2dA3cId1IsoId6NameB;
+                switch ((property2, ascending2))
+                {
+                    case (_, false):
+                        yield return ItemA2eA3dId3IsoId2NameD;
+                        yield return ItemA2eA3dId2IsoId1NameC;
+                        break;
+                    default:
+                        yield return ItemA2eA3dId2IsoId1NameC;
+                        yield return ItemA2eA3dId3IsoId2NameD;
+                        break;
+                }
+                yield return ItemA2aA3eId4IsoId3NameE;
+                break;
+            case (Iso3166CountriesOrderingProperty.Id, false):
+                yield return ItemA2cA3bId6IsoId5NameA;
+                yield return ItemA2bA3aId5IsoId4NameF;
+                yield return ItemA2aA3eId4IsoId3NameE;
+                yield return ItemA2eA3dId3IsoId2NameD;
+                yield return ItemA2eA3dId2IsoId1NameC;
+                yield return ItemA2dA3cId1IsoId6NameB;
+                break;
+            case (Iso3166CountriesOrderingProperty.Id, _):
+                yield return ItemA2dA3cId1IsoId6NameB;
+                yield return ItemA2eA3dId2IsoId1NameC;
+                yield return ItemA2eA3dId3IsoId2NameD;
+                yield return ItemA2aA3eId4IsoId3NameE;
+                yield return ItemA2bA3aId5IsoId4NameF;
+                yield return ItemA2cA3bId6IsoId5NameA;
+                break;
+            case (Iso3166CountriesOrderingProperty.IsoId, false):
+                yield return ItemA2dA3cId1IsoId6NameB;
+                yield return ItemA2cA3bId6IsoId5NameA;
+                yield return ItemA2bA3aId5IsoId4NameF;
+                yield return ItemA2aA3eId4IsoId3NameE;
+                yield return ItemA2eA3dId3IsoId2NameD;
                 yield return ItemA2eA3dId2IsoId1NameC;
                 break;
-            case Iso3166CountriesOrderingMethod.Alpha2Desc:
+            case (Iso3166CountriesOrderingProperty.IsoId, _):
                 yield return ItemA2eA3dId2IsoId1NameC;
-                yield return ItemA2dA3cId1IsoId5NameB;
-                yield return ItemA2cA3bId5IsoId4NameA;
-                yield return ItemA2bA3aId4IsoId3NameE;
-                yield return ItemA2aA3eId3IsoId2NameD;
+                yield return ItemA2eA3dId3IsoId2NameD;
+                yield return ItemA2aA3eId4IsoId3NameE;
+                yield return ItemA2bA3aId5IsoId4NameF;
+                yield return ItemA2cA3bId6IsoId5NameA;
+                yield return ItemA2dA3cId1IsoId6NameB;
                 break;
-            case Iso3166CountriesOrderingMethod.Alpha3Asc:
-                yield return ItemA2bA3aId4IsoId3NameE;
-                yield return ItemA2cA3bId5IsoId4NameA;
-                yield return ItemA2dA3cId1IsoId5NameB;
+            case (Iso3166CountriesOrderingProperty.Name, false):
+                yield return ItemA2bA3aId5IsoId4NameF;
+                yield return ItemA2aA3eId4IsoId3NameE;
+                yield return ItemA2eA3dId3IsoId2NameD;
                 yield return ItemA2eA3dId2IsoId1NameC;
-                yield return ItemA2aA3eId3IsoId2NameD;
-                break;
-            case Iso3166CountriesOrderingMethod.Alpha3Desc:
-                yield return ItemA2aA3eId3IsoId2NameD;
-                yield return ItemA2eA3dId2IsoId1NameC;
-                yield return ItemA2dA3cId1IsoId5NameB;
-                yield return ItemA2cA3bId5IsoId4NameA;
-                yield return ItemA2bA3aId4IsoId3NameE;
-                break;
-            case Iso3166CountriesOrderingMethod.IdAsc:
-                yield return ItemA2dA3cId1IsoId5NameB;
-                yield return ItemA2eA3dId2IsoId1NameC;
-                yield return ItemA2aA3eId3IsoId2NameD;
-                yield return ItemA2bA3aId4IsoId3NameE;
-                yield return ItemA2cA3bId5IsoId4NameA;
-                break;
-            case Iso3166CountriesOrderingMethod.IdDesc:
-                yield return ItemA2cA3bId5IsoId4NameA;
-                yield return ItemA2bA3aId4IsoId3NameE;
-                yield return ItemA2aA3eId3IsoId2NameD;
-                yield return ItemA2eA3dId2IsoId1NameC;
-                yield return ItemA2dA3cId1IsoId5NameB;
-                break;
-            case Iso3166CountriesOrderingMethod.IsoIdAsc:
-                yield return ItemA2eA3dId2IsoId1NameC;
-                yield return ItemA2aA3eId3IsoId2NameD;
-                yield return ItemA2bA3aId4IsoId3NameE;
-                yield return ItemA2cA3bId5IsoId4NameA;
-                yield return ItemA2dA3cId1IsoId5NameB;
-                break;
-            case Iso3166CountriesOrderingMethod.IsoIdDesc:
-                yield return ItemA2dA3cId1IsoId5NameB;
-                yield return ItemA2cA3bId5IsoId4NameA;
-                yield return ItemA2bA3aId4IsoId3NameE;
-                yield return ItemA2aA3eId3IsoId2NameD;
-                yield return ItemA2eA3dId2IsoId1NameC;
-                break;
-            // NameAsc ====> skips to default below
-            case Iso3166CountriesOrderingMethod.NameDesc:
-                yield return ItemA2bA3aId4IsoId3NameE;
-                yield return ItemA2aA3eId3IsoId2NameD;
-                yield return ItemA2eA3dId2IsoId1NameC;
-                yield return ItemA2dA3cId1IsoId5NameB;
-                yield return ItemA2cA3bId5IsoId4NameA;
+                yield return ItemA2dA3cId1IsoId6NameB;
+                yield return ItemA2cA3bId6IsoId5NameA;
                 break;
             default: // NameAsc: default ordering
-                yield return ItemA2cA3bId5IsoId4NameA;
-                yield return ItemA2dA3cId1IsoId5NameB;
+                yield return ItemA2cA3bId6IsoId5NameA;
+                yield return ItemA2dA3cId1IsoId6NameB;
                 yield return ItemA2eA3dId2IsoId1NameC;
-                yield return ItemA2aA3eId3IsoId2NameD;
-                yield return ItemA2bA3aId4IsoId3NameE;
+                yield return ItemA2eA3dId3IsoId2NameD;
+                yield return ItemA2aA3eId4IsoId3NameE;
+                yield return ItemA2bA3aId5IsoId4NameF;
                 break;
         }
     }

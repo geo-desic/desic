@@ -1,4 +1,6 @@
 ﻿using AwesomeAssertions;
+using Desic.Api.Dtos;
+using Desic.Application.Common.Models;
 using Desic.Application.Iso3166Countries;
 using Desic.Application.Iso3166Countries.List;
 using Desic.Testing.Integration.Db;
@@ -6,7 +8,7 @@ using Desic.Testing.Integration.Http;
 
 namespace Desic.Api.Tests.Functional.Controllers.V1;
 
-public class Iso3166CountriesControllerTests(SeededAppDatabase testDatabase) : TestWebAppDependencyTests(testDatabase), IClassFixture<SeededAppDatabase>
+public class Iso3166CountriesControllerTests(SeededAppDatabase testDatabase, ITestOutputHelper output) : TestWebAppDependencyTests(testDatabase, output), IClassFixture<SeededAppDatabase>
 {
     private const string RequestUri = "/v1/iso3166countries";
 
@@ -16,7 +18,10 @@ public class Iso3166CountriesControllerTests(SeededAppDatabase testDatabase) : T
         // arrange
         var count = 2;
         var includeTotalCount = false;
-        var orderingMethod = Iso3166CountriesOrderingMethod.Alpha2Desc;
+        var orderingMethod = new OrderingMethod<Iso3166CountriesOrderingProperty>
+        {
+            OrderBy = [new OrderBy<Iso3166CountriesOrderingProperty> { Ascending = false, Property = Iso3166CountriesOrderingProperty.Alpha2 }],
+        };
         var startIndex = 1;
         var expectedStatusCode = System.Net.HttpStatusCode.OK;
         var expectedItems = new List<Iso3166CountryView>
@@ -36,11 +41,15 @@ public class Iso3166CountriesControllerTests(SeededAppDatabase testDatabase) : T
         var request = new FluentHttpRequest(HttpMethod.Get, RequestUri)
             .AddQueryStringParameter(name: nameof(count), value: $"{count}")
             .AddQueryStringParameter(name: nameof(includeTotalCount), value: $"{includeTotalCount}")
-            .AddQueryStringParameter(name: nameof(orderingMethod), value: $"{orderingMethod}")
             .AddQueryStringParameter(name: nameof(startIndex), value: $"{startIndex}");
+        foreach (var item in orderingMethod.OrderBy)
+        {
+            request.AddQueryStringParameter(name: nameof(OrderingMethodFromQuery<>.OrderBy), value: $"{item.Property}");
+            request.AddQueryStringParameter(name: nameof(OrderingMethodFromQuery<>.Asc), value: $"{item.Ascending}");
+        }
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ListIso3166CountriesResult>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ListIso3166CountriesResult>(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(expectedStatusCode);
@@ -65,7 +74,7 @@ public class Iso3166CountriesControllerTests(SeededAppDatabase testDatabase) : T
             .AddQueryStringParameter(name: nameof(alpha3), value: $"{alpha3}");
 
         // act
-        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ListIso3166CountriesResult>(request);
+        var response = await HttpClient.SendAsyncAndReadResponseAsJson<ListIso3166CountriesResult>(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(expectedStatusCode);

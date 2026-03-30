@@ -18,9 +18,14 @@ Accept: application/json
 GET {{HostAddressApi}}/v1/entitytypes
 Accept: application/json
 
+### Entity Types
+
+GET {{HostAddressApi}}/v1/entitytypes?orderBy=Name&asc=false&orderBy=Key&asc=false
+Accept: application/json
+
 ###
 
-GET {{HostAddressApi}}/v1/entitytypes?includeTotalCount=true&startIndex=1&count=2&orderingMethod=KeyDesc
+GET {{HostAddressApi}}/v1/entitytypes?includeTotalCount=true&startIndex=1&count=2&orderBy=Key&asc=false
 Accept: application/json
 
 ###

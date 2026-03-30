@@ -1,5 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Api.Controllers.V1;
+using Desic.Api.Dtos;
 using Desic.Application.Common;
 using Desic.Application.Common.Interfaces;
 using Desic.Application.Common.Models;
@@ -32,7 +33,20 @@ public class Iso3166CountriesControllerTests
                 Count = 10,
                 IncludeTotalCount = true,
             };
-            var orderingMethod = Iso3166CountriesOrderingMethod.Alpha3Desc;
+            var orderingMethodFromQuery = new Dtos.OrderingMethodFromQuery<Iso3166CountriesOrderingProperty>
+            {
+                Asc = [false, true],
+                OrderBy = [Iso3166CountriesOrderingProperty.Alpha3, Iso3166CountriesOrderingProperty.IsoId],
+            };
+            var expectedOrderingMethod = new OrderingMethod<Iso3166CountriesOrderingProperty>
+            {
+                OrderBy =
+                [
+                    new OrderBy<Iso3166CountriesOrderingProperty> { Ascending = false, Property = Iso3166CountriesOrderingProperty.Alpha3},
+                    new OrderBy<Iso3166CountriesOrderingProperty> { Ascending = true, Property = Iso3166CountriesOrderingProperty.IsoId},
+                ],
+            };
+
             var filter = new Iso3166CountriesFilter
             {
                 Alpha2 = "aa",
@@ -47,10 +61,13 @@ public class Iso3166CountriesControllerTests
             var controller = NewController();
 
             // act
-            var result = (await controller.List(pagination: pagination, filter: filter, orderingMethod: orderingMethod))?.Result as OkObjectResult;
+            var result = (await controller.List(pagination: pagination, filter: filter, orderingMethodFromQuery: orderingMethodFromQuery))?.Result as OkObjectResult;
 
             // assert
-            _mediator.Verify(x => x.Send(It.Is<ListIso3166CountriesRequest>(x => IsEquivalentTo(source: x.Pagination, compare: pagination) && x.OrderingMethod == orderingMethod && IsEquivalentTo(source: x.Filter, compare: filter))), Times.Once());
+            _mediator.Verify(x => x.Send(It.Is<ListIso3166CountriesRequest>(x =>
+                x.Pagination.IsEquivalentTo(pagination)
+                && x.OrderingMethod.IsEquivalentTo(expectedOrderingMethod)
+                && IsEquivalentTo(source: x.Filter, compare: filter))), Times.Once());
             result.Should().NotBeNull();
             result.StatusCode.Should().Be((int)HttpStatusCode.OK);
             var objectResult = result.Value as ListIso3166CountriesResult;
@@ -58,22 +75,52 @@ public class Iso3166CountriesControllerTests
         }
     }
 
-    [Fact]
-    public async Task List_InvalidRequestSendReturnsError_400BadRequestWithExpectedProblemDetails()
+    public class Iso3166CountriesControllerTests002 : Iso3166CountriesControllerTests
     {
-        // arrange
-        Setup(result: new(new Error("Test")));
-        var controller = NewController();
+        [Fact]
+        public async Task List_InvalidRequestInvalidOrderingMethodFromQuery_400BadRequestWithExpectedProblemDetails()
+        {
+            // arrange
+            var sendResult = GetSendResult(items: GetItems(count: 1), pagination: new Pagination());
+            Setup(result: sendResult);
+            var controller = NewController();
+            var orderingMethodFromQueryInvalid = new OrderingMethodFromQuery<Iso3166CountriesOrderingProperty>
+            {
+                Asc = [true, true], // has more items than OrderBy which is invalid
+                OrderBy = [Iso3166CountriesOrderingProperty.Name],
+            };
 
-        // act
-        var result = (await controller.List(pagination: new(), filter: new(), orderingMethod: default))?.Result as ObjectResult;
+            // act
+            var result = (await controller.List(pagination: new(), filter: new(), orderingMethodFromQuery: orderingMethodFromQueryInvalid))?.Result as ObjectResult;
 
-        // assert
-        result.Should().NotBeNull();
-        result.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
-        var objectResult = result.Value as ProblemDetails;
-        objectResult.Should().NotBeNull();
-        objectResult.Status.Should().Be((int)HttpStatusCode.BadRequest);
+            // assert
+            result.Should().NotBeNull();
+            result.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+            var objectResult = result.Value as ProblemDetails;
+            objectResult.Should().NotBeNull();
+            objectResult.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        }
+    }
+
+    public class Iso3166CountriesControllerTests003 : Iso3166CountriesControllerTests
+    {
+        [Fact]
+        public async Task List_InvalidRequestSendReturnsError_400BadRequestWithExpectedProblemDetails()
+        {
+            // arrange
+            Setup(result: new(new Error("Test")));
+            var controller = NewController();
+
+            // act
+            var result = (await controller.List(pagination: new(), filter: new(), new()))?.Result as ObjectResult;
+
+            // assert
+            result.Should().NotBeNull();
+            result.StatusCode.Should().Be((int)HttpStatusCode.BadRequest);
+            var objectResult = result.Value as ProblemDetails;
+            objectResult.Should().NotBeNull();
+            objectResult.Status.Should().Be((int)HttpStatusCode.BadRequest);
+        }
     }
 
     private static Result<ListIso3166CountriesResult> GetSendResult(IEnumerable<Iso3166CountryView>? items = null, IPagination? pagination = null)
@@ -110,11 +157,6 @@ public class Iso3166CountriesControllerTests
                 Name = $"Name{i}",
             };
         }
-    }
-
-    private static bool IsEquivalentTo(IPagination source, IPagination compare)
-    {
-        return source.StartIndex == compare.StartIndex && source.Count == compare.Count && source.IncludeTotalCount == compare.IncludeTotalCount;
     }
 
     private static bool IsEquivalentTo(Iso3166CountriesFilter source, Iso3166CountriesFilter compare)

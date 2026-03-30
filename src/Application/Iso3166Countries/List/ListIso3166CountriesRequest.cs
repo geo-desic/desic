@@ -4,6 +4,6 @@ using MediatR;
 
 namespace Desic.Application.Iso3166Countries.List;
 
-public class ListIso3166CountriesRequest : FilterableOrderableListRequest<Iso3166CountriesFilter, Iso3166CountriesOrderingMethod>, IRequest<Result<ListIso3166CountriesResult>>
+public class ListIso3166CountriesRequest : FilterableOrderableListRequest<Iso3166CountriesFilter, Iso3166CountriesOrderingProperty>, IRequest<Result<ListIso3166CountriesResult>>
 {
 }

@@ -1,7 +1,11 @@
-﻿namespace Desic.Application.Iso3166Countries;
+﻿using Desic.Application.Common.Interfaces;
+
+namespace Desic.Application.Iso3166Countries;
 
 public static class QueryableExtensions
 {
+    private static readonly Lazy<Iso3166CountriesOrderer> _orderer = new();
+
     public static IQueryable<Domain.Iso3166Countries.Iso3166Country> ApplyFilter(this IQueryable<Domain.Iso3166Countries.Iso3166Country> source, Iso3166CountriesFilter filter)
     {
         var result = source;
@@ -14,22 +18,9 @@ public static class QueryableExtensions
         return result;
     }
 
-    public static IOrderedQueryable<Domain.Iso3166Countries.Iso3166Country> OrderBy(this IQueryable<Domain.Iso3166Countries.Iso3166Country> source, Iso3166CountriesOrderingMethod? orderingMethod)
+    public static IOrderedQueryable<Domain.Iso3166Countries.Iso3166Country> OrderBy(this IQueryable<Domain.Iso3166Countries.Iso3166Country> source, IOrderingMethod<Iso3166CountriesOrderingProperty> orderingMethod)
     {
-        return (orderingMethod ?? default) switch
-        {
-            Iso3166CountriesOrderingMethod.Alpha2Asc => source.OrderBy(x => x.Alpha2),
-            Iso3166CountriesOrderingMethod.Alpha2Desc => source.OrderByDescending(x => x.Alpha2),
-            Iso3166CountriesOrderingMethod.Alpha3Asc => source.OrderBy(x => x.Alpha3),
-            Iso3166CountriesOrderingMethod.Alpha3Desc => source.OrderByDescending(x => x.Alpha3),
-            Iso3166CountriesOrderingMethod.IdAsc => source.OrderBy(x => x.Id),
-            Iso3166CountriesOrderingMethod.IdDesc => source.OrderByDescending(x => x.Id),
-            Iso3166CountriesOrderingMethod.IsoIdAsc => source.OrderBy(x => x.IsoId),
-            Iso3166CountriesOrderingMethod.IsoIdDesc => source.OrderByDescending(x => x.IsoId),
-            Iso3166CountriesOrderingMethod.NameAsc => source.OrderBy(x => x.Name),
-            Iso3166CountriesOrderingMethod.NameDesc => source.OrderByDescending(x => x.Name),
-            _ => source.OrderBy(x => x.Name),
-        };
+        return _orderer.Value.ApplyOrderingMethod(source, orderingMethod);
     }
 
     public static IQueryable<Iso3166Country> SelectToModel(this IQueryable<Domain.Iso3166Countries.Iso3166Country> source) => source.Select(x => new Iso3166Country(x));

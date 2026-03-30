@@ -2,11 +2,11 @@
 
 namespace Desic.Application.Common.Models;
 
-public class FilterableOrderableListRequest<F, O> : ListRequest, IOrderingMethod<O>, IFilterable<F>
+public class FilterableOrderableListRequest<F, O> : ListRequest, IFilterable<F>
     where O : struct, Enum
     where F : class, new()
 {
     public F Filter { get; set; } = new();
 
-    public O OrderingMethod { get; set; } = default;
+    public IOrderingMethod<O> OrderingMethod { get; set; } = OrderingMethod<O>.Default;
 }

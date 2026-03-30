@@ -8,8 +8,9 @@ public class TestWebAppDependencyTests
 {
     private readonly TestWebApplicationFactory<Program> _factory;
     protected readonly HttpClient HttpClient;
+    protected readonly ITestOutputHelper? Output;
 
-    public TestWebAppDependencyTests(SeededAppDatabase testDatabase)
+    public TestWebAppDependencyTests(SeededAppDatabase testDatabase, ITestOutputHelper? output = null)
     {
         _factory = new TestWebApplicationFactory<Program>(testDatabase.GetConnectionString(), testDatabase.DbProvider);
         HttpClient = _factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -18,5 +19,6 @@ public class TestWebAppDependencyTests
             BaseAddress = new Uri("https://localhost"), // to avoid https redirection warnings when using https redirection middleware
             // see: https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests?view=aspnetcore-10.0&pivots=xunit#client-options
         });
+        Output = output;
     }
 }

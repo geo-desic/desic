@@ -64,7 +64,13 @@ public class ListIso3166CountriesRequestHandlerTests(SeededAppDatabase testDatab
                 IncludeTotalCount = false,
                 StartIndex = startIndex,
             },
-            OrderingMethod = Iso3166CountriesOrderingMethod.Alpha2Desc,
+            OrderingMethod = new OrderingMethod<Iso3166CountriesOrderingProperty>
+            {
+                OrderBy =
+                [
+                    new OrderBy<Iso3166CountriesOrderingProperty> { Ascending = false, Property = Iso3166CountriesOrderingProperty.Alpha2 }
+                ],
+            },
         };
 
         // act

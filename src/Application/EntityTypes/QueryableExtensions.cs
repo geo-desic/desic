@@ -1,9 +1,11 @@
-﻿using Desic.Application.EntityTypes;
+﻿using Desic.Application.Common.Interfaces;
 
 namespace Desic.Application.EntityTypes;
 
 public static class QueryableExtensions
 {
+    private static readonly Lazy<EntityTypesOrderer> _orderer = new();
+
     public static IQueryable<Domain.EntityTypes.EntityType> ApplyFilter(this IQueryable<Domain.EntityTypes.EntityType> source, EntityTypesFilter filter)
     {
         var result = source;
@@ -18,16 +20,9 @@ public static class QueryableExtensions
         return result;
     }
 
-    public static IOrderedQueryable<Domain.EntityTypes.EntityType> OrderBy(this IQueryable<Domain.EntityTypes.EntityType> source, EntityTypesOrderingMethod? orderingMethod)
+    public static IOrderedQueryable<Domain.EntityTypes.EntityType> OrderBy(this IQueryable<Domain.EntityTypes.EntityType> source, IOrderingMethod<EntityTypesOrderingProperty> orderingMethod)
     {
-        return (orderingMethod ?? default) switch
-        {
-            EntityTypesOrderingMethod.KeyAsc => source.OrderBy(x => x.Key),
-            EntityTypesOrderingMethod.KeyDesc => source.OrderByDescending(x => x.Key),
-            EntityTypesOrderingMethod.NameAsc => source.OrderBy(x => x.Name),
-            EntityTypesOrderingMethod.NameDesc => source.OrderByDescending(x => x.Name),
-            _ => source.OrderBy(x => x.Name),
-        };
+        return _orderer.Value.ApplyOrderingMethod(source, orderingMethod);
     }
 
     public static IQueryable<EntityType> SelectToModel(this IQueryable<Domain.EntityTypes.EntityType> source) => source.Select(x => new EntityType { Name = x.Name, Key = x.Key });

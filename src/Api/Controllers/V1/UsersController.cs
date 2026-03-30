@@ -27,7 +27,7 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
         var request = new GetUserByIdRequest { Id = id };
         var result = await _mediator.Send(request);
 
-        return result.Match(onSuccess: u => Ok(u), onFailure: e => Problem(e), onNull: () => NotFound());
+        return result.Match(onSuccess: r => Ok(r), onFailure: e => Problem(e), onNull: () => NotFound());
     }
 
     [HttpPost]

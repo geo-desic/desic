@@ -68,19 +68,34 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
     public class ListEntityTypesRequestHandlerTests002 : ListEntityTypesRequestHandlerTests
     {
         [Theory]
-        [InlineData(null)]
-        [InlineData(EntityTypesOrderingMethod.KeyAsc)]
-        [InlineData(EntityTypesOrderingMethod.KeyDesc)]
-        [InlineData(EntityTypesOrderingMethod.NameAsc)]
-        [InlineData(EntityTypesOrderingMethod.NameDesc)]
-        public async Task Handle_SpecifiedOrderingMethod_ExpectedResultsOrderedCorrectly(EntityTypesOrderingMethod? orderingMethod)
+        [InlineData(null, null, null, null)]
+        [InlineData(EntityTypesOrderingProperty.Key, true, null, null)]
+        [InlineData(EntityTypesOrderingProperty.Name, true, null, null)]
+        [InlineData(EntityTypesOrderingProperty.Key, false, EntityTypesOrderingProperty.Name, true)]
+        [InlineData(EntityTypesOrderingProperty.Name, false, EntityTypesOrderingProperty.Key, true)]
+        public async Task Handle_SpecifiedOrderingMethod_ExpectedResultsOrderedCorrectly(EntityTypesOrderingProperty? property1, bool? ascending1, EntityTypesOrderingProperty? property2, bool? ascending2)
         {
             // arrange
             var count = 10;
+            OrderingMethod<EntityTypesOrderingProperty>? orderingMethod = null;
+            if (property1 != null && ascending1.HasValue)
+            {
+                orderingMethod = new OrderingMethod<EntityTypesOrderingProperty>
+                {
+                    OrderBy =
+                    [
+                        new OrderBy<EntityTypesOrderingProperty> { Ascending = ascending1.Value, Property = property1.Value },
+                    ],
+                };
+                if (property2 != null && ascending2.HasValue)
+                {
+                    orderingMethod.OrderBy.Add(new OrderBy<EntityTypesOrderingProperty> { Ascending = ascending2.Value, Property = property2.Value });
+                }
+            }
             var expected = new Result<ListEntityTypesResult>(new ListEntityTypesResult
             {
                 // if no ordering method is specified it should use the default
-                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod ?? default)],
+                Items = [.. ExpectedItems(minIndex: 0, count: count, orderingMethod: orderingMethod)],
                 StartIndex = 0,
                 TotalCount = null,
             });
@@ -94,7 +109,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
                     StartIndex = 0,
                 },
             };
-            if (orderingMethod.HasValue) request.OrderingMethod = orderingMethod.Value;
+            if (orderingMethod != null) request.OrderingMethod = orderingMethod;
 
             // act
             var result = await handler.Handle(request, cancellationToken: TestContext.Current.CancellationToken);
@@ -152,8 +167,9 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
         }
     }
 
-    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, EntityTypesOrderingMethod orderingMethod = default)
+    private IEnumerable<EntityType> ExpectedItems(int minIndex, int count, OrderingMethod<EntityTypesOrderingProperty>? orderingMethod = null)
     {
+        orderingMethod ??= OrderingMethod<EntityTypesOrderingProperty>.Default;
         // note that the OrderBy and SelectToModel extension methods used here are already covered by tests of their own
         return _seededEntities.AsQueryable().OrderBy(orderingMethod: orderingMethod).Take(minIndex..(minIndex + count)).SelectToModel();
     }
