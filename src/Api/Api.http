@@ -18,7 +18,7 @@ Accept: application/json
 GET {{HostAddressApi}}/v1/entitytypes
 Accept: application/json
 
-### Entity Types
+###
 
 GET {{HostAddressApi}}/v1/entitytypes?orderBy=Name&asc=false&orderBy=Key&asc=false
 Accept: application/json
@@ -40,7 +40,12 @@ Accept: application/json
 
 ###
 
-GET {{HostAddressApi}}/v1/iso3166countries?includeTotalCount=true&startIndex=1&count=2&orderingMethod=alpha2Desc
+GET {{HostAddressApi}}/v1/iso3166countries?orderBy=Alpha3&asc=true&orderBy=IsoId&asc=true
+Accept: application/json
+
+###
+
+GET {{HostAddressApi}}/v1/iso3166countries?includeTotalCount=true&startIndex=1&count=2&orderBy=Alpha2&asc=false
 Accept: application/json
 
 ###
