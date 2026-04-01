@@ -14,7 +14,7 @@ public class Iso3166CountriesOrdererTests
         public void Constructor_ApplyOrderingMethodCalledOnConstructedObjectForAllPossibleEnumValues_AllEnumValuesAreMapped()
         {
             // arrange
-            var orderer = new Iso3166CountriesOrderer();
+            var orderer = new Iso3166CountriesOrderer<TestItem>();
             var expected = GetItems().ToList();
 
             foreach (var value in Enum.GetValues<Iso3166CountriesOrderingProperty>())
@@ -30,8 +30,17 @@ public class Iso3166CountriesOrdererTests
         }
     }
 
-    private static IEnumerable<Domain.Iso3166Countries.Iso3166Country> GetItems()
+    private static IEnumerable<TestItem> GetItems()
     {
         yield return new() { Alpha2 = "aa", Alpha3 = "aaa", Id = 1.ToGuid(), IsoId = 1, Name = "A" };
+    }
+
+    private class TestItem : Domain.Iso3166Countries.IReadOnlyIso3166Country, Domain.Common.Interfaces.IReadOnlyGuidId
+    {
+        public Guid Id { get; init; }
+        public int IsoId { get; init; }
+        public required string Name { get; init; }
+        public required string Alpha2 { get; init; }
+        public required string Alpha3 { get; init; }
     }
 }

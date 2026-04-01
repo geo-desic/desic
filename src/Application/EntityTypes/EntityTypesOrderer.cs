@@ -2,7 +2,7 @@
 
 namespace Desic.Application.EntityTypes;
 
-internal sealed class EntityTypesOrderer : EnumQueryableOrderer<EntityTypesOrderingProperty, Domain.EntityTypes.EntityType>
+internal sealed class EntityTypesOrderer<T> : EnumQueryableOrderer<EntityTypesOrderingProperty, T> where T : Domain.EntityTypes.IReadOnlyEntityType
 {
     public EntityTypesOrderer()
     {

@@ -236,7 +236,7 @@ public class ModelExtensionsTests
         public OptionalOnByType Deleted { get; set; } = new();
     }
 
-    private class TestIdEntity : IReadOnlyId
+    private class TestIdEntity : IReadOnlyGuidId
     {
         public Guid Id { get; set; }
     }

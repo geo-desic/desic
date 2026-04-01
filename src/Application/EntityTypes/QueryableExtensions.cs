@@ -4,9 +4,7 @@ namespace Desic.Application.EntityTypes;
 
 public static class QueryableExtensions
 {
-    private static readonly Lazy<EntityTypesOrderer> _orderer = new();
-
-    public static IQueryable<Domain.EntityTypes.EntityType> ApplyFilter(this IQueryable<Domain.EntityTypes.EntityType> source, EntityTypesFilter filter)
+    public static IQueryable<T> ApplyFilter<T>(this IQueryable<T> source, EntityTypesFilter filter) where T : Domain.EntityTypes.IReadOnlyEntityType
     {
         var result = source;
         if (filter.Key != null)
@@ -20,10 +18,11 @@ public static class QueryableExtensions
         return result;
     }
 
-    public static IOrderedQueryable<Domain.EntityTypes.EntityType> OrderBy(this IQueryable<Domain.EntityTypes.EntityType> source, IOrderingMethod<EntityTypesOrderingProperty> orderingMethod)
+    public static IOrderedQueryable<T> OrderBy<T>(this IQueryable<T> source, IOrderingMethod<EntityTypesOrderingProperty> orderingMethod) where T : Domain.EntityTypes.IReadOnlyEntityType
     {
-        return _orderer.Value.ApplyOrderingMethod(source, orderingMethod);
+        return new EntityTypesOrderer<T>().ApplyOrderingMethod(source, orderingMethod);
     }
 
-    public static IQueryable<EntityType> SelectToModel(this IQueryable<Domain.EntityTypes.EntityType> source) => source.Select(x => new EntityType { Name = x.Name, Key = x.Key });
+    public static IQueryable<EntityType> SelectToModel<T>(this IQueryable<T> source) where T : Domain.EntityTypes.IReadOnlyEntityType
+        => source.Select(x => new EntityType { Name = x.Name, Key = x.Key });
 }

@@ -1,14 +1,13 @@
 ﻿using Desic.Application.Common.Extensions;
-using Desic.Domain.Common.Entities;
 
 namespace Desic.Application.Common.Models;
 
 public abstract class ModifiableModel : CreatableModel, Interfaces.IModifiable
 {
     protected ModifiableModel() : base() { }
-    protected ModifiableModel(ModifiableEntity entity) : base(entity)
+    protected ModifiableModel(Domain.Common.Interfaces.IReadOnlyModifiableEntity from) : base(from)
     {
-        this.MapModified(entity);
+        this.MapModified(from);
     }
     public RequiredOnByType Modified { get; set; } = new();
 }

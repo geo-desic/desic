@@ -1,6 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Models;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Interfaces;
 using Desic.Domain.EntityTypes;
 using Desic.Shared.Extensions;
 
@@ -20,11 +20,11 @@ public class ModifiableModelTests
             {
                 Id = 1.ToGuid(),
                 CreatedById = 2.ToGuid(),
-                CreatedByName = "CreatedByName",
+                CreatedByName = nameof(TestEntity.CreatedByName),
                 CreatedByTypeId = createdByType.Id,
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 ModifiedById = 3.ToGuid(),
-                ModifiedByName = "ModifiedByName",
+                ModifiedByName = nameof(TestEntity.ModifiedByName),
                 ModifiedByTypeId = modifiedByType.Id,
                 ModifiedOn = new DateTime(2020, 1, 2, 0, 0, 0, DateTimeKind.Utc),
             };
@@ -69,14 +69,23 @@ public class ModifiableModelTests
         }
     }
 
-    private class TestEntity : ModifiableEntity
+    private class TestEntity : IReadOnlyModifiableEntity
     {
-        public override SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
+        public Guid Id { get; init; }
+        public Guid CreatedById { get; init; }
+        public string? CreatedByName { get; init; }
+        public Guid CreatedByTypeId { get; init; }
+        public DateTime CreatedOn { get; init; }
+        public Guid ModifiedById { get; init; }
+        public string? ModifiedByName { get; init; }
+        public Guid ModifiedByTypeId { get; init; }
+        public DateTime ModifiedOn { get; init; }
+        public SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
     }
 
     private class TestModel : ModifiableModel
     {
         public TestModel() : base() { }
-        public TestModel(ModifiableEntity entity) : base(entity) { } // we are testing this base(entity) call to make sure it sets all expected properties
+        public TestModel(IReadOnlyModifiableEntity from) : base(from) { } // we are testing this base(from) call to make sure it sets all expected properties
     }
 }

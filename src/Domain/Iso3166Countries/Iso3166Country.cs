@@ -4,7 +4,7 @@ using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Iso3166Countries;
 
-public class Iso3166Country : SeedableSoftDeletableEntity, IIso3166Country, IStaticEntityType, IReadOnlyNameable
+public class Iso3166Country : SeedableSoftDeletableEntity, IIso3166Country, IReadOnlyIso3166CountryEntity, IStaticEntityType, IReadOnlyNameable
 {
     public static SystemEntityType ClassEntityType => SystemEntityTypes.Iso3166Country;
     public override SystemEntityType SystemEntityType => ClassEntityType;

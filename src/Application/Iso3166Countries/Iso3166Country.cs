@@ -9,7 +9,7 @@ public class Iso3166Country : SoftDeletableModel, IIso3166Country
     public Iso3166Country() : base() { }
 
     [SetsRequiredMembers]
-    public Iso3166Country(Domain.Iso3166Countries.Iso3166Country source) : base(source)
+    public Iso3166Country(IReadOnlyIso3166CountryEntity source) : base(source)
     {
         this.UpdateFrom(source);
     }

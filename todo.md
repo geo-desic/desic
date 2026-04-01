@@ -7,8 +7,6 @@
   - [ ] Authorization implementation
 - [ ] Decide if validation behavior should be added
   - [ ] If so, implement validation behavior
-- [ ] Decide if filtering/ordering/pagination infrastructure should be enhanced to generic classes with interface constraints so it can be used with projections
-  - [ ] If so, implement filtering/ordering/pagination enhancements
 - [ ] Verify and enhance openapi documentation
 - [ ] Implement support for a consistent Guid generation method/delegate for non predefined data
   - [ ] Specifically, use a [byte shuffled UUIDv7](src/Shared/Extensions/GuidExtensions.cs) for all sql server ids

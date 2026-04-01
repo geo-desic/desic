@@ -1,6 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Models;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Interfaces;
 using Desic.Domain.EntityTypes;
 using Desic.Shared.Extensions;
 
@@ -19,7 +19,7 @@ public class CreatableModelTests
             {
                 Id = 1.ToGuid(),
                 CreatedById = 2.ToGuid(),
-                CreatedByName = "CreatedByName",
+                CreatedByName = nameof(TestEntity.CreatedByName),
                 CreatedByTypeId = createdByType.Id,
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             };
@@ -50,14 +50,19 @@ public class CreatableModelTests
         }
     }
 
-    private class TestEntity : CreatableEntity
+    private class TestEntity : IReadOnlyCreatableEntity
     {
-        public override SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
+        public Guid Id { get; init; }
+        public Guid CreatedById { get; init; }
+        public string? CreatedByName { get; init; }
+        public Guid CreatedByTypeId { get; init; }
+        public DateTime CreatedOn { get; init; }
+        public SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
     }
 
     private class TestModel : CreatableModel
     {
         public TestModel() : base() { }
-        public TestModel(CreatableEntity entity) : base(entity) { } // we are testing this base(entity) call to make sure it sets all expected properties
+        public TestModel(IReadOnlyCreatableEntity from) : base(from) { } // we are testing this base(from) call to make sure it sets all expected properties
     }
 }

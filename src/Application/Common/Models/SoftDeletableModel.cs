@@ -1,14 +1,13 @@
 ﻿using Desic.Application.Common.Extensions;
-using Desic.Domain.Common.Entities;
 
 namespace Desic.Application.Common.Models;
 
 public abstract class SoftDeletableModel : ModifiableModel, Interfaces.ISoftDeletable
 {
     protected SoftDeletableModel() : base() { }
-    protected SoftDeletableModel(SoftDeletableEntity entity) : base(entity)
+    protected SoftDeletableModel(Domain.Common.Interfaces.IReadOnlySoftDeletableEntity from) : base(from)
     {
-        this.MapDeleted(entity);
+        this.MapDeleted(from);
     }
     public OptionalOnByType Deleted { get; set; } = new();
 }

@@ -1,6 +1,6 @@
 ﻿namespace Desic.Domain.Common.Interfaces;
 
-public interface IId : IReadOnlyId
+public interface IGuidId : IReadOnlyGuidId
 {
     new Guid Id { get; set; }
 }

@@ -2,7 +2,7 @@
 
 namespace Desic.Application.Iso3166Countries;
 
-internal sealed class Iso3166CountriesOrderer : EnumQueryableOrderer<Iso3166CountriesOrderingProperty, Domain.Iso3166Countries.Iso3166Country>
+internal sealed class Iso3166CountriesOrderer<T> : EnumQueryableOrderer<Iso3166CountriesOrderingProperty, T> where T : Domain.Iso3166Countries.IReadOnlyIso3166Country, Domain.Common.Interfaces.IReadOnlyGuidId
 {
     public Iso3166CountriesOrderer()
     {

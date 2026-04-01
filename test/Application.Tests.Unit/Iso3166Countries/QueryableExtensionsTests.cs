@@ -36,7 +36,7 @@ public class QueryableExtensionsTests
             var expectedItem1 = ItemA2eA3dId2IsoId1NameC;
             var expectedItem2 = ItemA2eA3dId3IsoId2NameD;
             expectedItem1.Alpha2.Should().Be(expectedItem2.Alpha2);
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem1, expectedItem2 };
+            var expected = new List<TestItem> { expectedItem1, expectedItem2 };
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { Alpha2 = expectedItem1.Alpha2 };
 
@@ -54,7 +54,7 @@ public class QueryableExtensionsTests
         public void ApplyFilter_FilterByAlpha2ThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country>();
+            var expected = new List<TestItem>();
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { Alpha2 = "zz" }; // non-existant value
 
@@ -75,7 +75,7 @@ public class QueryableExtensionsTests
             var expectedItem1 = ItemA2eA3dId2IsoId1NameC;
             var expectedItem2 = ItemA2eA3dId3IsoId2NameD;
             expectedItem1.Alpha3.Should().Be(expectedItem2.Alpha3);
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem1, expectedItem2 };
+            var expected = new List<TestItem> { expectedItem1, expectedItem2 };
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { Alpha3 = expectedItem1.Alpha3 };
 
@@ -93,7 +93,7 @@ public class QueryableExtensionsTests
         public void ApplyFilter_FilterByAlpha3ThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country>();
+            var expected = new List<TestItem>();
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { Alpha3 = "zzz" }; // non-existant value
 
@@ -112,7 +112,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemA2eA3dId2IsoId1NameC;
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem };
+            var expected = new List<TestItem> { expectedItem };
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { Id = expectedItem.Id };
 
@@ -130,7 +130,7 @@ public class QueryableExtensionsTests
         public void ApplyFilter_FilterByIdThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country>();
+            var expected = new List<TestItem>();
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { Id = Guid.AllBitsSet }; // non-existant value
 
@@ -149,7 +149,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemA2eA3dId2IsoId1NameC;
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem };
+            var expected = new List<TestItem> { expectedItem };
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { IsoId = expectedItem.IsoId };
 
@@ -167,7 +167,7 @@ public class QueryableExtensionsTests
         public void ApplyFilter_FilterByIsoIdThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country>();
+            var expected = new List<TestItem>();
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { IsoId = -1 }; // non-existant value
 
@@ -186,7 +186,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemA2eA3dId2IsoId1NameC;
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem };
+            var expected = new List<TestItem> { expectedItem };
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { Name = expectedItem.Name };
 
@@ -204,7 +204,7 @@ public class QueryableExtensionsTests
         public void ApplyFilter_FilterByNameThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country>();
+            var expected = new List<TestItem>();
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { Name = "DoesNotExist" }; // non-existant value
 
@@ -223,7 +223,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemA2eA3dId2IsoId1NameC;
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem };
+            var expected = new List<TestItem> { expectedItem };
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { NameContains = expectedItem.Name.Right(length: expectedItem.Name.Length - 1) };
 
@@ -241,7 +241,7 @@ public class QueryableExtensionsTests
         public void ApplyFilter_FilterByNameContainsThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country>();
+            var expected = new List<TestItem>();
             var items = GetItems();
             var filter = new Iso3166CountriesFilter { NameContains = "DoesNotExist" }; // non-existant value
 
@@ -260,7 +260,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemA2eA3dId2IsoId1NameC;
-            var expected = new List<Domain.Iso3166Countries.Iso3166Country> { expectedItem };
+            var expected = new List<TestItem> { expectedItem };
             var items = GetItems();
             var filter = new Iso3166CountriesFilter
             {
@@ -364,19 +364,19 @@ public class QueryableExtensionsTests
             var createdByType = SystemEntityTypes.Unspecified;
             var modifiedByType = SystemEntityTypes.Label;
             var deletedByType = SystemEntityTypes.User;
-            var entity = new Domain.Iso3166Countries.Iso3166Country
+            var entity = new TestItem
             {
                 Id = 101.ToGuid(),
                 CreatedById = 102.ToGuid(),
-                CreatedByName = "CreatedByName",
+                CreatedByName = nameof(TestItem.CreatedByName),
                 CreatedByTypeId = createdByType.Id,
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 ModifiedById = 103.ToGuid(),
-                ModifiedByName = "ModifiedByName",
+                ModifiedByName = nameof(TestItem.ModifiedByName),
                 ModifiedByTypeId = modifiedByType.Id,
                 ModifiedOn = new DateTime(2020, 1, 2, 0, 0, 0, DateTimeKind.Utc),
                 DeletedById = 104.ToGuid(),
-                DeletedByName = "DeletedByName",
+                DeletedByName = nameof(TestItem.DeletedByName),
                 DeletedByTypeId = deletedByType.Id,
                 DeletedOn = new DateTime(2020, 1, 3, 0, 0, 0, DateTimeKind.Utc),
                 IsoId = 101,
@@ -458,19 +458,19 @@ public class QueryableExtensionsTests
             var createdByType = SystemEntityTypes.Unspecified;
             var modifiedByType = SystemEntityTypes.Label;
             var deletedByType = SystemEntityTypes.User;
-            var entity = new Domain.Iso3166Countries.Iso3166Country
+            var entity = new TestItem
             {
                 Id = 101.ToGuid(),
                 CreatedById = 102.ToGuid(),
-                CreatedByName = "CreatedByName",
+                CreatedByName = nameof(TestItem.CreatedByName),
                 CreatedByTypeId = createdByType.Id,
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 ModifiedById = 103.ToGuid(),
-                ModifiedByName = "ModifiedByName",
+                ModifiedByName = nameof(TestItem.ModifiedByName),
                 ModifiedByTypeId = modifiedByType.Id,
                 ModifiedOn = new DateTime(2020, 1, 2, 0, 0, 0, DateTimeKind.Utc),
                 DeletedById = 104.ToGuid(),
-                DeletedByName = "DeletedByName",
+                DeletedByName = nameof(TestItem.DeletedByName),
                 DeletedByTypeId = deletedByType.Id,
                 DeletedOn = new DateTime(2020, 1, 3, 0, 0, 0, DateTimeKind.Utc),
                 IsoId = 101,
@@ -502,13 +502,13 @@ public class QueryableExtensionsTests
     }
 
     // purposely constructed so that ordering by each property is different
-    private static Domain.Iso3166Countries.Iso3166Country ItemA2aA3eId4IsoId3NameE => new() { Alpha2 = "aa", Alpha3 = "eee", Id = 4.ToGuid(), IsoId = 3, Name = "NameE" };
-    private static Domain.Iso3166Countries.Iso3166Country ItemA2bA3aId5IsoId4NameF => new() { Alpha2 = "bb", Alpha3 = "aaa", Id = 5.ToGuid(), IsoId = 4, Name = "NameF" };
-    private static Domain.Iso3166Countries.Iso3166Country ItemA2cA3bId6IsoId5NameA => new() { Alpha2 = "cc", Alpha3 = "bbb", Id = 6.ToGuid(), IsoId = 5, Name = "NameA" };
-    private static Domain.Iso3166Countries.Iso3166Country ItemA2dA3cId1IsoId6NameB => new() { Alpha2 = "dd", Alpha3 = "ccc", Id = 1.ToGuid(), IsoId = 6, Name = "NameB" };
-    private static Domain.Iso3166Countries.Iso3166Country ItemA2eA3dId2IsoId1NameC => new() { Alpha2 = "ee", Alpha3 = "ddd", Id = 2.ToGuid(), IsoId = 1, Name = "NameC" };
+    private static TestItem ItemA2aA3eId4IsoId3NameE => new() { Alpha2 = "aa", Alpha3 = "eee", Id = 4.ToGuid(), IsoId = 3, Name = "NameE" };
+    private static TestItem ItemA2bA3aId5IsoId4NameF => new() { Alpha2 = "bb", Alpha3 = "aaa", Id = 5.ToGuid(), IsoId = 4, Name = "NameF" };
+    private static TestItem ItemA2cA3bId6IsoId5NameA => new() { Alpha2 = "cc", Alpha3 = "bbb", Id = 6.ToGuid(), IsoId = 5, Name = "NameA" };
+    private static TestItem ItemA2dA3cId1IsoId6NameB => new() { Alpha2 = "dd", Alpha3 = "ccc", Id = 1.ToGuid(), IsoId = 6, Name = "NameB" };
+    private static TestItem ItemA2eA3dId2IsoId1NameC => new() { Alpha2 = "ee", Alpha3 = "ddd", Id = 2.ToGuid(), IsoId = 1, Name = "NameC" };
     // note: alpha2 and alpha3 values are not unique and same as above, but all other values are unique
-    private static Domain.Iso3166Countries.Iso3166Country ItemA2eA3dId3IsoId2NameD => new()
+    private static TestItem ItemA2eA3dId3IsoId2NameD => new()
     {
         Alpha2 = "ee",
         Alpha3 = "ddd",
@@ -521,7 +521,7 @@ public class QueryableExtensionsTests
         DeletedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc)
     };
 
-    private static IEnumerable<Domain.Iso3166Countries.Iso3166Country> GetItems()
+    private static IEnumerable<TestItem> GetItems()
     {
         // in no particular order
         yield return ItemA2bA3aId5IsoId4NameF;
@@ -532,7 +532,7 @@ public class QueryableExtensionsTests
         yield return ItemA2aA3eId4IsoId3NameE;
     }
 
-    private static IEnumerable<Domain.Iso3166Countries.Iso3166Country> GetItemsOrdered(Iso3166CountriesOrderingProperty? property1, bool? ascending1, Iso3166CountriesOrderingProperty? property2, bool? ascending2)
+    private static IEnumerable<TestItem> GetItemsOrdered(Iso3166CountriesOrderingProperty? property1, bool? ascending1, Iso3166CountriesOrderingProperty? property2, bool? ascending2)
     {
         switch ((property1, ascending1))
         {
@@ -653,5 +653,29 @@ public class QueryableExtensionsTests
                 yield return ItemA2bA3aId5IsoId4NameF;
                 break;
         }
+    }
+
+    private class TestItem : Domain.Iso3166Countries.IReadOnlyIso3166CountryEntity
+    {
+        public Guid Id { get; init; }
+        public Guid CreatedById { get; init; }
+        public string? CreatedByName { get; init; }
+        public Guid CreatedByTypeId { get; init; }
+        public DateTime CreatedOn { get; init; }
+        public Guid ModifiedById { get; init; }
+        public string? ModifiedByName { get; init; }
+        public Guid ModifiedByTypeId { get; init; }
+        public DateTime ModifiedOn { get; init; }
+        public Guid? DeletedById { get; init; }
+        public string? DeletedByName { get; init; }
+        public Guid? DeletedByTypeId { get; init; }
+        public DateTime? DeletedOn { get; init; }
+        public bool IsDeleted { get => DeletedOn.HasValue; }
+        public int IsoId { get; init; }
+        public required string Alpha2 { get; init; }
+        public required string Alpha3 { get; init; }
+        public required string Name { get; init; }
+
+        public SystemEntityType SystemEntityType => SystemEntityTypes.Iso3166Country;
     }
 }

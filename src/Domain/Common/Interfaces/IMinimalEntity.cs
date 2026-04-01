@@ -1,5 +1,5 @@
 ﻿namespace Desic.Domain.Common.Interfaces;
 
-public interface IMinimalEntity : IReadOnlyMinimalEntity, IId
+public interface IMinimalEntity : IReadOnlyMinimalEntity, IGuidId
 {
 }

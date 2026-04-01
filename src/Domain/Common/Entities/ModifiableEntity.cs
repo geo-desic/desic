@@ -2,7 +2,7 @@
 
 namespace Desic.Domain.Common.Entities;
 
-public abstract class ModifiableEntity : CreatableEntity, IModifiable
+public abstract class ModifiableEntity : CreatableEntity, IModifiableEntity
 {
     public Guid ModifiedById { get; set; }
     public string? ModifiedByName { get; set; }

@@ -31,7 +31,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemKey3NameC;
-            var expected = new List<Domain.EntityTypes.EntityType> { expectedItem };
+            var expected = new List<TestItem> { expectedItem };
             var items = GetItems();
             var filter = new EntityTypesFilter { Key = expectedItem.Key };
 
@@ -49,7 +49,7 @@ public class QueryableExtensionsTests
         public void ApplyFilter_FilterByKeyThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
-            var expected = new List<Domain.EntityTypes.EntityType>();
+            var expected = new List<TestItem>();
             var items = GetItems();
             var filter = new EntityTypesFilter { Key = "zzzz" }; // non-existant value
 
@@ -68,7 +68,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemKey3NameC;
-            var expected = new List<Domain.EntityTypes.EntityType> { expectedItem };
+            var expected = new List<TestItem> { expectedItem };
             var items = GetItems();
             var filter = new EntityTypesFilter { Name = expectedItem.Name };
 
@@ -86,7 +86,7 @@ public class QueryableExtensionsTests
         public void ApplyFilter_FilterByNameThatDoesNotMatchAnyItems_NoItemsReturned()
         {
             // arrange
-            var expected = new List<Domain.EntityTypes.EntityType>();
+            var expected = new List<TestItem>();
             var items = GetItems();
             var filter = new EntityTypesFilter { Name = "DoesNotExist" }; // non-existant value
 
@@ -105,7 +105,7 @@ public class QueryableExtensionsTests
         {
             // arrange
             var expectedItem = ItemKey3NameC;
-            var expected = new List<Domain.EntityTypes.EntityType> { expectedItem };
+            var expected = new List<TestItem> { expectedItem };
             var items = GetItems();
             var filter = new EntityTypesFilter { Key = expectedItem.Key, Name = expectedItem.Name };
 
@@ -188,13 +188,13 @@ public class QueryableExtensionsTests
     }
 
     // purposely constructed so that ordering by each property is different
-    private static Domain.EntityTypes.EntityType ItemKey1NameE => new() { Key = "key1", Name = "E" };
-    private static Domain.EntityTypes.EntityType ItemKey2NameB => new() { Key = "key2", Name = "B" };
-    private static Domain.EntityTypes.EntityType ItemKey3NameC => new() { Key = "key3", Name = "C" };
-    private static Domain.EntityTypes.EntityType ItemKey4NameA => new() { Key = "key4", Name = "A" };
-    private static Domain.EntityTypes.EntityType ItemKey5NameD => new() { Key = "key5", Name = "D" };
+    private static TestItem ItemKey1NameE => new() { Key = "key1", Name = "E" };
+    private static TestItem ItemKey2NameB => new() { Key = "key2", Name = "B" };
+    private static TestItem ItemKey3NameC => new() { Key = "key3", Name = "C" };
+    private static TestItem ItemKey4NameA => new() { Key = "key4", Name = "A" };
+    private static TestItem ItemKey5NameD => new() { Key = "key5", Name = "D" };
 
-    private static IEnumerable<Domain.EntityTypes.EntityType> GetItems()
+    private static IEnumerable<TestItem> GetItems()
     {
         // in no particular order
         yield return ItemKey1NameE;
@@ -204,7 +204,7 @@ public class QueryableExtensionsTests
         yield return ItemKey3NameC;
     }
 
-    private static IEnumerable<Domain.EntityTypes.EntityType> GetItemsOrdered(EntityTypesOrderingProperty? property, bool? ascending)
+    private static IEnumerable<TestItem> GetItemsOrdered(EntityTypesOrderingProperty? property, bool? ascending)
     {
         switch ((property, ascending))
         {
@@ -244,5 +244,11 @@ public class QueryableExtensionsTests
                 yield return ItemKey1NameE;
                 break;
         }
+    }
+
+    private class TestItem : Domain.EntityTypes.IReadOnlyEntityType
+    {
+        public required string Key { get; init; }
+        public required string Name { get; init; }
     }
 }

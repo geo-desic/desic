@@ -2,7 +2,7 @@
 
 namespace Desic.Domain.Common.Entities;
 
-public abstract class SoftDeletableEntity : ModifiableEntity, ISoftDeletable
+public abstract class SoftDeletableEntity : ModifiableEntity, ISoftDeletableEntity
 {
     public Guid? DeletedById { get; set; }
     public string? DeletedByName { get; set; }

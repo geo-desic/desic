@@ -1,6 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Models;
-using Desic.Domain.Common.Entities;
+using Desic.Domain.Common.Interfaces;
 using Desic.Domain.EntityTypes;
 using Desic.Shared.Extensions;
 
@@ -21,15 +21,15 @@ public class SoftDeletableModelTests
             {
                 Id = 1.ToGuid(),
                 CreatedById = 2.ToGuid(),
-                CreatedByName = "CreatedByName",
+                CreatedByName = nameof(TestEntity.CreatedByName),
                 CreatedByTypeId = createdByType.Id,
                 CreatedOn = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                 ModifiedById = 3.ToGuid(),
-                ModifiedByName = "ModifiedByName",
+                ModifiedByName = nameof(TestEntity.ModifiedByName),
                 ModifiedByTypeId = modifiedByType.Id,
                 ModifiedOn = new DateTime(2020, 1, 2, 0, 0, 0, DateTimeKind.Utc),
                 DeletedById = 4.ToGuid(),
-                DeletedByName = "DeletedByName",
+                DeletedByName = nameof(TestEntity.DeletedByName),
                 DeletedByTypeId = deletedByType.Id,
                 DeletedOn = new DateTime(2020, 1, 3, 0, 0, 0, DateTimeKind.Utc),
             };
@@ -88,14 +88,28 @@ public class SoftDeletableModelTests
         }
     }
 
-    private class TestEntity : SoftDeletableEntity
+    private class TestEntity : IReadOnlySoftDeletableEntity
     {
-        public override SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
+        public Guid Id { get; init; }
+        public Guid CreatedById { get; init; }
+        public string? CreatedByName { get; init; }
+        public Guid CreatedByTypeId { get; init; }
+        public DateTime CreatedOn { get; init; }
+        public Guid ModifiedById { get; init; }
+        public string? ModifiedByName { get; init; }
+        public Guid ModifiedByTypeId { get; init; }
+        public DateTime ModifiedOn { get; init; }
+        public Guid? DeletedById { get; init; }
+        public string? DeletedByName { get; init; }
+        public Guid? DeletedByTypeId { get; init; }
+        public DateTime? DeletedOn { get; init; }
+        public bool IsDeleted { get => DeletedOn.HasValue; }
+        public SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
     }
 
     private class TestModel : SoftDeletableModel
     {
         public TestModel() : base() { }
-        public TestModel(SoftDeletableEntity entity) : base(entity) { } // we are testing this base(entity) call to make sure it sets all expected properties
+        public TestModel(IReadOnlySoftDeletableEntity from) : base(from) { } // we are testing this base(from) call to make sure it sets all expected properties
     }
 }

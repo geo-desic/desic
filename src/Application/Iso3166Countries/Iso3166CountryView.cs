@@ -9,7 +9,7 @@ public class Iso3166CountryView : BaseModel, IIso3166Country
     public Iso3166CountryView() : base() { }
 
     [SetsRequiredMembers]
-    public Iso3166CountryView(Domain.Iso3166Countries.Iso3166Country source) : base(source)
+    public Iso3166CountryView(IReadOnlyGuidIdIso3166Country source) : base(source)
     {
         this.UpdateFrom(source);
     }

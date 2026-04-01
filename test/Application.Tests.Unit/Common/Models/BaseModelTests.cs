@@ -1,7 +1,6 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Models;
-using Desic.Domain.Common.Entities;
-using Desic.Domain.EntityTypes;
+using Desic.Domain.Common.Interfaces;
 using Desic.Shared.Extensions;
 
 namespace Desic.Application.Tests.Unit.Common.Models;
@@ -31,14 +30,14 @@ public class BaseModelTests
         }
     }
 
-    private class TestEntity : BaseEntity
+    private class TestEntity : IReadOnlyGuidId
     {
-        public override SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
+        public Guid Id { get; init; }
     }
 
     private class TestModel : BaseModel
     {
         public TestModel() : base() { }
-        public TestModel(BaseEntity entity) : base(entity) { } // we are testing this base(entity) call to make sure it sets all expected properties
+        public TestModel(IReadOnlyGuidId from) : base(from) { } // we are testing this base(from) call to make sure it sets all expected properties
     }
 }

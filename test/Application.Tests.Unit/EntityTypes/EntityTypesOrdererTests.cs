@@ -1,7 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Models;
 using Desic.Application.EntityTypes;
-using Desic.Shared.Extensions;
+using Desic.Domain.EntityTypes;
 
 namespace Desic.Application.Tests.Unit.EntityTypes;
 
@@ -14,7 +14,7 @@ public class EntityTypesOrdererTests
         public void Constructor_ApplyOrderingMethodCalledOnConstructedObjectForAllPossibleEnumValues_AllEnumValuesAreMapped()
         {
             // arrange
-            var orderer = new EntityTypesOrderer();
+            var orderer = new EntityTypesOrderer<TestItem>();
             var expected = GetItems().ToList();
 
             foreach (var value in Enum.GetValues<EntityTypesOrderingProperty>())
@@ -30,8 +30,14 @@ public class EntityTypesOrdererTests
         }
     }
 
-    private static IEnumerable<Domain.EntityTypes.EntityType> GetItems()
+    private static IEnumerable<TestItem> GetItems()
     {
-        yield return new() { Id = 1.ToGuid(), Key = "aaaa", Name = "A" };
+        yield return new() { Key = "aaaa", Name = "A" };
+    }
+
+    private class TestItem : IReadOnlyEntityType
+    {
+        public required string Key { get; init; }
+        public required string Name { get; init; }
     }
 }

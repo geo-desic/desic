@@ -2,7 +2,7 @@
 
 namespace Desic.Domain.Common.Interfaces;
 
-public interface IReadOnlyMinimalEntity : IReadOnlyId
+public interface IReadOnlyMinimalEntity : IReadOnlyGuidId
 {
     SystemEntityType SystemEntityType { get; }
 }

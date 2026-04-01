@@ -2,7 +2,7 @@
 
 namespace Desic.Domain.Common.Entities;
 
-public abstract class CreatableEntity : BaseEntity, ICreatable
+public abstract class CreatableEntity : BaseEntity, ICreatableEntity
 {
     public Guid CreatedById { get; set; }
     public string? CreatedByName { get; set; }
