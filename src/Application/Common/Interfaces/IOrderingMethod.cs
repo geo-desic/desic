@@ -1,6 +1,12 @@
 ﻿namespace Desic.Application.Common.Interfaces;
 
-public interface IOrderingMethod<T> where T : struct, Enum
+public interface IOrderingMethod<T> : IOrderingMethod where T : struct, Enum
 {
-    IReadOnlyList<IOrderBy<T>> OrderBy { get; }
+    new IReadOnlyList<IOrderBy<T>> OrderBy { get; }
+    IReadOnlyList<IOrderBy> IOrderingMethod.OrderBy { get => OrderBy; }
+}
+
+public interface IOrderingMethod
+{
+    IReadOnlyList<IOrderBy> OrderBy { get; }
 }

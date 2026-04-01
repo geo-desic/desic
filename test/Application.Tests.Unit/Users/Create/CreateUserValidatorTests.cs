@@ -53,7 +53,7 @@ public class CreateUserValidatorTests
     public class UserCreateValidatorTests003 : CreateUserValidatorTests
     {
         [Fact]
-        public void ValidateUsername_InvalidData_ValidationError()
+        public void ValidateUsername_InvalidDataContainsInvalidAsciiCharacters_ValidationError()
         {
             // arrange
             var sb = new StringBuilder();

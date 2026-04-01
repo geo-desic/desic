@@ -1,9 +1,12 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common;
+using Desic.Application.Common.Interfaces;
 using Desic.Application.Common.Models;
+using Desic.Application.Common.Validators;
 using Desic.Application.EntityTypes;
 using Desic.Application.EntityTypes.List;
 using Desic.Shared.Extensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -13,6 +16,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
 {
     private readonly ILogger<ListEntityTypesRequestHandler> _logger = NullLogger<ListEntityTypesRequestHandler>.Instance;
     private readonly Domain.EntityTypes.EntityType[] _seededEntities;
+    private readonly IValidator<IOrderingMethod> _validator = new OrderingMethodValidator();
     private const int MaximumAllowedCount = ListEntityTypesRequestHandler.MaximumAllowedCount;
     private const int TotalCount = MaximumAllowedCount + 10;
 
@@ -44,7 +48,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
                 StartIndex = expectedStartIndex,
                 TotalCount = ListEntityTypesRequestHandler.IncludeTotalCountAllowed ? TotalCount : null,
             });
-            var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext);
+            var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext, validator: _validator);
             var request = new ListEntityTypesRequest
             {
                 Pagination = new Pagination
@@ -99,7 +103,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
                 StartIndex = 0,
                 TotalCount = null,
             });
-            var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext);
+            var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext, validator: _validator);
             var request = new ListEntityTypesRequest
             {
                 Pagination = new Pagination
@@ -128,7 +132,7 @@ public class ListEntityTypesRequestHandlerTests : InMemoryEfCoreDependencyTests<
         {
             // arrange
             var expectedKey = "e004"; // should be 5th item seeded in constructor
-            var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext);
+            var handler = new ListEntityTypesRequestHandler(logger: _logger, dbContext: DbContext, validator: _validator);
             var request = new ListEntityTypesRequest
             {
                 Pagination = new Pagination

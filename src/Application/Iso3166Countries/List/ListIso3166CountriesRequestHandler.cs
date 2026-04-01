@@ -2,21 +2,24 @@
 using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Infrastructure;
 using Desic.Application.Common.Interfaces;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Iso3166Countries.List;
 
-public class ListIso3166CountriesRequestHandler(ILogger<ListIso3166CountriesRequestHandler> logger, IApplicationDbContext dbContext) : IRequestHandler<ListIso3166CountriesRequest, Result<ListIso3166CountriesResult>>
+public class ListIso3166CountriesRequestHandler(ILogger<ListIso3166CountriesRequestHandler> logger, IApplicationDbContext dbContext, IValidator<IOrderingMethod> validator) : IRequestHandler<ListIso3166CountriesRequest, Result<ListIso3166CountriesResult>>
 {
     private readonly ILogger<ListIso3166CountriesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+    private readonly IValidator<IOrderingMethod> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
     internal const bool IncludeTotalCountAllowed = true;
     private const int LogEventId = LogEvents.ListIso3166Countries;
     internal const int MaximumAllowedCount = 300;
 
     public async Task<Result<ListIso3166CountriesResult>> Handle(ListIso3166CountriesRequest request, CancellationToken cancellationToken)
     {
+        if (!_validator.InstanceIsValid(request.OrderingMethod, out var error)) return error!;
         request.Pagination.Sanitize(settings: GetRequestSanitizationSettings());
 
         var query = _dbContext.Iso3166Countries.ApplyFilter(filter: request.Filter).OrderBy(orderingMethod: request.OrderingMethod).SelectToView();

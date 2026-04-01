@@ -2,21 +2,24 @@
 using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Infrastructure;
 using Desic.Application.Common.Interfaces;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.EntityTypes.List;
 
-public class ListEntityTypesRequestHandler(ILogger<ListEntityTypesRequestHandler> logger, IApplicationDbContext dbContext) : IRequestHandler<ListEntityTypesRequest, Result<ListEntityTypesResult>>
+public class ListEntityTypesRequestHandler(ILogger<ListEntityTypesRequestHandler> logger, IApplicationDbContext dbContext, IValidator<IOrderingMethod> validator) : IRequestHandler<ListEntityTypesRequest, Result<ListEntityTypesResult>>
 {
     private readonly ILogger<ListEntityTypesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+    private readonly IValidator<IOrderingMethod> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
     internal const bool IncludeTotalCountAllowed = true;
     private const int LogEventId = LogEvents.ListEntityTypes;
     internal const int MaximumAllowedCount = 200;
 
     public async Task<Result<ListEntityTypesResult>> Handle(ListEntityTypesRequest request, CancellationToken cancellationToken)
     {
+        if (!_validator.InstanceIsValid(request.OrderingMethod, out var error)) return error!;
         request.Pagination.Sanitize(settings: GetRequestSanitizationSettings());
 
         var query = _dbContext.EntityTypes.ApplyFilter(filter: request.Filter).OrderBy(orderingMethod: request.OrderingMethod).SelectToModel();

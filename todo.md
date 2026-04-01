@@ -1,6 +1,5 @@
 # To Do List
 
-- [ ] OrderingMethod\<T\> validation, e.g. 1 \<\= OrderBy.Count \<\= 3 and no OrderBy.Property is specified more than once
 - [ ] Add some entity types requiring joins / navigation properties to determine if there are any significant gaps with the existing infrastructure
 - [ ] Authentication design
   - [ ] Authentication implementation

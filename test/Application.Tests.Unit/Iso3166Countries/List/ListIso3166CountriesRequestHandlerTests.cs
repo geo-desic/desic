@@ -1,9 +1,12 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common;
+using Desic.Application.Common.Interfaces;
 using Desic.Application.Common.Models;
+using Desic.Application.Common.Validators;
 using Desic.Application.Iso3166Countries;
 using Desic.Application.Iso3166Countries.List;
 using Desic.Shared.Extensions;
+using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -13,6 +16,7 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
 {
     private readonly ILogger<ListIso3166CountriesRequestHandler> _logger = NullLogger<ListIso3166CountriesRequestHandler>.Instance;
     private readonly Domain.Iso3166Countries.Iso3166Country[] _seededEntities;
+    private readonly IValidator<IOrderingMethod> _validator = new OrderingMethodValidator();
     private const int MaximumAllowedCount = ListIso3166CountriesRequestHandler.MaximumAllowedCount;
     private const int TotalCount = MaximumAllowedCount + 10;
 
@@ -44,7 +48,7 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
                 StartIndex = expectedStartIndex,
                 TotalCount = ListIso3166CountriesRequestHandler.IncludeTotalCountAllowed ? TotalCount : null,
             });
-            var handler = new ListIso3166CountriesRequestHandler(logger: _logger, dbContext: DbContext);
+            var handler = new ListIso3166CountriesRequestHandler(logger: _logger, dbContext: DbContext, validator: _validator);
             var request = new ListIso3166CountriesRequest
             {
                 Pagination = new Pagination
@@ -106,7 +110,7 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
                 StartIndex = 0,
                 TotalCount = null,
             });
-            var handler = new ListIso3166CountriesRequestHandler(logger: _logger, dbContext: DbContext);
+            var handler = new ListIso3166CountriesRequestHandler(logger: _logger, dbContext: DbContext, validator: _validator);
             var request = new ListIso3166CountriesRequest
             {
                 Pagination = new Pagination
@@ -135,7 +139,7 @@ public class ListIso3166CountriesRequestHandlerTests : InMemoryEfCoreDependencyT
         {
             // arrange
             var expectedIsoId = TotalCount - 5; // should be 5th seeded in constructor
-            var handler = new ListIso3166CountriesRequestHandler(logger: _logger, dbContext: DbContext);
+            var handler = new ListIso3166CountriesRequestHandler(logger: _logger, dbContext: DbContext, validator: _validator);
             var request = new ListIso3166CountriesRequest
             {
                 Pagination = new Pagination
