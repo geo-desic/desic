@@ -5,7 +5,7 @@ namespace Desic.Application.Common.Extensions;
 
 internal static class ModelExtensions
 {
-    public static void MapCreated(this ICreatable item, Domain.Common.Interfaces.ICreatable entity)
+    public static void MapCreated(this ICreatable item, Domain.Common.Interfaces.IReadOnlyCreatable entity)
     {
         var entityType = SystemEntityTypes.GetById(entity.CreatedByTypeId);
         item.Created.By.Id = entity.CreatedById;
@@ -17,7 +17,7 @@ internal static class ModelExtensions
 
     public static void MapCreatedModified<T, U>(this T item, U entity)
         where T : ICreatable, IModifiable
-        where U : Domain.Common.Interfaces.ICreatable, Domain.Common.Interfaces.IModifiable
+        where U : Domain.Common.Interfaces.IReadOnlyCreatable, Domain.Common.Interfaces.IReadOnlyModifiable
     {
         item.MapCreated(entity);
         item.MapModified(entity);
@@ -25,14 +25,14 @@ internal static class ModelExtensions
 
     public static void MapCreatedModifiedDeleted<T, U>(this T item, U entity)
         where T : ICreatable, IModifiable, ISoftDeletable
-        where U : Domain.Common.Interfaces.ICreatable, Domain.Common.Interfaces.IModifiable, Domain.Common.Interfaces.ISoftDeletable
+        where U : Domain.Common.Interfaces.IReadOnlyCreatable, Domain.Common.Interfaces.IReadOnlyModifiable, Domain.Common.Interfaces.IReadOnlySoftDeletable
     {
         item.MapCreated(entity);
         item.MapModified(entity);
         item.MapDeleted(entity);
     }
 
-    public static void MapDeleted(this ISoftDeletable item, Domain.Common.Interfaces.ISoftDeletable entity)
+    public static void MapDeleted(this ISoftDeletable item, Domain.Common.Interfaces.IReadOnlySoftDeletable entity)
     {
         var entityType = entity.DeletedByTypeId.HasValue ? SystemEntityTypes.GetById(entity.DeletedByTypeId.Value) : null;
         item.Deleted.By.Id = entity.DeletedById;
@@ -42,12 +42,12 @@ internal static class ModelExtensions
         item.Deleted.On = entity.DeletedOn;
     }
 
-    public static void MapId(this IGuidId item, Domain.Common.Interfaces.IReadOnlyMinimalEntity entity)
+    public static void MapId(this IGuidId item, Domain.Common.Interfaces.IReadOnlyId entity)
     {
         item.Id = entity.Id;
     }
 
-    public static void MapModified(this IModifiable item, Domain.Common.Interfaces.IModifiable entity)
+    public static void MapModified(this IModifiable item, Domain.Common.Interfaces.IReadOnlyModifiable entity)
     {
         var entityType = SystemEntityTypes.GetById(entity.ModifiedByTypeId);
         item.Modified.By.Id = entity.ModifiedById;

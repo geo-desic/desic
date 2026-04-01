@@ -1,11 +1,10 @@
 ﻿using Desic.Application.Common.Models;
-using Desic.Domain.Common.Interfaces;
 using Desic.Domain.Iso3166Countries;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Desic.Application.Iso3166Countries;
 
-public class Iso3166CountryView : BaseModel, IIso3166CountryReferenceData
+public class Iso3166CountryView : BaseModel, IIso3166Country
 {
     public Iso3166CountryView() : base() { }
 
@@ -19,7 +18,4 @@ public class Iso3166CountryView : BaseModel, IIso3166CountryReferenceData
     public required string Alpha2 { get; set; } = null!;
     public required string Alpha3 { get; set; } = null!;
     public required string Name { get; set; } = null!;
-
-    void IUpdatableFrom<IIso3166CountryReferenceData>.UpdateFrom(IIso3166CountryReferenceData from) => Iso3166CountryExtensions.UpdateFrom(this, from);
-    bool IEquatable<IIso3166CountryReferenceData>.Equals(IIso3166CountryReferenceData? compare) => this.IsEquivalentTo(compare);
 }

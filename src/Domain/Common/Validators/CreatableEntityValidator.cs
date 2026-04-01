@@ -7,6 +7,6 @@ public class CreatableEntityValidator : AbstractValidator<CreatableEntity>
 {
     public CreatableEntityValidator()
     {
-        Include(new CreatableValidator());
+        Include(new ReadOnlyCreatableValidator());
     }
 }

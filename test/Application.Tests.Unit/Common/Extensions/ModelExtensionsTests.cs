@@ -2,7 +2,6 @@
 using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Models;
 using Desic.Domain.Common.Interfaces;
-using Desic.Domain.EntityTypes;
 using Desic.Domain.Labels;
 using Desic.Domain.Users;
 using Desic.Shared.Extensions;
@@ -237,9 +236,8 @@ public class ModelExtensionsTests
         public OptionalOnByType Deleted { get; set; } = new();
     }
 
-    private class TestIdEntity : IReadOnlyMinimalEntity
+    private class TestIdEntity : IReadOnlyId
     {
-        public SystemEntityType SystemEntityType => SystemEntityTypes.Unspecified;
         public Guid Id { get; set; }
     }
 

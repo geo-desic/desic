@@ -90,7 +90,7 @@ public class Iso3166CountryExtensionsTests
         return new TestItem { IsoId = 1, Alpha2 = "alpha2", Alpha3 = "alpha3", Name = "name" };
     }
 
-    public sealed class TestItem : IIso3166CountryReferenceData, IXunitSerializable
+    public sealed class TestItem : IIso3166Country, IXunitSerializable
     {
         public string Alpha2 { get; set; } = string.Empty;
         public string Alpha3 { get; set; } = string.Empty;
@@ -105,8 +105,6 @@ public class Iso3166CountryExtensionsTests
             Name = info.GetValue<string>(nameof(Name))!;
         }
 
-        public bool Equals(IIso3166CountryReferenceData? other) => throw new NotImplementedException(); // should not get called => testing extension methods directly, not this
-
         public void Serialize(IXunitSerializationInfo info)
         {
             info.AddValue(nameof(Alpha2), Alpha2);
@@ -114,7 +112,5 @@ public class Iso3166CountryExtensionsTests
             info.AddValue(nameof(IsoId), IsoId);
             info.AddValue(nameof(Name), Name);
         }
-
-        public void UpdateFrom(IIso3166CountryReferenceData compare) => throw new NotImplementedException(); // should not get called => testing extension methods directly, not this
     }
 }

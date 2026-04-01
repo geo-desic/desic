@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Desic.Domain.Common.Validators;
 
-public class ModifiableValidator : AbstractValidator<IModifiable>
+public class ReadOnlyModifiableValidator : AbstractValidator<IReadOnlyModifiable>
 {
-    public ModifiableValidator()
+    public ReadOnlyModifiableValidator()
     {
         RuleFor(x => x.ModifiedByName)
             .NotEmpty()

@@ -23,7 +23,7 @@ public class CreatableEntityValidatorTests
         {
             // arrange
             var item = NewItem(createdByName: createdByName);
-            var validator1 = new CreatableValidator();
+            var validator1 = new ReadOnlyCreatableValidator();
             var validator2 = new CreatableEntityValidator();
 
             // act

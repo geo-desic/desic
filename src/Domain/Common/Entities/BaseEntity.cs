@@ -3,7 +3,7 @@ using Desic.Domain.EntityTypes;
 
 namespace Desic.Domain.Common.Entities;
 
-public abstract class BaseEntity : IReadOnlyMinimalEntity
+public abstract class BaseEntity : IMinimalEntity
 {
     public abstract SystemEntityType SystemEntityType { get; }
 

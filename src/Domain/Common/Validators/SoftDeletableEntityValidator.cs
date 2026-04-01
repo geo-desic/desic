@@ -8,6 +8,6 @@ public class SoftDeletableEntityValidator : AbstractValidator<SoftDeletableEntit
     public SoftDeletableEntityValidator()
     {
         Include(new ModifiableEntityValidator());
-        Include(new SoftDeletableValidator());
+        Include(new ReadOnlySoftDeletableValidator());
     }
 }

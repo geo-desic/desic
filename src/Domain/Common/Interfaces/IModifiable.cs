@@ -1,9 +1,9 @@
 ﻿namespace Desic.Domain.Common.Interfaces;
 
-public interface IModifiable
+public interface IModifiable : IReadOnlyModifiable
 {
-    Guid ModifiedById { get; set; }
-    string? ModifiedByName { get; set; }
-    Guid ModifiedByTypeId { get; set; }
-    DateTime ModifiedOn { get; set; }
+    new Guid ModifiedById { get; set; }
+    new string? ModifiedByName { get; set; }
+    new Guid ModifiedByTypeId { get; set; }
+    new DateTime ModifiedOn { get; set; }
 }

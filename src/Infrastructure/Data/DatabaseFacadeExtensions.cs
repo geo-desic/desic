@@ -22,4 +22,19 @@ internal static class DatabaseFacadeExtensions
     private static bool IsSqlite(this DatabaseFacade source) => source.ProviderName == ProviderNames.Sqlite;
 
     internal static bool SupportsSchemas(this DatabaseFacade source) => !source.IsSqlite();
+
+    internal static string ToDelimitedIdentifier(this DatabaseFacade source, string identifier)
+    {
+        return source.ProviderName switch
+        {
+            ProviderNames.Cosmos => $"[{identifier}]",
+            ProviderNames.MySql => $"`{identifier}`",
+            ProviderNames.MySqlPomelo => $"`{identifier}`",
+            ProviderNames.Oracle => $"\"{identifier}\"",
+            ProviderNames.PostgreSQL => $"\"{identifier}\"",
+            ProviderNames.Sqlite => $"\"{identifier}\"",
+            ProviderNames.SqlServer => $"[{identifier}]",
+            _ => $"[{identifier}]",
+        };
+    }
 }

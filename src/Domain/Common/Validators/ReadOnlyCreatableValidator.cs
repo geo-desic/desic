@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Desic.Domain.Common.Validators;
 
-public class CreatableValidator : AbstractValidator<ICreatable>
+public class ReadOnlyCreatableValidator : AbstractValidator<IReadOnlyCreatable>
 {
-    public CreatableValidator()
+    public ReadOnlyCreatableValidator()
     {
         RuleFor(x => x.CreatedByName)
             .NotEmpty()

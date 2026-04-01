@@ -24,7 +24,7 @@ public class SoftDeletableEntityValidatorTests
         {
             // arrange
             var item = NewItem(deletedByName: deletedByName);
-            var validator1 = new SoftDeletableValidator();
+            var validator1 = new ReadOnlySoftDeletableValidator();
             var validator2 = new SoftDeletableEntityValidator();
 
             // act

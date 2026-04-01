@@ -1,10 +1,9 @@
 ﻿namespace Desic.Domain.Common.Interfaces;
 
-public interface ISoftDeletable
+public interface ISoftDeletable : IReadOnlySoftDeletable
 {
-    Guid? DeletedById { get; set; }
-    string? DeletedByName { get; set; }
-    Guid? DeletedByTypeId { get; set; }
-    DateTime? DeletedOn { get; set; }
-    bool IsDeleted { get; }
+    new Guid? DeletedById { get; set; }
+    new string? DeletedByName { get; set; }
+    new Guid? DeletedByTypeId { get; set; }
+    new DateTime? DeletedOn { get; set; }
 }

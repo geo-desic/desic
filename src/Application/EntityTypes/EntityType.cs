@@ -16,6 +16,4 @@ public class EntityType : IReadOnlyEntityType
 
     public required string Key { get; set; }
     public required string Name { get; set; }
-
-    bool IEquatable<IReadOnlyEntityType>.Equals(IReadOnlyEntityType? compare) => this.IsEquivalentTo(compare);
 }

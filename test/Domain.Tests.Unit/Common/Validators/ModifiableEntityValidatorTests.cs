@@ -23,7 +23,7 @@ public class ModifiableEntityValidatorTests
         {
             // arrange
             var item = NewItem(modifiedByName: modifiedByName);
-            var validator1 = new ModifiableValidator();
+            var validator1 = new ReadOnlyModifiableValidator();
             var validator2 = new ModifiableEntityValidator();
 
             // act

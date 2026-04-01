@@ -8,6 +8,6 @@ public class ModifiableEntityValidator : AbstractValidator<ModifiableEntity>
     public ModifiableEntityValidator()
     {
         Include(new CreatableEntityValidator());
-        Include(new ModifiableValidator());
+        Include(new ReadOnlyModifiableValidator());
     }
 }

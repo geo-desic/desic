@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace Desic.Domain.Common.Validators;
 
-public class SoftDeletableValidator : AbstractValidator<ISoftDeletable>
+public class ReadOnlySoftDeletableValidator : AbstractValidator<IReadOnlySoftDeletable>
 {
-    public SoftDeletableValidator()
+    public ReadOnlySoftDeletableValidator()
     {
         RuleFor(x => x.DeletedByName)
             .MaximumLength(SoftDeletableEntity.MaxLengthDeletedByName);

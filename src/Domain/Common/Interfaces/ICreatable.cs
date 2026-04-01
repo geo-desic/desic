@@ -1,9 +1,9 @@
 ﻿namespace Desic.Domain.Common.Interfaces;
 
-public interface ICreatable
+public interface ICreatable : IReadOnlyCreatable
 {
-    Guid CreatedById { get; set; }
-    string? CreatedByName { get; set; }
-    Guid CreatedByTypeId { get; set; }
-    DateTime CreatedOn { get; set; }
+    new Guid CreatedById { get; set; }
+    new string? CreatedByName { get; set; }
+    new Guid CreatedByTypeId { get; set; }
+    new DateTime CreatedOn { get; set; }
 }

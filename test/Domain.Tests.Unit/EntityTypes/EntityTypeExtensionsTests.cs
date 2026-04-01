@@ -67,8 +67,6 @@ public class EntityTypeExtensionsTests
             Name = info.GetValue<string>(nameof(Name))!;
         }
 
-        public bool Equals(IReadOnlyEntityType? other) => throw new NotImplementedException(); // should not get called => testing extension methods directly, not this
-
         public void Serialize(IXunitSerializationInfo info)
         {
             info.AddValue(nameof(Key), Key);

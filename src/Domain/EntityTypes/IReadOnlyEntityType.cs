@@ -1,6 +1,6 @@
 ﻿namespace Desic.Domain.EntityTypes;
 
-public interface IReadOnlyEntityType : IEquatable<IReadOnlyEntityType>
+public interface IReadOnlyEntityType
 {
     string Key { get; }
     string Name { get; }
