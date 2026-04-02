@@ -16,16 +16,16 @@ This is currently a template for a new .net api following recommended/best pract
       - [QueryableExtensions](src/Application/Common/Extensions/QueryableExtensions.cs) - `ToListResultAsync<T>`
         - no implementation required - easy and consistent pagination
       - [Iso3166CountriesFilter](src/Application/Iso3166Countries/Iso3166CountriesFilter.cs)
-        - defines the supported filtering options
+        - defines the supported filtering options (included in openapi documentation)
       - [Iso3166CountriesOrderingProperty](src/Application/Iso3166Countries/Iso3166CountriesOrderingProperty.cs)
-        - defines which properties support ordering (included in openapi documentation)
+        - defines the supported ordering properties (included in openapi documentation)
       - [Iso3166CountriesOrderer](src/Application/Iso3166Countries/Iso3166CountriesOrderer.cs)
         - maps ordering properties above (i.e. enum values) to the actual properties
+        - multiple ordering properties/directions are supported up to a defined maximum (currently 3)
       - [QueryableExtensions](src/Application/Iso3166Countries/QueryableExtensions.cs) - `ApplyFilter` `OrderBy`
         - easy and consistent filtering/ordering
       - [ListIso3166CountriesRequestHandler](src/Application/Iso3166Countries/List/ListIso3166CountriesRequestHandler.cs) - see `ApplyFilter` `OrderBy` and `ToListResultAsync` calls
       - [Iso3166CountriesControllerTests](test/Api.Tests.Functional/Controllers/V1/Iso3166CountriesControllerTests.cs) - example functional tests
-        - note multiple ordering properties/directions are supported up to a defined maximum (currently 3)
   - [Infrastructure.Data.Common](src/Infrastructure/Data/Common)
   - [Api.Common](src/Api/Common)
   - [Testing.Integration](test/Testing.Integration) - used by all integration/functional test projects
