@@ -9,26 +9,6 @@ This is currently a template for a new .net api following recommended/best pract
 - Follows domain driven design (DDD) and clean architecture principles similar to: [ardalis/CleanArchitecture](https://github.com/ardalis/CleanArchitecture), [jasontaylordev/CleanArchitecture](https://github.com/jasontaylordev/cleanarchitecture), [microsoft-next-level-boilerplate](https://devblogs.microsoft.com/ise/next-level-clean-architecture-boilerplate/)
 - Independent of a specific database provider. Can be customized to work with any major database provider with minimal changes. Two examples, `Sqlite` and `SqlServer`, are currently included. For other providers a dedicated class library similar to [Infrastructure.Data.SqlServer](src/Infrastructure.Data.SqlServer) could be created.
 - Robust [testing framework](test/README.md) with a high degree of code coverage and multiple types: Unit, Integration, and Functional
-- Extensive common infrastructure for promoting consistency and simplifying implementation ([DRY principle](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself))
-  - [Domain.Common](src/Domain/Common)
-  - [Application.Common](src/Application/Common)
-    - Includes [pagination, ordering, and filtering](src/Application/Common/Models/FilterableOrderableListRequest.cs) infrastructure - here is an example implementation
-      - [QueryableExtensions](src/Application/Common/Extensions/QueryableExtensions.cs) - `ToListResultAsync<T>`
-        - no implementation required - easy and consistent pagination
-      - [Iso3166CountriesFilter](src/Application/Iso3166Countries/Iso3166CountriesFilter.cs)
-        - defines the supported filtering options (included in openapi documentation)
-      - [Iso3166CountriesOrderingProperty](src/Application/Iso3166Countries/Iso3166CountriesOrderingProperty.cs)
-        - defines the supported ordering properties (included in openapi documentation)
-      - [Iso3166CountriesOrderer](src/Application/Iso3166Countries/Iso3166CountriesOrderer.cs)
-        - maps ordering properties above (i.e. enum values) to the actual properties
-        - multiple ordering properties/directions are supported up to a defined maximum (currently 3)
-      - [QueryableExtensions](src/Application/Iso3166Countries/QueryableExtensions.cs) - `ApplyFilter` `OrderBy`
-        - easy and consistent filtering/ordering
-      - [ListIso3166CountriesRequestHandler](src/Application/Iso3166Countries/List/ListIso3166CountriesRequestHandler.cs) - see `ApplyFilter` `OrderBy` and `ToListResultAsync` calls
-      - [Iso3166CountriesControllerTests](test/Api.Tests.Functional/Controllers/V1/Iso3166CountriesControllerTests.cs) - example functional tests
-  - [Infrastructure.Data.Common](src/Infrastructure/Data/Common)
-  - [Api.Common](src/Api/Common)
-  - [Testing.Integration](test/Testing.Integration) - used by all integration/functional test projects
 - Designed with vertical slicing in mind, e.g.
   - [Domain/EntityTypes](src/Domain/EntityTypes)
   - [Application/EntityTypes](src/Application/EntityTypes)
@@ -51,3 +31,23 @@ This is currently a template for a new .net api following recommended/best pract
   - For all other databases [Guid.CreateVersion7](https://learn.microsoft.com/en-us/dotnet/api/system.guid.createversion7) is used which adheres with [UUIDv7](https://uuid7.com)
     - Note: Sql Server does not currently support sorting UUIDv7 correctly
 - Development environment [OpenAPI generation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/aspnetcore-openapi) and Swagger support included with various documented response types and component schemas
+- Extensive common infrastructure for promoting consistency and simplifying implementation ([DRY principle](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself))
+  - [Domain.Common](src/Domain/Common)
+  - [Application.Common](src/Application/Common)
+    - Includes [pagination, ordering, and filtering](src/Application/Common/Models/FilterableOrderableListRequest.cs) infrastructure - here is an example implementation
+      - [QueryableExtensions](src/Application/Common/Extensions/QueryableExtensions.cs) - `ToListResultAsync<T>`
+        - no implementation required - easy and consistent pagination
+      - [Iso3166CountriesFilter](src/Application/Iso3166Countries/Iso3166CountriesFilter.cs)
+        - defines the supported filtering options (included in openapi documentation)
+      - [Iso3166CountriesOrderingProperty](src/Application/Iso3166Countries/Iso3166CountriesOrderingProperty.cs)
+        - defines the supported ordering properties (included in openapi documentation)
+      - [Iso3166CountriesOrderer](src/Application/Iso3166Countries/Iso3166CountriesOrderer.cs)
+        - maps ordering properties above (i.e. enum values) to the actual properties
+        - multiple ordering properties/directions are supported up to a defined maximum (currently 3)
+      - [QueryableExtensions](src/Application/Iso3166Countries/QueryableExtensions.cs) - `ApplyFilter` `OrderBy`
+        - easy and consistent filtering/ordering
+      - [ListIso3166CountriesRequestHandler](src/Application/Iso3166Countries/List/ListIso3166CountriesRequestHandler.cs) - see `ApplyFilter` `OrderBy` and `ToListResultAsync` calls
+      - [Iso3166CountriesControllerTests](test/Api.Tests.Functional/Controllers/V1/Iso3166CountriesControllerTests.cs) - example functional tests
+  - [Infrastructure.Data.Common](src/Infrastructure/Data/Common)
+  - [Api.Common](src/Api/Common)
+  - [Testing.Integration](test/Testing.Integration) - used by all integration/functional test projects
