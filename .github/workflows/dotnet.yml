@@ -1,0 +1,38 @@
+# For more information see: https://docs.github.com/en/actions/tutorials/build-and-test-code/net
+
+name: dotnet test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v5
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Test with dotnet including code coverage
+      run: dotnet test --no-restore --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml --coverage-settings code-coverage.runsettings --report-xunit-trx --report-xunit-trx-filename test-results.trx --results-directory "TestResults"
+    - name: Generate coverage report
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.5.4
+      with:
+        reports: 'TestResults/coverage.cobertura.xml'
+        targetdir: 'TestResults'
+        reporttypes: 'MarkdownSummary'
+    - name: Upload dotnet test results
+      uses: actions/upload-artifact@v6
+      with:
+        name: dotnet-results
+        path: TestResults
+      # Use always() to always run this step to publish test results when there are test failures
+      if: ${{ always() }}
