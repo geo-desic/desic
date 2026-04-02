@@ -1,4 +1,7 @@
-﻿namespace Desic.Shared.Extensions;
+﻿using System.Buffers.Binary;
+using System.Runtime.InteropServices;
+
+namespace Desic.Shared.Extensions;
 
 public static class GuidExtensions
 {
@@ -12,43 +15,29 @@ public static class GuidExtensions
         return guid.ToString().ToIntBasedGuid(value);
     }
 
-    // source: https://github.com/bitfoundation/bitplatform/blob/develop/src/Templates/Boilerplate/Bit.Boilerplate/src/Shared/Infrastructure/Extensions/GuidExtensions.cs
     extension(Guid source)
     {
-        public static Guid CreateSequentialGuid(bool alterForSqlServer)
+        public static Guid CreateSequentialGuid(bool forSqlServer) => forSqlServer ? CreateSequentialGuidForSqlServer() : Guid.CreateVersion7();
+
+        // source: https://github.com/dotnet/dotnet/blob/main/src/efcore/src/EFCore/ValueGeneration/SequentialGuidValueGenerator.cs
+        public static Guid CreateSequentialGuidForSqlServer()
         {
-            Guid standardV7 = Guid.CreateVersion7();
-
-            if (!alterForSqlServer) return standardV7;
-
-            Span<byte> bytes = stackalloc byte[16];
-            standardV7.TryWriteBytes(bytes, bigEndian: true, out _);
-
-            // Version 7 structure (big-endian):
-            // bytes[0-5]: 48-bit Unix timestamp in milliseconds
-            // bytes[6-7]: 4-bit version (0111) + 12-bit random
-            // bytes[8-15]: 2-bit variant (10) + 62-bit random
-
-            Span<byte> sqlBytes = stackalloc byte[16];
-
-            /* SQL SERVER SORTING PRIORITY:
-               1st: Bytes 10-15 (Must contain the most significant Time bits)
-               2nd: Bytes 8-9
-               3rd: Bytes 6-7
-               4th-6th: Bytes 0-5 (Least significant)
-            */
-
-            // Move the 48-bit Timestamp (6 bytes) to the very end (10-15)
-            // This makes the timestamp the PRIMARY sorting criteria for SQL Server
-            bytes[..6].CopyTo(sqlBytes.Slice(10, 6));
-
-            // Move Version, Variant, and Random bytes to the beginning (0-9)
-            // These will only be compared if the timestamp is identical
-            bytes.Slice(6, 10).CopyTo(sqlBytes[..10]);
-
-            // Use bigEndian: true because we manually laid out the bytes
-            // for SQL Server's internal storage format.
-            return new Guid(sqlBytes, bigEndian: true);
+            var guid = Guid.NewGuid();
+            var ticks = DateTime.UtcNow.Ticks;
+            var counter = BitConverter.IsLittleEndian
+                ? Interlocked.Increment(ref ticks)
+                : BinaryPrimitives.ReverseEndianness(Interlocked.Increment(ref ticks));
+            var counterBytes = MemoryMarshal.AsBytes(new ReadOnlySpan<long>(in counter));
+            var guidBytes = MemoryMarshal.AsBytes(new Span<Guid>(ref guid));
+            guidBytes[08] = counterBytes[1];
+            guidBytes[09] = counterBytes[0];
+            guidBytes[10] = counterBytes[7];
+            guidBytes[11] = counterBytes[6];
+            guidBytes[12] = counterBytes[5];
+            guidBytes[13] = counterBytes[4];
+            guidBytes[14] = counterBytes[3];
+            guidBytes[15] = counterBytes[2];
+            return guid;
         }
     }
 }

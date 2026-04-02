@@ -6,6 +6,7 @@ namespace Desic.Shared.Tests.Unit.Extensions;
 
 public class GuidExtensionsTests
 {
+    private const int GuidGenerationCount = 25;
     private const int GuidGenerationDelayMs = 2;
 
     public class GuidExtensionsTests001 : GuidExtensionsTests
@@ -101,46 +102,63 @@ public class GuidExtensionsTests
     public class GuidExtensionsTests003 : GuidExtensionsTests
     {
         [Fact]
-        public async Task CreateSequentialGuid_AlterForSqlServerFalse_GeneratedGuidsSortSequentially()
+        public async Task CreateSequentialGuid_SpecifiedCountWithForSqlServerFalse_GeneratedGuidsSortSequentially()
         {
             // arrange
-            var list = new List<GuidAndSequentialId>();
-            var count = 50;
+            var expected = new List<GuidAndSequentialId>();
 
             // act
-            for (var i = 0; i < count; ++i)
+            for (var i = 0; i < GuidGenerationCount; ++i)
             {
-                list.Add(new() { Guid = Guid.CreateSequentialGuid(alterForSqlServer: false), SequentialId = i });
+                expected.Add(new() { Guid = Guid.CreateSequentialGuid(forSqlServer: false), SequentialId = i });
                 await Task.Delay(GuidGenerationDelayMs, cancellationToken: TestContext.Current.CancellationToken);
             }
 
             // assert
-            var listOrderedByGuid = list.OrderBy(x => x.Guid).ToList();
-            var listOrderedBySequentialId = list.OrderBy(x => x.SequentialId).ToList();
-            listOrderedByGuid.Should().BeEquivalentTo(listOrderedBySequentialId, opt => opt.WithStrictOrdering());
+            var result = expected.OrderBy(x => x.Guid).ToList();
+            result.Should().BeEquivalentTo(expected, opt => opt.WithStrictOrdering());
         }
     }
 
     public class GuidExtensionsTests004 : GuidExtensionsTests
     {
         [Fact]
-        public async Task CreateSequentialGuid_AlterForSqlServerTrue_GeneratedGuidsSortSequentially()
+        public async Task CreateSequentialGuid_SpecifiedCountWithForSqlServerTrue_GeneratedGuidsSortSequentially()
         {
             // arrange
-            var list = new List<SqlGuidAndSequentialId>();
-            var count = 50;
+            var expected = new List<SqlGuidAndSequentialId>();
 
             // act
-            for (var i = 0; i < count; ++i)
+            for (var i = 0; i < GuidGenerationCount; ++i)
             {
-                list.Add(new() { Guid = Guid.CreateSequentialGuid(alterForSqlServer: true), SequentialId = i });
+                expected.Add(new() { Guid = Guid.CreateSequentialGuid(forSqlServer: true), SequentialId = i });
                 await Task.Delay(GuidGenerationDelayMs, cancellationToken: TestContext.Current.CancellationToken);
             }
 
             // assert
-            var listOrderedByGuid = list.OrderBy(x => x.Guid).ToList();
-            var listOrderedBySequentialId = list.OrderBy(x => x.SequentialId).ToList();
-            listOrderedByGuid.Should().BeEquivalentTo(listOrderedBySequentialId, opt => opt.WithStrictOrdering());
+            var result = expected.OrderBy(x => x.Guid).ToList();
+            result.Should().BeEquivalentTo(expected, opt => opt.WithStrictOrdering());
+        }
+    }
+
+    public class GuidExtensionsTests005 : GuidExtensionsTests
+    {
+        [Fact]
+        public async Task CreateSequentialGuidForSqlServer_SpecifiedCount_GeneratedGuidsSortSequentially()
+        {
+            // arrange
+            var expected = new List<SqlGuidAndSequentialId>();
+
+            // act
+            for (var i = 0; i < GuidGenerationCount; ++i)
+            {
+                expected.Add(new() { Guid = Guid.CreateSequentialGuidForSqlServer(), SequentialId = i });
+                await Task.Delay(GuidGenerationDelayMs, cancellationToken: TestContext.Current.CancellationToken);
+            }
+
+            // assert
+            var result = expected.OrderBy(x => x.Guid).ToList();
+            result.Should().BeEquivalentTo(expected, opt => opt.WithStrictOrdering());
         }
     }
 
