@@ -8,32 +8,35 @@ namespace Desic.Api.Tests.Functional;
 
 public class HealthCheckTests(SeededAppDatabase testDatabase, ITestOutputHelper output) : TestWebAppDependencyTests(testDatabase, output), IClassFixture<SeededAppDatabase>
 {
+    private const string Healthy = nameof(Healthy);
+    private const string PartialRequestUri = "/v1/healthz";
+
     [Fact]
     public async Task Live_ValidRequest_Status200OkAndHealthy()
     {
         // arrange
-        var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/live");
+        var request = new FluentHttpRequest(HttpMethod.Get, $"{PartialRequestUri}/live");
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsString(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        response.Content.Should().Be("Healthy");
+        response.Content.Should().Be(Healthy);
     }
 
     [Fact]
     public async Task Ready_ValidRequest_Status200OkAndHealthy()
     {
         // arrange
-        var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/ready");
+        var request = new FluentHttpRequest(HttpMethod.Get, $"{PartialRequestUri}/ready");
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsString(request: request, output: Output);
 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        response.Content.Should().Be("Healthy");
+        response.Content.Should().Be(Healthy);
     }
 
     [Fact]
@@ -52,7 +55,7 @@ public class HealthCheckTests(SeededAppDatabase testDatabase, ITestOutputHelper 
                 new() { Name = "Startup", Status = healthy, Tags = ["ready"], Data = new Dictionary<string, object>() },
             ]
         };
-        var request = new FluentHttpRequest(HttpMethod.Get, "/v1/healthz/report");
+        var request = new FluentHttpRequest(HttpMethod.Get, $"{PartialRequestUri}/report");
 
         // act
         var response = await HttpClient.SendAsyncAndReadResponseAsJson<HealthReport>(request: request, output: Output);
