@@ -1,10 +1,13 @@
 ﻿using AwesomeAssertions;
+using Desic.Domain.EntityTypes;
+using Desic.Domain.Labels;
 using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.EntityTypes;
 using Desic.Infrastructure.Data.Iso3166Countries;
 using Desic.Infrastructure.Data.Labels;
 using Desic.Infrastructure.Data.Test.Users;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -31,7 +34,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Processes.Any().Should().BeFalse();
+            (await DbContext.Processes.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().Be(false);
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never());
         }
     }
@@ -55,7 +58,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Processes.Count().Should().Be(1);
+            (await DbContext.Processes.CountAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedEntityTypesRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Once());
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedEntityTypesRequestHandler));
         }
@@ -80,7 +83,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Processes.Count().Should().Be(1);
+            (await DbContext.Processes.CountAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedLabelsRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Once());
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedLabelsRequestHandler));
         }
@@ -105,7 +108,7 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Processes.Count().Should().Be(1);
+            (await DbContext.Processes.CountAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedIso3166CountriesRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Once());
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedIso3166CountriesRequestHandler));
         }
@@ -132,9 +135,58 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
             await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
-            DbContext.Processes.Count().Should().Be(1);
+            (await DbContext.Processes.CountAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().Be(1);
             _mediator.Verify(x => x.Send(It.Is<SeedTestUsersRequest>(x => x.Method == expectedMethod), It.IsAny<CancellationToken>()), Times.Exactly(expectedTimes));
             VerifyAllSeedRequestHandlers(mediator: _mediator, Times.Never(), except: typeof(SeedTestUsersRequestHandler));
+        }
+    }
+
+    public class SeedApplicationDatabaseRequestHandlerTests006 : SeedApplicationDatabaseRequestHandlerTests
+    {
+        [Fact]
+        public async Task Handle_ExceptionOccursBeforeProcessDependenciesPersisted_NoProcessPersisted()
+        {
+            // arrange
+            var expectedException = new TestException("Test exception");
+            Setup(includeSeedEntityTypes: false);
+            _mediator.Setup(x => x.Send(It.IsAny<SeedEntityTypesRequest>(), It.IsAny<CancellationToken>())).ThrowsAsync(exception: expectedException);
+            var options = NewOptions(individualEntitiesEnabled: true);
+            var handler = new SeedApplicationDatabaseRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object, seedingOptions: options);
+            var request = new SeedApplicationDatabaseRequest();
+            var act = async () => await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
+
+            // act & assert
+            await act.Should().ThrowAsync<TestException>().WithMessage(expectedException.Message);
+            (await DbContext.Processes.AnyAsync(cancellationToken: TestContext.Current.CancellationToken)).Should().Be(false);
+        }
+    }
+
+    public class SeedApplicationDatabaseRequestHandlerTests007 : SeedApplicationDatabaseRequestHandlerTests
+    {
+        [Fact]
+        public async Task Handle_ExceptionOccursAfterProcessDependenciesPersisted_ProcessPersistedWithExpectedMessage()
+        {
+            // arrange
+            var expectedException = new TestException("Test exception");
+            Setup(includeSeedIso3166Countries: false);
+            _mediator.Setup(x => x.Send(It.IsAny<SeedIso3166CountriesRequest>(), It.IsAny<CancellationToken>())).ThrowsAsync(exception: expectedException);
+            var options = NewOptions(individualEntitiesEnabled: true);
+            var handler = new SeedApplicationDatabaseRequestHandler(context: DbContext, logger: _logger, mediator: _mediator.Object, seedingOptions: options);
+            var request = new SeedApplicationDatabaseRequest();
+
+            // seed process dependencies to ensure process can be persisted
+            DbContext.EntityTypes.AddRange(SystemEntityTypes.AllAsEntities());
+            DbContext.Labels.Add(SystemLabels.System.ToEntity());
+            await DbContext.SaveChangesAsync(cancellationToken: TestContext.Current.CancellationToken);
+            DbContext.ChangeTracker.Clear();
+
+            var act = async () => await handler.Handle(request: request, cancellationToken: TestContext.Current.CancellationToken);
+
+            // act & assert
+            await act.Should().ThrowAsync<TestException>().WithMessage(expectedException.Message);
+            var processCreated = await DbContext.Processes.FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
+            processCreated.Should().NotBeNull();
+            processCreated.Message.Should().Be(expectedException.Message);
         }
     }
 
@@ -155,12 +207,12 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
         return Options.Create(options);
     }
 
-    private void Setup()
+    private void Setup(bool includeSeedEntityTypes = true, bool includeSeedLabels = true, bool includeSeedIso3166Countries = true, bool includeSeedTestUsers = true)
     {
-        _mediator.Setup(x => x.Send(It.IsAny<SeedEntityTypesRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedEntityTypesResult());
-        _mediator.Setup(x => x.Send(It.IsAny<SeedLabelsRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedLabelsResult());
-        _mediator.Setup(x => x.Send(It.IsAny<SeedIso3166CountriesRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedIso3166CountriesResult());
-        _mediator.Setup(x => x.Send(It.IsAny<SeedTestUsersRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedTestUsersResult());
+        if (includeSeedEntityTypes) _mediator.Setup(x => x.Send(It.IsAny<SeedEntityTypesRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedEntityTypesResult());
+        if (includeSeedLabels) _mediator.Setup(x => x.Send(It.IsAny<SeedLabelsRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedLabelsResult());
+        if (includeSeedIso3166Countries) _mediator.Setup(x => x.Send(It.IsAny<SeedIso3166CountriesRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedIso3166CountriesResult());
+        if (includeSeedTestUsers) _mediator.Setup(x => x.Send(It.IsAny<SeedTestUsersRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(new SeedTestUsersResult());
     }
 
     private static void VerifyAllSeedRequestHandlers(Mock<IMediator> mediator, Times times, Type? except = null)
@@ -170,4 +222,6 @@ public class SeedApplicationDatabaseRequestHandlerTests : ApplicationDbContextIm
         if (except != typeof(SeedIso3166CountriesRequestHandler)) mediator.Verify(x => x.Send(It.IsAny<SeedIso3166CountriesRequest>(), It.IsAny<CancellationToken>()), times);
         if (except != typeof(SeedTestUsersRequestHandler)) mediator.Verify(x => x.Send(It.IsAny<SeedTestUsersRequest>(), It.IsAny<CancellationToken>()), times);
     }
+
+    public class TestException(string? message) : Exception(message) { }
 }
