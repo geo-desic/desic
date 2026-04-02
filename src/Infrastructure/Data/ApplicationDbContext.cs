@@ -7,12 +7,22 @@ using Desic.Domain.Tags;
 using Desic.Domain.Users;
 using Desic.Infrastructure.Data.Common.Extensions;
 using Desic.Infrastructure.Data.Configurations;
+using Desic.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Desic.Infrastructure.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IApplicationDbContext
+public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
+    private readonly bool _providerIsSqlServer;
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    {
+        _providerIsSqlServer = Database.IsSqlServer();
+    }
+
+    public Guid CreateSequentialGuid() => Guid.CreateSequentialGuid(forSqlServer: _providerIsSqlServer);
+
     // note: when adding a new DbSet<T> also add it to the IApplicationDbContext inside the Application project (if it needs to use it)
     // alphebetized dbsets
     public DbSet<EntityType> EntityTypes { get; set; }

@@ -52,7 +52,7 @@ public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, IL
             var countryExisting = await dbSet.AsTracking().FirstOrDefaultAsync(x => x.IsoId == item.IsoId, cancellationToken);
             if (countryExisting == null)
             {
-                item.Id = Guid.CreateVersion7();
+                item.Id = _context.CreateSequentialGuid();
                 item.IsBeingSeeded = false;
                 item.SetCreatedAndModifiedBy(request.By);
                 batchInserts.Add(item);

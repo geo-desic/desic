@@ -1,6 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Interfaces;
 using Desic.Application.Users.Create;
+using Desic.Shared.Extensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -23,7 +24,8 @@ public class CreateUserRequestHandlerTests
         public async Task Handle_ValidRequestReturnResultFalse_SuccessResultWithCreatedUser(bool returnResult)
         {
             // arrange
-            Setup();
+            var expectedId = 1.ToGuid();
+            Setup(createSequentialGuidResult: expectedId);
             var handler = new CreateUserRequestHandler(logger: _logger, dbContext: _dbContext.Object, validator: _validator);
             var request = new CreateUserRequest
             {
@@ -39,7 +41,7 @@ public class CreateUserRequestHandlerTests
             _dbContext.Verify(x => x.Users.Add(It.IsAny<Domain.Users.User>()), Times.Once());
             _dbContext.Verify(x => x.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once());
             result.Value.Should().NotBeNull();
-            result.Value.Id.Should().NotBeEmpty();
+            result.Value.Id.Should().Be(expectedId);
             if (returnResult)
             {
                 result.Value.Model.Should().NotBeNull();
@@ -95,10 +97,12 @@ public class CreateUserRequestHandlerTests
         }
     }
 
-    private void Setup(string? usernameSeed = null)
+    private void Setup(string? usernameSeed = null, Guid? createSequentialGuidResult = null)
     {
+        createSequentialGuidResult ??= Guid.CreateSequentialGuid(forSqlServer: false);
         var users = new List<Domain.Users.User>();
         if (usernameSeed != null) users.Add(new Domain.Users.User { Username = usernameSeed });
         _dbContext.Setup(x => x.Users).ReturnsDbSet(users);
+        _dbContext.Setup(x => x.CreateSequentialGuid()).Returns(createSequentialGuidResult.Value);
     }
 }

@@ -46,7 +46,8 @@ This is currently a template for a new .net api following recommended/best pract
   - see the [development guide](development.md) for more information
 - Solution-wide [.editorconfig](.editorconfig) nearly identical to [Microsoft's example](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options#example-editorconfig-file) to assist with coding consistency
   - [dotnet-format-verification.ps1](tools/dotnet-format-verification.ps1) can be executed, potentially as part of the CI/CD process, to quickly identify non-compliant code
-- The [Guid](https://learn.microsoft.com/en-us/dotnet/api/system.guid) datatype is used for all entity identifiers
-  - [UUIDv7](https://uuid7.com) is the default generation algorithm used which allows for the possibility of time based sorting (e.g. [keyset pagination](https://learn.microsoft.com/en-us/ef/core/querying/pagination#keyset-pagination))
-    - Note: Sql Server does not currently support UUIDv7 - byte shuffling the result of this generation is required for it to sort correctly
+- The [Guid](https://learn.microsoft.com/en-us/dotnet/api/system.guid) datatype is used for all entity identifiers with a sequential (i.e. embedded timestamp) generation method
+  - For Sql Server the [generation method](src/Shared/Extensions/GuidExtensions.cs) is essentially the same as EF Core's [SequentialGuidValueGenerator](https://github.com/dotnet/dotnet/blob/main/src/efcore/src/EFCore/ValueGeneration/SequentialGuidValueGenerator.cs)
+  - For all other databases [Guid.CreateVersion7](https://learn.microsoft.com/en-us/dotnet/api/system.guid.createversion7) is used which adheres with [UUIDv7](https://uuid7.com)
+    - Note: Sql Server does not currently support sorting UUIDv7 correctly
 - Development environment [OpenAPI generation](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/openapi/aspnetcore-openapi) and Swagger support included with various documented response types and component schemas

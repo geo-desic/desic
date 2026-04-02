@@ -30,7 +30,7 @@ public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, 
 
         var user = new Domain.Users.User
         {
-            Id = Guid.CreateVersion7(),
+            Id = dbContext.CreateSequentialGuid(),
             IsActive = true,
             Username = request.Model.Username!
         };

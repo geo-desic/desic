@@ -10,6 +10,8 @@ namespace Desic.Application.Common.Interfaces;
 
 public interface IApplicationDbContext : IBaseDbContext
 {
+    Guid CreateSequentialGuid();
+
     // alphebetized dbsets
     DbSet<EntityType> EntityTypes { get; }
     DbSet<Iso3166Country> Iso3166Countries { get; }

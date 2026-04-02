@@ -66,12 +66,12 @@ public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context,
         }
     }
 
-    private static Process CreateProcessUnpersisted()
+    private Process CreateProcessUnpersisted()
     {
         var now = DateTime.UtcNow;
         var by = new Process
         {
-            Id = Guid.CreateVersion7(),
+            Id = _context.CreateSequentialGuid(),
             Name = $"Seed Application Database - {now:yyyyMMddHHmmss}",
             StartedOn = now,
         };

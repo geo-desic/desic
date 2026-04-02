@@ -21,6 +21,8 @@ internal static class DatabaseFacadeExtensions
 
     private static bool IsSqlite(this DatabaseFacade source) => source.ProviderName == ProviderNames.Sqlite;
 
+    internal static bool IsSqlServer(this DatabaseFacade source) => source.ProviderName == ProviderNames.SqlServer;
+
     internal static bool SupportsSchemas(this DatabaseFacade source) => !source.IsSqlite();
 
     internal static string ToDelimitedIdentifier(this DatabaseFacade source, string identifier)
