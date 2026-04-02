@@ -22,6 +22,12 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Test with dotnet including code coverage
+      env:
+        # set required configuration values
+        # the actual value does not matter as long as the passwords are secure enough to pass database validation checks, so using randomly generated UUIDs for simplicity
+        Databases__Application__SqlServer__Migrations__ConnectionBehavior__Password: $(uuidgen)
+        Databases__Application__SqlServer__Initialization__ConnectionBehavior__Password: $(uuidgen)
+        Databases__Application__SqlServer__Api__ConnectionBehavior__Password: $(uuidgen)
       run: dotnet test --no-restore --coverage --coverage-output-format cobertura --coverage-output coverage.cobertura.xml --coverage-settings code-coverage.runsettings --report-xunit-trx --report-xunit-trx-filename test-results.trx --results-directory "TestResults"
     - name: Generate coverage report
       uses: danielpalme/ReportGenerator-GitHub-Action@5.5.4
