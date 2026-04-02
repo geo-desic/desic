@@ -14,7 +14,7 @@ public sealed class SeededAppDatabaseSqlServerContainer(SeededAppDatabaseTemplat
             .UntilMessageIsLogged(ServerReadyForConnectionsMessage, o => o.WithTimeout(DatabaseReadyTimeout))
             .UntilMessageIsLogged(DatabaseStartedLogMessage, o => o.WithTimeout(DatabaseReadyTimeout))
             .AddCustomWaitStrategy(new SqlServerDatabaseOnlineWaitStrategy(databaseName: databaseTemplate.DatabaseName), o => o.WithTimeout(DatabaseReadyTimeout)));
-    private static readonly TimeSpan DatabaseReadyTimeout = TimeSpan.FromSeconds(15);
+    private static readonly TimeSpan DatabaseReadyTimeout = TimeSpan.FromSeconds(60);
     private const string DatabaseStartedLogMessage = $"Starting up database '{Constants.DatabaseName}'";
     private const string ServerReadyForConnectionsMessage = "SQL Server is now ready for client connections";
     private readonly SeededAppDatabaseTemplateSqlServerContainer _databaseTemplate = databaseTemplate ?? throw new ArgumentNullException(nameof(databaseTemplate));

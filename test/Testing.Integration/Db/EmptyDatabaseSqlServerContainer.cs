@@ -21,7 +21,7 @@ public sealed class EmptyDatabaseSqlServerContainer(bool contained = true, strin
         var connectionStringContainer = _container.GetConnectionString();
 
         await SqlServerOperations.CreateDatabase(connectionString: connectionStringContainer, contained: contained, databaseName: _databaseName);
-        Console.Write($"Successfully created empty database [{_databaseName}] with contained = {contained}");
+        Console.WriteLine($"Successfully created empty database [{_databaseName}] with contained = {contained}");
 
         _connectionString = new SqlConnectionStringBuilder(connectionStringContainer) { InitialCatalog = _databaseName }.ConnectionString;
         using var connection = GetSqlServerConnection();

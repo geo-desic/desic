@@ -41,7 +41,7 @@ public sealed class SeededAppDatabaseSqlServerLocal(SeededAppDatabaseTemplateSql
             command.CommandText = $"ALTER USER [{user.Name}] WITH LOGIN = [{user.LoginName}];";
             await command.ExecuteNonQueryAsync();
         }
-        Console.Write($"Successfully set logins for database users");
+        Console.WriteLine($"Successfully set logins for database users");
         await connection.CloseAsync();
     }
 

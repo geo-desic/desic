@@ -38,7 +38,7 @@ public sealed class SeededAppDatabaseTemplateSqlServerContainer(string image = C
     public async ValueTask InitializeAsync()
     {
         await _container.StartAsync();
-        Console.Write($"Successfully started SqlServer container: {image}");
+        Console.WriteLine($"Successfully started SqlServer container: {image}");
 
         _connectionStringInitialization = _container.GetConnectionString();
 
@@ -58,12 +58,12 @@ public sealed class SeededAppDatabaseTemplateSqlServerContainer(string image = C
             DatabaseName = _databaaseName,
         };
         await mediator.Send(request: request, cancellationToken: default);
-        Console.Write($"Successfully initialized database: {_databaaseName}");
+        Console.WriteLine($"Successfully initialized database: {_databaaseName}");
 
         // apply migrations
         using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await context.Database.MigrateAsync();
-        Console.Write($"Successfully migrated database: {_databaaseName}");
+        Console.WriteLine($"Successfully migrated database: {_databaaseName}");
 
         // ensure can connect to the database as the api user
         var hostConfiguration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
@@ -71,14 +71,14 @@ public sealed class SeededAppDatabaseTemplateSqlServerContainer(string image = C
         using var connection = new SqlConnection(_connectionStringApi);
         await connection.OpenAsync();
         await connection.CloseAsync();
-        Console.Write($"Successfully connected to database as api user");
+        Console.WriteLine($"Successfully connected to database as api user");
 
         var sqlCmdFilePath = await _container.GetSqlCmdFilePathAsync().ConfigureAwait(false);
         await _container.ExecAsync([sqlCmdFilePath, "-C", "-Q", "SHUTDOWN"]).ConfigureAwait(false);
-        Console.Write("Successfully cleanly shutdown database server");
+        Console.WriteLine("Successfully cleanly shutdown database server");
 
         await _container.StopAsync();
-        Console.Write("Successfully stopped SqlServer container");
+        Console.WriteLine("Successfully stopped SqlServer container");
 
         using var clientConfiguration = TestcontainersSettings.OS.DockerEndpointAuthConfig.GetDockerClientConfiguration(ResourceReaper.DefaultSessionId);
         using var client = clientConfiguration.CreateClient();
@@ -90,7 +90,7 @@ public sealed class SeededAppDatabaseTemplateSqlServerContainer(string image = C
         };
         await client.Images.CommitContainerChangesAsync(model);
         _templateImage = $"{model.RepositoryName}:{model.Tag}";
-        Console.Write($"Successfully created a temporary docker image of the SqlServer container: {_templateImage}");
+        Console.WriteLine($"Successfully created a temporary docker image of the SqlServer container: {_templateImage}");
     }
 
     public async ValueTask DisposeAsync()

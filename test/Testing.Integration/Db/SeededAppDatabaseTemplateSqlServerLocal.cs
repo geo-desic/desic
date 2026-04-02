@@ -60,14 +60,14 @@ public sealed class SeededAppDatabaseTemplateSqlServerLocal(string connectionStr
             DatabaseName = _databaseName,
         };
         await mediator.Send(request: request, cancellationToken: default);
-        Console.Write($"Successfully initialized database: {_databaseName}");
+        Console.WriteLine($"Successfully initialized database: {_databaseName}");
 
         _contained = await SqlServerOperations.IsContained(_connectionStringInitialization, _databaseName);
 
         // apply migrations
         using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         await context.Database.MigrateAsync();
-        Console.Write($"Successfully migrated database: {_databaseName}");
+        Console.WriteLine($"Successfully migrated database: {_databaseName}");
 
         // ensure can connect to the database as the api user
         var hostConfiguration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
@@ -75,12 +75,12 @@ public sealed class SeededAppDatabaseTemplateSqlServerLocal(string connectionStr
         using var connection = new SqlConnection(_connectionStringApi);
         await connection.OpenAsync();
         await connection.CloseAsync();
-        Console.Write($"Successfully connected to database [{_databaseName}] as api user");
+        Console.WriteLine($"Successfully connected to database [{_databaseName}] as api user");
 
         var databaseBackupFilePath = Path.Combine(_backupDirectoryPath, $"{_databaseName}.bak");
         _backupFileList = await SqlServerOperations.BackupDatabaseReturningFileList(connectionString: _connectionStringInitialization, databaseBackupFilePath: databaseBackupFilePath, databaseName: _databaseName);
         _databaseBackupFilePath = databaseBackupFilePath;
-        Console.Write($"Successfully backed up database: {_databaseBackupFilePath}");
+        Console.WriteLine($"Successfully backed up database: {_databaseBackupFilePath}");
     }
 
     public async ValueTask DisposeAsync()

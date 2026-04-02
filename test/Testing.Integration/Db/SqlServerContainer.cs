@@ -18,7 +18,7 @@ public sealed class SqlServerContainer(string image = Containers.DefaultImageSql
     public async ValueTask InitializeAsync()
     {
         await _container.StartAsync();
-        Console.Write($"Successfully started SqlServer container created from image: {_image}");
+        Console.WriteLine($"Successfully started SqlServer container created from image: {_image}");
 
         _connectionString = _container.GetConnectionString(); // if using standard microsoft images this is a master (sa) database connection as no user databases exist yet
 

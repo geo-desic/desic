@@ -31,7 +31,7 @@ public sealed class EmptyDatabaseSqlServerLocal : IDatabaseSqlServer
     {
         if (_databaseCreator != null) await _databaseCreator(_connectionString, _databaseName, _contained);
         else await SqlServerOperations.CreateDatabase(connectionString: _connectionString, contained: _contained, databaseName: _databaseName);
-        Console.Write($"Successfully created database [{_databaseName}] with contained = {_contained}");
+        Console.WriteLine($"Successfully created database [{_databaseName}] with contained = {_contained}");
 
         using var connection = GetSqlServerConnection();
         await connection.OpenAsync();
