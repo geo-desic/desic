@@ -39,6 +39,11 @@ public class Person : SoftDeletableEntity, IStaticEntityType
     public required string FirstName { get; set; }
     public required string LastName { get; set; }
     // ...
+
+    // add desired constants
+    public const int MaxLengthFirstName = 50;
+    public const int MaxLengthLastName = 50;
+    // ...
 }
 ```
 
@@ -89,9 +94,11 @@ public class PersonConfiguration(DatabaseFacade databaseFacade) : IEntityTypeCon
 
     public void Configure(EntityTypeBuilder<Person> builder)
     {
+        var schema = _databaseFacade.SupportsSchemas() ? ApplicationDbContext.AppSchema : null;
+        builder.ToTable(nameof(ApplicationDbContext.Persons), schema); // note: ApplicationDbContext.Persons won't resolve until the subsequent step
         var columnOrder = builder.ConfigureSoftDeletableEntity(_databaseFacade);
-        builder.Property(x => x.FirstName).IsRequired().HasColumnOrder(++columnOrder);
-        builder.Property(x => x.LastName).IsRequired().HasColumnOrder(++columnOrder);
+        builder.Property(x => x.FirstName).IsRequired().HasMaxLength(Person.MaxLengthFirstName).HasColumnOrder(++columnOrder);
+        builder.Property(x => x.LastName).IsRequired().HasMaxLength(Person.MaxLengthLastName).HasColumnOrder(++columnOrder);
         // other desired properties
         builder.HasIndex(x => x.FirstName).IsUnique(false);
         builder.HasIndex(x => x.LastName).IsUnique(false);
@@ -114,7 +121,7 @@ In [ApplicationDbContext.cs](src/Infrastructure/Data/ApplicationDbContext.cs)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.HasDefaultSchema(AppSchema);
+        if (Database.SupportsSchemas()) modelBuilder.HasDefaultSchema(AppSchema);
         // alphabetized entity configurations
         // ...
         modelBuilder.ApplyConfiguration(new PersonConfiguration()); // <==== new line added
