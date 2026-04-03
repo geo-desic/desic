@@ -63,5 +63,13 @@ public class HealthCheckTests(SeededAppDatabase testDatabase, ITestOutputHelper 
         // assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         response.Content.Should().BeEquivalentTo(expected, opt => opt.Excluding(x => x.Build).Excluding(x => x.TotalDurationMilliseconds).For(x => x.Entries).Exclude(x => x.DurationMilliseconds));
+        var build = response.Content.Build;
+        build.Should().NotBeNull();
+        build.CommitSha.Should().NotBeNullOrEmpty();
+        build.CreatedOn.Should().NotBeNull();
+        build.RunAttempt.Should().NotBeNull();
+        build.RunId.Should().NotBeNull();
+        build.RunNumber.Should().NotBeNull();
+        build.Version.Should().NotBeNull();
     }
 }

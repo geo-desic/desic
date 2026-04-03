@@ -5,6 +5,7 @@ name: build test publish
 on:
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build-test-publish:
@@ -20,10 +21,10 @@ jobs:
     - name: Restore
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --configuration Release -p:InformationalVersion=1.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }} -p:BuildCommitSha=${{ github.sha }} -p:BuildId=${{ github.run_id }} -p:BuildNumber=${{ github.run_number }} -p:BuildAttempt=${{ github.run_attempt }}
+      run: dotnet build --no-restore --configuration Release -p:InformationalVersion=1.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
     - name: Set environment variables
       # these are required configuration values
-      # the actual password values do not matter as long as they are strong enough to pass database validation checks, so using randomly generated UUIDs for simplicity
+      # the actual password values do not matter as long as they are strong enough to pass database validation checks, so using randomly generated uuids for simplicity
       run: |
         echo "Databases__Application__SqlServer__Migrations__ConnectionBehavior__Password=$(uuidgen)" >> $GITHUB_ENV
         echo "Databases__Application__SqlServer__Initialization__ConnectionBehavior__Password=$(uuidgen)" >> $GITHUB_ENV

@@ -42,27 +42,37 @@
     <InternalsVisibleTo Include="$(AssemblyName).Tests.Unit" />
   </ItemGroup>
 
-  <!-- custom properties exposed as assembly metadata attributes -->
+  <!-- custom properties - most for workflow correlation: https://docs.github.com/en/actions/reference/workflows-and-actions/variables -->
+  <!-- default values set so tests on dependant functionality can assert all values are non-empty even when building outside of CI (e.g. locally during development) -->
+  <PropertyGroup>
+    <BuildCommitSha Condition="'$(GITHUB_SHA)' == ''">0000000000000000000000000000000000000000</BuildCommitSha>
+    <BuildCreatedOn Condition="'$(BuildCreatedOn)' == ''">$([System.DateTime]::UtcNow.ToString("u"))</BuildCreatedOn>
+    <BuildRunAttempt Condition="'$(GITHUB_RUN_ATTEMPT)' == ''">2</BuildRunAttempt>
+    <BuildRunId Condition="'$(GITHUB_RUN_ID)' == ''">1000000000</BuildRunId>
+    <BuildRunNumber Condition="'$(GITHUB_RUN_NUMBER)' == ''">1</BuildRunNumber>
+  </PropertyGroup>
+
+  <!-- custom properties included as assembly metadata attributes -->
   <ItemGroup>
-    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-      <_Parameter1>BuildAttempt</_Parameter1>
-      <_Parameter2>$(BuildAttempt)</_Parameter2>
-    </AssemblyAttribute>
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
       <_Parameter1>BuildCommitSha</_Parameter1>
       <_Parameter2>$(BuildCommitSha)</_Parameter2>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
       <_Parameter1>BuildCreatedOn</_Parameter1>
-      <_Parameter2>$([System.DateTime]::UtcNow.ToString("u"))</_Parameter2>
+      <_Parameter2>$(BuildCreatedOn)</_Parameter2>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-      <_Parameter1>BuildId</_Parameter1>
-      <_Parameter2>$(BuildId)</_Parameter2>
+      <_Parameter1>BuildRunAttempt</_Parameter1>
+      <_Parameter2>$(BuildRunAttempt)</_Parameter2>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-      <_Parameter1>BuildNumber</_Parameter1>
-      <_Parameter2>$(BuildNumber)</_Parameter2>
+      <_Parameter1>BuildRunId</_Parameter1>
+      <_Parameter2>$(BuildRunId)</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>BuildRunNumber</_Parameter1>
+      <_Parameter2>$(BuildRunNumber)</_Parameter2>
     </AssemblyAttribute>
   </ItemGroup>
 

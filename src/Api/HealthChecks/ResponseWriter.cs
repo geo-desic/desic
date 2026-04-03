@@ -29,11 +29,11 @@ internal static class ResponseWriter
         {
             Build = new Dtos.HealthChecks.BuildInformation
             {
-                Attempt = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.Attempt)}"),
                 CommitSha = GetAssemblyMetadataValue($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.CommitSha)}"),
                 CreatedOn = GetAssemblyMetadataValueAsDateTime($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.CreatedOn)}"),
-                Id = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.Id)}"),
-                Number = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.Number)}"),
+                RunAttempt = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunAttempt)}"),
+                RunId = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunId)}"),
+                RunNumber = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunNumber)}"),
                 Version = _executingAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
             },
             OverallStatus = healthReport.Status,
