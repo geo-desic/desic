@@ -31,9 +31,9 @@ internal static class ResponseWriter
             {
                 CommitSha = GetAssemblyMetadataValue($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.CommitSha)}"),
                 CreatedOn = GetAssemblyMetadataValueAsDateTime($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.CreatedOn)}"),
-                RunAttempt = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunAttempt)}"),
-                RunId = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunId)}"),
-                RunNumber = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunNumber)}"),
+                RunAttempt = GetAssemblyMetadataValueAsLong($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunAttempt)}"),
+                RunId = GetAssemblyMetadataValueAsLong($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunId)}"),
+                RunNumber = GetAssemblyMetadataValueAsLong($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunNumber)}"),
                 Version = _executingAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
             },
             OverallStatus = healthReport.Status,
@@ -62,9 +62,9 @@ internal static class ResponseWriter
         return null;
     }
 
-    private static int? GetAssemblyMetadataValueAsInt(string key)
+    private static long? GetAssemblyMetadataValueAsLong(string key)
     {
-        if (int.TryParse(GetAssemblyMetadataValue(key), out var result)) return result;
+        if (long.TryParse(GetAssemblyMetadataValue(key), out var result)) return result;
         return null;
     }
 }

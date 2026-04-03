@@ -51,7 +51,7 @@
     <BuildRunAttempt Condition="'$(GITHUB_RUN_ATTEMPT)' != ''">$(GITHUB_RUN_ATTEMPT)</BuildRunAttempt>
     <BuildRunAttempt Condition="'$(GITHUB_RUN_ATTEMPT)' == ''">1</BuildRunAttempt>  <!-- default value -->
     <BuildRunId Condition="'$(GITHUB_RUN_ID)' != ''">$(GITHUB_RUN_ID)</BuildRunId>
-    <BuildRunId Condition="'$(GITHUB_RUN_ID)' == ''">1000000000</BuildRunId>  <!-- default value -->
+    <BuildRunId Condition="'$(GITHUB_RUN_ID)' == ''">100000000000</BuildRunId>  <!-- default value -->
     <BuildRunNumber Condition="'$(GITHUB_RUN_NUMBER)' != ''">$(GITHUB_RUN_NUMBER)</BuildRunNumber>
     <BuildRunNumber Condition="'$(GITHUB_RUN_NUMBER)' == ''">1</BuildRunNumber> <!-- default value -->
   </PropertyGroup>
