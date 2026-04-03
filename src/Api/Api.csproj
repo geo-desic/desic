@@ -42,4 +42,28 @@
     <InternalsVisibleTo Include="$(AssemblyName).Tests.Unit" />
   </ItemGroup>
 
+  <!-- custom properties exposed as assembly metadata attributes -->
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>BuildAttempt</_Parameter1>
+      <_Parameter2>$(BuildAttempt)</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>BuildCommitSha</_Parameter1>
+      <_Parameter2>$(BuildCommitSha)</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>BuildCreatedOn</_Parameter1>
+      <_Parameter2>$([System.DateTime]::UtcNow.ToString("u"))</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>BuildId</_Parameter1>
+      <_Parameter2>$(BuildId)</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>BuildNumber</_Parameter1>
+      <_Parameter2>$(BuildNumber)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
 </Project>

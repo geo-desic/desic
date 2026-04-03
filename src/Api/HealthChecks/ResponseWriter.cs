@@ -1,10 +1,15 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Desic.Api.HealthChecks;
 
 internal static class ResponseWriter
 {
+    private static readonly Assembly _executingAssembly = Assembly.GetExecutingAssembly();
+    private static readonly List<AssemblyMetadataAttribute> _metadataAttributes = [.. Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyMetadataAttribute>()];
+
     private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
         Converters =
@@ -22,6 +27,15 @@ internal static class ResponseWriter
 
         var result = new Dtos.HealthChecks.HealthReport
         {
+            Build = new Dtos.HealthChecks.BuildInformation
+            {
+                Attempt = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.Attempt)}"),
+                CommitSha = GetAssemblyMetadataValue($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.CommitSha)}"),
+                CreatedOn = GetAssemblyMetadataValueAsDateTime($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.CreatedOn)}"),
+                Id = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.Id)}"),
+                Number = GetAssemblyMetadataValueAsInt($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.Number)}"),
+                Version = _executingAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion,
+            },
             OverallStatus = healthReport.Status,
             TotalDurationMilliseconds = (long)healthReport.TotalDuration.TotalMilliseconds,
             Entries = [.. healthReport.Entries.Select(e => new Dtos.HealthChecks.HealthReportEntry
@@ -35,5 +49,22 @@ internal static class ResponseWriter
         };
 
         return context.Response.WriteAsync(JsonSerializer.Serialize(result, options: _jsonSerializerOptions));
+    }
+
+    private static string? GetAssemblyMetadataValue(string key)
+    {
+        return _metadataAttributes.FirstOrDefault(a => a.Key == key)?.Value;
+    }
+
+    private static DateTime? GetAssemblyMetadataValueAsDateTime(string key)
+    {
+        if (DateTime.TryParse(GetAssemblyMetadataValue(key), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var result)) return result;
+        return null;
+    }
+
+    private static int? GetAssemblyMetadataValueAsInt(string key)
+    {
+        if (int.TryParse(GetAssemblyMetadataValue(key), out var result)) return result;
+        return null;
     }
 }
