@@ -2,7 +2,7 @@ namespace MediatR.Benchmarks
 {
     public class Ping : IRequest
     {
-        public string Message { get; set; }
+        public required string Message { get; set; }
     }
 
     public class PingHandler : IRequestHandler<Ping>

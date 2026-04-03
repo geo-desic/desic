@@ -6,7 +6,7 @@ namespace MediatR.Benchmarks
     [DotTraceDiagnoser]
     public class Benchmarks
     {
-        private IMediator _mediator;
+        private IMediator? _mediator;
         private readonly Ping _request = new Ping { Message = "Hello World" };
         private readonly Pinged _notification = new Pinged();
 
@@ -31,13 +31,13 @@ namespace MediatR.Benchmarks
         [Benchmark]
         public Task SendingRequests()
         {
-            return _mediator.Send(_request);
+            return _mediator!.Send(_request);
         }
 
         [Benchmark]
         public Task PublishingNotifications()
         {
-            return _mediator.Publish(_notification);
+            return _mediator!.Publish(_notification);
         }
     }
 }
