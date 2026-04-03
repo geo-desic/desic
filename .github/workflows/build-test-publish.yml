@@ -18,10 +18,6 @@ jobs:
       uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
-    - name: Restore
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore --configuration Release -p:InformationalVersion=1.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
     - name: Set environment variables
       # these are required configuration values
       # the actual password values do not matter as long as they are strong enough to pass database validation checks, so using randomly generated uuids for simplicity
@@ -29,6 +25,22 @@ jobs:
         echo "Databases__Application__SqlServer__Migrations__ConnectionBehavior__Password=$(uuidgen)" >> $GITHUB_ENV
         echo "Databases__Application__SqlServer__Initialization__ConnectionBehavior__Password=$(uuidgen)" >> $GITHUB_ENV
         echo "Databases__Application__SqlServer__Api__ConnectionBehavior__Password=$(uuidgen)" >> $GITHUB_ENV
+    - name: Log important environment variables
+      run: |
+        echo "::group::Environment Variables"
+        echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
+        echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"
+        echo "GITHUB_RUN_NUMBER=$GITHUB_RUN_NUMBER"
+        echo "GITHUB_RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
+        echo "GITHUB_SHA=$GITHUB_SHA"
+        echo "Databases__Application__SqlServer__Migrations__ConnectionBehavior__Password=$Databases__Application__SqlServer__Migrations__ConnectionBehavior__Password"
+        echo "Databases__Application__SqlServer__Initialization__ConnectionBehavior__Password=$Databases__Application__SqlServer__Initialization__ConnectionBehavior__Password"
+        echo "Databases__Application__SqlServer__Api__ConnectionBehavior__Password=$Databases__Application__SqlServer__Api__ConnectionBehavior__Password"
+        echo "::endgroup::"
+    - name: Restore
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore --configuration Release -p:InformationalVersion=1.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
     - name: Test
       run: dotnet test --no-build --configuration Release --coverage --coverage-output-format cobertura --coverage-settings code-coverage.runsettings --report-xunit-trx --results-directory "TestResults"
     - name: Generate test coverage report
