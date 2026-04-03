@@ -45,11 +45,15 @@
   <!-- custom properties - most for workflow correlation: https://docs.github.com/en/actions/reference/workflows-and-actions/variables -->
   <!-- default values set so tests on dependant functionality can assert all values are non-empty even when building outside of CI (e.g. locally during development) -->
   <PropertyGroup>
-    <BuildCommitSha Condition="'$(GITHUB_SHA)' == ''">0000000000000000000000000000000000000000</BuildCommitSha>
-    <BuildCreatedOn Condition="'$(BuildCreatedOn)' == ''">$([System.DateTime]::UtcNow.ToString("u"))</BuildCreatedOn>
-    <BuildRunAttempt Condition="'$(GITHUB_RUN_ATTEMPT)' == ''">2</BuildRunAttempt>
-    <BuildRunId Condition="'$(GITHUB_RUN_ID)' == ''">1000000000</BuildRunId>
-    <BuildRunNumber Condition="'$(GITHUB_RUN_NUMBER)' == ''">1</BuildRunNumber>
+    <BuildCommitSha Condition="'$(GITHUB_SHA)' != ''">$(GITHUB_SHA)</BuildCommitSha>
+    <BuildCommitSha Condition="'$(GITHUB_SHA)' == ''">0000000000000000000000000000000000000000</BuildCommitSha> <!-- default value -->
+    <BuildCreatedOn>$([System.DateTime]::UtcNow.ToString("u"))</BuildCreatedOn>
+    <BuildRunAttempt Condition="'$(GITHUB_RUN_ATTEMPT)' != ''">$(GITHUB_RUN_ATTEMPT)</BuildRunAttempt>
+    <BuildRunAttempt Condition="'$(GITHUB_RUN_ATTEMPT)' == ''">1</BuildRunAttempt>  <!-- default value -->
+    <BuildRunId Condition="'$(GITHUB_RUN_ID)' != ''">$(GITHUB_RUN_ID)</BuildRunId>
+    <BuildRunId Condition="'$(GITHUB_RUN_ID)' == ''">1000000000</BuildRunId>  <!-- default value -->
+    <BuildRunNumber Condition="'$(GITHUB_RUN_NUMBER)' != ''">$(GITHUB_RUN_NUMBER)</BuildRunNumber>
+    <BuildRunNumber Condition="'$(GITHUB_RUN_NUMBER)' == ''">1</BuildRunNumber> <!-- default value -->
   </PropertyGroup>
 
   <!-- custom properties included as assembly metadata attributes -->
