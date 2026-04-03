@@ -20,7 +20,17 @@ This is currently a template for a new .net api following recommended/best pract
   - dedicated migrations database user with more permissive access: ddl and dml permissions to the application database
   - currently implemented by the functional testing framework so any potential issues with new code should be identified quickly
   - note that this is not supported by the Sqlite infrastructure as it does not support database users, schemas, etc.
+- Includes github workflow [build-test-puslish.yml](./.github/workflows/build-test-publish.yml) which runs on pull requests to main
+  - build with release configuration
+  - executes all tests
+  - generates a test code coverage report
+  - publishes the api and dbupdater projects
+  - uploads the test results, code coverage report, and published project files as workflow artifacts
 - Multiple [health checks](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks) implemented with [test coverage](test/Api.Tests.Functional/HealthCheckTests.cs)
+  - The health report includes some build information for easy correlation with the CI/CD pipeline and source control history
+    - git commit hash
+    - github build id, number, and attempt
+    - such data can be extremely helpful when troubleshooting build & deployment related issues
 - No sensitive data checked into source control
   - [user secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) are used for development purposes which would be handled by desired secret manager for other environments, e.g. azure keyvault
   - see the [development guide](development.md) for more information
