@@ -42,11 +42,11 @@ jobs:
         dotnet-version: 10.0.x
     - name: Restore
       run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore --configuration Release -p:InformationalVersion=1.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
     - name: Format verification
       if: ${{ !inputs.skip_format_verification }}
       run: dotnet format --no-restore --verify-no-changes --verbosity diagnostic
-    - name: Build
-      run: dotnet build --no-restore --configuration Release -p:InformationalVersion=1.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
     - name: Set configuration values required by tests
       if: ${{ !inputs.skip_tests }}
       # the actual password values do not matter as long as they are strong enough to pass database validation checks, so using randomly generated uuids for simplicity
