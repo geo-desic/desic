@@ -20,22 +20,25 @@ This is currently a template for a new .net api following recommended/best pract
   - dedicated migrations database user with more permissive access: ddl and dml permissions to the application database
   - currently implemented by the functional testing framework so any potential issues with new code should be identified quickly
   - note that this is not supported by the Sqlite infrastructure as it does not support database users, schemas, etc.
+- Solution-wide [.editorconfig](.editorconfig) nearly identical to [Microsoft's example](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options#example-editorconfig-file) to assist with coding consistency
+  - [dotnet-format-verification.ps1](tools/dotnet-format-verification.ps1) can be manually executed to quickly identify non-compliant code
+  - dotnet format verification is automatically executed as part of the CI process and will fail if any non-compliant code is identified
 - Includes github workflow [build-test-puslish.yml](./.github/workflows/build-test-publish.yml) which runs on pull requests to main
   - build with release configuration
+  - performs code format verification against the defined [.editorconfig](.editorconfig) ruleset
   - executes all tests
   - generates a test code coverage report
-  - publishes the api and dbupdater projects
-  - uploads the test results, code coverage report, and published project files as workflow artifacts
+  - optionally publishes the api and dbupdater projects
+  - uploads the test results, code coverage report, and optionally published project files as workflow artifacts
 - Multiple [health checks](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks) implemented with [test coverage](test/Api.Tests.Functional/HealthCheckTests.cs)
-  - The health report includes some build information for easy correlation with the CI/CD pipeline and source control history
+  - The health report includes some build information for easy correlation with the CI/CD process and source control history
+    - whether the build was performed by CI or not
     - git commit hash
     - github build id, number, and attempt
-    - such data can be extremely helpful when troubleshooting build & deployment related issues
+    - such information can be extremely helpful when troubleshooting build & deployment related issues
 - No sensitive data checked into source control
   - [user secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) are used for development purposes which would be handled by desired secret manager for other environments, e.g. azure keyvault
   - see the [development guide](development.md) for more information
-- Solution-wide [.editorconfig](.editorconfig) nearly identical to [Microsoft's example](https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options#example-editorconfig-file) to assist with coding consistency
-  - [dotnet-format-verification.ps1](tools/dotnet-format-verification.ps1) can be executed, potentially as part of the CI/CD process, to quickly identify non-compliant code
 - The [Guid](https://learn.microsoft.com/en-us/dotnet/api/system.guid) datatype is used for all entity identifiers with a sequential (i.e. embedded timestamp) generation method
   - For Sql Server the [generation method](src/Shared/Extensions/GuidExtensions.cs) is essentially the same as EF Core's [SequentialGuidValueGenerator](https://github.com/dotnet/dotnet/blob/main/src/efcore/src/EFCore/ValueGeneration/SequentialGuidValueGenerator.cs)
   - For all other databases [Guid.CreateVersion7](https://learn.microsoft.com/en-us/dotnet/api/system.guid.createversion7) is used which adheres with [UUIDv7](https://uuid7.com)

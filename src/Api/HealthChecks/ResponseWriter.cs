@@ -31,6 +31,7 @@ internal static class ResponseWriter
             {
                 CommitSha = GetAssemblyMetadataValue($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.CommitSha)}"),
                 CreatedOn = GetAssemblyMetadataValueAsDateTime($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.CreatedOn)}"),
+                IsCi = GetAssemblyMetadataValueAsBool($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.IsCi)}"),
                 RunAttempt = GetAssemblyMetadataValueAsLong($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunAttempt)}"),
                 RunId = GetAssemblyMetadataValueAsLong($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunId)}"),
                 RunNumber = GetAssemblyMetadataValueAsLong($"{nameof(Dtos.HealthChecks.HealthReport.Build)}{nameof(Dtos.HealthChecks.BuildInformation.RunNumber)}"),
@@ -54,6 +55,12 @@ internal static class ResponseWriter
     private static string? GetAssemblyMetadataValue(string key)
     {
         return _metadataAttributes.FirstOrDefault(a => a.Key == key)?.Value;
+    }
+
+    private static bool? GetAssemblyMetadataValueAsBool(string key)
+    {
+        if (bool.TryParse(GetAssemblyMetadataValue(key), out var result)) return result;
+        return null;
     }
 
     private static DateTime? GetAssemblyMetadataValueAsDateTime(string key)

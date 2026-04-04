@@ -67,6 +67,7 @@ public class HealthCheckTests(SeededAppDatabase testDatabase, ITestOutputHelper 
         build.Should().NotBeNull(because: $"{nameof(HealthReport.Build)} should not be null");
         build.CommitSha.Should().NotBeNullOrEmpty(because: $"{nameof(HealthReport.Build)}.{nameof(BuildInformation.CommitSha)} should not be null or empty");
         build.CreatedOn.Should().NotBeNull(because: $"{nameof(HealthReport.Build)}.{nameof(BuildInformation.CreatedOn)} should not be null");
+        build.IsCi.Should().NotBeNull(because: $"{nameof(HealthReport.Build)}.{nameof(BuildInformation.IsCi)} should not be null");
         build.RunAttempt.Should().NotBeNull(because: $"{nameof(HealthReport.Build)}.{nameof(BuildInformation.RunAttempt)} should not be null");
         build.RunId.Should().NotBeNull(because: $"{nameof(HealthReport.Build)}.{nameof(BuildInformation.RunId)} should not be null");
         build.RunNumber.Should().NotBeNull(because: $"{nameof(HealthReport.Build)}.{nameof(BuildInformation.RunNumber)} should not be null");

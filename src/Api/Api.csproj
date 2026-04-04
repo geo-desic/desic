@@ -42,12 +42,14 @@
     <InternalsVisibleTo Include="$(AssemblyName).Tests.Unit" />
   </ItemGroup>
 
-  <!-- custom properties - most for workflow correlation: https://docs.github.com/en/actions/reference/workflows-and-actions/variables -->
-  <!-- default values set so tests on dependant functionality can assert all values are non-empty even when building outside of CI (e.g. locally during development) -->
+  <!-- custom properties - most for ci/cd correlation: https://docs.github.com/en/actions/reference/workflows-and-actions/variables -->
+  <!-- default values set so tests on dependant functionality can assert all values are non-empty even when building outside of ci (e.g. locally during development) -->
   <PropertyGroup>
     <BuildCommitSha Condition="'$(GITHUB_SHA)' != ''">$(GITHUB_SHA)</BuildCommitSha>
     <BuildCommitSha Condition="'$(GITHUB_SHA)' == ''">0000000000000000000000000000000000000000</BuildCommitSha> <!-- default value -->
     <BuildCreatedOn>$([System.DateTime]::UtcNow.ToString("u"))</BuildCreatedOn>
+    <BuildIsCi Condition="'$(CI)' != ''">$(CI)</BuildIsCi>
+    <BuildIsCi Condition="'$(CI)' == ''">false</BuildIsCi> <!-- default value -->
     <BuildRunAttempt Condition="'$(GITHUB_RUN_ATTEMPT)' != ''">$(GITHUB_RUN_ATTEMPT)</BuildRunAttempt>
     <BuildRunAttempt Condition="'$(GITHUB_RUN_ATTEMPT)' == ''">1</BuildRunAttempt>  <!-- default value -->
     <BuildRunId Condition="'$(GITHUB_RUN_ID)' != ''">$(GITHUB_RUN_ID)</BuildRunId>
@@ -65,6 +67,10 @@
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
       <_Parameter1>BuildCreatedOn</_Parameter1>
       <_Parameter2>$(BuildCreatedOn)</_Parameter2>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>BuildIsCi</_Parameter1>
+      <_Parameter2>$(BuildIsCi)</_Parameter2>
     </AssemblyAttribute>
     <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
       <_Parameter1>BuildRunAttempt</_Parameter1>
