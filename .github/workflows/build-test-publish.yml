@@ -1,71 +1,89 @@
-# For more information see: https://docs.github.com/en/actions/tutorials/build-and-test-code/net
-
 name: build test publish
 
 on:
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
+    inputs:
+      skip_format_verification:
+        description: 'Skip format verification'
+        required: true
+        default: false
+        type: boolean
+      skip_tests:
+        description: 'Skip tests and uploading results'
+        required: true
+        default: false
+        type: boolean
+      skip_tests_coverage_report:
+        description: 'Skip test coverage report'
+        required: true
+        default: false
+        type: boolean
+      skip_publish_api:
+        description: 'Publish and upload api'
+        required: true
+        default: false
+        type: boolean
+      skip_publish_db_updater:
+        description: 'Publish and upload dbupdater'
+        required: true
+        default: false
+        type: boolean
 
 jobs:
   build-test-publish:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v5
     - name: Setup dotnet
       uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 10.0.x
-    - name: Set environment variables
-      # these are required configuration values
+    - name: Restore
+      run: dotnet restore
+    - name: Format verification
+      if: ${{ !inputs.skip_format_verification }}
+      run: dotnet format --no-restore --verify-no-changes --verbosity diagnostic
+    - name: Build
+      run: dotnet build --no-restore --configuration Release -p:InformationalVersion=1.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
+    - name: Set configuration values required by tests
+      if: ${{ !inputs.skip_tests }}
       # the actual password values do not matter as long as they are strong enough to pass database validation checks, so using randomly generated uuids for simplicity
       run: |
         echo "Databases__Application__SqlServer__Migrations__ConnectionBehavior__Password=$(uuidgen)" >> $GITHUB_ENV
         echo "Databases__Application__SqlServer__Initialization__ConnectionBehavior__Password=$(uuidgen)" >> $GITHUB_ENV
         echo "Databases__Application__SqlServer__Api__ConnectionBehavior__Password=$(uuidgen)" >> $GITHUB_ENV
-    - name: Log important environment variables
-      run: |
-        echo "::group::Environment Variables"
-        echo "GITHUB_REF_NAME=$GITHUB_REF_NAME"
-        echo "GITHUB_RUN_ID=$GITHUB_RUN_ID"
-        echo "GITHUB_RUN_NUMBER=$GITHUB_RUN_NUMBER"
-        echo "GITHUB_RUN_ATTEMPT=$GITHUB_RUN_ATTEMPT"
-        echo "GITHUB_SHA=$GITHUB_SHA"
-        echo "Databases__Application__SqlServer__Migrations__ConnectionBehavior__Password=$Databases__Application__SqlServer__Migrations__ConnectionBehavior__Password"
-        echo "Databases__Application__SqlServer__Initialization__ConnectionBehavior__Password=$Databases__Application__SqlServer__Initialization__ConnectionBehavior__Password"
-        echo "Databases__Application__SqlServer__Api__ConnectionBehavior__Password=$Databases__Application__SqlServer__Api__ConnectionBehavior__Password"
-        echo "::endgroup::"
-    - name: Restore
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore --configuration Release -p:InformationalVersion=1.${{ github.run_id }}.${{ github.run_number }}.${{ github.run_attempt }}
     - name: Test
+      if: ${{ !inputs.skip_tests }}
       run: dotnet test --no-build --configuration Release --coverage --coverage-output-format cobertura --coverage-settings code-coverage.runsettings --report-xunit-trx --results-directory "TestResults"
     - name: Generate test coverage report
+      if: ${{ !inputs.skip_tests && !inputs.skip_tests_coverage_report }}
       uses: danielpalme/ReportGenerator-GitHub-Action@5.5.4
       with:
         reports: 'TestResults/**.cobertura.xml'
         targetdir: 'TestResults'
         reporttypes: 'MarkdownSummary'
     - name: Publish api
+      if: ${{ !inputs.skip_publish_api }}
       run: dotnet publish src/Api/Api.csproj --no-build --configuration Release --output published/Api
     - name: Publish dbupdater
+      if: ${{ !inputs.skip_publish_db_updater }}
       run: dotnet publish src/Infrastructure.Tools.DbUpdater/Infrastructure.Tools.DbUpdater.csproj --no-build --configuration Release --output published/DbUpdater
     - name: Upload test results
+      if: ${{ !inputs.skip_tests }}
       uses: actions/upload-artifact@v6
       with:
         name: test-results
         path: TestResults
-      # Use always() to always run this step to publish test results when there are test failures
-      if: ${{ always() }}
-    - name: Upload api
+    - name: Upload published api
+      if: ${{ !inputs.skip_publish_api }}
       uses: actions/upload-artifact@v6
       with:
         name: api
         path: published/Api
-    - name: Upload dbupdater
+    - name: Upload published dbupdater
+      if: ${{ !inputs.skip_publish_db_updater }}
       uses: actions/upload-artifact@v6
       with:
         name: dbupdater
