@@ -21,12 +21,12 @@ on:
         default: false
         type: boolean
       skip_publish_api:
-        description: 'Publish and upload api'
+        description: 'Skip publish and upload api'
         required: true
         default: false
         type: boolean
       skip_publish_db_updater:
-        description: 'Publish and upload dbupdater'
+        description: 'Skip publish and upload dbupdater'
         required: true
         default: false
         type: boolean
