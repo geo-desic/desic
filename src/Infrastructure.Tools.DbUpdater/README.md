@@ -2,7 +2,7 @@
 This application can be used to initialize a database and/or apply migrations/seed data to it. It is designed to be run from the command line and can be used in conjunction with a CI/CD pipeline to automate database updates.
 
 ## Database Initialization
-This is the process of creating a new database and/or performing any initial configuration to it such as creating schemas, roles, and users (see [sqlserver.appsettings.json](../Infrastructure.Data.SqlServer/sqlserver.appsettings.json)). This is typically done when setting up a new environment for the first time. Note that this may (and currently does) include creating a migrations database user specifially for applying migrations to it. So this step, if performed, occurs before applying any migrations.
+This is the process of creating a new database and/or performing any initial configuration to it such as creating schemas, roles, and users (see [sqlserver.appsettings.json](../Infrastructure.Data.SqlServer/sqlserver.appsettings.json)). This is typically done when setting up a new environment for the first time. Note that this may (and currently does) include creating a migrations database user specifically for applying migrations to it. So this step, if performed, occurs before applying any migrations.
 
 ## Migrations
 This is the process of applying changes to an existing database. Migrations are typically used to evolve the database over time as the application requirements change. This can include things such as adding/modifying/removing tables, columns, indexes, and constraints.

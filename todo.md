@@ -13,3 +13,5 @@
 - [ ] Implement some basic github workflows for the repository
   - [ ] CI workflow for running tests and code analysis
   - [ ] CD workflow for deploying to a staging environment
+- [ ] Find a replacement for MediatR
+  - [ ] Implement replacement and remove MediatR and MediatR.Contracts projects from the solution

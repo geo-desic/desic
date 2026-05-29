@@ -12,7 +12,7 @@ public interface IApplicationDbContext : IBaseDbContext
 {
     Guid CreateSequentialGuid();
 
-    // alphebetized dbsets
+    // alphabetized dbsets
     DbSet<EntityType> EntityTypes { get; }
     DbSet<Iso3166Country> Iso3166Countries { get; }
     DbSet<Label> Labels { get; }

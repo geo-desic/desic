@@ -21,7 +21,7 @@ public class TestApplicationDbContext : DbContext, IApplicationDbContext
 
     public Guid CreateSequentialGuid() => Guid.CreateSequentialGuid(forSqlServer: _isSqlServer);
 
-    // alphebetized dbsets
+    // alphabetized dbsets
     public DbSet<EntityType> EntityTypes { get; set; }
     public DbSet<Iso3166Country> Iso3166Countries { get; set; }
     public DbSet<Label> Labels { get; set; }
