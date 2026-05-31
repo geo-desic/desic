@@ -27,7 +27,7 @@ public class DependencyInjectionTests
             serviceCollection.AddSqliteInfrastructure(config: configuration, connectionString: explicitConnectionString);
 
             // assert
-            // currently no use of mediatR in the assembly
+            // currently no use of mediator in the assembly
             // assert ApplicationDbContext is registered correctly
             var serviceProvider = serviceCollection.BuildServiceProvider();
             using var scope = serviceProvider.CreateScope();

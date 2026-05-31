@@ -2,7 +2,7 @@
 
 namespace Desic.Testing.Integration.Db;
 
-public class EmptyDatabaseSqlServerBasedOnConfig(bool contained = true) : IDatabaseSqlServer
+public sealed class EmptyDatabaseSqlServerBasedOnConfig(bool contained = true) : IDatabaseSqlServer
 {
     private readonly bool _contained = contained;
     private IDatabaseSqlServer? _database;

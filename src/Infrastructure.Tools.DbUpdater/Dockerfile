@@ -16,9 +16,7 @@ COPY ["src/Infrastructure.Data.Sqlite/Infrastructure.Data.Sqlite.csproj", "src/I
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
-COPY ["src/MediatR.Contracts/MediatR.Contracts.csproj", "src/MediatR.Contracts/"]
 COPY ["src/Shared/Shared.csproj", "src/Shared/"]
-COPY ["src/MediatR/MediatR.csproj", "src/MediatR/"]
 COPY ["src/Infrastructure.Data.SqlServer/Infrastructure.Data.SqlServer.csproj", "src/Infrastructure.Data.SqlServer/"]
 RUN dotnet restore "./src/Infrastructure.Tools.DbUpdater/Infrastructure.Tools.DbUpdater.csproj"
 COPY . .
