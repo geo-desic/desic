@@ -6,7 +6,7 @@ using Desic.Application.Common.Interfaces;
 using Desic.Application.Common.Models;
 using Desic.Application.EntityTypes;
 using Desic.Application.EntityTypes.List;
-using MediatR;
+using DispatchR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -55,13 +55,13 @@ public class EntityTypesControllerTests
             var controller = NewController();
 
             // act
-            var result = (await controller.List(pagination: pagination, filter: filter, orderingMethodFromQuery: orderingMethodFromQuery))?.Result as OkObjectResult;
+            var result = (await controller.List(pagination: pagination, filter: filter, orderingMethodFromQuery: orderingMethodFromQuery, cancellationToken: TestContext.Current.CancellationToken))?.Result as OkObjectResult;
 
             // assert
             _mediator.Verify(x => x.Send(It.Is<ListEntityTypesRequest>(x =>
                 x.Pagination.IsEquivalentTo(pagination)
                 && x.OrderingMethod.IsEquivalentTo(expectedOrderingMethod)
-                && IsEquivalentTo(source: x.Filter, compare: filter))), Times.Once());
+                && IsEquivalentTo(source: x.Filter, compare: filter)), It.IsAny<CancellationToken>()), Times.Once());
             result.Should().NotBeNull();
             result.StatusCode.Should().Be((int)HttpStatusCode.OK);
             var objectResult = result.Value as ListEntityTypesResult;
@@ -85,7 +85,7 @@ public class EntityTypesControllerTests
             };
 
             // act
-            var result = (await controller.List(pagination: new(), filter: new(), orderingMethodFromQuery: orderingMethodFromQueryInvalid))?.Result as ObjectResult;
+            var result = (await controller.List(pagination: new(), filter: new(), orderingMethodFromQuery: orderingMethodFromQueryInvalid, cancellationToken: TestContext.Current.CancellationToken))?.Result as ObjectResult;
 
             // assert
             result.Should().NotBeNull();
@@ -106,7 +106,7 @@ public class EntityTypesControllerTests
             var controller = NewController();
 
             // act
-            var result = (await controller.List(pagination: new(), filter: new(), orderingMethodFromQuery: new()))?.Result as ObjectResult;
+            var result = (await controller.List(pagination: new(), filter: new(), orderingMethodFromQuery: new(), cancellationToken: TestContext.Current.CancellationToken))?.Result as ObjectResult;
 
             // assert
             result.Should().NotBeNull();
@@ -120,7 +120,7 @@ public class EntityTypesControllerTests
     private void Setup(Result<ListEntityTypesResult>? result = null)
     {
         result ??= new((ListEntityTypesResult)null!);
-        _mediator.Setup(x => x.Send(It.IsAny<ListEntityTypesRequest>())).ReturnsAsync(result.Value);
+        _mediator.Setup(x => x.Send(It.IsAny<ListEntityTypesRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(result.Value);
     }
 
     private static Result<ListEntityTypesResult> GetSendResult(IEnumerable<EntityType>? items = null, IPagination? pagination = null)

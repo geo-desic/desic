@@ -3,14 +3,14 @@ using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Interfaces;
 using Desic.Domain.Common.Extensions;
 using Desic.Domain.Labels;
+using DispatchR.Abstractions.Send;
 using FluentValidation;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Users.Create;
 
-public class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IApplicationDbContext dbContext, IValidator<CreateUser> validator) : IRequestHandler<CreateUserRequest, Result<CreateUserResult>>
+public sealed class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> logger, IApplicationDbContext dbContext, IValidator<CreateUser> validator) : IRequestHandler<CreateUserRequest, Task<Result<CreateUserResult>>>
 {
     private readonly ILogger<CreateUserRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));

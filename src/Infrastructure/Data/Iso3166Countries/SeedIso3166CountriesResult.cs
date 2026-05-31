@@ -2,6 +2,6 @@
 
 namespace Desic.Infrastructure.Data.Iso3166Countries;
 
-public class SeedIso3166CountriesResult : SeedResult
+public sealed class SeedIso3166CountriesResult : SeedResult
 {
 }

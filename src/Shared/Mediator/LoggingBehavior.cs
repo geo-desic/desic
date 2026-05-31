@@ -1,15 +1,17 @@
-﻿using MediatR;
+﻿using DispatchR.Abstractions.Send;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace Desic.Shared.Mediator;
 
-public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+public sealed class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, Task<TResponse>>
+    where TRequest : class, IRequest<TRequest, Task<TResponse>>
 {
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger = logger;
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
+    public required IRequestHandler<TRequest, Task<TResponse>> NextPipeline { get; set; }
+
+    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken)
     {
         var requestType = typeof(TRequest).Name;
         _logger.LogDebug("Handling {RequestType}", requestType);
@@ -17,7 +19,7 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
         var stopwatch = new Stopwatch();
 
         stopwatch.Start();
-        var response = await next(cancellationToken);
+        var response = await NextPipeline.Handle(request, cancellationToken);
         stopwatch.Stop();
 
         var responseType = typeof(TResponse).Name;

@@ -1,5 +1,5 @@
 ﻿using Desic.Shared.Data;
-using MediatR;
+using DispatchR.Abstractions.Send;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -10,7 +10,7 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
-public class InitializeApplicationDatabaseRequestHandler(IConfiguration config, IOptions<InitializeApplicationDatabaseOptions> options, ILogger<InitializeApplicationDatabaseRequestHandler> logger) : IRequestHandler<InitializeApplicationDatabaseRequest>
+public sealed class InitializeApplicationDatabaseRequestHandler(IConfiguration config, IOptions<InitializeApplicationDatabaseOptions> options, ILogger<InitializeApplicationDatabaseRequestHandler> logger) : IRequestHandler<InitializeApplicationDatabaseRequest, Task>
 {
     private readonly IConfiguration _config = config ?? throw new ArgumentNullException(nameof(config));
     private bool _contained;

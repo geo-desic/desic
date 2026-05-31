@@ -15,13 +15,13 @@ public class LoggingBehaviorTests
         public async Task Handle_SpecifiedRequest_ExpectedLogging()
         {
             // arrange
-            var behavior = new LoggingBehavior<TestRequest, TestResponse>(_logger);
             var request = new TestRequest { Message = "Request" };
-            var expectedResponse = new TestResponse { Message = "Response" };
-            async Task<TestResponse> next(CancellationToken t = default) => expectedResponse;
+            var handler = new TestRequestHandler();
+            var expectedResponse = new TestResponse { Message = "Request Response" };
+            var behavior = new LoggingBehavior<TestRequest, TestResponse>(_logger) { NextPipeline = handler };
 
             // act
-            var response = await behavior.Handle(request, next, TestContext.Current.CancellationToken);
+            var response = await behavior.Handle(request, TestContext.Current.CancellationToken);
 
             // assert
             _logger.Collector.Count.Should().Be(4);

@@ -18,8 +18,6 @@
     <Project Path="src/Infrastructure.Data.SqlServer/Infrastructure.Data.SqlServer.csproj" Id="6aa03bec-40b7-4f99-90dd-343d1f6575fa" />
     <Project Path="src/Infrastructure.Tools.DbUpdater/Infrastructure.Tools.DbUpdater.csproj" Id="52416796-62fe-488f-989e-b006ac0f01da" />
     <Project Path="src/Infrastructure/Infrastructure.csproj" Id="9a6707b2-40a0-486e-b091-901d654d46c8" />
-    <Project Path="src/MediatR.Contracts/MediatR.Contracts.csproj" />
-    <Project Path="src/MediatR/MediatR.csproj" />
     <Project Path="src/ServiceDefaults/ServiceDefaults.csproj" />
     <Project Path="src/Shared/Shared.csproj" />
     <Project Path="src/web/web.esproj">
@@ -39,8 +37,6 @@
     <Project Path="test/Infrastructure.Data.SqlServer.Tests.Integration/Infrastructure.Data.SqlServer.Tests.Integration.csproj" />
     <Project Path="test/Infrastructure.Data.SqlServer.Tests.Unit/Infrastructure.Data.SqlServer.Tests.Unit.csproj" />
     <Project Path="test/Infrastructure.Tests.Unit/Infrastructure.Tests.Unit.csproj" />
-    <Project Path="test/MediatR.Benchmarks/MediatR.Benchmarks.csproj" />
-    <Project Path="test/MediatR.Tests/MediatR.Tests.csproj" />
     <Project Path="test/Shared.Tests.Unit/Shared.Tests.Unit.csproj" />
     <Project Path="test/Testing.Integration/Testing.Integration.csproj" Id="defdd080-770f-45a6-b39b-fc2a941b1710" />
   </Folder>

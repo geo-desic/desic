@@ -1,13 +1,14 @@
 ﻿using Desic.Application.Common;
 using Desic.Domain.Common.Extensions;
 using Desic.Domain.Iso3166Countries;
-using MediatR;
+using DispatchR;
+using DispatchR.Abstractions.Send;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Infrastructure.Data.Iso3166Countries;
 
-public class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, SeedIso3166CountriesResult>
+public sealed class SeedIso3166CountriesRequestHandler(ApplicationDbContext context, ILogger<SeedIso3166CountriesRequestHandler> logger, IMediator mediator) : IRequestHandler<SeedIso3166CountriesRequest, Task<SeedIso3166CountriesResult>>
 {
     private int _batchNumber = 0;
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));

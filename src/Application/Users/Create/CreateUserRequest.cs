@@ -1,9 +1,9 @@
 ﻿using Desic.Application.Common;
 using Desic.Application.Common.Models;
-using MediatR;
+using DispatchR.Abstractions.Send;
 
 namespace Desic.Application.Users.Create;
 
-public class CreateUserRequest : CreateRequest<CreateUser>, IRequest<Result<CreateUserResult>>
+public sealed class CreateUserRequest : CreateRequest<CreateUser>, IRequest<CreateUserRequest, Task<Result<CreateUserResult>>>
 {
 }

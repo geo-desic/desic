@@ -1,13 +1,13 @@
 ﻿using Desic.Application.Common;
 using Desic.Domain.Common.Extensions;
 using Desic.Domain.Labels;
-using MediatR;
+using DispatchR.Abstractions.Send;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Infrastructure.Data.Labels;
 
-public class SeedLabelsRequestHandler(ApplicationDbContext context, ILogger<SeedLabelsRequestHandler> logger) : IRequestHandler<SeedLabelsRequest, SeedLabelsResult>
+public sealed class SeedLabelsRequestHandler(ApplicationDbContext context, ILogger<SeedLabelsRequestHandler> logger) : IRequestHandler<SeedLabelsRequest, Task<SeedLabelsResult>>
 {
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
     private readonly ILogger<SeedLabelsRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));

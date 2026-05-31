@@ -3,7 +3,7 @@ using Desic.Application.Common;
 using Desic.Application.Users;
 using Desic.Application.Users.Create;
 using Desic.Application.Users.Get;
-using MediatR;
+using DispatchR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Desic.Api.Controllers.V1;
@@ -19,13 +19,13 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<User>> Get([FromRoute] Guid id)
+    public async Task<ActionResult<User>> Get([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         using var loggerScope = _logger.BeginScope("UserId:{userId}", id);
         _logger.LogInformation(LogEvents.GetUser, $"{nameof(UsersController)}.{nameof(Get)}({{{nameof(id)}}})", id);
 
         var request = new GetUserByIdRequest { Id = id };
-        var result = await _mediator.Send(request);
+        var result = await _mediator.Send(request, cancellationToken);
 
         return result.Match(onSuccess: r => Ok(r), onFailure: e => Problem(e), onNull: () => NotFound());
     }
@@ -36,13 +36,13 @@ public class UsersController(ILogger<UsersController> logger, IMediator mediator
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<User>> Create([FromBody] CreateUser user, [FromHeader(Name = Headers.Keys.Prefer)] string? preferHeaderValue)
+    public async Task<ActionResult<User>> Create([FromBody] CreateUser user, [FromHeader(Name = Headers.Keys.Prefer)] string? preferHeaderValue, CancellationToken cancellationToken)
     {
         using var loggerScope = _logger.BeginScope("Username:{username}", user.Username);
         _logger.LogInformation(LogEvents.CreateUser, $"{nameof(UsersController)}.{nameof(Create)}(user, {{{nameof(preferHeaderValue)}}})", preferHeaderValue);
 
         var request = new CreateUserRequest { Model = user, ReturnRepresentation = Headers.Values.IsPreferRepresentation(preferHeaderValue) };
-        var resultCreate = await _mediator.Send(request);
+        var resultCreate = await _mediator.Send(request, cancellationToken);
         if (resultCreate.IsFailure) return Problem(resultCreate.Error);
         var value = resultCreate.Value;
         _logger.LogDebug(LogEvents.CreateUser, $"Adding '{Headers.Keys.EntityId}' response header with value {{{nameof(Headers.Keys.EntityId)}}}", value.Id);

@@ -2,6 +2,6 @@
 
 namespace Desic.Application.Iso3166Countries.List;
 
-public class ListIso3166CountriesResult : ListResult<Iso3166CountryView>
+public sealed class ListIso3166CountriesResult : ListResult<Iso3166CountryView>
 {
 }

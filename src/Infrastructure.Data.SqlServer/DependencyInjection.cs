@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DispatchR.Extensions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Desic.Infrastructure.Data.SqlServer;
@@ -9,7 +10,7 @@ public static class DependencyInjection
     {
         services.AddOptions<InitializeApplicationDatabaseOptions>().BindConfiguration(ConfigKeys.SectionInitialization).ValidateDataAnnotations().ValidateOnStart();
         services
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IAssemblyReference>())
+            .AddDispatchR(typeof(IAssemblyReference).Assembly)
             .ConfigureApplicationDbContextForSqlServer(connectionString: connectionString ?? config.GetValue("connection", config.GetConnectionString(DbProviders.SqlServer)), setMigrationsAssembly: config.GetValue(ApplicationDatabaseConfigKeys.MigrationsEnabled, true), useSeeding: config.GetValue(ApplicationDatabaseConfigKeys.SeedingEnabled, false));
         return services;
     }

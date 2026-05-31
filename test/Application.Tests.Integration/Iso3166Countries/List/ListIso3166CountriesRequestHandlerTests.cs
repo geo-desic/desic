@@ -3,7 +3,7 @@ using Desic.Application.Common.Models;
 using Desic.Application.Iso3166Countries;
 using Desic.Application.Iso3166Countries.List;
 using Desic.Testing.Integration.Db;
-using MediatR;
+using DispatchR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Desic.Application.Tests.Integration.Iso3166Countries.List;

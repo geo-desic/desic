@@ -1,7 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Application.Common.Interfaces;
 using Desic.Infrastructure.Data;
-using MediatR;
+using DispatchR.Abstractions.Send;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -23,8 +23,8 @@ public class DependencyInjectionTests
 
             // assert
             serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IApplicationDbContext)).Should().NotBeNull();
-            // at least one request handler is registered (MediatR)
-            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IRequestHandler<SeedApplicationDatabaseRequest>)).Should().NotBeNull();
+            // at least one request handler is registered
+            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IRequestHandler<SeedApplicationDatabaseRequest, Task>)).Should().NotBeNull();
             // at least one IOptions is registered
             var serviceProvider = serviceCollection.BuildServiceProvider(); // can't validate IOptions<T> until service provider is built
             serviceProvider.GetService<IOptions<SeedApplicationDatabaseOptions>>().Should().NotBeNull();

@@ -3,7 +3,7 @@ using Desic.Api.Controllers.V1;
 using Desic.Application.Common;
 using Desic.Application.Users;
 using Desic.Application.Users.Get;
-using MediatR;
+using DispatchR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -28,7 +28,7 @@ public class UsersControllerTests
             var controller = NewController();
 
             // act
-            var result = (await controller.Get(_id))?.Result as NotFoundResult;
+            var result = (await controller.Get(_id, cancellationToken: TestContext.Current.CancellationToken))?.Result as NotFoundResult;
 
             // assert
             result.Should().NotBeNull();
@@ -47,7 +47,7 @@ public class UsersControllerTests
             var controller = NewController();
 
             // act
-            var result = (await controller.Get(_id))?.Result as OkObjectResult;
+            var result = (await controller.Get(_id, cancellationToken: TestContext.Current.CancellationToken))?.Result as OkObjectResult;
 
             // assert
             result.Should().NotBeNull();
@@ -59,7 +59,7 @@ public class UsersControllerTests
     private void Setup(User? item)
     {
         var result = item == null ? new Result<User>() : new Result<User>(item);
-        _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>())).ReturnsAsync(result);
+        _mediator.Setup(x => x.Send(It.IsAny<GetUserByIdRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(result);
     }
 
     private UsersController NewController()

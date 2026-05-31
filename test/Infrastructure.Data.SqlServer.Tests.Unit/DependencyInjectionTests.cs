@@ -1,5 +1,5 @@
 using AwesomeAssertions;
-using MediatR;
+using DispatchR.Abstractions.Send;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -30,11 +30,11 @@ public class DependencyInjectionTests
             serviceCollection.AddSqlServerInfrastructure(config: configuration, connectionString: explicitConnectionString);
 
             // assert
-            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IRequestHandler<InitializeApplicationDatabaseRequest>)).Should().NotBeNull();
+            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IRequestHandler<InitializeApplicationDatabaseRequest, Task>)).Should().NotBeNull();
             // service provider items
             var serviceProvider = serviceCollection.BuildServiceProvider();
             serviceProvider.GetService<IOptions<InitializeApplicationDatabaseOptions>>().Should().NotBeNull();
-            serviceProvider.GetService<IRequestHandler<InitializeApplicationDatabaseRequest>>().Should().BeOfType<InitializeApplicationDatabaseRequestHandler>();
+            serviceProvider.GetService<IRequestHandler<InitializeApplicationDatabaseRequest, Task>>().Should().BeOfType<InitializeApplicationDatabaseRequestHandler>();
             // assert ApplicationDbContext is registered correctly
             using var scope = serviceProvider.CreateScope();
             using var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

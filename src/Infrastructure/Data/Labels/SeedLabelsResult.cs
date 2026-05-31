@@ -2,6 +2,6 @@
 
 namespace Desic.Infrastructure.Data.Labels;
 
-public class SeedLabelsResult : SeedResult
+public sealed class SeedLabelsResult : SeedResult
 {
 }

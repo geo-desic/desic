@@ -1,5 +1,6 @@
 ﻿using Desic.Application.Common.Interfaces;
 using Desic.Infrastructure.Data;
+using DispatchR.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Desic.Infrastructure;
@@ -11,7 +12,7 @@ public static class DependencyInjection
         services.AddOptions<SeedApplicationDatabaseOptions>().BindConfiguration(ApplicationDatabaseConfigKeys.SectionSeeding);
         services
             .AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>())
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<IAssemblyReference>());
+            .AddDispatchR(typeof(IAssemblyReference).Assembly);
         return services;
     }
 }

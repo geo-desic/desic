@@ -2,6 +2,6 @@
 
 namespace Desic.Infrastructure.Data.EntityTypes;
 
-public class SeedEntityTypesResult : SeedResult
+public sealed class SeedEntityTypesResult : SeedResult
 {
 }

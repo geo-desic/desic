@@ -7,7 +7,7 @@ using Desic.Application.Common.Models;
 using Desic.Application.Iso3166Countries;
 using Desic.Application.Iso3166Countries.List;
 using Desic.Shared.Extensions;
-using MediatR;
+using DispatchR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -61,13 +61,13 @@ public class Iso3166CountriesControllerTests
             var controller = NewController();
 
             // act
-            var result = (await controller.List(pagination: pagination, filter: filter, orderingMethodFromQuery: orderingMethodFromQuery))?.Result as OkObjectResult;
+            var result = (await controller.List(pagination: pagination, filter: filter, orderingMethodFromQuery: orderingMethodFromQuery, cancellationToken: TestContext.Current.CancellationToken))?.Result as OkObjectResult;
 
             // assert
             _mediator.Verify(x => x.Send(It.Is<ListIso3166CountriesRequest>(x =>
                 x.Pagination.IsEquivalentTo(pagination)
                 && x.OrderingMethod.IsEquivalentTo(expectedOrderingMethod)
-                && IsEquivalentTo(source: x.Filter, compare: filter))), Times.Once());
+                && IsEquivalentTo(source: x.Filter, compare: filter)), It.IsAny<CancellationToken>()), Times.Once());
             result.Should().NotBeNull();
             result.StatusCode.Should().Be((int)HttpStatusCode.OK);
             var objectResult = result.Value as ListIso3166CountriesResult;
@@ -91,7 +91,7 @@ public class Iso3166CountriesControllerTests
             };
 
             // act
-            var result = (await controller.List(pagination: new(), filter: new(), orderingMethodFromQuery: orderingMethodFromQueryInvalid))?.Result as ObjectResult;
+            var result = (await controller.List(pagination: new(), filter: new(), orderingMethodFromQuery: orderingMethodFromQueryInvalid, cancellationToken: TestContext.Current.CancellationToken))?.Result as ObjectResult;
 
             // assert
             result.Should().NotBeNull();
@@ -112,7 +112,7 @@ public class Iso3166CountriesControllerTests
             var controller = NewController();
 
             // act
-            var result = (await controller.List(pagination: new(), filter: new(), new()))?.Result as ObjectResult;
+            var result = (await controller.List(pagination: new(), filter: new(), orderingMethodFromQuery: new(), cancellationToken: TestContext.Current.CancellationToken))?.Result as ObjectResult;
 
             // assert
             result.Should().NotBeNull();
@@ -136,7 +136,7 @@ public class Iso3166CountriesControllerTests
     private void Setup(Result<ListIso3166CountriesResult>? result = null)
     {
         result ??= new((ListIso3166CountriesResult)null!);
-        _mediator.Setup(x => x.Send(It.IsAny<ListIso3166CountriesRequest>())).ReturnsAsync(result.Value);
+        _mediator.Setup(x => x.Send(It.IsAny<ListIso3166CountriesRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(result.Value);
     }
 
     private Iso3166CountriesController NewController()

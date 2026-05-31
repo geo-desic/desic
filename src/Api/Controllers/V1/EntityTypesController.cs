@@ -3,7 +3,7 @@ using Desic.Application.Common;
 using Desic.Application.Common.Models;
 using Desic.Application.EntityTypes;
 using Desic.Application.EntityTypes.List;
-using MediatR;
+using DispatchR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Desic.Api.Controllers.V1;
@@ -20,7 +20,7 @@ public class EntityTypesController(ILogger<EntityTypesController> logger, IMedia
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    public async Task<ActionResult<ListEntityTypesResult>> List([FromQuery] Pagination pagination, [FromQuery] EntityTypesFilter filter, [FromQuery] OrderingMethodFromQuery<EntityTypesOrderingProperty> orderingMethodFromQuery)
+    public async Task<ActionResult<ListEntityTypesResult>> List([FromQuery] Pagination pagination, [FromQuery] EntityTypesFilter filter, [FromQuery] OrderingMethodFromQuery<EntityTypesOrderingProperty> orderingMethodFromQuery, CancellationToken cancellationToken)
     {
         _logger.LogInformation(LogEvents.ListEntityTypes, $"{nameof(EntityTypesController)}.{nameof(List)}({nameof(Pagination)}, {nameof(EntityTypesFilter)}, {nameof(OrderingMethodFromQuery<>)})");
         _logger.LogDebug(LogEvents.ListEntityTypes, $"{nameof(Pagination)}: {nameof(Pagination.Count)} = {{{nameof(Pagination.Count)}}}; {nameof(Pagination.IncludeTotalCount)} = {{{nameof(Pagination.IncludeTotalCount)}}}; {nameof(Pagination.StartIndex)} = {{{nameof(Pagination.StartIndex)}}}", pagination.Count, pagination.IncludeTotalCount, pagination.StartIndex);
@@ -37,7 +37,7 @@ public class EntityTypesController(ILogger<EntityTypesController> logger, IMedia
             OrderingMethod = orderingMethod,
             Filter = filter,
         };
-        var result = await _mediator.Send(request);
+        var result = await _mediator.Send(request, cancellationToken);
 
         return result.Match(onSuccess: r => Ok(r), onFailure: e => Problem(e));
     }

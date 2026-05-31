@@ -2,8 +2,8 @@
 using Desic.Application.Common;
 using Desic.Application.EntityTypes.List;
 using Desic.Application.Users.Create;
+using DispatchR.Abstractions.Send;
 using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Desic.Application.Tests.Unit;
@@ -24,8 +24,8 @@ public class DependencyInjectionTests
             // assert
             // at least one validator is registered (FluentAssertions)
             serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IValidator<CreateUser>)).Should().NotBeNull();
-            // at least one request handler is registered (MediatR)
-            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IRequestHandler<ListEntityTypesRequest, Result<ListEntityTypesResult>>)).Should().NotBeNull();
+            // at least one request handler is registered
+            serviceCollection.SingleOrDefault(d => d.ServiceType == typeof(IRequestHandler<ListEntityTypesRequest, Task<Result<ListEntityTypesResult>>>)).Should().NotBeNull();
         }
     }
 

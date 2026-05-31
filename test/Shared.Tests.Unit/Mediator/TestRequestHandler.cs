@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using DispatchR.Abstractions.Send;
 
 namespace Desic.Shared.Tests.Unit.Mediator;
 
-public class TestRequestHandler : IRequestHandler<TestRequest, TestResponse>
+public sealed class TestRequestHandler : IRequestHandler<TestRequest, Task<TestResponse>>
 {
     public Task<TestResponse> Handle(TestRequest request, CancellationToken cancellationToken)
     {

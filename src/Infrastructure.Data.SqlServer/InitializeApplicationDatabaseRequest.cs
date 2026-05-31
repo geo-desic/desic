@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using DispatchR.Abstractions.Send;
 
 namespace Desic.Infrastructure.Data.SqlServer;
 
-public class InitializeApplicationDatabaseRequest : IRequest
+public sealed class InitializeApplicationDatabaseRequest : IRequest<InitializeApplicationDatabaseRequest, Task>
 {
     public required string ConnectionString { get; set; }
     public string? DatabaseName { get; set; }

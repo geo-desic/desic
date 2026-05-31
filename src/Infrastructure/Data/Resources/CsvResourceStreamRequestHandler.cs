@@ -1,12 +1,11 @@
 ﻿using CsvHelper;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 
 namespace Desic.Infrastructure.Data.Resources;
 
-public class CsvResourceStreamRequestHandler<T>(ILogger<CsvResourceStreamRequestHandler<T>> logger) : IStreamRequestHandler<CsvResourceStreamRequest<T>, T>
+public class CsvResourceStreamRequestHandler<T>(ILogger<CsvResourceStreamRequestHandler<T>> logger)
 {
     private readonly ILogger<CsvResourceStreamRequestHandler<T>> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 

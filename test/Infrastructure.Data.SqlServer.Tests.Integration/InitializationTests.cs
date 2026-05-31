@@ -1,7 +1,7 @@
 ﻿using AwesomeAssertions;
 using Desic.Testing.Integration.Db;
 using Desic.Testing.Integration.Hosting;
-using MediatR;
+using DispatchR;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

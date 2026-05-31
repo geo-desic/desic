@@ -1,6 +1,6 @@
 ﻿using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.SqlServer;
-using MediatR;
+using DispatchR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

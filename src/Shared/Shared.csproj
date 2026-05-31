@@ -9,11 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DispatchR.Mediator.Abstractions" Version="2.3.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.8" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MediatR\MediatR.csproj" />
   </ItemGroup>
 
   <ItemGroup>

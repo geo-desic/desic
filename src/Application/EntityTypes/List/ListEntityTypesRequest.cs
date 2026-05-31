@@ -1,9 +1,9 @@
 ﻿using Desic.Application.Common;
 using Desic.Application.Common.Models;
-using MediatR;
+using DispatchR.Abstractions.Send;
 
 namespace Desic.Application.EntityTypes.List;
 
-public class ListEntityTypesRequest : FilterableOrderableListRequest<EntityTypesFilter, EntityTypesOrderingProperty>, IRequest<Result<ListEntityTypesResult>>
+public sealed class ListEntityTypesRequest : FilterableOrderableListRequest<EntityTypesFilter, EntityTypesOrderingProperty>, IRequest<ListEntityTypesRequest, Task<Result<ListEntityTypesResult>>>
 {
 }

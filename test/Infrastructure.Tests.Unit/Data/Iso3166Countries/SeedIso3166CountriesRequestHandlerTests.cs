@@ -7,7 +7,7 @@ using Desic.Domain.Labels;
 using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.Iso3166Countries;
 using Desic.Shared.Extensions;
-using MediatR;
+using DispatchR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Testing;
 using Moq;

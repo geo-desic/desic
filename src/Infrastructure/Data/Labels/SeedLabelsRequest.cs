@@ -1,8 +1,7 @@
 ﻿using Desic.Infrastructure.Data.Common.Models;
-using MediatR;
-
+using DispatchR.Abstractions.Send;
 namespace Desic.Infrastructure.Data.Labels;
 
-public class SeedLabelsRequest : SeedRequest, IRequest<SeedLabelsResult>
+public sealed class SeedLabelsRequest : SeedRequest, IRequest<SeedLabelsRequest, Task<SeedLabelsResult>>
 {
 }

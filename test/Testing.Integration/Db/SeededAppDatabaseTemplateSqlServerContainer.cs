@@ -1,9 +1,9 @@
 ﻿using Desic.Infrastructure.Data;
 using Desic.Infrastructure.Data.Providers;
 using Desic.Infrastructure.Data.SqlServer;
+using DispatchR;
 using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
-using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

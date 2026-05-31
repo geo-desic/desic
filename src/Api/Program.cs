@@ -130,21 +130,23 @@ app.UseHttpsRedirection();
 app.Logger.LogInformation("Configuring the app to use authorization");
 app.UseAuthorization();
 
-var endpoint = "v1/healthz/live";
+const string routePrefixHealth = "v1/healthz";
+
+var endpoint = $"{routePrefixHealth}/live";
 app.Logger.LogInformation("Configuring the endpoint: {Endpoint}", endpoint);
 app.MapHealthChecks(endpoint, new HealthCheckOptions
 {
     Predicate = _ => false
 });
 
-endpoint = "v1/healthz/ready";
+endpoint = $"{routePrefixHealth}/ready";
 app.Logger.LogInformation("Configuring the endpoint: {Endpoint}", endpoint);
 app.MapHealthChecks(endpoint, new HealthCheckOptions
 {
     Predicate = healthCheck => healthCheck.Tags.Contains("ready")
 });
 
-endpoint = "v1/healthz/report";
+endpoint = $"{routePrefixHealth}/report";
 app.Logger.LogInformation("Configuring the endpoint: {Endpoint}", endpoint);
 app.MapHealthChecks(endpoint, new HealthCheckOptions
 {

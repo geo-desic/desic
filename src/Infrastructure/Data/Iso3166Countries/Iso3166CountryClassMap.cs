@@ -3,7 +3,7 @@ using Desic.Domain.Iso3166Countries;
 
 namespace Desic.Infrastructure.Data.Iso3166Countries;
 
-public class Iso3166CountryClassMap : ClassMap<Iso3166Country>
+public sealed class Iso3166CountryClassMap : ClassMap<Iso3166Country>
 {
     public Iso3166CountryClassMap()
     {

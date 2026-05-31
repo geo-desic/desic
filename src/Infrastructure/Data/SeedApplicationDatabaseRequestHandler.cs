@@ -8,14 +8,15 @@ using Desic.Infrastructure.Data.Iso3166Countries;
 using Desic.Infrastructure.Data.Labels;
 using Desic.Infrastructure.Data.Test.Users;
 using Desic.Shared.Extensions;
-using MediatR;
+using DispatchR;
+using DispatchR.Abstractions.Send;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Desic.Infrastructure.Data;
 
-public class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context, ILogger<SeedApplicationDatabaseRequestHandler> logger, IMediator mediator, IOptions<SeedApplicationDatabaseOptions> seedingOptions) : IRequestHandler<SeedApplicationDatabaseRequest>
+public sealed class SeedApplicationDatabaseRequestHandler(ApplicationDbContext context, ILogger<SeedApplicationDatabaseRequestHandler> logger, IMediator mediator, IOptions<SeedApplicationDatabaseOptions> seedingOptions) : IRequestHandler<SeedApplicationDatabaseRequest, Task>
 {
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
     private readonly ILogger<SeedApplicationDatabaseRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));

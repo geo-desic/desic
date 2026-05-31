@@ -1,3 +1,3 @@
 ﻿namespace Desic.Shared;
 
-internal interface IAssemblyReference { }
+public interface IAssemblyReference { }

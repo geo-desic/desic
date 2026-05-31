@@ -2,6 +2,6 @@
 
 namespace Desic.Application.Users.Create;
 
-public class CreateUserResult : CreateResult<User>
+public sealed class CreateUserResult : CreateResult<User>
 {
 }

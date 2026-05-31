@@ -1,12 +1,12 @@
 ﻿using Desic.Application.Common;
 using Desic.Domain.EntityTypes;
-using MediatR;
+using DispatchR.Abstractions.Send;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Infrastructure.Data.EntityTypes;
 
-public class SeedEntityTypesRequestHandler(ApplicationDbContext context, ILogger<SeedEntityTypesRequestHandler> logger) : IRequestHandler<SeedEntityTypesRequest, SeedEntityTypesResult>
+public sealed class SeedEntityTypesRequestHandler(ApplicationDbContext context, ILogger<SeedEntityTypesRequestHandler> logger) : IRequestHandler<SeedEntityTypesRequest, Task<SeedEntityTypesResult>>
 {
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
     private readonly ILogger<SeedEntityTypesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));

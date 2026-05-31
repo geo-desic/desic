@@ -6,7 +6,7 @@ using Desic.Infrastructure.Data.EntityTypes;
 using Desic.Infrastructure.Data.Iso3166Countries;
 using Desic.Infrastructure.Data.Labels;
 using Desic.Infrastructure.Data.Test.Users;
-using MediatR;
+using DispatchR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;

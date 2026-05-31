@@ -1,12 +1,12 @@
 ﻿using Desic.Application.Common;
 using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Interfaces;
-using MediatR;
+using DispatchR.Abstractions.Send;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Users.Get;
 
-public class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger, IApplicationDbContext dbContext) : IRequestHandler<GetUserByIdRequest, Result<User>>
+public sealed class GetUserByIdRequestHandler(ILogger<GetUserByIdRequestHandler> logger, IApplicationDbContext dbContext) : IRequestHandler<GetUserByIdRequest, Task<Result<User>>>
 {
     private readonly ILogger<GetUserByIdRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));

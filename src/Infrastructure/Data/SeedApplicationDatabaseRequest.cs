@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using DispatchR.Abstractions.Send;
 
 namespace Desic.Infrastructure.Data;
 
-public class SeedApplicationDatabaseRequest : IRequest
+public sealed class SeedApplicationDatabaseRequest : IRequest<SeedApplicationDatabaseRequest, Task>
 {
 }

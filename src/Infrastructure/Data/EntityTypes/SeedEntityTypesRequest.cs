@@ -1,8 +1,8 @@
 ﻿using Desic.Infrastructure.Data.Common.Models;
-using MediatR;
+using DispatchR.Abstractions.Send;
 
 namespace Desic.Infrastructure.Data.EntityTypes;
 
-public class SeedEntityTypesRequest : SeedRequest, IRequest<SeedEntityTypesResult>
+public sealed class SeedEntityTypesRequest : SeedRequest, IRequest<SeedEntityTypesRequest, Task<SeedEntityTypesResult>>
 {
 }

@@ -2,6 +2,6 @@
 
 namespace Desic.Infrastructure.Data.Test.Users;
 
-public class SeedTestUsersResult : SeedResult
+public sealed class SeedTestUsersResult : SeedResult
 {
 }

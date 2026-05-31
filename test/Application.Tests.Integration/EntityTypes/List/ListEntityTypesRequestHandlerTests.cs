@@ -4,7 +4,7 @@ using Desic.Application.EntityTypes;
 using Desic.Application.EntityTypes.List;
 using Desic.Domain.EntityTypes;
 using Desic.Testing.Integration.Db;
-using MediatR;
+using DispatchR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Desic.Application.Tests.Integration.EntityTypes.List;

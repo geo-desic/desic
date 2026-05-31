@@ -2,13 +2,13 @@
 using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Infrastructure;
 using Desic.Application.Common.Interfaces;
+using DispatchR.Abstractions.Send;
 using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.Iso3166Countries.List;
 
-public class ListIso3166CountriesRequestHandler(ILogger<ListIso3166CountriesRequestHandler> logger, IApplicationDbContext dbContext, IValidator<IOrderingMethod> validator) : IRequestHandler<ListIso3166CountriesRequest, Result<ListIso3166CountriesResult>>
+public sealed class ListIso3166CountriesRequestHandler(ILogger<ListIso3166CountriesRequestHandler> logger, IApplicationDbContext dbContext, IValidator<IOrderingMethod> validator) : IRequestHandler<ListIso3166CountriesRequest, Task<Result<ListIso3166CountriesResult>>>
 {
     private readonly ILogger<ListIso3166CountriesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));

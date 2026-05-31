@@ -1,9 +1,9 @@
 ﻿using Desic.Application.Common;
 using Desic.Application.Common.Models;
-using MediatR;
+using DispatchR.Abstractions.Send;
 
 namespace Desic.Application.Users.Get;
 
-public class GetUserByIdRequest : GetByIdRequest, IRequest<Result<User>>
+public sealed class GetUserByIdRequest : GetByIdRequest, IRequest<GetUserByIdRequest, Task<Result<User>>>
 {
 }

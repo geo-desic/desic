@@ -2,13 +2,13 @@
 using Desic.Application.Common.Extensions;
 using Desic.Application.Common.Infrastructure;
 using Desic.Application.Common.Interfaces;
+using DispatchR.Abstractions.Send;
 using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Application.EntityTypes.List;
 
-public class ListEntityTypesRequestHandler(ILogger<ListEntityTypesRequestHandler> logger, IApplicationDbContext dbContext, IValidator<IOrderingMethod> validator) : IRequestHandler<ListEntityTypesRequest, Result<ListEntityTypesResult>>
+public sealed class ListEntityTypesRequestHandler(ILogger<ListEntityTypesRequestHandler> logger, IApplicationDbContext dbContext, IValidator<IOrderingMethod> validator) : IRequestHandler<ListEntityTypesRequest, Task<Result<ListEntityTypesResult>>>
 {
     private readonly ILogger<ListEntityTypesRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     private readonly IApplicationDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));

@@ -2,6 +2,6 @@
 
 namespace Desic.Application.EntityTypes.List;
 
-public class ListEntityTypesResult : ListResult<EntityType>
+public sealed class ListEntityTypesResult : ListResult<EntityType>
 {
 }

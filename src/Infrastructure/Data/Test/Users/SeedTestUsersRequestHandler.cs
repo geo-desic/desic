@@ -1,13 +1,13 @@
 ﻿using Desic.Application.Common;
 using Desic.Domain.Users;
 using Desic.Domain.Users.Test;
-using MediatR;
+using DispatchR.Abstractions.Send;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Desic.Infrastructure.Data.Test.Users;
 
-public class SeedTestUsersRequestHandler(ApplicationDbContext context, ILogger<SeedTestUsersRequestHandler> logger) : IRequestHandler<SeedTestUsersRequest, SeedTestUsersResult>
+public sealed class SeedTestUsersRequestHandler(ApplicationDbContext context, ILogger<SeedTestUsersRequestHandler> logger) : IRequestHandler<SeedTestUsersRequest, Task<SeedTestUsersResult>>
 {
     private readonly ApplicationDbContext _context = context ?? throw new ArgumentNullException(nameof(context));
     private readonly ILogger<SeedTestUsersRequestHandler> _logger = logger ?? throw new ArgumentNullException(nameof(logger));

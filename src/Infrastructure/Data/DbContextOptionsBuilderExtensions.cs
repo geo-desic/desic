@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using DispatchR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +14,7 @@ public static class DbContextOptionsBuilderExtensions
         options.UseSeeding((context, seed) =>
         {
             var mediator = serviceProvider.GetRequiredService<IMediator>();
-            mediator.Send(new SeedApplicationDatabaseRequest()).GetAwaiter().GetResult();
+            mediator.Send(new SeedApplicationDatabaseRequest(), cancellationToken: CancellationToken.None).GetAwaiter().GetResult();
         });
         options.UseAsyncSeeding(async (context, seed, cancellationToken) =>
         {

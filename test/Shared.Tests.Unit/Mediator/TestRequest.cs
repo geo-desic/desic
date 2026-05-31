@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using DispatchR.Abstractions.Send;
 
 namespace Desic.Shared.Tests.Unit.Mediator;
 
-public class TestRequest : IRequest<TestResponse>
+public sealed class TestRequest : IRequest<TestRequest, Task<TestResponse>>
 {
     public string? Message { get; set; }
 }
