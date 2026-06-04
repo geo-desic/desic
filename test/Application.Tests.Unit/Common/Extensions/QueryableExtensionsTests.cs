@@ -59,7 +59,7 @@ public class QueryableExtensionsTests : InMemoryEfCoreDependencyTests<TestDbCont
             var expected = new TestEntity { Id = IdThatExists };
 
             // act
-            var query = QueryableExtensions.GetEntityByIdQuery(source: DbContext.TestEntities, id: IdThatExists, cancellationToken: TestContext.Current.CancellationToken);
+            var query = QueryableExtensions.GetEntityByIdQuery(source: DbContext.TestEntities, id: IdThatExists);
             var result = await query.FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             // assert
@@ -73,7 +73,7 @@ public class QueryableExtensionsTests : InMemoryEfCoreDependencyTests<TestDbCont
         public async Task GetEntityByIdQuery_EntityWithSpecifiedIdDoesNotExist_ReturnsExpectedQuery()
         {
             // act
-            var query = QueryableExtensions.GetEntityByIdQuery(source: DbContext.TestEntities, id: IdThatDoesNotExist, cancellationToken: TestContext.Current.CancellationToken);
+            var query = QueryableExtensions.GetEntityByIdQuery(source: DbContext.TestEntities, id: IdThatDoesNotExist);
             var result = await query.FirstOrDefaultAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             // assert

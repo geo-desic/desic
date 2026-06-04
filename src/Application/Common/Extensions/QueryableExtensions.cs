@@ -12,7 +12,7 @@ internal static class QueryableExtensions
         return await source.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
-    public static IQueryable<T> GetEntityByIdQuery<T>(this IQueryable<T> source, Guid id, CancellationToken cancellationToken) where T : BaseEntity
+    public static IQueryable<T> GetEntityByIdQuery<T>(this IQueryable<T> source, Guid id) where T : BaseEntity
     {
         return source.Where(x => x.Id == id);
     }
