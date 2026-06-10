@@ -30,7 +30,7 @@ public sealed class CreateUserRequestHandler(ILogger<CreateUserRequestHandler> l
 
         var user = new Domain.Users.User
         {
-            Id = dbContext.CreateSequentialGuid(),
+            Id = _dbContext.CreateSequentialGuid(),
             IsActive = true,
             Username = request.Model.Username!
         };

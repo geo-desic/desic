@@ -1,6 +1,6 @@
-﻿# Desic Solution
+﻿# Desic Solution Template
 
-This is currently a template for a new .net api following recommended/best practices.
+This is a template for a new .net api following recommended/best practices. The entity types included are fairly basic and not particularly interesting. The main purpose of this repository is to provide a solid starting point (or reference) for new projects with a bunch of the initial setup and boilerplate code already implemented. It also includes some example implementations and a robust testing framework to help ensure that all code is well tested and follows the established patterns and practices.
 
 - [Quickstart - Development](development.md)
 

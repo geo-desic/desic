@@ -13,3 +13,4 @@
 - [ ] Implement some basic github workflows for the repository
   - [ ] CI workflow for running tests and code analysis
   - [ ] CD workflow for deploying to a staging environment
+- [ ] Add some basic functionality to the frontend project to verify that it can successfully communicate with the api and display data
