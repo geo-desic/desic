@@ -2,17 +2,14 @@
 
   <PropertyGroup>
     <AssemblyName>Desic.Testing.Integration</AssemblyName>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
     <RootNamespace>Desic.Testing.Integration</RootNamespace>
-    <TargetFramework>net10.0</TargetFramework>
     <UserSecretsId>c121f405-33f5-48cb-b6f5-f4287fc75de8</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.9" />
-    <PackageReference Include="Testcontainers.MsSql" Version="4.11.0" />
-    <PackageReference Include="xunit.v3.extensibility.core" Version="3.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <PackageReference Include="Testcontainers.MsSql" />
+    <PackageReference Include="xunit.v3.extensibility.core" />
   </ItemGroup>
 
   <ItemGroup>
